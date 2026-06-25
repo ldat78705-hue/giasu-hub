@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { TransactionItem } from '../types';
-import { Plus, ArrowDownLeft, ArrowUpRight, CheckCircle2, Trash2, DollarSign, Clock } from 'lucide-react';
+import { Plus, ArrowDownLeft, ArrowUpRight, CheckCircle2, Trash2, DollarSign, Clock, Download } from 'lucide-react';
 
 interface FinanceTabProps {
   transactions: TransactionItem[];
@@ -45,6 +45,17 @@ export const FinanceTab: React.FC<FinanceTabProps> = ({ transactions, onAddTrans
 
   const formatCurrency = (val: number) => new Intl.NumberFormat('vi-VN').format(val);
 
+  const exportCSV = () => {
+    if (transactions.length === 0) return;
+    const header = 'Mã Biên Lai,Loại,Đối tượng,Số tiền,Thời gian,Trạng thái\n';
+    const rows = transactions.map(t => `${t.receiptId},${t.type},"${t.targetName}",${t.amount},${t.date},${t.status}`).join('\n');
+    const blob = new Blob(["\uFEFF" + header + rows], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = `tai-chinh-${new Date().toISOString().slice(0,10)}.csv`;
+    link.click();
+  };
+
   return (
     <div className="col-span-12 space-y-6">
       {/* Finance Metrics */}
@@ -78,11 +89,19 @@ export const FinanceTab: React.FC<FinanceTabProps> = ({ transactions, onAddTrans
 
       {/* Transactions Table */}
       <div className="bg-white rounded-2xl border border-slate-200 shadow-xs p-6">
-        <h3 className="font-bold text-lg text-slate-800 mb-4 flex items-center gap-2">
-          <DollarSign className="w-5 h-5 text-slate-600" />
-          <span>Lịch sử Giao dịch</span>
-          <span className="px-2 py-0.5 bg-slate-100 text-slate-600 text-xs font-bold rounded-full">{transactions.length}</span>
-        </h3>
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="font-bold text-lg text-slate-800 flex items-center gap-2">
+            <DollarSign className="w-5 h-5 text-slate-600" />
+            <span>Lịch sử Giao dịch</span>
+            <span className="px-2 py-0.5 bg-slate-100 text-slate-600 text-xs font-bold rounded-full">{transactions.length}</span>
+          </h3>
+          {transactions.length > 0 && (
+            <button onClick={exportCSV}
+              className="px-3 py-1.5 bg-slate-100 hover:bg-blue-600 hover:text-white text-slate-600 text-xs font-bold rounded-xl transition-colors flex items-center gap-1.5 cursor-pointer border border-slate-200">
+              <Download className="w-3.5 h-3.5" /><span>Xuất CSV</span>
+            </button>
+          )}
+        </div>
 
         {transactions.length === 0 ? (
           <div className="py-12 text-center text-slate-400">

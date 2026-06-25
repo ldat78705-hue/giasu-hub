@@ -1,6 +1,6 @@
 import React from 'react';
 import { ActiveTab } from '../types';
-import { LayoutDashboard, BookOpen, Users, GraduationCap, DollarSign, ClipboardList, Settings, ExternalLink } from 'lucide-react';
+import { LayoutDashboard, BookOpen, Users, GraduationCap, DollarSign, ClipboardList, Settings, ExternalLink, Globe } from 'lucide-react';
 
 interface SidebarProps {
   activeTab: ActiveTab;
@@ -17,6 +17,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab, pendi
     { id: 'students', label: 'Quản lý học viên', icon: <Users className="w-4 h-4" /> },
     { id: 'applications', label: 'Đơn ứng tuyển', icon: <ClipboardList className="w-4 h-4" />, badge: pendingApplicationsCount },
     { id: 'finance', label: 'Tài chính', icon: <DollarSign className="w-4 h-4" /> },
+    { id: 'seo', label: 'SEO & Marketing', icon: <Globe className="w-4 h-4" /> },
     { id: 'settings', label: 'Cài đặt', icon: <Settings className="w-4 h-4" /> },
   ];
 

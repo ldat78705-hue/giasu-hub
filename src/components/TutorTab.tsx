@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { TutorItem } from '../types';
-import { Plus, Star, Trash2, Phone } from 'lucide-react';
+import { Plus, Star, Trash2, Phone, Search } from 'lucide-react';
 
 interface TutorTabProps {
   tutors: TutorItem[];
@@ -11,12 +11,22 @@ interface TutorTabProps {
 
 export const TutorTab: React.FC<TutorTabProps> = ({ tutors, onAddTutor, onUpdateStatus, onDeleteTutor }) => {
   const [showModal, setShowModal] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
   const [name, setName] = useState('');
   const [subjects, setSubjects] = useState('');
   const [qualification, setQualification] = useState('');
   const [experience, setExperience] = useState('');
   const [hourlyRate, setHourlyRate] = useState(200000);
   const [phone, setPhone] = useState('');
+
+  const filteredTutors = tutors.filter(t => {
+    if (!searchTerm.trim()) return true;
+    const q = searchTerm.toLowerCase();
+    return t.name.toLowerCase().includes(q)
+      || t.code.toLowerCase().includes(q)
+      || t.subjects.some(s => s.toLowerCase().includes(q))
+      || (t.qualification && t.qualification.toLowerCase().includes(q));
+  });
 
   const colors = ['bg-blue-500', 'bg-purple-500', 'bg-emerald-500', 'bg-amber-500', 'bg-rose-500', 'bg-indigo-500', 'bg-teal-500'];
 
@@ -56,14 +66,26 @@ export const TutorTab: React.FC<TutorTabProps> = ({ tutors, onAddTutor, onUpdate
         </button>
       </div>
 
-      {tutors.length === 0 ? (
+      {/* Search */}
+      {tutors.length > 0 && (
+        <div className="relative max-w-sm">
+          <Search className="w-4 h-4 absolute left-3 top-2.5 text-slate-400" />
+          <input type="text" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)}
+            placeholder="Tìm gia sư theo tên, môn dạy..."
+            className="w-full pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm outline-none focus:bg-white focus:border-blue-500" />
+        </div>
+      )}
+
+      {filteredTutors.length === 0 && tutors.length > 0 ? (
+        <div className="py-8 text-center text-slate-400 text-sm">Không tìm thấy gia sư phù hợp với &quot;{searchTerm}&quot;</div>
+      ) : tutors.length === 0 ? (
         <div className="py-12 text-center text-slate-400">
           <p className="font-semibold text-sm">Chưa có gia sư nào</p>
           <p className="text-xs mt-1">Nhấn "Thêm Gia sư" để bắt đầu xây dựng đội ngũ</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-          {tutors.map((t) => (
+          {filteredTutors.map((t) => (
             <div key={t.id || t.code} className="p-5 rounded-2xl border border-slate-200 hover:border-blue-300 bg-slate-50/40 transition-all flex flex-col justify-between space-y-4">
               <div className="flex items-start gap-3.5">
                 <div className={`w-12 h-12 rounded-xl ${t.avatarColor} flex items-center justify-center font-bold text-white text-lg shadow-sm shrink-0`}>{t.avatar}</div>
