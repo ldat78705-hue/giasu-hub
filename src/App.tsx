@@ -185,6 +185,7 @@ export default function App() {
   const handleUpdateStudentStatus = async (id: string, st: StudentItem['status']) => { await updateDoc(doc(db, 'students', id), { status: st }); };
 
   const handleAddTransaction = async (tr: TransactionItem) => { await addDoc(collection(db, 'transactions'), tr); };
+  const handleDeleteTransaction = async (id: string) => { await deleteDoc(doc(db, 'transactions', id)); };
 
   const handleUpdateApplicationStatus = async (id: string, st: ClassApplication['status']) => { await updateDoc(doc(db, 'applications', id), { status: st }); };
   const handleUpdateBookingStatus = async (id: string, st: TutorBooking['status']) => { await updateDoc(doc(db, 'bookings', id), { status: st }); };
@@ -328,7 +329,7 @@ export default function App() {
           )}
 
           {activeTab === 'finance' && (
-            <FinanceTab transactions={transactions} onAddTransaction={handleAddTransaction} />
+            <FinanceTab transactions={transactions} onAddTransaction={handleAddTransaction} onDeleteTransaction={handleDeleteTransaction} />
           )}
 
           {activeTab === 'seo' && (
