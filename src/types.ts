@@ -24,6 +24,7 @@ export interface TutorItem {
   status: 'online' | 'busy' | 'offline';
   hourlyRate: number;
   matchScore?: number;
+  phone?: string;
 }
 
 export interface StudentItem {
@@ -69,9 +70,27 @@ export interface TutorBooking {
   address: string;
   note?: string;
   createdAt: string;
-  status: 'Chờ liên hệ' | 'Đã xếp lớp';
+  status: 'Chờ liên hệ' | 'Đã xếp lớp' | 'Hủy';
 }
 
-export type ActiveTab = 'home' | 'find-tutors' | 'register-tutor' | 'dashboard' | 'classes' | 'tutors' | 'students' | 'finance' | 'seo' | 'applications';
+export interface AdminSettings {
+  id?: string;
+  centerName: string;
+  centerPhone: string;
+  centerEmail: string;
+  centerAddress: string;
+  geminiApiKey: string;
+  updatedAt: number;
+}
 
+export interface NotificationItem {
+  id?: string;
+  type: 'application' | 'booking' | 'class' | 'system';
+  title: string;
+  message: string;
+  isRead: boolean;
+  createdAt: number;
+  relatedId?: string;
+}
 
+export type ActiveTab = 'home' | 'find-tutors' | 'register-tutor' | 'dashboard' | 'classes' | 'tutors' | 'students' | 'finance' | 'seo' | 'applications' | 'settings';

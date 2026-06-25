@@ -239,7 +239,7 @@ export const ClassTable: React.FC<ClassTableProps> = ({
                 <input
                   type="text"
                   required
-                  placeholder="VD: Quận 7, HCM hoặc Online - Zoom"
+                  placeholder="VD: Cầu Giấy, Hà Nội hoặc Online - Zoom"
                   value={location}
                   onChange={(e) => setLocation(e.target.value)}
                   className="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:bg-white focus:border-blue-500 text-sm"

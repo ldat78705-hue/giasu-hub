@@ -9,9 +9,9 @@ export const SeoConfigTab: React.FC<SeoConfigTabProps> = ({ onRunAiSeo }) => {
   const [topic, setTopic] = useState('');
   const [loading, setLoading] = useState(false);
   const [seoResult, setSeoResult] = useState<{ metaTitle: string; metaDescription: string; topKeywords: string[]; contentOutline: string[] } | null>({
-    metaTitle: "Gia Sư Hub - Trung Tâm Gia Sư Uy Tín Hàng Đầu TP.HCM & Online",
+    metaTitle: "Gia Sư Thành Đạt - Trung Tâm Gia Sư Uy Tín Hàng Đầu Hà Nội",
     metaDescription: "Tìm gia sư chất lượng cao dạy kèm tại nhà Toán, Lý, Hóa, IELTS. Đội ngũ gia sư Bách Khoa, Sư Phạm chuẩn kiến thức. Cam kết tiến bộ sau 10 buổi.",
-    topKeywords: ["gia sư hcm", "trung tâm gia sư uy tín", "tìm gia sư tại nhà", "gia sư toán lớp 12", "gia sư ielts 8.0", "gia sư online"],
+    topKeywords: ["gia sư hà nội", "trung tâm gia sư uy tín", "tìm gia sư tại nhà", "gia sư toán lớp 12", "gia sư ielts", "gia sư online"],
     contentOutline: ["Kinh nghiệm chọn gia sư chất lượng tại nhà", "Bảng giá học phí gia sư chuẩn nhất 2026", "Quy trình xác thực văn bằng gia sư 3 bước"]
   });
 
@@ -69,7 +69,7 @@ export const SeoConfigTab: React.FC<SeoConfigTabProps> = ({ onRunAiSeo }) => {
             <span>Sitemap.xml & Structured Data</span>
           </div>
           <p className="text-slate-500 leading-relaxed">
-            Hệ thống Gia Sư Hub tự động xuất bản schema <code className="bg-slate-200 px-1 rounded">EducationalOrganization</code> giúp Google Index lớp học tức thì trong 60 giây.
+            Hệ thống Gia Sư Thành Đạt tự động xuất bản schema <code className="bg-slate-200 px-1 rounded">EducationalOrganization</code> giúp Google Index lớp học tức thì.
           </p>
         </div>
       </div>
@@ -85,7 +85,7 @@ export const SeoConfigTab: React.FC<SeoConfigTabProps> = ({ onRunAiSeo }) => {
           <div className="p-6 rounded-2xl border border-slate-200 bg-slate-50/50 space-y-2 max-w-xl">
             <div className="flex items-center gap-2 text-xs text-slate-600 font-sans">
               <span className="w-6 h-6 bg-slate-200 rounded-full flex items-center justify-center text-[10px] font-bold">G</span>
-              <span className="truncate">https://giasuhub.vn › tim-gia-su-hcm</span>
+              <span className="truncate">giasu-thanhdat.vercel.app › tim-gia-su-ha-noi</span>
             </div>
             <h4 className="text-blue-800 hover:underline cursor-pointer text-lg font-medium font-sans leading-snug">
               {seoResult.metaTitle}

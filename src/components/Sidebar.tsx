@@ -1,32 +1,34 @@
 import React from 'react';
 import { ActiveTab } from '../types';
-import { LayoutDashboard, BookOpen, Users, GraduationCap, DollarSign, Globe, ExternalLink, ClipboardList } from 'lucide-react';
+import { LayoutDashboard, BookOpen, Users, GraduationCap, DollarSign, ClipboardList, Settings, ExternalLink } from 'lucide-react';
 
 interface SidebarProps {
   activeTab: ActiveTab;
   setActiveTab: (tab: ActiveTab) => void;
   pendingClassesCount: number;
+  pendingApplicationsCount: number;
 }
 
-export const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab, pendingClassesCount }) => {
+export const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab, pendingClassesCount, pendingApplicationsCount }) => {
   const navItems: { id: ActiveTab; label: string; icon: React.ReactNode; badge?: number }[] = [
     { id: 'dashboard', label: 'Bảng điều khiển', icon: <LayoutDashboard className="w-4 h-4" /> },
-    { id: 'classes', label: 'Lớp học mới', icon: <BookOpen className="w-4 h-4" />, badge: pendingClassesCount },
-    { id: 'tutors', label: 'Danh sách Gia sư', icon: <GraduationCap className="w-4 h-4" /> },
-    { id: 'students', label: 'Quản lý Học sinh', icon: <Users className="w-4 h-4" /> },
-    { id: 'finance', label: 'Tài chính & Biên lai', icon: <DollarSign className="w-4 h-4" /> },
-    { id: 'seo', label: 'Cấu hình SEO', icon: <Globe className="w-4 h-4" /> },
+    { id: 'classes', label: 'Quản lý lớp', icon: <BookOpen className="w-4 h-4" />, badge: pendingClassesCount },
+    { id: 'tutors', label: 'Quản lý gia sư', icon: <GraduationCap className="w-4 h-4" /> },
+    { id: 'students', label: 'Quản lý học viên', icon: <Users className="w-4 h-4" /> },
+    { id: 'applications', label: 'Đơn ứng tuyển', icon: <ClipboardList className="w-4 h-4" />, badge: pendingApplicationsCount },
+    { id: 'finance', label: 'Tài chính', icon: <DollarSign className="w-4 h-4" /> },
+    { id: 'settings', label: 'Cài đặt', icon: <Settings className="w-4 h-4" /> },
   ];
 
   return (
     <aside id="sidebar-navigation" className="w-64 bg-[#0F172A] text-slate-300 flex flex-col h-full shrink-0 select-none border-r border-slate-800">
       <div className="p-6 flex items-center gap-3 border-b border-slate-700/80">
         <div className="w-9 h-9 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center font-bold text-white shadow-md shadow-blue-500/25 text-sm">
-          GT
+          TĐ
         </div>
         <div>
-          <div className="text-lg font-bold tracking-tight text-white leading-none">Gia Sư Hub</div>
-          <div className="text-[9px] font-bold text-blue-400 uppercase tracking-[0.1em] mt-0.5">Admin Panel</div>
+          <div className="text-base font-bold tracking-tight text-white leading-none">Gia Sư Thành Đạt</div>
+          <div className="text-[9px] font-bold text-blue-400 uppercase tracking-[0.1em] mt-0.5">Quản trị viên</div>
         </div>
       </div>
 
@@ -63,28 +65,20 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab, pendi
       </nav>
 
       <div className="p-4 space-y-3 border-t border-slate-700/80 bg-slate-900/40">
-        {/* Back to Public Site Button */}
         <button
           onClick={() => setActiveTab('home')}
           className="w-full px-4 py-2.5 bg-slate-800/60 hover:bg-slate-700 border border-slate-700/50 rounded-xl text-xs font-semibold text-slate-300 hover:text-white transition-all flex items-center justify-center gap-2 cursor-pointer"
         >
           <ExternalLink className="w-3.5 h-3.5" />
-          <span>Về Trang công khai</span>
+          <span>Xem trang công khai</span>
         </button>
 
-        {/* System Status */}
-        <div className="bg-slate-800/60 p-4 rounded-xl text-xs border border-slate-700/50 shadow-sm">
-          <div className="flex justify-between mb-1.5 font-medium">
-            <span className="text-slate-300">Hệ thống</span>
-            <span className="text-green-400 font-bold">Online</span>
+        <div className="bg-slate-800/60 p-3 rounded-xl text-xs border border-slate-700/50">
+          <div className="flex justify-between mb-1 font-medium">
+            <span className="text-slate-400">Hệ thống</span>
+            <span className="text-green-400 font-bold text-[10px]">● Online</span>
           </div>
-          <div className="w-full bg-slate-700/80 h-1.5 rounded-full overflow-hidden">
-            <div className="bg-green-400 w-full h-full animate-pulse"></div>
-          </div>
-          <div className="mt-2 text-[10px] text-slate-400 flex items-center justify-between">
-            <span>Firebase Sync</span>
-            <span className="text-emerald-400">● LIVE</span>
-          </div>
+          <div className="text-[10px] text-slate-500">Firebase Realtime Sync</div>
         </div>
       </div>
     </aside>

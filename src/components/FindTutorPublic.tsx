@@ -322,7 +322,7 @@ export const FindTutorPublic: React.FC<FindTutorPublicProps> = ({ tutors, onBook
                     required
                     value={reqLocation}
                     onChange={(e) => setReqLocation(e.target.value)}
-                    placeholder="VD: Quận 7, HCM"
+                    placeholder="VD: Cầu Giấy, Hà Nội"
                     className="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:bg-white focus:border-blue-500 text-sm"
                   />
                 </div>
