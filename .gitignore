@@ -1,0 +1,33 @@
+# Dependencies
+node_modules/
+
+# Build outputs
+build/
+dist/
+coverage/
+
+# System
+.DS_Store
+*.log
+Thumbs.db
+
+# Environment
+.env*
+!.env.example
+
+# IDE
+.vscode/
+.idea/
+
+# Vercel
+.vercel/
+
+# Archives
+*.zip
+*.rar
+
+# Firebase
+firebase-applet-config.json
+firebase-blueprint.json
+firestore.rules
+metadata.json
