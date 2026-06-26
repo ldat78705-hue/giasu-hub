@@ -31,7 +31,7 @@ export interface TutorItem {
   verifiedAt?: number;
   registeredAt?: number;
   area?: string;                // Khu vực dạy (text cũ, backward compat)
-  teachingAreas?: string[];     // Các quận/huyện có thể dạy
+  teachingAreas?: string[];     // Các xã/phường có thể dạy
   documentUrls?: {              // Hồ sơ đính kèm (CCCD, bằng cấp)
     cccdUrl?: string;
     degreeUrl?: string;
@@ -66,7 +66,8 @@ export interface ParentRegistration {
   studentName: string;
   grade: string;
   subjects: string[];
-  district: string;
+  district: string; // legacy, giữ backward compat
+  ward?: string;    // xã/phường mới
   mode: 'Tại nhà' | 'Online' | 'Cả hai';
   schedule: string;
   note: string;
@@ -120,6 +121,7 @@ export interface AdminSettings {
   facebookUrl: string;
   cloudinaryCloudName: string;
   cloudinaryPreset: string;
+  wards: string[];              // Danh sách xã/phường (admin chỉnh sửa)
   updatedAt: number;
 }
 

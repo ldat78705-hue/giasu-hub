@@ -9,6 +9,7 @@ interface RegisterTutorPublicProps {
   initialClass?: ClassItem | null;
   cloudinaryCloudName: string;
   cloudinaryPreset: string;
+  wards: string[];
 }
 
 const SUBJECTS = [
@@ -25,13 +26,6 @@ const GRADE_LEVELS = [
   'Đại học', 'Người đi làm',
 ];
 
-const DISTRICTS = [
-  'Ba Đình', 'Hoàn Kiếm', 'Hai Bà Trưng', 'Đống Đa', 'Tây Hồ', 'Cầu Giấy',
-  'Thanh Xuân', 'Hoàng Mai', 'Long Biên', 'Nam Từ Liêm', 'Bắc Từ Liêm',
-  'Hà Đông', 'Thanh Trì', 'Gia Lâm', 'Đông Anh', 'Sóc Sơn', 'Mê Linh',
-  'Hoài Đức', 'Đan Phượng', 'Thạch Thất',
-  'Dạy Online',
-];
 
 const SCHEDULES = ['Sáng (7h-12h)', 'Chiều (13h-17h)', 'Tối (18h-21h)', 'Cả ngày'];
 
@@ -55,7 +49,7 @@ async function uploadToCloudinary(file: File, cloudName: string, preset: string)
 
 export const RegisterTutorPublic: React.FC<RegisterTutorPublicProps> = ({
   classes, onApplyClass, onRegisterProfile, initialClass,
-  cloudinaryCloudName, cloudinaryPreset,
+  cloudinaryCloudName, cloudinaryPreset, wards,
 }) => {
   const [tab, setTab] = useState<'register' | 'browse'>('register');
   const [step, setStep] = useState(1);
@@ -75,6 +69,7 @@ export const RegisterTutorPublic: React.FC<RegisterTutorPublicProps> = ({
   const [selectedGrades, setSelectedGrades] = useState<string[]>([]);
   const [selectedAreas, setSelectedAreas] = useState<string[]>([]);
   const [selectedSchedules, setSelectedSchedules] = useState<string[]>([]);
+  const [wardSearch, setWardSearch] = useState('');
   const [regRate, setRegRate] = useState(200000);
   const [regIntro, setRegIntro] = useState('');
 
@@ -352,17 +347,20 @@ export const RegisterTutorPublic: React.FC<RegisterTutorPublicProps> = ({
 
                 <div className="bg-white rounded-2xl border border-slate-200 p-5 sm:p-6 space-y-4">
                   <h3 className="font-bold text-slate-800 text-sm flex items-center gap-1.5">
-                    <MapPin className="w-4 h-4 text-emerald-600" />Khu vực có thể đi dạy * <span className="text-[10px] font-normal text-slate-400">(chọn nhiều quận)</span>
+                    <MapPin className="w-4 h-4 text-emerald-600" />Khu vực có thể đi dạy * <span className="text-[10px] font-normal text-slate-400">(chọn xã/phường)</span>
                   </h3>
-                  <div className="flex flex-wrap gap-2">
-                    {DISTRICTS.map(d => (
+                  <input type="text" placeholder="🔍 Gõ tên xã/phường để tìm nhanh..."
+                    className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:bg-white focus:border-emerald-500 text-sm"
+                    onChange={e => setWardSearch(e.target.value)} value={wardSearch} />
+                  <div className="flex flex-wrap gap-2 max-h-48 overflow-y-auto">
+                    {wards.filter(w => !wardSearch || w.toLowerCase().includes(wardSearch.toLowerCase())).map(d => (
                       <button key={d} type="button" onClick={() => toggle(selectedAreas, setSelectedAreas, d)}
                         className={`px-3 py-2 rounded-xl text-xs font-semibold border transition-all cursor-pointer ${
                           selectedAreas.includes(d) ? 'bg-emerald-600 text-white border-emerald-600 shadow-sm' : 'bg-white text-slate-600 border-slate-200 hover:border-emerald-300'
                         }`}>{d}</button>
                     ))}
                   </div>
-                  {selectedAreas.length > 0 && <p className="text-[11px] text-emerald-600 font-semibold">✓ {selectedAreas.join(', ')}</p>}
+                  {selectedAreas.length > 0 && <p className="text-[11px] text-emerald-600 font-semibold">✓ Đã chọn {selectedAreas.length}: {selectedAreas.join(', ')}</p>}
                 </div>
 
                 <div className="bg-white rounded-2xl border border-slate-200 p-5 sm:p-6 space-y-4">

@@ -1,6 +1,7 @@
 import { initializeApp } from 'firebase/app';
 import { getFirestore, collection, getDocs, setDoc, doc } from 'firebase/firestore';
 import { AdminSettings } from './types';
+import { DEFAULT_HANOI_WARDS } from './hanoiWards';
 
 const firebaseConfig = {
   apiKey: "AIzaSyBKR-3QcLsHIp0qUcA7UJsPeJE8KeR0jtg",
@@ -25,6 +26,7 @@ const DEFAULT_SETTINGS: Omit<AdminSettings, 'id'> = {
   facebookUrl: '',
   cloudinaryCloudName: '',
   cloudinaryPreset: '',
+  wards: DEFAULT_HANOI_WARDS,
   updatedAt: Date.now(),
 };
 

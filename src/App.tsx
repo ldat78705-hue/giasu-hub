@@ -3,6 +3,7 @@ import { db, initSettingsIfEmpty } from './firebase';
 import { collection, onSnapshot, addDoc, doc, updateDoc, deleteDoc, setDoc } from 'firebase/firestore';
 import { ClassItem, TutorItem, StudentItem, TransactionItem, ActiveTab, TutorBooking, ClassApplication, AdminSettings, NotificationItem, ParentRegistration, ContactMessage } from './types';
 import { aiSmartSearch, aiMatchTutors, aiOptimizeSeo, aiGenerateClass, testApiKey } from './aiService';
+import { DEFAULT_HANOI_WARDS } from './hanoiWards';
 
 // Admin Components
 import { Sidebar } from './components/Sidebar';
@@ -39,6 +40,7 @@ const DEFAULT_SETTINGS: AdminSettings = {
   facebookUrl: '',
   cloudinaryCloudName: '',
   cloudinaryPreset: '',
+  wards: DEFAULT_HANOI_WARDS,
   updatedAt: Date.now(),
 };
 
@@ -298,10 +300,12 @@ export default function App() {
               {activeTab === 'register-tutor' && (
                 <RegisterTutorPublic classes={classes} onApplyClass={handleApplyClass}
                   onRegisterProfile={handleRegisterTutorProfile} initialClass={selectedClassForApply}
-                  cloudinaryCloudName={settings.cloudinaryCloudName || ''} cloudinaryPreset={settings.cloudinaryPreset || ''} />
+                  cloudinaryCloudName={settings.cloudinaryCloudName || ''} cloudinaryPreset={settings.cloudinaryPreset || ''}
+                  wards={settings.wards || DEFAULT_HANOI_WARDS} />
               )}
               {activeTab === 'parent-register' && (
-                <ParentRegisterForm onSubmit={handleParentRegister} zaloNumber={zaloNumber} />
+                <ParentRegisterForm onSubmit={handleParentRegister} zaloNumber={zaloNumber}
+                  wards={settings.wards || DEFAULT_HANOI_WARDS} />
               )}
             </div>
           </div>

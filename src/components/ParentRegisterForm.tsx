@@ -5,19 +5,14 @@ import { UserPlus, CheckCircle2, Phone, MapPin, BookOpen, Clock, Send } from 'lu
 interface ParentRegisterFormProps {
   onSubmit: (reg: ParentRegistration) => Promise<void>;
   zaloNumber?: string;
+  wards: string[];
 }
 
-const DISTRICTS = [
-  'Ba Đình', 'Hoàn Kiếm', 'Hai Bà Trưng', 'Đống Đa', 'Tây Hồ', 'Cầu Giấy',
-  'Thanh Xuân', 'Hoàng Mai', 'Long Biên', 'Nam Từ Liêm', 'Bắc Từ Liêm',
-  'Hà Đông', 'Thanh Trì', 'Gia Lâm', 'Đông Anh', 'Sóc Sơn', 'Mê Linh',
-  'Thường Tín', 'Phú Xuyên', 'Online',
-];
 
 const SUBJECTS = ['Toán', 'Tiếng Anh', 'Ngữ Văn', 'Vật Lý', 'Hóa Học', 'Sinh Học', 'IELTS', 'Tin Học', 'Luyện thi vào 10', 'Luyện thi ĐH'];
 const GRADES = ['Lớp 1-5', 'Lớp 6', 'Lớp 7', 'Lớp 8', 'Lớp 9', 'Lớp 10', 'Lớp 11', 'Lớp 12', 'Đại học', 'Người đi làm'];
 
-export const ParentRegisterForm: React.FC<ParentRegisterFormProps> = ({ onSubmit, zaloNumber }) => {
+export const ParentRegisterForm: React.FC<ParentRegisterFormProps> = ({ onSubmit, zaloNumber, wards }) => {
   const [parentName, setParentName] = useState('');
   const [phone, setPhone] = useState('');
   const [studentName, setStudentName] = useState('');
@@ -146,12 +141,13 @@ export const ParentRegisterForm: React.FC<ParentRegisterFormProps> = ({ onSubmit
             <MapPin className="w-4 h-4 text-emerald-600" /><span>Yêu cầu dạy</span>
           </h3>
           <div>
-            <label className="block text-xs font-bold text-slate-600 mb-1.5">Khu vực</label>
-            <select value={district} onChange={(e) => setDistrict(e.target.value)}
-              className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:bg-white focus:border-blue-500 transition-colors">
-              <option value="">— Chọn quận/huyện —</option>
-              {DISTRICTS.map(d => <option key={d}>{d}</option>)}
-            </select>
+            <label className="block text-xs font-bold text-slate-600 mb-1.5">Xã/phường</label>
+            <input type="text" list="ward-list" value={district} onChange={(e) => setDistrict(e.target.value)}
+              placeholder="Gõ tên xã/phường..."
+              className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:bg-white focus:border-blue-500 transition-colors" />
+            <datalist id="ward-list">
+              {wards.map(w => <option key={w} value={w} />)}
+            </datalist>
           </div>
           <div>
             <label className="block text-xs font-bold text-slate-600 mb-2">Hình thức học</label>

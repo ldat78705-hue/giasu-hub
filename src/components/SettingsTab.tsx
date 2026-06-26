@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { AdminSettings } from '../types';
-import { Settings, Key, Building2, Phone, Mail, MapPin, Save, CheckCircle2, AlertCircle, Eye, EyeOff, Sparkles, RefreshCw, Trash2, Shield, MessageCircle, Globe, Cloud } from 'lucide-react';
+import { Settings, Key, Building2, Phone, Mail, MapPin, Save, CheckCircle2, AlertCircle, Eye, EyeOff, Sparkles, RefreshCw, Trash2, Shield, MessageCircle, Globe, Cloud, Plus, X, Search } from 'lucide-react';
+import { DEFAULT_HANOI_WARDS } from '../hanoiWards';
 
 interface SettingsTabProps {
   settings: AdminSettings;
@@ -19,6 +20,9 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({ settings, onSaveSettin
   const [facebookUrl, setFacebookUrl] = useState(settings.facebookUrl || '');
   const [cloudinaryCloudName, setCloudinaryCloudName] = useState(settings.cloudinaryCloudName || '');
   const [cloudinaryPreset, setCloudinaryPreset] = useState(settings.cloudinaryPreset || '');
+  const [wards, setWards] = useState<string[]>(settings.wards || DEFAULT_HANOI_WARDS);
+  const [newWard, setNewWard] = useState('');
+  const [wardSearchTerm, setWardSearchTerm] = useState('');
   const [isSaving, setIsSaving] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
   const [isTesting, setIsTesting] = useState(false);
@@ -34,6 +38,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({ settings, onSaveSettin
     setFacebookUrl(settings.facebookUrl || '');
     setCloudinaryCloudName(settings.cloudinaryCloudName || '');
     setCloudinaryPreset(settings.cloudinaryPreset || '');
+    setWards(settings.wards || DEFAULT_HANOI_WARDS);
   }, [settings]);
 
   const handleSaveAll = async () => {
@@ -49,6 +54,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({ settings, onSaveSettin
         facebookUrl,
         cloudinaryCloudName,
         cloudinaryPreset,
+        wards,
         updatedAt: Date.now(),
       });
       setSaveSuccess(true);
@@ -349,6 +355,75 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({ settings, onSaveSettin
               </span>
             )}
           </div>
+        </div>
+
+        {/* Ward Management */}
+        <div className="bg-white rounded-2xl border border-slate-200 shadow-xs p-6 space-y-5 col-span-1 lg:col-span-2">
+          <div className="flex items-center justify-between border-b border-slate-100 pb-4">
+            <div className="flex items-center gap-2">
+              <div className="p-2 bg-emerald-50 text-emerald-600 rounded-xl">
+                <MapPin className="w-5 h-5" />
+              </div>
+              <div>
+                <h3 className="font-bold text-slate-800">Quản lý Xã/Phường</h3>
+                <p className="text-[11px] text-slate-500">Danh sách khu vực hiển thị cho gia sư & phụ huynh • {wards.length} địa điểm</p>
+              </div>
+            </div>
+            <button type="button" onClick={() => { setWards(DEFAULT_HANOI_WARDS); }}
+              className="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-600 text-[10px] font-bold rounded-lg cursor-pointer flex items-center gap-1">
+              <RefreshCw className="w-3 h-3" /><span>Reset mặc định</span>
+            </button>
+          </div>
+
+          {/* Add new ward */}
+          <div className="flex gap-2">
+            <div className="relative flex-1">
+              <Plus className="w-4 h-4 absolute left-3 top-3 text-slate-400" />
+              <input type="text" value={newWard} onChange={e => setNewWard(e.target.value)}
+                placeholder="Nhập tên xã/phường mới..."
+                onKeyDown={e => {
+                  if (e.key === 'Enter' && newWard.trim() && !wards.includes(newWard.trim())) {
+                    setWards(prev => [...prev, newWard.trim()]);
+                    setNewWard('');
+                  }
+                }}
+                className="w-full pl-9 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:bg-white focus:border-emerald-500 text-sm" />
+            </div>
+            <button type="button" onClick={() => {
+              if (newWard.trim() && !wards.includes(newWard.trim())) {
+                setWards(prev => [...prev, newWard.trim()]);
+                setNewWard('');
+              }
+            }}
+              className="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl cursor-pointer flex items-center gap-1">
+              <Plus className="w-3.5 h-3.5" /><span>Thêm</span>
+            </button>
+          </div>
+
+          {/* Search wards */}
+          <div className="relative">
+            <Search className="w-4 h-4 absolute left-3 top-2.5 text-slate-400" />
+            <input type="text" value={wardSearchTerm} onChange={e => setWardSearchTerm(e.target.value)}
+              placeholder="🔍 Tìm xã/phường..."
+              className="w-full pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:bg-white focus:border-blue-500 text-sm" />
+          </div>
+
+          {/* Ward list */}
+          <div className="flex flex-wrap gap-1.5 max-h-64 overflow-y-auto">
+            {wards.filter(w => !wardSearchTerm || w.toLowerCase().includes(wardSearchTerm.toLowerCase())).map((w, i) => (
+              <span key={`${w}-${i}`} className="inline-flex items-center gap-1 px-2.5 py-1 bg-slate-50 border border-slate-200 rounded-lg text-[11px] font-semibold text-slate-700 hover:border-red-300 hover:bg-red-50 group transition-colors">
+                {w}
+                <button type="button" onClick={() => setWards(prev => prev.filter((_, idx) => idx !== wards.indexOf(w)))}
+                  className="w-3.5 h-3.5 text-slate-300 group-hover:text-red-500 cursor-pointer flex items-center justify-center">
+                  <X className="w-3 h-3" />
+                </button>
+              </span>
+            ))}
+          </div>
+
+          <p className="text-[10px] text-slate-400">
+            Nhấn <b>Lưu tất cả cài đặt</b> để áp dụng. Danh sách này hiển thị ở form đăng ký gia sư và form đăng ký học.
+          </p>
         </div>
       </div>
     </div>
