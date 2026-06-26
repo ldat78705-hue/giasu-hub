@@ -1,0 +1,17 @@
+{
+  "name": "Gia Sư Thành Đạt",
+  "short_name": "GS Thành Đạt",
+  "description": "Trung Tâm Gia Sư Uy Tín Hàng Đầu Hà Nội",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0F172A",
+  "theme_color": "#3B82F6",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%233B82F6'/><text x='50' y='62' text-anchor='middle' font-size='40' font-weight='bold' fill='white'>TĐ</text></svg>",
+      "sizes": "192x192",
+      "type": "image/svg+xml"
+    }
+  ]
+}

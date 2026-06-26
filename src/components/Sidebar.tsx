@@ -1,6 +1,6 @@
 import React from 'react';
 import { ActiveTab } from '../types';
-import { LayoutDashboard, BookOpen, Users, GraduationCap, DollarSign, ClipboardList, Settings, ExternalLink, Globe, UserPlus, MessageCircle, Calendar, Star, ClipboardCheck, MessageSquareText, BarChart3, Upload } from 'lucide-react';
+import { LayoutDashboard, BookOpen, Users, GraduationCap, DollarSign, ClipboardList, Settings, ExternalLink, Globe, UserPlus, MessageCircle, Calendar, Star, ClipboardCheck, MessageSquareText, BarChart3, Upload, FileText, Wrench } from 'lucide-react';
 
 interface SidebarProps {
   activeTab: ActiveTab;
@@ -29,7 +29,9 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab, pendi
     { id: 'finance', label: 'Tài chính', icon: <DollarSign className="w-4 h-4" /> },
     { id: 'kpi' as ActiveTab, label: 'KPI & Thống kê', icon: <BarChart3 className="w-4 h-4" /> },
     { id: 'import' as ActiveTab, label: 'Import & Trùng', icon: <Upload className="w-4 h-4" /> },
+    { id: 'blog' as ActiveTab, label: 'Blog SEO', icon: <FileText className="w-4 h-4" /> },
     { id: 'seo', label: 'SEO & Marketing', icon: <Globe className="w-4 h-4" /> },
+    { id: 'advanced' as ActiveTab, label: 'Công cụ nâng cao', icon: <Wrench className="w-4 h-4" /> },
     { id: 'settings', label: 'Cài đặt', icon: <Settings className="w-4 h-4" /> },
   ];
 

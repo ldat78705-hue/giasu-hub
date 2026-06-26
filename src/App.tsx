@@ -27,6 +27,9 @@ import { ReviewsTab } from './components/ReviewsTab';
 import { AttendanceTab } from './components/AttendanceTab';
 import { CalendarView } from './components/CalendarView';
 import { ImportTab } from './components/ImportTab';
+import { AdvancedToolsTab } from './components/AdvancedToolsTab';
+import { BlogTab } from './components/BlogTab';
+import { ChatbotWidget } from './components/ChatbotWidget';
 
 // Public Components
 import { PublicNavbar } from './components/PublicNavbar';
@@ -490,6 +493,7 @@ export default function App() {
           onNavigateRegister={() => setActiveTab('parent-register')}
           onContactSubmit={handleContactSubmit}
         />
+        <ChatbotWidget apiKey={settings.geminiApiKey} centerName={settings.centerName || 'Gia Sư Thành Đạt'} />
       </div>
     );
   }
@@ -612,6 +616,14 @@ export default function App() {
 
           {adminTab === 'settings' && (
             <SettingsTab settings={settings} onSaveSettings={handleSaveSettings} onTestApiKey={handleTestApiKey} />
+          )}
+
+          {adminTab === 'blog' && (
+            <BlogTab />
+          )}
+
+          {adminTab === 'advanced' && (
+            <AdvancedToolsTab />
           )}
         </section>
       </main>
