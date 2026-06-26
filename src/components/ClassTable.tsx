@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { ClassItem } from '../types';
-import { Plus, Sparkles, Filter, Trash2, CheckCircle2, Download, Search } from 'lucide-react';
+import { Plus, Sparkles, Filter, Trash2, CheckCircle2, Download, Search, ArrowUpDown } from 'lucide-react';
 
 interface ClassTableProps {
   classes: ClassItem[];
@@ -24,6 +24,7 @@ export const ClassTable: React.FC<ClassTableProps> = ({
   const [showAddModal, setShowAddModal] = useState(false);
   const [statusFilter, setStatusFilter] = useState<string>('ALL');
   const [searchTerm, setSearchTerm] = useState('');
+  const [sortBy, setSortBy] = useState<'newest' | 'fee-high' | 'fee-low' | 'subject'>('newest');
   
   // New Class Form State
   const [code, setCode] = useState(`#CS${Math.floor(2300 + Math.random() * 100)}`);
@@ -40,6 +41,11 @@ export const ClassTable: React.FC<ClassTableProps> = ({
     if (!searchTerm) return true;
     const q = searchTerm.toLowerCase();
     return c.code.toLowerCase().includes(q) || c.subject.toLowerCase().includes(q) || c.location.toLowerCase().includes(q) || (c.studentInfo || '').toLowerCase().includes(q);
+  }).sort((a, b) => {
+    if (sortBy === 'fee-high') return b.fee - a.fee;
+    if (sortBy === 'fee-low') return a.fee - b.fee;
+    if (sortBy === 'subject') return a.subject.localeCompare(b.subject, 'vi');
+    return (b.createdAt || 0) - (a.createdAt || 0);
   });
 
   const handleCreate = (e: React.FormEvent) => {
@@ -96,6 +102,16 @@ export const ClassTable: React.FC<ClassTableProps> = ({
             <input type="text" value={searchTerm} onChange={e => setSearchTerm(e.target.value)}
               placeholder="Tìm mã, môn, khu vực..."
               className="pl-8 pr-3 py-1.5 bg-slate-50 border border-slate-200 rounded-xl text-xs outline-none focus:bg-white focus:border-blue-500 w-40" />
+          </div>
+          <div className="relative">
+            <ArrowUpDown className="w-3.5 h-3.5 absolute left-2.5 top-2 text-slate-400" />
+            <select value={sortBy} onChange={e => setSortBy(e.target.value as any)}
+              className="pl-8 pr-2 py-1.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold text-slate-600 outline-none cursor-pointer">
+              <option value="newest">Mới nhất</option>
+              <option value="fee-high">Phí cao → thấp</option>
+              <option value="fee-low">Phí thấp → cao</option>
+              <option value="subject">Môn A-Z</option>
+            </select>
           </div>
           <button onClick={() => {
             const header = 'M\u00e3,M\u00f4n,H\u1ecdc sinh,\u0110\u1ecba \u0111i\u1ec3m,Ph\u00ed,H\u00ecnh th\u1ee9c,Y\u00eau c\u1ea7u,Tr\u1ea1ng th\u00e1i\n';

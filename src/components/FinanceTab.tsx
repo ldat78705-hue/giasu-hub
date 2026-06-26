@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { TransactionItem } from '../types';
-import { Plus, ArrowDownLeft, ArrowUpRight, CheckCircle2, Trash2, DollarSign, Clock, Download } from 'lucide-react';
+import { Plus, ArrowDownLeft, ArrowUpRight, CheckCircle2, Trash2, DollarSign, Clock, Download, Search } from 'lucide-react';
 
 interface FinanceTabProps {
   transactions: TransactionItem[];
@@ -13,6 +13,8 @@ export const FinanceTab: React.FC<FinanceTabProps> = ({ transactions, onAddTrans
   const [targetName, setTargetName] = useState('');
   const [amount, setAmount] = useState(500000);
   const [type, setType] = useState<TransactionItem['type']>('Thu phí gia sư');
+  const [searchTerm, setSearchTerm] = useState('');
+  const [typeFilter, setTypeFilter] = useState<string>('all');
 
   const totalIncome = transactions
     .filter(t => t.type === 'Thu phí gia sư' && t.status === 'Thành công')
@@ -103,6 +105,31 @@ export const FinanceTab: React.FC<FinanceTabProps> = ({ transactions, onAddTrans
           )}
         </div>
 
+        {/* Search + Filter */}
+        {transactions.length > 0 && (
+          <div className="flex flex-col sm:flex-row gap-3 px-6 py-3 border-b border-slate-100">
+            <div className="relative flex-1 max-w-xs">
+              <Search className="w-4 h-4 absolute left-3 top-2.5 text-slate-400" />
+              <input type="text" value={searchTerm} onChange={e => setSearchTerm(e.target.value)}
+                placeholder="Tìm mã phiếu, đối tượng..."
+                className="w-full pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm outline-none focus:bg-white focus:border-blue-500" />
+            </div>
+            <div className="flex gap-2 flex-wrap">
+              {[
+                { val: 'all', label: 'Tất cả' },
+                { val: 'Thu phí gia sư', label: 'Thu phí' },
+                { val: 'Hoàn tiền', label: 'Hoàn tiền' },
+                { val: 'Thanh toán lương', label: 'Lương' },
+              ].map(f => (
+                <button key={f.val} onClick={() => setTypeFilter(f.val)}
+                  className={`px-3 py-2 rounded-xl text-xs font-semibold border cursor-pointer transition-all ${
+                    typeFilter === f.val ? 'bg-blue-600 text-white border-blue-600' : 'bg-white text-slate-600 border-slate-200 hover:border-blue-300'
+                  }`}>{f.label}</button>
+              ))}
+            </div>
+          </div>
+        )}
+
         {transactions.length === 0 ? (
           <div className="py-12 text-center text-slate-400">
             <DollarSign className="w-10 h-10 mx-auto mb-3 text-slate-300" />
@@ -124,7 +151,10 @@ export const FinanceTab: React.FC<FinanceTabProps> = ({ transactions, onAddTrans
                 </tr>
               </thead>
               <tbody className="text-sm divide-y divide-slate-100">
-                {transactions.map((tr) => (
+                {transactions
+                  .filter(t => typeFilter === 'all' || t.type === typeFilter)
+                  .filter(t => !searchTerm || t.targetName.toLowerCase().includes(searchTerm.toLowerCase()) || t.receiptId.toLowerCase().includes(searchTerm.toLowerCase()))
+                  .map((tr) => (
                   <tr key={tr.id || tr.receiptId} className="hover:bg-slate-50/80 transition-colors">
                     <td className="px-6 py-4 font-mono font-bold text-xs text-slate-700">{tr.receiptId}</td>
                     <td className="px-6 py-4">
