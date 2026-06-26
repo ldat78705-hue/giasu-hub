@@ -25,6 +25,11 @@ export interface TutorItem {
   hourlyRate: number;
   matchScore?: number;
   phone?: string;
+  email?: string;
+  verified: boolean;
+  verifiedAt?: number;
+  registeredAt?: number;
+  area?: string; // Khu vực dạy
 }
 
 export interface StudentItem {
@@ -45,6 +50,30 @@ export interface TransactionItem {
   targetName: string;
   date: string;
   status: 'Thành công' | 'Đang xử lý';
+}
+
+export interface ParentRegistration {
+  id?: string;
+  parentName: string;
+  phone: string;
+  studentName: string;
+  grade: string;
+  subjects: string[];
+  district: string;
+  mode: 'Tại nhà' | 'Online' | 'Cả hai';
+  schedule: string;
+  note: string;
+  createdAt: number;
+  status: 'Mới' | 'Đã liên hệ' | 'Đã xếp lớp' | 'Hủy';
+}
+
+export interface ContactMessage {
+  id?: string;
+  name: string;
+  phone: string;
+  message: string;
+  createdAt: number;
+  isRead: boolean;
 }
 
 export type PortalRole = 'public' | 'tutor' | 'admin';
@@ -80,12 +109,14 @@ export interface AdminSettings {
   centerEmail: string;
   centerAddress: string;
   geminiApiKey: string;
+  zaloNumber: string;
+  facebookUrl: string;
   updatedAt: number;
 }
 
 export interface NotificationItem {
   id?: string;
-  type: 'application' | 'booking' | 'class' | 'system';
+  type: 'application' | 'booking' | 'class' | 'system' | 'registration' | 'contact';
   title: string;
   message: string;
   isRead: boolean;
@@ -93,4 +124,4 @@ export interface NotificationItem {
   relatedId?: string;
 }
 
-export type ActiveTab = 'home' | 'find-tutors' | 'register-tutor' | 'dashboard' | 'classes' | 'tutors' | 'students' | 'finance' | 'seo' | 'applications' | 'settings';
+export type ActiveTab = 'home' | 'find-tutors' | 'register-tutor' | 'parent-register' | 'dashboard' | 'classes' | 'tutors' | 'students' | 'finance' | 'seo' | 'applications' | 'registrations' | 'settings';

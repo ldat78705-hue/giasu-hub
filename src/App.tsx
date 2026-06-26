@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { db, initSettingsIfEmpty } from './firebase';
 import { collection, onSnapshot, addDoc, doc, updateDoc, deleteDoc, setDoc } from 'firebase/firestore';
-import { ClassItem, TutorItem, StudentItem, TransactionItem, ActiveTab, TutorBooking, ClassApplication, AdminSettings, NotificationItem } from './types';
+import { ClassItem, TutorItem, StudentItem, TransactionItem, ActiveTab, TutorBooking, ClassApplication, AdminSettings, NotificationItem, ParentRegistration, ContactMessage } from './types';
 import { aiSmartSearch, aiMatchTutors, aiOptimizeSeo, aiGenerateClass, testApiKey } from './aiService';
 
 // Admin Components
@@ -16,6 +16,7 @@ import { FinanceTab } from './components/FinanceTab';
 import { SettingsTab } from './components/SettingsTab';
 import { ApplicationsTab } from './components/ApplicationsTab';
 import { SeoConfigTab } from './components/SeoConfigTab';
+import { RegistrationsTab } from './components/RegistrationsTab';
 
 // Public Components
 import { PublicNavbar } from './components/PublicNavbar';
@@ -23,8 +24,10 @@ import { PublicFooter } from './components/PublicFooter';
 import { HomePublic } from './components/HomePublic';
 import { FindTutorPublic } from './components/FindTutorPublic';
 import { RegisterTutorPublic } from './components/RegisterTutorPublic';
+import { ParentRegisterForm } from './components/ParentRegisterForm';
+import { ContactSection } from './components/ContactSection';
 
-const publicTabs: ActiveTab[] = ['home', 'find-tutors', 'register-tutor'];
+const publicTabs: ActiveTab[] = ['home', 'find-tutors', 'register-tutor', 'parent-register'];
 
 const DEFAULT_SETTINGS: AdminSettings = {
   centerName: 'Gia Sư Thành Đạt',
@@ -32,6 +35,8 @@ const DEFAULT_SETTINGS: AdminSettings = {
   centerEmail: '',
   centerAddress: 'Hà Nội',
   geminiApiKey: '',
+  zaloNumber: '',
+  facebookUrl: '',
   updatedAt: Date.now(),
 };
 
@@ -46,6 +51,7 @@ export default function App() {
   const [applications, setApplications] = useState<ClassApplication[]>([]);
   const [bookings, setBookings] = useState<TutorBooking[]>([]);
   const [notifications, setNotifications] = useState<NotificationItem[]>([]);
+  const [registrations, setRegistrations] = useState<ParentRegistration[]>([]);
   const [settings, setSettings] = useState<AdminSettings>(DEFAULT_SETTINGS);
 
   // AI States
@@ -65,6 +71,7 @@ export default function App() {
 
   const isPublicView = publicTabs.includes(activeTab);
   const apiKey = settings.geminiApiKey || '';
+  const zaloNumber = settings.zaloNumber || '';
 
   // Initialize & Subscribe
   useEffect(() => {
@@ -84,17 +91,20 @@ export default function App() {
         setTransactions(snap.docs.map(d => ({ id: d.id, ...d.data() } as TransactionItem)));
       }),
       onSnapshot(collection(db, 'applications'), (snap) => {
-        const apps = snap.docs.map(d => ({ id: d.id, ...d.data() } as ClassApplication));
-        setApplications(apps);
+        setApplications(snap.docs.map(d => ({ id: d.id, ...d.data() } as ClassApplication)));
       }),
       onSnapshot(collection(db, 'bookings'), (snap) => {
-        const bks = snap.docs.map(d => ({ id: d.id, ...d.data() } as TutorBooking));
-        setBookings(bks);
+        setBookings(snap.docs.map(d => ({ id: d.id, ...d.data() } as TutorBooking)));
       }),
       onSnapshot(collection(db, 'notifications'), (snap) => {
         const notifs = snap.docs.map(d => ({ id: d.id, ...d.data() } as NotificationItem));
         notifs.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
         setNotifications(notifs);
+      }),
+      onSnapshot(collection(db, 'registrations'), (snap) => {
+        const regs = snap.docs.map(d => ({ id: d.id, ...d.data() } as ParentRegistration));
+        regs.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+        setRegistrations(regs);
       }),
       onSnapshot(doc(db, 'settings', 'admin'), (snap) => {
         if (snap.exists()) {
@@ -179,6 +189,9 @@ export default function App() {
   const handleAddTutor = async (t: TutorItem) => { await addDoc(collection(db, 'tutors'), t); };
   const handleUpdateTutorStatus = async (id: string, st: TutorItem['status']) => { await updateDoc(doc(db, 'tutors', id), { status: st }); };
   const handleDeleteTutor = async (id: string) => { await deleteDoc(doc(db, 'tutors', id)); };
+  const handleVerifyTutor = async (id: string, verified: boolean) => {
+    await updateDoc(doc(db, 'tutors', id), { verified, verifiedAt: verified ? Date.now() : null });
+  };
 
   const handleAddStudent = async (st: StudentItem) => { await addDoc(collection(db, 'students'), st); };
   const handleDeleteStudent = async (id: string) => { await deleteDoc(doc(db, 'students', id)); };
@@ -189,6 +202,7 @@ export default function App() {
 
   const handleUpdateApplicationStatus = async (id: string, st: ClassApplication['status']) => { await updateDoc(doc(db, 'applications', id), { status: st }); };
   const handleUpdateBookingStatus = async (id: string, st: TutorBooking['status']) => { await updateDoc(doc(db, 'bookings', id), { status: st }); };
+  const handleUpdateRegistrationStatus = async (id: string, st: ParentRegistration['status']) => { await updateDoc(doc(db, 'registrations', id), { status: st }); };
 
   const handleSaveSettings = async (partial: Partial<AdminSettings>) => {
     await setDoc(doc(db, 'settings', 'admin'), { ...settings, ...partial, updatedAt: Date.now() }, { merge: true });
@@ -231,29 +245,50 @@ export default function App() {
   const handleRegisterTutorProfile = async (tutor: TutorItem) => {
     await addDoc(collection(db, 'tutors'), tutor);
     await addDoc(collection(db, 'notifications'), {
-      type: 'application', title: 'Gia sư mới đăng ký',
+      type: 'application', title: 'Gia sư mới đăng ký (chờ xác minh)',
       message: `${tutor.name} - ${tutor.subjects.join(', ')}`,
+      isRead: false, createdAt: Date.now(),
+    });
+  };
+
+  const handleParentRegister = async (reg: ParentRegistration) => {
+    await addDoc(collection(db, 'registrations'), reg);
+    await addDoc(collection(db, 'notifications'), {
+      type: 'registration', title: 'Phụ huynh đăng ký tìm gia sư',
+      message: `${reg.parentName} (${reg.phone}) - ${reg.subjects.join(', ')} - ${reg.district || 'Hà Nội'}`,
+      isRead: false, createdAt: Date.now(),
+    });
+  };
+
+  const handleContactSubmit = async (msg: ContactMessage) => {
+    await addDoc(collection(db, 'contacts'), msg);
+    await addDoc(collection(db, 'notifications'), {
+      type: 'contact', title: 'Liên hệ tư vấn mới',
+      message: `${msg.name} (${msg.phone}): ${msg.message || 'Cần tư vấn'}`,
       isRead: false, createdAt: Date.now(),
     });
   };
 
   const pendingClassesCount = classes.filter(c => c.status === 'ĐANG TÌM' || c.status === 'KHẨN CẤP').length;
   const pendingApplicationsCount = applications.filter(a => a.status === 'Chờ duyệt').length + bookings.filter(b => b.status === 'Chờ liên hệ').length;
+  const pendingRegistrations = registrations.filter(r => r.status === 'Mới').length;
+  const pendingTutorVerify = tutors.filter(t => !t.verified).length;
   const totalRevenue = transactions.filter(t => t.type === 'Thu phí gia sư' && t.status === 'Thành công').reduce((s, t) => s + t.amount, 0);
 
   // ===================== PUBLIC VIEW =====================
   if (isPublicView) {
     return (
       <div className="min-h-screen bg-[#F8FAFC] flex flex-col font-sans text-slate-800 select-text">
-        <PublicNavbar activeTab={activeTab} onNavigate={setActiveTab} />
-        <main className="flex-1 pt-16">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <PublicNavbar activeTab={activeTab} onNavigate={setActiveTab} zaloNumber={zaloNumber} />
+        <main className="flex-1 pt-14 sm:pt-16">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
             <div className="grid grid-cols-12 gap-6">
               {activeTab === 'home' && (
                 <HomePublic classes={classes} tutors={tutors} onNavigate={setActiveTab}
                   onSelectClassForApply={setSelectedClassForApply}
                   onSelectTutorForBook={() => {}}
-                  onAiSearch={handleAiSearch} isSearching={isSearching} />
+                  onAiSearch={handleAiSearch} isSearching={isSearching}
+                  zaloNumber={zaloNumber} />
               )}
               {activeTab === 'find-tutors' && (
                 <FindTutorPublic tutors={tutors} onBookTutor={handleBookTutor} onPostRequest={handlePostRequest} />
@@ -262,10 +297,22 @@ export default function App() {
                 <RegisterTutorPublic classes={classes} onApplyClass={handleApplyClass}
                   onRegisterProfile={handleRegisterTutorProfile} initialClass={selectedClassForApply} />
               )}
+              {activeTab === 'parent-register' && (
+                <ParentRegisterForm onSubmit={handleParentRegister} zaloNumber={zaloNumber} />
+              )}
             </div>
           </div>
+          <ContactSection onSubmit={handleContactSubmit} zaloNumber={zaloNumber} />
         </main>
-        <PublicFooter onNavigate={setActiveTab} />
+        <PublicFooter onNavigate={setActiveTab} zaloNumber={zaloNumber} />
+
+        {/* Floating Zalo CTA (mobile only) */}
+        {zaloNumber && (
+          <a href={`https://zalo.me/${zaloNumber}`} target="_blank" rel="noopener noreferrer"
+            className="floating-cta w-14 h-14 bg-blue-600 hover:bg-blue-700 text-white rounded-full shadow-xl flex items-center justify-center animate-pulse-glow">
+            <svg viewBox="0 0 24 24" className="w-6 h-6 fill-current"><path d="M12 2C6.48 2 2 6.03 2 10.93c0 2.75 1.44 5.19 3.67 6.77l-.02 2.25c0 .44.52.68.87.4l2.47-1.97c.93.26 1.93.4 2.99.4 5.52 0 10-4.03 10-8.93S17.52 2 12 2z"/></svg>
+          </a>
+        )}
       </div>
     );
   }
@@ -274,7 +321,8 @@ export default function App() {
   return (
     <div className="w-full h-screen bg-[#F1F5F9] flex font-sans overflow-hidden text-slate-800 select-text">
       <Sidebar activeTab={activeTab} setActiveTab={setActiveTab}
-        pendingClassesCount={pendingClassesCount} pendingApplicationsCount={pendingApplicationsCount} />
+        pendingClassesCount={pendingClassesCount}
+        pendingApplicationsCount={pendingApplicationsCount + pendingRegistrations + pendingTutorVerify} />
 
       <main className="flex-1 flex flex-col h-full overflow-hidden">
         <Header onAiSearch={handleAiSearch} isSearching={isSearching} hasApiKey={!!apiKey}
@@ -314,7 +362,8 @@ export default function App() {
 
           {activeTab === 'tutors' && (
             <TutorTab tutors={tutors} onAddTutor={handleAddTutor}
-              onUpdateStatus={handleUpdateTutorStatus} onDeleteTutor={handleDeleteTutor} />
+              onUpdateStatus={handleUpdateTutorStatus} onDeleteTutor={handleDeleteTutor}
+              onVerifyTutor={handleVerifyTutor} />
           )}
 
           {activeTab === 'students' && (
@@ -326,6 +375,10 @@ export default function App() {
             <ApplicationsTab applications={applications} bookings={bookings}
               onUpdateApplicationStatus={handleUpdateApplicationStatus}
               onUpdateBookingStatus={handleUpdateBookingStatus} />
+          )}
+
+          {activeTab === 'registrations' && (
+            <RegistrationsTab registrations={registrations} onUpdateStatus={handleUpdateRegistrationStatus} />
           )}
 
           {activeTab === 'finance' && (

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { TutorItem, ClassItem } from '../types';
-import { Search, Star, MapPin, GraduationCap, BookOpen, CheckCircle2, Filter, Sparkles, MessageSquare, ShieldCheck } from 'lucide-react';
+import { Search, Star, MapPin, GraduationCap, BookOpen, CheckCircle2, ShieldCheck, Phone, Send, X, UserPlus } from 'lucide-react';
 
 interface FindTutorPublicProps {
   tutors: TutorItem[];
@@ -12,266 +12,187 @@ export const FindTutorPublic: React.FC<FindTutorPublicProps> = ({ tutors, onBook
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedSubject, setSelectedSubject] = useState('ALL');
   const [selectedTutor, setSelectedTutor] = useState<TutorItem | null>(null);
-
-  // Booking Form State
   const [studentName, setStudentName] = useState('');
   const [phone, setPhone] = useState('');
   const [notes, setNotes] = useState('');
   const [bookingSuccess, setBookingSuccess] = useState(false);
-  const [requestSuccess, setRequestSuccess] = useState(false);
-
-  // Quick Request Form Modal State
   const [showRequestModal, setShowRequestModal] = useState(false);
   const [reqSubject, setReqSubject] = useState('');
   const [reqGrade, setReqGrade] = useState('');
   const [reqLocation, setReqLocation] = useState('');
   const [reqFee, setReqFee] = useState(300000);
   const [reqNotes, setReqNotes] = useState('');
+  const [requestSuccess, setRequestSuccess] = useState(false);
 
-  const subjectsList = ['ALL', 'Tiếng Anh', 'Toán', 'IELTS', 'Luyện thi ĐH', 'Python', 'Ngữ Văn'];
+  const subjects = ['ALL', 'Toán', 'Tiếng Anh', 'IELTS', 'Vật Lý', 'Hóa Học', 'Ngữ Văn', 'Tin Học', 'Luyện thi'];
 
-  const filteredTutors = tutors.filter(t => {
-    const matchSearch = t.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      t.subjects.some(s => s.toLowerCase().includes(searchTerm.toLowerCase())) ||
-      t.qualification.toLowerCase().includes(searchTerm.toLowerCase());
+  // Only show verified tutors to public
+  const verifiedTutors = tutors.filter(t => t.verified);
+
+  const filtered = verifiedTutors.filter(t => {
+    const matchSearch = !searchTerm || t.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      t.subjects.some(s => s.toLowerCase().includes(searchTerm.toLowerCase()));
     const matchSub = selectedSubject === 'ALL' || t.subjects.some(s => s.toLowerCase().includes(selectedSubject.toLowerCase()));
     return matchSearch && matchSub;
   });
 
-  const handleBookSubmit = async (e: React.FormEvent) => {
+  const handleBook = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!selectedTutor || !studentName || !phone) return;
     await onBookTutor(selectedTutor, studentName, phone, notes);
     setBookingSuccess(true);
-    setTimeout(() => {
-      setBookingSuccess(false);
-      setSelectedTutor(null);
-      setStudentName('');
-      setPhone('');
-      setNotes('');
-    }, 2500);
+    setTimeout(() => { setBookingSuccess(false); setSelectedTutor(null); setStudentName(''); setPhone(''); setNotes(''); }, 2500);
   };
 
-  const handleQuickRequest = async (e: React.FormEvent) => {
+  const handleRequest = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!reqSubject || !reqLocation) return;
     await onPostRequest({
-      code: `#CS${Math.floor(2300 + Math.random() * 100)}`,
+      code: `#YC${Math.floor(1000 + Math.random() * 9000)}`,
       subject: `${reqSubject} (${reqGrade || 'Phổ thông'})`,
-      studentInfo: reqGrade || 'Học sinh',
-      location: reqLocation,
-      fee: Number(reqFee) || 300000,
-      status: 'ĐANG TÌM',
-      createdAt: Date.now(),
-      requirements: reqNotes || 'Tìm gia sư dạy kèm tại nhà uy tín.',
+      studentInfo: reqGrade, location: reqLocation, fee: reqFee,
+      status: 'ĐANG TÌM', createdAt: Date.now(), requirements: reqNotes,
     });
-    setShowRequestModal(false);
-    setReqSubject('');
-    setReqLocation('');
-    setReqNotes('');
     setRequestSuccess(true);
-    setTimeout(() => setRequestSuccess(false), 3000);
+    setTimeout(() => { setRequestSuccess(false); setShowRequestModal(false); }, 2500);
   };
 
-  const formatCurrency = (val: number) => {
-    return new Intl.NumberFormat('vi-VN').format(val) + 'đ';
-  };
+  const fmt = (v: number) => new Intl.NumberFormat('vi-VN').format(v);
 
   return (
-    <div className="col-span-12 space-y-8 pb-16 animate-in fade-in duration-300">
-      {/* Success Toast */}
-      {requestSuccess && (
-        <div className="fixed top-20 right-4 z-50 bg-emerald-600 text-white px-6 py-3 rounded-xl shadow-lg animate-fade-in flex items-center gap-2 text-sm font-semibold">
-          <CheckCircle2 className="w-5 h-5" />
-          <span>Đăng yêu cầu thành công! Trung tâm sẽ liên hệ sớm nhất.</span>
-        </div>
-      )}
-      {/* Page Header */}
-      <div className="bg-white rounded-3xl p-8 border border-slate-200 shadow-xs flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+    <div className="col-span-12 space-y-6 pb-24 md:pb-16">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-slate-800">Lựa Chọn Gia Sư Giỏi Dạy Kèm</h1>
-          <p className="text-slate-500 text-sm mt-1">Khám phá hồ sơ, văn bằng và đánh giá thực tế của đội ngũ gia sư hàng đầu</p>
+          <h1 className="text-xl sm:text-2xl font-bold text-slate-800">Tìm gia sư</h1>
+          <p className="text-xs sm:text-sm text-slate-500 mt-0.5">{filtered.length} gia sư đã xác minh sẵn sàng</p>
         </div>
-        <button
-          onClick={() => setShowRequestModal(true)}
-          className="px-5 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs uppercase tracking-wider rounded-xl transition-all shadow-md shadow-blue-600/20 shrink-0 flex items-center gap-2 cursor-pointer"
-        >
-          <Sparkles className="w-4 h-4" />
-          <span>Đăng Yêu Cầu Gia Sư Nhanh</span>
+        <button onClick={() => setShowRequestModal(true)}
+          className="px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-xl transition-colors cursor-pointer flex items-center gap-2 shadow-sm self-start sm:self-auto">
+          <UserPlus className="w-4 h-4" /><span>Gửi yêu cầu tìm GS</span>
         </button>
       </div>
 
-      {/* Filter Bar */}
-      <div className="bg-white rounded-2xl p-4 border border-slate-200 shadow-xs flex flex-col sm:flex-row gap-4 justify-between items-center">
-        <div className="relative w-full sm:w-96">
-          <Search className="w-4 h-4 absolute left-3.5 top-3 text-slate-400" />
-          <input
-            type="text"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            placeholder="Tìm theo tên gia sư, môn học hoặc trường ĐH..."
-            className="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm outline-none focus:bg-white focus:border-blue-500 text-slate-800"
-          />
-        </div>
-
-        <div className="flex items-center gap-2 w-full sm:w-auto overflow-x-auto pb-2 sm:pb-0">
-          <Filter className="w-4 h-4 text-slate-400 shrink-0 hidden md:block" />
-          {subjectsList.map((sub) => (
-            <button
-              key={sub}
-              onClick={() => setSelectedSubject(sub)}
-              className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold shrink-0 transition-all cursor-pointer ${
-                selectedSubject === sub
-                  ? 'bg-slate-900 text-white shadow-xs'
-                  : 'bg-slate-100 hover:bg-slate-200 text-slate-600'
-              }`}
-            >
-              {sub === 'ALL' ? 'Tất cả môn' : sub}
-            </button>
-          ))}
-        </div>
+      {/* Search */}
+      <div className="relative">
+        <Search className="w-4 h-4 absolute left-4 top-3.5 text-slate-400" />
+        <input type="text" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)}
+          placeholder="Tìm theo tên, môn dạy..."
+          className="w-full pl-11 pr-4 py-3 bg-white border border-slate-200 rounded-xl outline-none focus:border-blue-500 transition-colors" />
       </div>
 
-      {/* Tutors Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        {filteredTutors.map((tutor) => (
-          <div key={tutor.id || tutor.code} className="bg-white rounded-2xl border border-slate-200 shadow-xs hover:border-blue-300 hover:shadow-md transition-all p-6 flex flex-col justify-between space-y-4 relative">
-            <div>
-              <div className="flex items-start gap-4">
-                <div className={`w-14 h-14 rounded-2xl ${tutor.avatarColor || 'bg-blue-500'} flex items-center justify-center font-bold text-white text-xl shadow-md shrink-0`}>
-                  {tutor.avatar || 'GS'}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center justify-between gap-1">
-                    <h3 className="font-bold text-slate-800 text-base truncate">{tutor.name}</h3>
-                    <span className="font-mono text-[10px] bg-slate-100 px-1.5 py-0.5 rounded text-slate-500 font-semibold">{tutor.code}</span>
-                  </div>
-                  <div className="flex items-center gap-1 text-amber-500 text-xs font-bold mt-1">
-                    <Star className="w-3.5 h-3.5 fill-current" />
-                    <span>{tutor.rating}</span>
-                    <span className="text-slate-400 font-normal">• {tutor.experience}</span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="mt-4">
-                <div className="flex items-center gap-1.5 text-xs text-slate-600 font-medium">
-                  <GraduationCap className="w-4 h-4 text-blue-600 shrink-0" />
-                  <span className="line-clamp-1">{tutor.qualification}</span>
-                </div>
-                
-                <div className="flex flex-wrap gap-1.5 mt-3">
-                  {tutor.subjects.map((s, idx) => (
-                    <span key={idx} className="px-2.5 py-0.5 bg-blue-50 text-blue-700 rounded-lg text-xs font-semibold">
-                      {s}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            <div className="pt-4 border-t border-slate-100 flex items-center justify-between">
-              <div>
-                <span className="text-[10px] uppercase font-bold text-slate-400 block">Học phí</span>
-                <span className="text-base font-bold text-blue-600">{formatCurrency(tutor.hourlyRate)}/h</span>
-              </div>
-              <button
-                onClick={() => setSelectedTutor(tutor)}
-                className="px-4 py-2 bg-slate-900 hover:bg-blue-600 text-white font-bold text-xs rounded-xl transition-colors cursor-pointer shadow-sm"
-              >
-                Chọn Gia Sư
-              </button>
-            </div>
-          </div>
+      {/* Subject Chips */}
+      <div className="flex gap-2 overflow-x-auto pb-1 -mx-1 px-1 scrollbar-hide">
+        {subjects.map(sub => (
+          <button key={sub} onClick={() => setSelectedSubject(sub)}
+            className={`px-4 py-2.5 rounded-xl text-xs font-semibold border whitespace-nowrap cursor-pointer transition-all shrink-0 ${
+              selectedSubject === sub
+                ? 'bg-blue-600 text-white border-blue-600'
+                : 'bg-white text-slate-600 border-slate-200 hover:border-blue-300'
+            }`}>
+            {sub === 'ALL' ? 'Tất cả' : sub}
+          </button>
         ))}
       </div>
 
-      {/* Booking Tutor Modal */}
-      {selectedTutor && (
-        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl max-w-lg w-full p-8 shadow-2xl border border-slate-200 animate-in fade-in zoom-in-95 duration-200">
-            {bookingSuccess ? (
-              <div className="py-12 text-center space-y-4">
-                <div className="w-16 h-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto animate-bounce">
-                  <CheckCircle2 className="w-10 h-10" />
+      {/* Tutor Grid */}
+      {filtered.length === 0 ? (
+        <div className="bg-white rounded-2xl border border-slate-200 p-8 text-center">
+          <GraduationCap className="w-10 h-10 text-slate-300 mx-auto mb-3" />
+          <p className="text-sm font-semibold text-slate-600">Chưa có gia sư phù hợp</p>
+          <p className="text-xs text-slate-400 mt-1">Hãy gửi yêu cầu, trung tâm sẽ tìm GS cho bạn</p>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {filtered.map((t) => (
+            <div key={t.id || t.code}
+              className="bg-white rounded-2xl border border-slate-200 p-5 hover:border-blue-200 hover:shadow-md transition-all cursor-pointer"
+              onClick={() => setSelectedTutor(t)}>
+              <div className="flex items-start gap-4">
+                <div className={`w-14 h-14 rounded-2xl ${t.avatarColor || 'bg-blue-500'} flex items-center justify-center font-bold text-white text-lg shadow-sm shrink-0`}>
+                  {t.avatar}
                 </div>
-                <h3 className="text-2xl font-bold text-slate-800">Đăng Ký Thuê Gia Sư Thành Công!</h3>
-                <p className="text-slate-600 text-sm max-w-sm mx-auto">
-                  Yêu cầu thuê gia sư <b>{selectedTutor.name}</b> đã được gửi tới bộ phận xếp lớp. Gia sư sẽ gọi điện xác nhận trong vòng 15 phút.
-                </p>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2 mb-1">
+                    <h3 className="font-bold text-slate-800 truncate">{t.name}</h3>
+                    {t.verified && <span className="verified-badge">✓ Xác minh</span>}
+                  </div>
+                  <div className="flex items-center gap-2 text-xs text-slate-500 mb-2.5">
+                    <span className="flex items-center gap-0.5 text-amber-500 font-bold">
+                      <Star className="w-3 h-3 fill-current" />{t.rating}
+                    </span>
+                    <span>•</span>
+                    <span>{t.experience}</span>
+                  </div>
+                  <div className="flex flex-wrap gap-1.5 mb-3">
+                    {t.subjects.slice(0, 4).map((sub, i) => (
+                      <span key={i} className="px-2.5 py-1 bg-blue-50 text-blue-700 rounded-lg text-[11px] font-semibold">{sub}</span>
+                    ))}
+                  </div>
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="text-slate-500 truncate max-w-[60%]">{t.qualification}</span>
+                    <span className="font-bold text-blue-600 shrink-0">{fmt(t.hourlyRate)}đ/h</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* ===== BOOKING BOTTOM SHEET ===== */}
+      {selectedTutor && (
+        <div className="fixed inset-0 z-50 modal-backdrop" onClick={() => !bookingSuccess && setSelectedTutor(null)}>
+          <div className="bottom-sheet bg-white p-6 shadow-2xl max-w-lg mx-auto" onClick={(e) => e.stopPropagation()}>
+            {/* Handle */}
+            <div className="w-10 h-1 bg-slate-300 rounded-full mx-auto mb-4" />
+
+            {bookingSuccess ? (
+              <div className="text-center py-4 animate-scale-in">
+                <CheckCircle2 className="w-12 h-12 text-emerald-500 mx-auto mb-3" />
+                <p className="font-bold text-lg text-slate-800">Đã gửi yêu cầu!</p>
+                <p className="text-sm text-slate-500 mt-1">Trung tâm sẽ liên hệ xác nhận sớm nhất.</p>
               </div>
             ) : (
               <>
-                <div className="flex items-center justify-between pb-4 border-b border-slate-100 mb-6">
+                {/* Tutor Info */}
+                <div className="flex items-center gap-3 mb-5">
+                  <div className={`w-12 h-12 rounded-xl ${selectedTutor.avatarColor} flex items-center justify-center font-bold text-white text-lg shrink-0`}>
+                    {selectedTutor.avatar}
+                  </div>
                   <div>
-                    <h3 className="text-xl font-bold text-slate-800">Đặt Lịch Thuê Gia Sư</h3>
-                    <p className="text-xs text-slate-500 mt-0.5">Gia sư: <b className="text-blue-600">{selectedTutor.name}</b> ({selectedTutor.code})</p>
+                    <h3 className="font-bold text-slate-800">{selectedTutor.name}</h3>
+                    <p className="text-xs text-slate-500">{selectedTutor.subjects.join(' • ')} • {fmt(selectedTutor.hourlyRate)}đ/h</p>
                   </div>
-                  <div className="text-right">
-                    <span className="text-xs text-slate-400 block">Học phí</span>
-                    <span className="font-bold text-blue-600">{formatCurrency(selectedTutor.hourlyRate)}/h</span>
-                  </div>
+                  <button onClick={() => setSelectedTutor(null)}
+                    className="ml-auto p-2 hover:bg-slate-100 rounded-xl cursor-pointer">
+                    <X className="w-5 h-5 text-slate-400" />
+                  </button>
                 </div>
 
-                <form onSubmit={handleBookSubmit} className="space-y-4 text-sm">
+                <form onSubmit={handleBook} className="space-y-3">
                   <div>
-                    <label className="block text-xs font-bold uppercase text-slate-600 mb-1">Họ tên Phụ Huynh / Học Sinh</label>
-                    <input
-                      type="text"
-                      required
-                      value={studentName}
-                      onChange={(e) => setStudentName(e.target.value)}
-                      placeholder="VD: Anh Hoàng Long hoặc em Gia Bảo"
-                      className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:bg-white focus:border-blue-500"
-                    />
+                    <label className="block text-xs font-bold text-slate-600 mb-1.5">Họ tên phụ huynh *</label>
+                    <input type="text" required value={studentName} onChange={(e) => setStudentName(e.target.value)}
+                      placeholder="VD: Chị Lan"
+                      className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-blue-500" />
                   </div>
-
                   <div>
-                    <label className="block text-xs font-bold uppercase text-slate-600 mb-1">Số điện thoại liên hệ nhanh</label>
-                    <input
-                      type="text"
-                      required
-                      value={phone}
-                      onChange={(e) => setPhone(e.target.value)}
-                      placeholder="VD: 0909123456"
-                      className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:bg-white focus:border-blue-500 font-mono"
-                    />
+                    <label className="block text-xs font-bold text-slate-600 mb-1.5">Số điện thoại *</label>
+                    <input type="tel" required value={phone} onChange={(e) => setPhone(e.target.value)}
+                      placeholder="0912345678"
+                      className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-blue-500" />
                   </div>
-
                   <div>
-                    <label className="block text-xs font-bold uppercase text-slate-600 mb-1">Thời gian học & Yêu cầu chi tiết</label>
-                    <textarea
-                      rows={3}
-                      value={notes}
-                      onChange={(e) => setNotes(e.target.value)}
-                      placeholder="VD: Muốn học tối thứ 2, 4, 6 từ 19h30, cần gia sư kèm sát bài trên lớp..."
-                      className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:bg-white focus:border-blue-500 text-sm"
-                    ></textarea>
+                    <label className="block text-xs font-bold text-slate-600 mb-1.5">Ghi chú</label>
+                    <textarea rows={2} value={notes} onChange={(e) => setNotes(e.target.value)}
+                      placeholder="Lớp, khu vực, yêu cầu..."
+                      className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-blue-500 resize-none" />
                   </div>
-
-                  <div className="bg-blue-50/60 p-4 rounded-xl text-xs text-blue-800 space-y-1">
-                    <div className="font-bold flex items-center gap-1">
-                      <ShieldCheck className="w-4 h-4 text-blue-600" />
-                      <span>Cam Kết Học Thử 2 Buổi Miễn Phí</span>
-                    </div>
-                    <p className="text-blue-600">Nếu sau 2 buổi không hài lòng về phương pháp truyền đạt, phụ huynh được đổi gia sư khác hoàn toàn miễn phí.</p>
-                  </div>
-
-                  <div className="flex justify-end gap-3 pt-4 border-t border-slate-100">
-                    <button
-                      type="button"
-                      onClick={() => setSelectedTutor(null)}
-                      className="px-5 py-2.5 border border-slate-200 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-100"
-                    >
-                      Hủy bỏ
-                    </button>
-                    <button
-                      type="submit"
-                      className="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold shadow-md shadow-blue-600/20 cursor-pointer"
-                    >
-                      Xác nhận thuê gia sư
-                    </button>
-                  </div>
+                  <button type="submit"
+                    className="w-full py-3.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm rounded-xl cursor-pointer flex items-center justify-center gap-2">
+                    <Send className="w-4 h-4" /><span>Đặt lịch thuê gia sư</span>
+                  </button>
                 </form>
               </>
             )}
@@ -279,92 +200,41 @@ export const FindTutorPublic: React.FC<FindTutorPublicProps> = ({ tutors, onBook
         </div>
       )}
 
-      {/* Post Quick Request Modal */}
+      {/* ===== REQUEST MODAL ===== */}
       {showRequestModal && (
-        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl max-w-lg w-full p-8 shadow-2xl border border-slate-200 animate-in fade-in zoom-in-95 duration-200">
-            <h3 className="text-xl font-bold text-slate-800 mb-2 flex items-center gap-2">
-              <Sparkles className="w-5 h-5 text-amber-500" />
-              <span>Đăng Yêu Cầu Tìm Gia Sư Kèm Riêng</span>
-            </h3>
-            <p className="text-xs text-slate-500 mb-6">Đăng yêu cầu lớp học hoàn toàn miễn phí. Hàng trăm gia sư phù hợp sẽ liên hệ bạn ngay.</p>
-            
-            <form onSubmit={handleQuickRequest} className="space-y-4 text-sm">
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-xs font-bold uppercase text-slate-600 mb-1">Môn học</label>
-                  <input
-                    type="text"
-                    required
-                    value={reqSubject}
-                    onChange={(e) => setReqSubject(e.target.value)}
-                    placeholder="VD: Toán, Tiếng Anh"
-                    className="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:bg-white focus:border-blue-500 text-sm"
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs font-bold uppercase text-slate-600 mb-1">Lớp / Khối</label>
-                  <input
-                    type="text"
-                    value={reqGrade}
-                    onChange={(e) => setReqGrade(e.target.value)}
-                    placeholder="VD: Lớp 11"
-                    className="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:bg-white focus:border-blue-500 text-sm"
-                  />
-                </div>
-              </div>
+        <div className="fixed inset-0 z-50 modal-backdrop flex items-end sm:items-center justify-center" onClick={() => !requestSuccess && setShowRequestModal(false)}>
+          <div className="bottom-sheet sm:rounded-2xl bg-white p-6 shadow-2xl max-w-md w-full sm:mb-0" onClick={(e) => e.stopPropagation()}>
+            <div className="w-10 h-1 bg-slate-300 rounded-full mx-auto mb-4 sm:hidden" />
 
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-xs font-bold uppercase text-slate-600 mb-1">Quận / Huyện</label>
-                  <input
-                    type="text"
-                    required
-                    value={reqLocation}
-                    onChange={(e) => setReqLocation(e.target.value)}
-                    placeholder="VD: Cầu Giấy, Hà Nội"
-                    className="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:bg-white focus:border-blue-500 text-sm"
-                  />
+            {requestSuccess ? (
+              <div className="text-center py-6 animate-scale-in">
+                <CheckCircle2 className="w-12 h-12 text-emerald-500 mx-auto mb-3" />
+                <p className="font-bold text-lg text-slate-800">Đã gửi yêu cầu!</p>
+                <p className="text-sm text-slate-500 mt-1">Trung tâm sẽ tìm gia sư phù hợp cho bạn.</p>
+              </div>
+            ) : (
+              <>
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="font-bold text-slate-800">Gửi yêu cầu tìm gia sư</h3>
+                  <button onClick={() => setShowRequestModal(false)} className="p-2 hover:bg-slate-100 rounded-xl cursor-pointer">
+                    <X className="w-5 h-5 text-slate-400" />
+                  </button>
                 </div>
-                <div>
-                  <label className="block text-xs font-bold uppercase text-slate-600 mb-1">Học phí dự kiến / Buổi</label>
-                  <input
-                    type="number"
-                    required
-                    value={reqFee}
-                    onChange={(e) => setReqFee(Number(e.target.value))}
-                    className="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:bg-white focus:border-blue-500 text-sm font-bold text-blue-600"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-xs font-bold uppercase text-slate-600 mb-1">Yêu cầu thêm về gia sư</label>
-                <textarea
-                  rows={2}
-                  value={reqNotes}
-                  onChange={(e) => setReqNotes(e.target.value)}
-                  placeholder="VD: Gia sư nữ kinh nghiệm ôn thi đại học, nhẹ nhàng kiên nhẫn..."
-                  className="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:bg-white focus:border-blue-500 text-sm"
-                ></textarea>
-              </div>
-
-              <div className="flex justify-end gap-3 pt-4 border-t border-slate-100">
-                <button
-                  type="button"
-                  onClick={() => setShowRequestModal(false)}
-                  className="px-4 py-2 border border-slate-200 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-100"
-                >
-                  Hủy
-                </button>
-                <button
-                  type="submit"
-                  className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold shadow-md shadow-blue-600/20 cursor-pointer"
-                >
-                  Đăng Yêu Cầu
-                </button>
-              </div>
-            </form>
+                <form onSubmit={handleRequest} className="space-y-3">
+                  <input type="text" required value={reqSubject} onChange={(e) => setReqSubject(e.target.value)}
+                    placeholder="Môn học cần tìm GS *" className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-blue-500" />
+                  <input type="text" value={reqGrade} onChange={(e) => setReqGrade(e.target.value)}
+                    placeholder="Lớp / Trình độ" className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-blue-500" />
+                  <input type="text" required value={reqLocation} onChange={(e) => setReqLocation(e.target.value)}
+                    placeholder="Khu vực (VD: Cầu Giấy) *" className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-blue-500" />
+                  <textarea rows={2} value={reqNotes} onChange={(e) => setReqNotes(e.target.value)}
+                    placeholder="Yêu cầu thêm..." className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-blue-500 resize-none" />
+                  <button type="submit" className="w-full py-3.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm rounded-xl cursor-pointer">
+                    Gửi yêu cầu
+                  </button>
+                </form>
+              </>
+            )}
           </div>
         </div>
       )}

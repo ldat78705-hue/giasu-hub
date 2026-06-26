@@ -21,6 +21,8 @@ const DEFAULT_SETTINGS: Omit<AdminSettings, 'id'> = {
   centerEmail: '',
   centerAddress: 'Hà Nội',
   geminiApiKey: '',
+  zaloNumber: '',
+  facebookUrl: '',
   updatedAt: Date.now(),
 };
 

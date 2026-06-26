@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { AdminSettings } from '../types';
-import { Settings, Key, Building2, Phone, Mail, MapPin, Save, CheckCircle2, AlertCircle, Eye, EyeOff, Sparkles, RefreshCw, Trash2, Shield } from 'lucide-react';
+import { Settings, Key, Building2, Phone, Mail, MapPin, Save, CheckCircle2, AlertCircle, Eye, EyeOff, Sparkles, RefreshCw, Trash2, Shield, MessageCircle, Globe } from 'lucide-react';
 
 interface SettingsTabProps {
   settings: AdminSettings;
@@ -15,6 +15,8 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({ settings, onSaveSettin
   const [centerAddress, setCenterAddress] = useState(settings.centerAddress || '');
   const [apiKey, setApiKey] = useState(settings.geminiApiKey || '');
   const [showApiKey, setShowApiKey] = useState(false);
+  const [zaloNumber, setZaloNumber] = useState(settings.zaloNumber || '');
+  const [facebookUrl, setFacebookUrl] = useState(settings.facebookUrl || '');
   const [isSaving, setIsSaving] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
   const [isTesting, setIsTesting] = useState(false);
@@ -26,6 +28,8 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({ settings, onSaveSettin
     setCenterEmail(settings.centerEmail || '');
     setCenterAddress(settings.centerAddress || '');
     setApiKey(settings.geminiApiKey || '');
+    setZaloNumber(settings.zaloNumber || '');
+    setFacebookUrl(settings.facebookUrl || '');
   }, [settings]);
 
   const handleSaveAll = async () => {
@@ -37,6 +41,8 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({ settings, onSaveSettin
         centerEmail,
         centerAddress,
         geminiApiKey: apiKey,
+        zaloNumber,
+        facebookUrl,
         updatedAt: Date.now(),
       });
       setSaveSuccess(true);
@@ -248,6 +254,34 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({ settings, onSaveSettin
                 placeholder="Hà Nội"
                 className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:bg-white focus:border-blue-500 text-sm"
               />
+            </div>
+          </div>
+
+          {/* Zalo & Social */}
+          <div className="space-y-4 pt-4 border-t border-slate-100">
+            <h4 className="font-bold text-xs uppercase text-slate-600 flex items-center gap-1.5">
+              <MessageCircle className="w-4 h-4 text-blue-500" /><span>Zalo & Mạng xã hội</span>
+            </h4>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-xs font-bold uppercase text-slate-600 mb-1.5">Số Zalo</label>
+                <div className="relative">
+                  <MessageCircle className="w-4 h-4 absolute left-3.5 top-3.5 text-slate-400" />
+                  <input type="text" value={zaloNumber} onChange={(e) => setZaloNumber(e.target.value)}
+                    placeholder="0912345678"
+                    className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:bg-white focus:border-blue-500 text-sm" />
+                </div>
+                <p className="text-[10px] text-slate-400 mt-1">Hiển thị nút Zalo trên trang công khai</p>
+              </div>
+              <div>
+                <label className="block text-xs font-bold uppercase text-slate-600 mb-1.5">Facebook URL</label>
+                <div className="relative">
+                  <Globe className="w-4 h-4 absolute left-3.5 top-3.5 text-slate-400" />
+                  <input type="text" value={facebookUrl} onChange={(e) => setFacebookUrl(e.target.value)}
+                    placeholder="https://facebook.com/..."
+                    className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:bg-white focus:border-blue-500 text-sm" />
+                </div>
+              </div>
             </div>
           </div>
 
