@@ -154,7 +154,7 @@ input, textarea, select {
   animation: float 3s ease-in-out infinite;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 1024px) {
   .floating-cta { display: none; }
   .mobile-bottom-nav { display: none; }
 }

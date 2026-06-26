@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { ClassItem, TutorItem, ActiveTab } from '../types';
-import { Star, MapPin, GraduationCap, BookOpen, ArrowRight, ShieldCheck, Clock, Award, CheckCircle2, Phone, UserPlus, Sparkles, ChevronRight, Calendar, Users } from 'lucide-react';
+import { Star, MapPin, GraduationCap, BookOpen, ShieldCheck, Clock, Award, CheckCircle2, Phone, UserPlus, Sparkles, ChevronRight, Search, Users, Heart, ArrowRight, Calculator, Beaker, BookA, Monitor, PenTool, Globe2 } from 'lucide-react';
 
 interface HomePublicProps {
   classes: ClassItem[];
@@ -21,69 +21,146 @@ export const HomePublic: React.FC<HomePublicProps> = ({
   const fmt = (v: number) => new Intl.NumberFormat('vi-VN').format(v);
 
   return (
-    <div className="space-y-0">
+    <div>
 
       {/* ===== HERO ===== */}
-      <section className="bg-gradient-to-br from-slate-900 via-blue-950 to-indigo-950 text-white relative overflow-hidden">
+      <section className="relative bg-gradient-to-br from-blue-50 via-white to-indigo-50 overflow-hidden">
         <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute -top-20 -right-20 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl" />
-          <div className="absolute -bottom-20 -left-20 w-80 h-80 bg-indigo-500/10 rounded-full blur-3xl" />
+          <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-blue-100/40 rounded-full blur-3xl -translate-y-1/2 translate-x-1/4" />
+          <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-indigo-100/30 rounded-full blur-3xl translate-y-1/2 -translate-x-1/4" />
         </div>
-        <div className="max-w-6xl mx-auto px-5 sm:px-8 py-14 sm:py-20 lg:py-24 relative z-10">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
-            {/* Left */}
-            <div>
-              <div className="inline-flex items-center gap-2 bg-white/10 border border-white/15 px-3.5 py-1.5 rounded-full text-[11px] font-bold mb-6">
-                <span className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse" />
-                <span>Trung tâm gia sư uy tín tại Hà Nội</span>
+        <div className="max-w-6xl mx-auto px-5 sm:px-8 py-12 sm:py-16 lg:py-20 relative z-10">
+          <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 lg:gap-12 items-center">
+            {/* Left — 3 cols */}
+            <div className="lg:col-span-3">
+              <div className="inline-flex items-center gap-2 bg-blue-100 text-blue-700 px-3.5 py-1.5 rounded-full text-[11px] font-bold mb-5 border border-blue-200/50">
+                <span className="w-1.5 h-1.5 bg-blue-600 rounded-full animate-pulse" />
+                TRUNG TÂM GIA SƯ UY TÍN HÀNG ĐẦU HÀ NỘI
               </div>
-              <h1 className="text-3xl sm:text-4xl lg:text-[2.75rem] font-black leading-[1.12] mb-5">
-                Tìm Gia Sư Giỏi<br />
-                <span className="bg-gradient-to-r from-blue-400 to-cyan-300 bg-clip-text text-transparent">Cho Con Bạn</span>
+              <h1 className="text-3xl sm:text-4xl lg:text-[2.75rem] font-black text-slate-900 leading-[1.12] mb-4">
+                Đồng hành cùng con<br />
+                vững bước <span className="text-blue-600">tương lai</span>
               </h1>
-              <p className="text-slate-300 text-sm sm:text-[15px] leading-relaxed mb-8 max-w-lg">
-                Đội ngũ gia sư đã được xác minh hồ sơ. Dạy kèm tại nhà & online toàn Hà Nội. Cam kết tiến bộ hoặc đổi giáo viên miễn phí.
+              <p className="text-slate-600 text-sm sm:text-[15px] leading-relaxed mb-7 max-w-lg">
+                Chúng tôi cung cấp đội ngũ gia sư chất lượng, tận tâm và phương pháp giảng dạy hiệu quả, giúp học viên tiến bộ mỗi ngày.
               </p>
-              <div className="flex flex-col sm:flex-row gap-3 mb-8">
+              <div className="flex flex-wrap gap-3 mb-8">
                 <button onClick={() => onNavigate('parent-register')}
-                  className="px-7 py-3.5 bg-blue-500 hover:bg-blue-400 text-white font-bold text-sm rounded-xl shadow-lg shadow-blue-500/25 transition-all cursor-pointer flex items-center justify-center gap-2">
-                  <UserPlus className="w-4 h-4" /><span>Tìm gia sư miễn phí</span>
+                  className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm rounded-xl shadow-lg shadow-blue-600/20 transition-all cursor-pointer flex items-center gap-2">
+                  <UserPlus className="w-4 h-4" />Tìm gia sư ngay
                 </button>
                 {zaloNumber && (
                   <a href={`https://zalo.me/${zaloNumber}`} target="_blank" rel="noopener noreferrer"
-                    className="px-7 py-3.5 bg-white/10 border border-white/20 hover:bg-white/15 text-white font-bold text-sm rounded-xl transition-all flex items-center justify-center gap-2">
-                    <Phone className="w-4 h-4" /><span>Zalo tư vấn</span>
+                    className="px-6 py-3 bg-white hover:bg-slate-50 text-slate-700 font-bold text-sm rounded-xl border border-slate-200 transition-all flex items-center gap-2 shadow-sm">
+                    <Phone className="w-4 h-4 text-blue-600" />Tư vấn miễn phí
+                  </a>
+                )}
+                <button onClick={() => onNavigate('register-tutor')}
+                  className="px-6 py-3 bg-white hover:bg-slate-50 text-slate-700 font-bold text-sm rounded-xl border border-slate-200 transition-all cursor-pointer flex items-center gap-2 shadow-sm">
+                  <GraduationCap className="w-4 h-4 text-blue-600" />Gia sư đăng ký ngay
+                </button>
+              </div>
+              {/* Trust badges */}
+              <div className="flex flex-wrap gap-x-6 gap-y-2 text-xs text-slate-500">
+                <span className="flex items-center gap-1.5"><ShieldCheck className="w-3.5 h-3.5 text-blue-600" />Gia sư chất lượng</span>
+                <span className="flex items-center gap-1.5"><Heart className="w-3.5 h-3.5 text-blue-600" />Dạy kèm tận tâm</span>
+                <span className="flex items-center gap-1.5"><CheckCircle2 className="w-3.5 h-3.5 text-blue-600" />Chi phí hợp lý</span>
+                <span className="flex items-center gap-1.5"><Clock className="w-3.5 h-3.5 text-blue-600" />Hỗ trợ 24/7</span>
+              </div>
+            </div>
+            {/* Right — 2 cols: Floating card "Bạn là gia sư?" */}
+            <div className="lg:col-span-2 hidden lg:flex flex-col items-end gap-4">
+              <div className="bg-white rounded-2xl border border-slate-200 shadow-xl shadow-slate-200/50 p-6 w-full max-w-xs">
+                <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mb-4">
+                  <GraduationCap className="w-6 h-6 text-blue-600" />
+                </div>
+                <h3 className="font-bold text-slate-800 text-lg mb-1">Bạn là gia sư?</h3>
+                <p className="text-sm text-slate-500 mb-4 leading-relaxed">
+                  Đăng ký để kết nối với học viên phù hợp và gia tăng thu nhập.
+                </p>
+                <button onClick={() => onNavigate('register-tutor')}
+                  className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm rounded-xl cursor-pointer flex items-center justify-center gap-2 transition-colors">
+                  Đăng ký ngay <ArrowRight className="w-4 h-4" />
+                </button>
+              </div>
+              <div className="bg-white rounded-2xl border border-slate-200 shadow-lg shadow-slate-200/30 p-5 w-full max-w-xs">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="w-10 h-10 bg-emerald-100 rounded-xl flex items-center justify-center">
+                    <Phone className="w-5 h-5 text-emerald-600" />
+                  </div>
+                  <div>
+                    <div className="font-bold text-slate-800 text-sm">Tư vấn nhanh</div>
+                    <div className="text-xs text-slate-500">Liên hệ ngay qua Zalo</div>
+                  </div>
+                </div>
+                {zaloNumber && (
+                  <a href={`https://zalo.me/${zaloNumber}`} target="_blank" rel="noopener noreferrer"
+                    className="w-full py-2.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-bold text-sm rounded-xl border border-emerald-200 cursor-pointer flex items-center justify-center gap-2 transition-colors">
+                    Chat Zalo: {zaloNumber}
                   </a>
                 )}
               </div>
-            </div>
-            {/* Right — Stats */}
-            <div className="hidden lg:grid grid-cols-2 gap-4">
-              {[
-                { icon: <GraduationCap className="w-5 h-5" />, value: `${tutors.length}+`, label: 'Gia sư đã xác minh', color: 'from-blue-500/20 to-blue-600/10 border-blue-400/20' },
-                { icon: <BookOpen className="w-5 h-5" />, value: `${pendingClasses.length}`, label: 'Lớp đang tuyển', color: 'from-emerald-500/20 to-emerald-600/10 border-emerald-400/20' },
-                { icon: <MapPin className="w-5 h-5" />, value: 'Hà Nội', label: 'Tại nhà & Online', color: 'from-amber-500/20 to-amber-600/10 border-amber-400/20' },
-                { icon: <ShieldCheck className="w-5 h-5" />, value: '100%', label: 'Hồ sơ xác minh', color: 'from-purple-500/20 to-purple-600/10 border-purple-400/20' },
-              ].map((s, i) => (
-                <div key={i} className={`bg-gradient-to-br ${s.color} border rounded-2xl p-5 backdrop-blur-sm`}>
-                  <div className="text-white/60 mb-2">{s.icon}</div>
-                  <div className="text-2xl font-black text-white mb-0.5">{s.value}</div>
-                  <div className="text-xs text-slate-400">{s.label}</div>
-                </div>
-              ))}
-            </div>
-            {/* Mobile stats */}
-            <div className="flex items-center gap-6 text-xs text-slate-400 lg:hidden">
-              <div className="flex items-center gap-1.5"><GraduationCap className="w-4 h-4 text-blue-400" /><span><b className="text-white">{tutors.length}+</b> gia sư</span></div>
-              <div className="flex items-center gap-1.5"><BookOpen className="w-4 h-4 text-emerald-400" /><span><b className="text-white">{pendingClasses.length}</b> lớp tuyển</span></div>
-              <div className="flex items-center gap-1.5"><MapPin className="w-4 h-4 text-amber-400" /><span>Hà Nội</span></div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ===== QUY TRÌNH ===== */}
+      {/* ===== STATS BAR ===== */}
+      <section className="bg-white border-y border-slate-100">
+        <div className="max-w-6xl mx-auto px-5 sm:px-8 py-6 sm:py-8">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 lg:gap-8">
+            {[
+              { icon: <Users className="w-5 h-5 text-blue-600" />, value: `${Math.max(tutors.length, 50)}+`, label: 'Học viên đã & đang học' },
+              { icon: <GraduationCap className="w-5 h-5 text-blue-600" />, value: `${tutors.length}+`, label: 'Gia sư chất lượng' },
+              { icon: <CheckCircle2 className="w-5 h-5 text-blue-600" />, value: '98%', label: 'Học viên hài lòng' },
+              { icon: <Star className="w-5 h-5 text-blue-600" />, value: '5+', label: 'Năm kinh nghiệm' },
+            ].map((s, i) => (
+              <div key={i} className="flex items-center gap-3">
+                <div className="w-11 h-11 bg-blue-50 rounded-xl flex items-center justify-center shrink-0">{s.icon}</div>
+                <div>
+                  <div className="text-xl sm:text-2xl font-black text-blue-600">{s.value}</div>
+                  <div className="text-[11px] sm:text-xs text-slate-500 leading-tight">{s.label}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ===== DANH MỤC DỊCH VỤ ===== */}
       <section className="bg-white border-b border-slate-100">
+        <div className="max-w-6xl mx-auto px-5 sm:px-8 py-12 sm:py-16">
+          <div className="text-center mb-10">
+            <h2 className="text-xl sm:text-2xl font-bold text-slate-800 uppercase tracking-wide mb-1.5">Danh mục dịch vụ</h2>
+            <p className="text-sm text-slate-500">Gia sư dạy kèm tất cả các môn từ Tiểu học đến Đại học</p>
+          </div>
+          <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-7 gap-3 sm:gap-4">
+            {[
+              { icon: <Calculator className="w-6 h-6" />, name: 'Toán', desc: 'Tiểu học - ĐH' },
+              { icon: <Beaker className="w-6 h-6" />, name: 'Lý', desc: 'THCS - THPT' },
+              { icon: <Sparkles className="w-6 h-6" />, name: 'Hóa', desc: 'THCS - THPT' },
+              { icon: <BookA className="w-6 h-6" />, name: 'Văn', desc: 'Tiểu học - THPT' },
+              { icon: <Globe2 className="w-6 h-6" />, name: 'Tiếng Anh', desc: 'Mọi trình độ' },
+              { icon: <Monitor className="w-6 h-6" />, name: 'Tin học', desc: 'Mọi trình độ' },
+              { icon: <PenTool className="w-6 h-6" />, name: 'IELTS', desc: 'Mọi trình độ' },
+            ].map((item, i) => (
+              <button key={i} onClick={() => onNavigate('find-tutors')}
+                className="bg-slate-50 hover:bg-blue-50 hover:border-blue-200 border border-slate-200 rounded-2xl p-4 sm:p-5 flex flex-col items-center gap-2 transition-all cursor-pointer group">
+                <div className="w-11 h-11 bg-white group-hover:bg-blue-100 border border-slate-200 group-hover:border-blue-200 rounded-xl flex items-center justify-center text-slate-500 group-hover:text-blue-600 transition-all">
+                  {item.icon}
+                </div>
+                <div className="text-center">
+                  <div className="text-sm font-bold text-slate-800">{item.name}</div>
+                  <div className="text-[10px] text-slate-400 mt-0.5">{item.desc}</div>
+                </div>
+              </button>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ===== QUY TRÌNH ===== */}
+      <section className="bg-slate-50 border-b border-slate-100">
         <div className="max-w-6xl mx-auto px-5 sm:px-8 py-12 sm:py-16">
           <div className="text-center mb-10">
             <h2 className="text-xl sm:text-2xl font-bold text-slate-800 mb-1.5">Quy trình đơn giản</h2>
@@ -91,11 +168,11 @@ export const HomePublic: React.FC<HomePublicProps> = ({
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
             {[
-              { n: '01', icon: <UserPlus className="w-5 h-5" />, color: 'bg-blue-500', title: 'Đăng ký nhu cầu', desc: 'Phụ huynh điền thông tin yêu cầu về môn học, lớp, lịch học, khu vực' },
-              { n: '02', icon: <Sparkles className="w-5 h-5" />, color: 'bg-purple-500', title: 'Tư vấn & ghép GS', desc: 'Trung tâm tìm gia sư phù hợp nhất, tư vấn qua Zalo/điện thoại' },
-              { n: '03', icon: <CheckCircle2 className="w-5 h-5" />, color: 'bg-emerald-500', title: 'Học thử & quyết định', desc: 'Học thử miễn phí 1-2 buổi, hài lòng mới cam kết lâu dài' },
+              { n: '01', icon: <UserPlus className="w-5 h-5" />, color: 'bg-blue-600', title: 'Đăng ký nhu cầu', desc: 'Phụ huynh điền thông tin yêu cầu về môn học, lớp, lịch học, khu vực' },
+              { n: '02', icon: <Search className="w-5 h-5" />, color: 'bg-purple-600', title: 'Tư vấn & ghép GS', desc: 'Trung tâm tìm gia sư phù hợp nhất, tư vấn qua Zalo/điện thoại' },
+              { n: '03', icon: <CheckCircle2 className="w-5 h-5" />, color: 'bg-emerald-600', title: 'Học thử & quyết định', desc: 'Học thử miễn phí 1-2 buổi, hài lòng mới cam kết lâu dài' },
             ].map((item, i) => (
-              <div key={i} className="relative bg-slate-50 hover:bg-white rounded-2xl p-6 lg:p-8 border border-transparent hover:border-slate-200 hover:shadow-lg hover:shadow-slate-100 transition-all group">
+              <div key={i} className="bg-white rounded-2xl p-6 lg:p-8 border border-slate-200 hover:shadow-lg hover:shadow-slate-100 transition-all group">
                 <div className={`w-11 h-11 ${item.color} rounded-xl flex items-center justify-center text-white mb-4 shadow-md group-hover:scale-105 transition-transform`}>
                   {item.icon}
                 </div>
@@ -109,22 +186,22 @@ export const HomePublic: React.FC<HomePublicProps> = ({
       </section>
 
       {/* ===== VÌ SAO CHỌN ===== */}
-      <section className="bg-slate-50 border-b border-slate-100">
+      <section className="bg-white border-b border-slate-100">
         <div className="max-w-6xl mx-auto px-5 sm:px-8 py-12 sm:py-16">
           <div className="text-center mb-10">
-            <h2 className="text-xl sm:text-2xl font-bold text-slate-800 mb-1.5">Vì sao chọn Gia Sư Thành Đạt?</h2>
+            <h2 className="text-xl sm:text-2xl font-bold text-slate-800 mb-1.5">Vì sao chọn chúng tôi?</h2>
             <p className="text-sm text-slate-500">Dịch vụ chất lượng, uy tín hàng đầu</p>
           </div>
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-5">
             {[
-              { icon: <ShieldCheck className="w-5 h-5" />, bg: 'bg-emerald-100 text-emerald-600', title: 'Xác minh hồ sơ', desc: 'CCCD & bằng cấp được kiểm tra kỹ lưỡng' },
-              { icon: <Award className="w-5 h-5" />, bg: 'bg-blue-100 text-blue-600', title: 'Cam kết tiến bộ', desc: 'Không hài lòng — đổi GS miễn phí' },
-              { icon: <Clock className="w-5 h-5" />, bg: 'bg-purple-100 text-purple-600', title: 'Phản hồi nhanh', desc: 'Ghép GS phù hợp trong vòng 24h' },
-              { icon: <MapPin className="w-5 h-5" />, bg: 'bg-amber-100 text-amber-600', title: 'Toàn bộ Hà Nội', desc: 'Dạy tại nhà hoặc online linh hoạt' },
+              { icon: <ShieldCheck className="w-6 h-6" />, bg: 'bg-blue-50 text-blue-600 border-blue-100', title: 'Gia sư chất lượng cao', desc: 'Đội ngũ gia sư giỏi chuyên môn, kinh nghiệm và tận tâm' },
+              { icon: <Heart className="w-6 h-6" />, bg: 'bg-emerald-50 text-emerald-600 border-emerald-100', title: 'Dạy kèm tận tâm', desc: 'Phương pháp hiệu quả, kiên nhẫn với từng học viên' },
+              { icon: <Award className="w-6 h-6" />, bg: 'bg-purple-50 text-purple-600 border-purple-100', title: 'Chi phí hợp lý', desc: 'Minh bạch, rõ ràng, không phát sinh thêm chi phí' },
+              { icon: <Clock className="w-6 h-6" />, bg: 'bg-amber-50 text-amber-600 border-amber-100', title: 'Hỗ trợ 24/7', desc: 'Luôn đồng hành cùng bạn, hỗ trợ mọi lúc' },
             ].map((item, i) => (
-              <div key={i} className="bg-white rounded-2xl border border-slate-200 p-5 lg:p-6 hover:shadow-md hover:border-slate-300 transition-all">
-                <div className={`w-10 h-10 rounded-xl ${item.bg} flex items-center justify-center mb-3`}>{item.icon}</div>
-                <h3 className="font-bold text-slate-800 text-sm mb-1">{item.title}</h3>
+              <div key={i} className={`rounded-2xl border p-5 lg:p-6 hover:shadow-md transition-all ${item.bg.split(' ')[2]}`}>
+                <div className={`w-12 h-12 rounded-xl ${item.bg} flex items-center justify-center mb-4 border`}>{item.icon}</div>
+                <h3 className="font-bold text-slate-800 text-sm mb-1.5">{item.title}</h3>
                 <p className="text-xs text-slate-500 leading-relaxed">{item.desc}</p>
               </div>
             ))}
@@ -134,7 +211,7 @@ export const HomePublic: React.FC<HomePublicProps> = ({
 
       {/* ===== GIA SƯ NỔI BẬT ===== */}
       {verifiedTutors.length > 0 && (
-        <section className="bg-white border-b border-slate-100">
+        <section className="bg-slate-50 border-b border-slate-100">
           <div className="max-w-6xl mx-auto px-5 sm:px-8 py-12 sm:py-16">
             <div className="flex items-center justify-between mb-8">
               <div>
@@ -142,7 +219,7 @@ export const HomePublic: React.FC<HomePublicProps> = ({
                 <p className="text-sm text-slate-500 mt-0.5">Đã xác minh hồ sơ bởi trung tâm</p>
               </div>
               <button onClick={() => onNavigate('find-tutors')}
-                className="hidden sm:flex px-4 py-2.5 bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-700 text-xs font-bold rounded-xl cursor-pointer items-center gap-1.5 transition-colors">
+                className="hidden sm:flex px-4 py-2.5 bg-white hover:bg-blue-50 border border-slate-200 text-slate-700 text-xs font-bold rounded-xl cursor-pointer items-center gap-1.5 transition-colors shadow-sm">
                 Xem tất cả<ChevronRight className="w-3.5 h-3.5" />
               </button>
             </div>
@@ -168,8 +245,8 @@ export const HomePublic: React.FC<HomePublicProps> = ({
                         <span className="truncate">{t.experience || t.qualification}</span>
                       </div>
                       <div className="flex flex-wrap gap-1.5 mb-2.5">
-                        {t.subjects.slice(0, 3).map((sub, i) => (
-                          <span key={i} className="px-2 py-0.5 bg-blue-50 text-blue-700 rounded-md text-[10px] font-semibold">{sub}</span>
+                        {t.subjects.slice(0, 3).map((sub, si) => (
+                          <span key={si} className="px-2 py-0.5 bg-blue-50 text-blue-700 rounded-md text-[10px] font-semibold">{sub}</span>
                         ))}
                       </div>
                       <div className="flex items-center justify-between">
@@ -182,7 +259,7 @@ export const HomePublic: React.FC<HomePublicProps> = ({
               ))}
             </div>
             <button onClick={() => onNavigate('find-tutors')}
-              className="sm:hidden mt-4 w-full py-3 bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-700 text-xs font-bold rounded-xl cursor-pointer flex items-center justify-center gap-1.5">
+              className="sm:hidden mt-4 w-full py-3 bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 text-xs font-bold rounded-xl cursor-pointer flex items-center justify-center gap-1.5">
               Xem tất cả gia sư<ChevronRight className="w-3.5 h-3.5" />
             </button>
           </div>
@@ -191,7 +268,7 @@ export const HomePublic: React.FC<HomePublicProps> = ({
 
       {/* ===== LỚP CẦN GIA SƯ ===== */}
       {pendingClasses.length > 0 && (
-        <section className="bg-slate-50 border-b border-slate-100">
+        <section className="bg-white border-b border-slate-100">
           <div className="max-w-6xl mx-auto px-5 sm:px-8 py-12 sm:py-16">
             <div className="flex items-center justify-between mb-8">
               <div>
@@ -199,7 +276,7 @@ export const HomePublic: React.FC<HomePublicProps> = ({
                 <p className="text-sm text-slate-500 mt-0.5">Gia sư nhận lớp ngay — thu nhập cao, lịch linh hoạt</p>
               </div>
               <button onClick={() => onNavigate('register-tutor')}
-                className="hidden sm:flex px-4 py-2.5 bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 text-xs font-bold rounded-xl cursor-pointer items-center gap-1.5 transition-colors">
+                className="hidden sm:flex px-4 py-2.5 bg-white hover:bg-blue-50 border border-slate-200 text-slate-700 text-xs font-bold rounded-xl cursor-pointer items-center gap-1.5 transition-colors shadow-sm">
                 Ứng tuyển<ChevronRight className="w-3.5 h-3.5" />
               </button>
             </div>
@@ -224,7 +301,7 @@ export const HomePublic: React.FC<HomePublicProps> = ({
               ))}
             </div>
             <button onClick={() => onNavigate('register-tutor')}
-              className="sm:hidden mt-4 w-full py-3 bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 text-xs font-bold rounded-xl cursor-pointer flex items-center justify-center gap-1.5">
+              className="sm:hidden mt-4 w-full py-3 bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-700 text-xs font-bold rounded-xl cursor-pointer flex items-center justify-center gap-1.5">
               Xem & ứng tuyển lớp<ChevronRight className="w-3.5 h-3.5" />
             </button>
           </div>
@@ -238,17 +315,17 @@ export const HomePublic: React.FC<HomePublicProps> = ({
             <div>
               <h2 className="text-2xl sm:text-3xl font-bold mb-3">Sẵn sàng tìm gia sư?</h2>
               <p className="text-blue-100 text-sm leading-relaxed max-w-md">
-                Đăng ký hoàn toàn miễn phí. Trung tâm tư vấn và tìm gia sư phù hợp trong vòng 30 phút (giờ hành chính).
+                Đăng ký hoàn toàn miễn phí. Trung tâm tư vấn và tìm gia sư phù hợp trong vòng 30 phút.
               </p>
             </div>
             <div className="flex flex-col sm:flex-row lg:justify-end gap-3">
               <button onClick={() => onNavigate('parent-register')}
                 className="px-8 py-3.5 bg-white text-blue-700 font-bold text-sm rounded-xl shadow-lg cursor-pointer flex items-center justify-center gap-2 hover:shadow-xl hover:bg-blue-50 transition-all">
-                <BookOpen className="w-4 h-4" /><span>Phụ huynh đăng ký</span>
+                <BookOpen className="w-4 h-4" />Phụ huynh đăng ký
               </button>
               <button onClick={() => onNavigate('register-tutor')}
                 className="px-8 py-3.5 bg-white/15 border border-white/25 text-white font-bold text-sm rounded-xl cursor-pointer flex items-center justify-center gap-2 hover:bg-white/20 transition-colors">
-                <GraduationCap className="w-4 h-4" /><span>Gia sư đăng ký</span>
+                <GraduationCap className="w-4 h-4" />Gia sư đăng ký
               </button>
             </div>
           </div>
