@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { ClassApplication, TutorBooking } from '../types';
-import { ClipboardList, CheckCircle2, XCircle, Clock, UserCheck, BookOpen, Phone, MessageSquare, Filter, ChevronDown } from 'lucide-react';
+import { ClipboardList, CheckCircle2, XCircle, Clock, UserCheck, BookOpen, Phone, MessageSquare, Filter, ChevronDown, Search } from 'lucide-react';
 
 interface ApplicationsTabProps {
   applications: ClassApplication[];
@@ -17,17 +17,20 @@ export const ApplicationsTab: React.FC<ApplicationsTabProps> = ({
 }) => {
   const [activeSubTab, setActiveSubTab] = useState<'applications' | 'bookings'>('applications');
   const [statusFilter, setStatusFilter] = useState<string>('all');
+  const [searchTerm, setSearchTerm] = useState('');
 
   const pendingApps = applications.filter(a => a.status === 'Chờ duyệt').length;
   const pendingBookings = bookings.filter(b => b.status === 'Chờ liên hệ').length;
 
-  const filteredApps = statusFilter === 'all'
-    ? applications
-    : applications.filter(a => a.status === statusFilter);
+  const searchLower = searchTerm.toLowerCase();
 
-  const filteredBookings = statusFilter === 'all'
-    ? bookings
-    : bookings.filter(b => b.status === statusFilter);
+  const filteredApps = applications
+    .filter(a => statusFilter === 'all' || a.status === statusFilter)
+    .filter(a => !searchTerm || a.tutorName.toLowerCase().includes(searchLower) || a.subject.toLowerCase().includes(searchLower) || a.classCode.toLowerCase().includes(searchLower));
+
+  const filteredBookings = bookings
+    .filter(b => statusFilter === 'all' || b.status === statusFilter)
+    .filter(b => !searchTerm || b.parentName.toLowerCase().includes(searchLower) || b.tutorName.toLowerCase().includes(searchLower) || b.subject.toLowerCase().includes(searchLower));
 
   const getStatusBadge = (status: string) => {
     switch (status) {
@@ -79,6 +82,15 @@ export const ApplicationsTab: React.FC<ApplicationsTabProps> = ({
             <option value="Đã xếp lớp">Đã xếp lớp</option>
           </select>
           <ChevronDown className="w-3.5 h-3.5 absolute right-3 top-2.5 text-slate-400 pointer-events-none" />
+        </div>
+
+        <div className="flex gap-2">
+          <div className="relative">
+            <Search className="w-3.5 h-3.5 absolute left-2.5 top-2.5 text-slate-400" />
+            <input type="text" value={searchTerm} onChange={e => setSearchTerm(e.target.value)}
+              placeholder="Tìm GS, PH, môn..."
+              className="pl-8 pr-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs outline-none focus:bg-white focus:border-blue-500 w-40" />
+          </div>
         </div>
       </div>
 
