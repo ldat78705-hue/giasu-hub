@@ -521,7 +521,7 @@ export const RegisterTutorPublic: React.FC<RegisterTutorPublicProps> = ({
 
           {selectedClass && (
             <div className="fixed inset-0 z-50 modal-backdrop flex items-end sm:items-center justify-center" onClick={() => !applySuccess && setSelectedClass(null)}>
-              <div className="bottom-sheet sm:rounded-2xl bg-white p-6 shadow-2xl max-w-md w-full" onClick={e => e.stopPropagation()}>
+              <div className="bottom-sheet bg-white p-6 shadow-2xl" onClick={e => e.stopPropagation()}>
                 <div className="w-10 h-1 bg-slate-300 rounded-full mx-auto mb-4 sm:hidden" />
                 {applySuccess ? (
                   <div className="text-center py-6 animate-scale-in">

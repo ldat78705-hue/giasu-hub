@@ -51,9 +51,8 @@ body {
 ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 999px; }
 ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
 
-/* Touch-friendly: min 44px targets */
+/* Touch-friendly defaults */
 button, a, select, [role="button"] {
-  min-height: 44px;
   display: inline-flex;
   align-items: center;
 }
@@ -185,7 +184,7 @@ input, textarea, select {
   }
 }
 
-/* Bottom sheet */
+/* Bottom sheet - slides up on mobile, centered modal on desktop */
 .bottom-sheet {
   position: fixed;
   bottom: 0;
@@ -197,6 +196,21 @@ input, textarea, select {
   border-radius: 1.5rem 1.5rem 0 0;
   padding-bottom: var(--safe-bottom);
   animation: slideUp 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@media (min-width: 640px) {
+  .bottom-sheet {
+    left: 50%;
+    right: auto;
+    bottom: auto;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 1.5rem;
+    max-height: 90vh;
+    width: 100%;
+    max-width: 28rem;
+    animation: scaleIn 0.3s ease-out both;
+  }
 }
 
 /* Verified badge */

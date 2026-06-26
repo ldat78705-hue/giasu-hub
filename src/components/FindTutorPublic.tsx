@@ -142,8 +142,8 @@ export const FindTutorPublic: React.FC<FindTutorPublicProps> = ({ tutors, onBook
 
       {/* ===== BOOKING BOTTOM SHEET ===== */}
       {selectedTutor && (
-        <div className="fixed inset-0 z-50 modal-backdrop" onClick={() => !bookingSuccess && setSelectedTutor(null)}>
-          <div className="bottom-sheet bg-white p-6 shadow-2xl max-w-lg mx-auto" onClick={(e) => e.stopPropagation()}>
+        <div className="fixed inset-0 z-50 modal-backdrop flex items-end sm:items-center justify-center" onClick={() => !bookingSuccess && setSelectedTutor(null)}>
+          <div className="bottom-sheet bg-white p-6 shadow-2xl" onClick={(e) => e.stopPropagation()}>
             {/* Handle */}
             <div className="w-10 h-1 bg-slate-300 rounded-full mx-auto mb-4" />
 
@@ -203,7 +203,7 @@ export const FindTutorPublic: React.FC<FindTutorPublicProps> = ({ tutors, onBook
       {/* ===== REQUEST MODAL ===== */}
       {showRequestModal && (
         <div className="fixed inset-0 z-50 modal-backdrop flex items-end sm:items-center justify-center" onClick={() => !requestSuccess && setShowRequestModal(false)}>
-          <div className="bottom-sheet sm:rounded-2xl bg-white p-6 shadow-2xl max-w-md w-full sm:mb-0" onClick={(e) => e.stopPropagation()}>
+          <div className="bottom-sheet bg-white p-6 shadow-2xl" onClick={(e) => e.stopPropagation()}>
             <div className="w-10 h-1 bg-slate-300 rounded-full mx-auto mb-4 sm:hidden" />
 
             {requestSuccess ? (
