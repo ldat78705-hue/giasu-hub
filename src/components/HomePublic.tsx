@@ -165,12 +165,17 @@ export const HomePublic: React.FC<HomePublicProps> = ({
               {pending.slice(0, 6).map(cls => (
                 <div key={cls.id || cls.code} onClick={() => { onSelectClassForApply(cls); onNavigate('register-tutor'); }}
                   style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 10, padding: 16, cursor: 'pointer' }}>
-                  <div style={{ marginBottom: 8 }}>
+                  <div style={{ marginBottom: 8, display: 'flex', gap: 6 }}>
                     <span style={{
                       fontSize: 10, fontWeight: 700, padding: '2px 8px', borderRadius: 4,
                       background: cls.status === 'KHẨN CẤP' ? '#fef2f2' : '#fffbeb',
                       color: cls.status === 'KHẨN CẤP' ? '#dc2626' : '#d97706',
                     }}>{cls.status}</span>
+                    {cls.teachMode && (
+                      <span style={{ fontSize: 10, fontWeight: 600, padding: '2px 8px', borderRadius: 4, background: '#f0fdf4', color: '#16a34a' }}>
+                        {cls.teachMode === 'Online' ? '💻 Trực tuyến' : cls.teachMode === 'Tại nhà' ? '🏠 Trực tiếp' : '🔄 Cả hai'}
+                      </span>
+                    )}
                   </div>
                   <div style={{ fontWeight: 700, fontSize: 14, color: '#0f172a', marginBottom: 4 }}>{cls.subject}</div>
                   {cls.studentInfo && <div style={{ fontSize: 12, color: '#64748b', marginBottom: 8 }}>{cls.studentInfo}</div>}
