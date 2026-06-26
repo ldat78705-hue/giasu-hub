@@ -284,7 +284,7 @@ export default function App() {
     return (
       <div className="min-h-screen bg-[#F8FAFC] flex flex-col font-sans text-slate-800 select-text">
         <PublicNavbar activeTab={activeTab} onNavigate={setActiveTab} zaloNumber={zaloNumber} />
-        <main className="flex-1 pt-14 sm:pt-16">
+        <main className="flex-1 pt-14">
           {activeTab === 'home' && (
             <HomePublic classes={classes} tutors={tutors} onNavigate={setActiveTab}
               onSelectClassForApply={setSelectedClassForApply}
