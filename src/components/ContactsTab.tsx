@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { ContactMessage } from '../types';
-import { Phone, MessageCircle, Clock, CheckCircle2, Trash2, Eye, EyeOff } from 'lucide-react';
+import { Phone, MessageCircle, Clock, CheckCircle2, Trash2, Download, Search } from 'lucide-react';
 
 interface ContactsTabProps {
   contacts: ContactMessage[];
@@ -9,8 +9,10 @@ interface ContactsTabProps {
 }
 
 export const ContactsTab: React.FC<ContactsTabProps> = ({ contacts, onMarkRead, onDelete }) => {
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filterRead, setFilterRead] = useState<'all' | 'unread' | 'read'>('all');
+
   const unreadCount = contacts.filter(c => !c.isRead).length;
-  const sorted = [...contacts].sort((a, b) => b.createdAt - a.createdAt);
 
   const formatTime = (ts: number) => {
     const d = new Date(ts);
@@ -22,9 +24,33 @@ export const ContactsTab: React.FC<ContactsTabProps> = ({ contacts, onMarkRead, 
     return d.toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' }) + ' ' + d.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' });
   };
 
+  const fmtDate = (ts: number) => new Date(ts).toLocaleString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+
+  const filtered = contacts
+    .filter(c => {
+      if (filterRead === 'unread') return !c.isRead;
+      if (filterRead === 'read') return c.isRead;
+      return true;
+    })
+    .filter(c => {
+      if (!searchTerm) return true;
+      const q = searchTerm.toLowerCase();
+      return c.name.toLowerCase().includes(q) || c.phone.includes(q) || (c.message || '').toLowerCase().includes(q);
+    })
+    .sort((a, b) => b.createdAt - a.createdAt);
+
+  const exportCsv = () => {
+    const header = 'Họ tên,SĐT,Nội dung,Thời gian,Trạng thái\n';
+    const rows = contacts.map(c =>
+      `"${c.name}","${c.phone}","${(c.message || '').replace(/"/g, '""')}","${fmtDate(c.createdAt)}","${c.isRead ? 'Đã đọc' : 'Chưa đọc'}"`
+    ).join('\n');
+    const blob = new Blob(['\uFEFF' + header + rows], { type: 'text/csv;charset=utf-8' });
+    const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = `lien-he-${new Date().toISOString().slice(0,10)}.csv`; a.click(); URL.revokeObjectURL(url);
+  };
+
   return (
     <div className="col-span-12 bg-white rounded-2xl border border-slate-200 shadow-xs p-6 space-y-5">
-      <div className="flex justify-between items-center border-b border-slate-100 pb-4">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b border-slate-100 pb-4">
         <div>
           <h2 className="text-xl font-bold text-slate-800">Liên hệ & Tư vấn</h2>
           <p className="text-xs text-slate-500 mt-0.5">
@@ -32,17 +58,45 @@ export const ContactsTab: React.FC<ContactsTabProps> = ({ contacts, onMarkRead, 
             {unreadCount > 0 && <span className="text-red-500 font-bold ml-1">· {unreadCount} chưa đọc</span>}
           </p>
         </div>
+        <button onClick={exportCsv}
+          className="px-3 py-2 bg-white border border-slate-200 hover:border-slate-300 rounded-xl text-xs font-bold text-slate-600 cursor-pointer flex items-center gap-1.5">
+          <Download className="w-3.5 h-3.5" /> Export
+        </button>
       </div>
 
-      {sorted.length === 0 ? (
+      {/* Search + Filter */}
+      {contacts.length > 0 && (
+        <div className="flex flex-col sm:flex-row gap-3">
+          <div className="relative flex-1 max-w-sm">
+            <Search className="w-4 h-4 absolute left-3 top-2.5 text-slate-400" />
+            <input type="text" value={searchTerm} onChange={e => setSearchTerm(e.target.value)}
+              placeholder="Tìm theo tên, SĐT, nội dung..."
+              className="w-full pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm outline-none focus:bg-white focus:border-blue-500" />
+          </div>
+          <div className="flex gap-2">
+            {[
+              { val: 'all' as const, label: 'Tất cả' },
+              { val: 'unread' as const, label: `Chưa đọc${unreadCount > 0 ? ` (${unreadCount})` : ''}` },
+              { val: 'read' as const, label: 'Đã đọc' },
+            ].map(f => (
+              <button key={f.val} onClick={() => setFilterRead(f.val)}
+                className={`px-3 py-2 rounded-xl text-xs font-semibold border cursor-pointer transition-all ${
+                  filterRead === f.val ? 'bg-blue-600 text-white border-blue-600' : 'bg-white text-slate-600 border-slate-200 hover:border-blue-300'
+                }`}>{f.label}</button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {filtered.length === 0 ? (
         <div className="py-12 text-center text-slate-400">
           <MessageCircle className="w-10 h-10 mx-auto mb-3 text-slate-300" />
-          <p className="font-semibold text-sm">Chưa có tin nhắn nào</p>
-          <p className="text-xs mt-1">Tin nhắn từ khách hàng sẽ hiển thị tại đây</p>
+          <p className="font-semibold text-sm">{contacts.length === 0 ? 'Chưa có tin nhắn nào' : 'Không tìm thấy kết quả'}</p>
+          <p className="text-xs mt-1">{contacts.length === 0 ? 'Tin nhắn từ khách hàng sẽ hiển thị tại đây' : 'Thử thay đổi bộ lọc'}</p>
         </div>
       ) : (
         <div className="space-y-3">
-          {sorted.map(msg => (
+          {filtered.map(msg => (
             <div key={msg.id}
               className={`p-4 rounded-xl border transition-all ${
                 msg.isRead ? 'border-slate-200 bg-white' : 'border-blue-200 bg-blue-50/30'
@@ -72,7 +126,7 @@ export const ContactsTab: React.FC<ContactsTabProps> = ({ contacts, onMarkRead, 
                       <CheckCircle2 className="w-4 h-4" />
                     </span>
                   )}
-                  <button onClick={() => msg.id && onDelete(msg.id)}
+                  <button onClick={() => msg.id && window.confirm(`Xóa tin nhắn của ${msg.name}?`) && onDelete(msg.id)}
                     className="p-1.5 hover:bg-red-50 text-slate-400 hover:text-red-600 rounded-lg cursor-pointer transition-colors" title="Xóa">
                     <Trash2 className="w-4 h-4" />
                   </button>
