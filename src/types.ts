@@ -18,6 +18,7 @@ export interface TutorItem {
   avatar: string;
   avatarColor: string;
   subjects: string[];
+  gradeLevels?: string[];       // Khối lớp dạy
   qualification: string;
   experience: string;
   rating: number;
@@ -29,7 +30,13 @@ export interface TutorItem {
   verified: boolean;
   verifiedAt?: number;
   registeredAt?: number;
-  area?: string; // Khu vực dạy
+  area?: string;                // Khu vực dạy (text cũ, backward compat)
+  teachingAreas?: string[];     // Các quận/huyện có thể dạy
+  documentUrls?: {              // Hồ sơ đính kèm (CCCD, bằng cấp)
+    cccdUrl?: string;
+    degreeUrl?: string;
+    otherUrl?: string;
+  };
 }
 
 export interface StudentItem {
@@ -111,6 +118,8 @@ export interface AdminSettings {
   geminiApiKey: string;
   zaloNumber: string;
   facebookUrl: string;
+  cloudinaryCloudName: string;
+  cloudinaryPreset: string;
   updatedAt: number;
 }
 

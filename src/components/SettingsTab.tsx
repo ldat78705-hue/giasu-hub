@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { AdminSettings } from '../types';
-import { Settings, Key, Building2, Phone, Mail, MapPin, Save, CheckCircle2, AlertCircle, Eye, EyeOff, Sparkles, RefreshCw, Trash2, Shield, MessageCircle, Globe } from 'lucide-react';
+import { Settings, Key, Building2, Phone, Mail, MapPin, Save, CheckCircle2, AlertCircle, Eye, EyeOff, Sparkles, RefreshCw, Trash2, Shield, MessageCircle, Globe, Cloud } from 'lucide-react';
 
 interface SettingsTabProps {
   settings: AdminSettings;
@@ -17,6 +17,8 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({ settings, onSaveSettin
   const [showApiKey, setShowApiKey] = useState(false);
   const [zaloNumber, setZaloNumber] = useState(settings.zaloNumber || '');
   const [facebookUrl, setFacebookUrl] = useState(settings.facebookUrl || '');
+  const [cloudinaryCloudName, setCloudinaryCloudName] = useState(settings.cloudinaryCloudName || '');
+  const [cloudinaryPreset, setCloudinaryPreset] = useState(settings.cloudinaryPreset || '');
   const [isSaving, setIsSaving] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
   const [isTesting, setIsTesting] = useState(false);
@@ -30,6 +32,8 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({ settings, onSaveSettin
     setApiKey(settings.geminiApiKey || '');
     setZaloNumber(settings.zaloNumber || '');
     setFacebookUrl(settings.facebookUrl || '');
+    setCloudinaryCloudName(settings.cloudinaryCloudName || '');
+    setCloudinaryPreset(settings.cloudinaryPreset || '');
   }, [settings]);
 
   const handleSaveAll = async () => {
@@ -43,6 +47,8 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({ settings, onSaveSettin
         geminiApiKey: apiKey,
         zaloNumber,
         facebookUrl,
+        cloudinaryCloudName,
+        cloudinaryPreset,
         updatedAt: Date.now(),
       });
       setSaveSuccess(true);
@@ -287,6 +293,61 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({ settings, onSaveSettin
 
           <div className="text-[11px] text-slate-400 pt-2 border-t border-slate-100">
             Cập nhật lần cuối: {settings.updatedAt ? new Date(settings.updatedAt).toLocaleString('vi-VN') : 'Chưa cập nhật'}
+          </div>
+        </div>
+
+        {/* Cloudinary Config */}
+        <div className="bg-white rounded-2xl border border-slate-200 shadow-xs p-6 space-y-5 col-span-1 lg:col-span-2">
+          <div className="flex items-center gap-2 border-b border-slate-100 pb-4">
+            <div className="p-2 bg-purple-50 text-purple-600 rounded-xl">
+              <Cloud className="w-5 h-5" />
+            </div>
+            <div>
+              <h3 className="font-bold text-slate-800">Cấu hình lưu trữ ảnh (Cloudinary)</h3>
+              <p className="text-[11px] text-slate-500">Gia sư gửi ảnh CCCD & bằng cấp — Miễn phí 25GB</p>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-xs font-bold uppercase text-slate-600 mb-1.5">Cloud Name</label>
+              <input type="text" value={cloudinaryCloudName} onChange={(e) => setCloudinaryCloudName(e.target.value)}
+                placeholder="VD: dkpvfqz1"
+                className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:bg-white focus:border-blue-500 text-sm font-mono" />
+            </div>
+            <div>
+              <label className="block text-xs font-bold uppercase text-slate-600 mb-1.5">Upload Preset (Unsigned)</label>
+              <input type="text" value={cloudinaryPreset} onChange={(e) => setCloudinaryPreset(e.target.value)}
+                placeholder="VD: o1stheydat"
+                className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:bg-white focus:border-blue-500 text-sm font-mono" />
+            </div>
+          </div>
+
+          <div className="bg-purple-50 p-4 rounded-xl text-xs text-purple-800 space-y-1.5 border border-purple-100">
+            <div className="font-bold flex items-center gap-1.5">
+              <Cloud className="w-4 h-4 text-purple-600" />
+              <span>Hướng dẫn lấy thông tin Cloudinary</span>
+            </div>
+            <ol className="list-decimal list-inside space-y-0.5 text-purple-700">
+              <li>Đăng nhập <b>cloudinary.com/console</b></li>
+              <li>Copy <b>Cloud Name</b> từ Dashboard</li>
+              <li>Vào Settings → Upload → Upload presets</li>
+              <li>Tạo preset mới, đặt <b>Signing Mode: Unsigned</b></li>
+              <li>Copy tên preset và dán vào ô trên</li>
+            </ol>
+          </div>
+
+          <div className="flex items-center justify-between text-xs pt-2 border-t border-slate-100">
+            <span className="text-slate-500">Trạng thái:</span>
+            {cloudinaryCloudName && cloudinaryPreset ? (
+              <span className="flex items-center gap-1.5 text-emerald-600 font-bold bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200">
+                <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full"></span>Đã cấu hình
+              </span>
+            ) : (
+              <span className="flex items-center gap-1.5 text-amber-600 font-bold bg-amber-50 px-2.5 py-1 rounded-full border border-amber-200">
+                <span className="w-1.5 h-1.5 bg-amber-500 rounded-full animate-pulse"></span>Chưa cấu hình
+              </span>
+            )}
           </div>
         </div>
       </div>

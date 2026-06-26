@@ -37,6 +37,8 @@ const DEFAULT_SETTINGS: AdminSettings = {
   geminiApiKey: '',
   zaloNumber: '',
   facebookUrl: '',
+  cloudinaryCloudName: '',
+  cloudinaryPreset: '',
   updatedAt: Date.now(),
 };
 
@@ -295,7 +297,8 @@ export default function App() {
               )}
               {activeTab === 'register-tutor' && (
                 <RegisterTutorPublic classes={classes} onApplyClass={handleApplyClass}
-                  onRegisterProfile={handleRegisterTutorProfile} initialClass={selectedClassForApply} />
+                  onRegisterProfile={handleRegisterTutorProfile} initialClass={selectedClassForApply}
+                  cloudinaryCloudName={settings.cloudinaryCloudName || ''} cloudinaryPreset={settings.cloudinaryPreset || ''} />
               )}
               {activeTab === 'parent-register' && (
                 <ParentRegisterForm onSubmit={handleParentRegister} zaloNumber={zaloNumber} />

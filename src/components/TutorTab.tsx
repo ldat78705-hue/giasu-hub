@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { TutorItem } from '../types';
-import { Plus, Star, Trash2, Phone, Search, ShieldCheck, ShieldX, Clock, CheckCircle2 } from 'lucide-react';
+import { Plus, Star, Trash2, Phone, Search, ShieldCheck, ShieldX, Clock, CheckCircle2, MapPin, ExternalLink, FileText } from 'lucide-react';
 
 interface TutorTabProps {
   tutors: TutorItem[];
@@ -122,17 +122,52 @@ export const TutorTab: React.FC<TutorTabProps> = ({ tutors, onAddTutor, onUpdate
               </div>
 
               {/* Subjects */}
-              <div className="flex flex-wrap gap-1.5 mb-3">
+              <div className="flex flex-wrap gap-1.5 mb-2">
                 {t.subjects.map((sub, i) => (
                   <span key={i} className="px-2 py-0.5 bg-blue-50 text-blue-700 rounded text-[10px] font-semibold">{sub}</span>
                 ))}
               </div>
 
+              {/* Grade Levels */}
+              {t.gradeLevels && t.gradeLevels.length > 0 && (
+                <div className="flex flex-wrap gap-1 mb-2">
+                  {t.gradeLevels.map((g, i) => (
+                    <span key={i} className="px-1.5 py-0.5 bg-purple-50 text-purple-600 rounded text-[9px] font-semibold">{g}</span>
+                  ))}
+                </div>
+              )}
+
+              {/* Teaching Areas */}
+              {t.teachingAreas && t.teachingAreas.length > 0 && (
+                <div className="flex items-start gap-1 mb-2 text-[10px] text-slate-500">
+                  <MapPin className="w-3 h-3 shrink-0 mt-0.5 text-emerald-500" />
+                  <span className="leading-relaxed">{t.teachingAreas.join(', ')}</span>
+                </div>
+              )}
+
               {/* Info */}
-              <div className="text-xs text-slate-500 space-y-0.5 mb-3">
+              <div className="text-xs text-slate-500 space-y-0.5 mb-2">
                 <p>{t.qualification}</p>
                 <p>{t.experience} • <span className="flex items-center gap-0.5 inline text-amber-500"><Star className="w-3 h-3 fill-current inline" />{t.rating}</span></p>
               </div>
+
+              {/* Documents */}
+              {t.documentUrls && (t.documentUrls.cccdUrl || t.documentUrls.degreeUrl) && (
+                <div className="flex gap-2 mb-2">
+                  {t.documentUrls.cccdUrl && (
+                    <a href={t.documentUrls.cccdUrl} target="_blank" rel="noopener noreferrer"
+                      className="flex items-center gap-1 px-2 py-1 bg-amber-50 text-amber-700 rounded-lg text-[10px] font-semibold border border-amber-200 hover:bg-amber-100 transition-colors">
+                      <FileText className="w-3 h-3" /><span>CCCD</span><ExternalLink className="w-2.5 h-2.5" />
+                    </a>
+                  )}
+                  {t.documentUrls.degreeUrl && (
+                    <a href={t.documentUrls.degreeUrl} target="_blank" rel="noopener noreferrer"
+                      className="flex items-center gap-1 px-2 py-1 bg-indigo-50 text-indigo-700 rounded-lg text-[10px] font-semibold border border-indigo-200 hover:bg-indigo-100 transition-colors">
+                      <FileText className="w-3 h-3" /><span>Bằng cấp</span><ExternalLink className="w-2.5 h-2.5" />
+                    </a>
+                  )}
+                </div>
+              )}
 
               {/* Actions */}
               <div className="flex items-center justify-between pt-3 border-t border-slate-200/60">

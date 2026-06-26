@@ -23,6 +23,8 @@ const DEFAULT_SETTINGS: Omit<AdminSettings, 'id'> = {
   geminiApiKey: '',
   zaloNumber: '',
   facebookUrl: '',
+  cloudinaryCloudName: '',
+  cloudinaryPreset: '',
   updatedAt: Date.now(),
 };
 
