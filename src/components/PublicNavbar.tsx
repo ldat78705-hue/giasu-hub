@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ActiveTab } from '../types';
-import { Home, Search, GraduationCap, UserPlus, Phone, Menu, X } from 'lucide-react';
+import { Home, Search, GraduationCap, UserPlus, Phone, Menu, X, MessageCircle } from 'lucide-react';
 
 interface PublicNavbarProps {
   activeTab: ActiveTab;
@@ -9,113 +9,119 @@ interface PublicNavbarProps {
 }
 
 export const PublicNavbar: React.FC<PublicNavbarProps> = ({ activeTab, onNavigate, zaloNumber }) => {
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [isMobileOpen, setIsMobileOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   useEffect(() => {
-    const h = () => setIsScrolled(window.scrollY > 10);
-    window.addEventListener('scroll', h);
+    const h = () => setScrolled(window.scrollY > 8);
+    window.addEventListener('scroll', h, { passive: true });
     return () => window.removeEventListener('scroll', h);
   }, []);
 
-  const navLinks = [
-    { id: 'home' as ActiveTab, label: 'Trang chủ' },
-    { id: 'find-tutors' as ActiveTab, label: 'Tìm gia sư' },
-    { id: 'parent-register' as ActiveTab, label: 'Đăng ký học' },
-    { id: 'register-tutor' as ActiveTab, label: 'Đăng ký dạy' },
+  const links: { id: ActiveTab; label: string }[] = [
+    { id: 'home', label: 'Trang chủ' },
+    { id: 'find-tutors', label: 'Tìm gia sư' },
+    { id: 'register-tutor', label: 'Đăng ký dạy' },
   ];
 
-  const mobileNav = [
-    { id: 'home' as ActiveTab, label: 'Trang chủ', icon: <Home className="w-5 h-5" /> },
-    { id: 'find-tutors' as ActiveTab, label: 'Tìm GS', icon: <Search className="w-5 h-5" /> },
-    { id: 'parent-register' as ActiveTab, label: 'Đăng ký', icon: <UserPlus className="w-5 h-5" /> },
-    { id: 'register-tutor' as ActiveTab, label: 'Dạy kèm', icon: <GraduationCap className="w-5 h-5" /> },
+  const mobileItems: { id: ActiveTab; label: string; icon: React.ReactNode }[] = [
+    { id: 'home', label: 'Trang chủ', icon: <Home size={20} /> },
+    { id: 'find-tutors', label: 'Tìm GS', icon: <Search size={20} /> },
+    { id: 'parent-register', label: 'Tìm GS', icon: <UserPlus size={20} /> },
+    { id: 'register-tutor', label: 'Dạy kèm', icon: <GraduationCap size={20} /> },
   ];
 
   return (
     <>
-      <header className={`fixed top-0 left-0 right-0 z-50 bg-white border-b transition-shadow duration-200 ${
-        isScrolled ? 'shadow-sm border-slate-200' : 'border-slate-100'
-      }`}>
-        <div className="max-w-5xl mx-auto px-5 sm:px-8">
-          <div className="flex items-center justify-between h-14">
-            {/* Logo */}
-            <div className="flex items-center gap-2 cursor-pointer shrink-0" onClick={() => onNavigate('home')}>
-              <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center font-bold text-white text-xs">TĐ</div>
-              <span className="text-sm sm:text-base font-bold text-slate-900">Gia Sư Thành Đạt</span>
-            </div>
+      {/* Top bar */}
+      <header
+        style={{
+          position: 'fixed', top: 0, left: 0, right: 0, zIndex: 50,
+          background: '#fff',
+          borderBottom: scrolled ? '1px solid #e2e8f0' : '1px solid transparent',
+          boxShadow: scrolled ? '0 1px 3px rgba(0,0,0,0.04)' : 'none',
+          transition: 'border-color .2s, box-shadow .2s',
+        }}
+      >
+        <div style={{ maxWidth: 1024, margin: '0 auto', padding: '0 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: 56 }}>
+          {/* Logo */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer' }} onClick={() => onNavigate('home')}>
+            <div style={{ width: 32, height: 32, background: '#2563eb', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontWeight: 700, fontSize: 12 }}>TĐ</div>
+            <span style={{ fontWeight: 700, fontSize: 15, color: '#0f172a' }}>Gia Sư Thành Đạt</span>
+          </div>
 
-            {/* Desktop Nav */}
-            <nav className="hidden lg:flex items-center gap-1">
-              {navLinks.map((link) => (
-                <button key={link.id} onClick={() => onNavigate(link.id)}
-                  className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors cursor-pointer ${
-                    activeTab === link.id ? 'text-blue-600 bg-blue-50' : 'text-slate-600 hover:text-blue-600 hover:bg-slate-50'
-                  }`}>
-                  {link.label}
-                </button>
-              ))}
-            </nav>
-
-            {/* Desktop Right */}
-            <div className="hidden lg:flex items-center gap-2">
-              {zaloNumber && (
-                <a href={`tel:${zaloNumber}`} className="text-sm font-bold text-slate-700 flex items-center gap-1.5">
-                  <Phone className="w-3.5 h-3.5 text-blue-600" />{zaloNumber}
-                </a>
-              )}
-              <button onClick={() => onNavigate('dashboard')}
-                className="ml-2 px-3 py-1.5 bg-slate-900 text-white text-xs font-bold rounded-md cursor-pointer hover:bg-slate-800 transition-colors">
-                Quản trị
+          {/* Desktop nav */}
+          <nav style={{ display: 'flex', alignItems: 'center', gap: 4 }} className="lg:flex hidden">
+            {links.map(l => (
+              <button key={l.id} onClick={() => onNavigate(l.id)}
+                style={{
+                  padding: '6px 14px', borderRadius: 6, fontSize: 14, fontWeight: 500, cursor: 'pointer',
+                  background: activeTab === l.id ? '#eff6ff' : 'transparent',
+                  color: activeTab === l.id ? '#2563eb' : '#475569',
+                  border: 'none', transition: 'all .15s',
+                }}>
+                {l.label}
               </button>
-            </div>
+            ))}
+          </nav>
 
-            {/* Mobile hamburger */}
-            <button onClick={() => setIsMobileOpen(!isMobileOpen)}
-              className="lg:hidden p-2 text-slate-600 cursor-pointer">
-              {isMobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+          {/* Desktop right */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }} className="lg:flex hidden">
+            {zaloNumber && (
+              <span style={{ fontSize: 13, fontWeight: 600, color: '#475569', display: 'flex', alignItems: 'center', gap: 4 }}>
+                <Phone size={14} color="#2563eb" />{zaloNumber}
+              </span>
+            )}
+            <button onClick={() => onNavigate('parent-register')}
+              style={{ padding: '7px 16px', background: '#2563eb', color: '#fff', border: 'none', borderRadius: 6, fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>
+              Tìm gia sư
             </button>
           </div>
+
+          {/* Mobile menu button */}
+          <button onClick={() => setMobileOpen(!mobileOpen)}
+            style={{ background: 'none', border: 'none', padding: 8, cursor: 'pointer', color: '#475569' }}
+            className="lg:hidden">
+            {mobileOpen ? <X size={22} /> : <Menu size={22} />}
+          </button>
         </div>
 
         {/* Mobile dropdown */}
-        {isMobileOpen && (
-          <div className="lg:hidden bg-white border-t border-slate-100 shadow-lg">
-            <div className="px-5 py-3 space-y-1">
-              {navLinks.map(link => (
-                <button key={link.id} onClick={() => { onNavigate(link.id); setIsMobileOpen(false); }}
-                  className={`w-full text-left px-3 py-2.5 rounded-lg text-sm font-medium cursor-pointer ${
-                    activeTab === link.id ? 'bg-blue-50 text-blue-600' : 'text-slate-600 hover:bg-slate-50'
-                  }`}>
-                  {link.label}
-                </button>
-              ))}
-              <button onClick={() => { onNavigate('dashboard'); setIsMobileOpen(false); }}
-                className="w-full mt-2 py-2.5 bg-slate-900 text-white text-sm font-bold rounded-lg cursor-pointer">
-                Quản trị
+        {mobileOpen && (
+          <div style={{ background: '#fff', borderTop: '1px solid #f1f5f9', padding: '8px 16px 12px' }} className="lg:hidden">
+            {links.map(l => (
+              <button key={l.id} onClick={() => { onNavigate(l.id); setMobileOpen(false); }}
+                style={{
+                  display: 'block', width: '100%', textAlign: 'left', padding: '10px 12px', borderRadius: 8,
+                  fontSize: 14, fontWeight: 500, cursor: 'pointer', border: 'none', marginBottom: 2,
+                  background: activeTab === l.id ? '#eff6ff' : 'transparent',
+                  color: activeTab === l.id ? '#2563eb' : '#475569',
+                }}>
+                {l.label}
               </button>
-            </div>
+            ))}
+            <button onClick={() => { onNavigate('parent-register'); setMobileOpen(false); }}
+              style={{ display: 'block', width: '100%', padding: '10px 0', background: '#2563eb', color: '#fff', border: 'none', borderRadius: 8, fontSize: 14, fontWeight: 600, cursor: 'pointer', marginTop: 8, textAlign: 'center' }}>
+              Tìm gia sư ngay
+            </button>
           </div>
         )}
       </header>
 
-      {/* Mobile Bottom Nav */}
-      <nav className="mobile-bottom-nav lg:hidden">
-        <div className="flex items-stretch justify-around px-1 pt-1 pb-0.5">
-          {mobileNav.map((item) => {
-            const isActive = activeTab === item.id;
-            return (
-              <button key={item.id} onClick={() => { onNavigate(item.id); setIsMobileOpen(false); }}
-                className={`flex flex-col items-center justify-center gap-0.5 flex-1 py-1.5 cursor-pointer transition-colors ${
-                  isActive ? 'text-blue-600' : 'text-slate-400'
-                }`}>
-                {item.icon}
-                <span className={`text-[10px] font-medium ${isActive ? 'text-blue-600' : 'text-slate-400'}`}>
-                  {item.label}
-                </span>
-              </button>
-            );
-          })}
+      {/* Mobile bottom nav */}
+      <nav className="lg:hidden" style={{ position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 50, background: 'rgba(255,255,255,.97)', borderTop: '1px solid #e2e8f0', paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-around', padding: '6px 4px 2px' }}>
+          {mobileItems.map(item => (
+            <button key={item.id} onClick={() => { onNavigate(item.id); setMobileOpen(false); }}
+              style={{
+                display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2, flex: 1, padding: '4px 0',
+                background: 'none', border: 'none', cursor: 'pointer',
+                color: activeTab === item.id ? '#2563eb' : '#94a3b8',
+              }}>
+              {item.icon}
+              <span style={{ fontSize: 10, fontWeight: 500 }}>{item.label}</span>
+            </button>
+          ))}
         </div>
       </nav>
     </>

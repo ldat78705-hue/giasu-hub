@@ -282,26 +282,25 @@ export default function App() {
   // ===================== PUBLIC VIEW =====================
   if (isPublicView) {
     return (
-      <div className="min-h-screen bg-[#F8FAFC] flex flex-col font-sans text-slate-800 select-text">
+      <div style={{ minHeight: '100vh', background: '#F8FAFC', display: 'flex', flexDirection: 'column', fontFamily: "'Inter', -apple-system, sans-serif", color: '#1e293b' }}>
         <PublicNavbar activeTab={activeTab} onNavigate={setActiveTab} zaloNumber={zaloNumber} />
-        <main className="flex-1 pt-14">
+        <main style={{ flex: 1, paddingTop: 56 }}>
           {activeTab === 'home' && (
             <HomePublic classes={classes} tutors={tutors} onNavigate={setActiveTab}
               onSelectClassForApply={setSelectedClassForApply}
               onSelectTutorForBook={() => {}}
               onAiSearch={handleAiSearch} isSearching={isSearching}
-              zaloNumber={zaloNumber} />
+              zaloNumber={zaloNumber} onContactSubmit={handleContactSubmit} />
           )}
 
-
           {activeTab === 'find-tutors' && (
-            <div className="max-w-5xl mx-auto px-5 sm:px-8 py-8 sm:py-12">
+            <div style={{ maxWidth: 1024, margin: '0 auto', padding: '32px 20px' }}>
               <FindTutorPublic tutors={tutors} onBookTutor={handleBookTutor} onPostRequest={handlePostRequest} />
             </div>
           )}
 
           {activeTab === 'register-tutor' && (
-            <div className="max-w-3xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
+            <div style={{ maxWidth: 768, margin: '0 auto', padding: '32px 20px' }}>
               <RegisterTutorPublic classes={classes} onApplyClass={handleApplyClass}
                 onRegisterProfile={handleRegisterTutorProfile} initialClass={selectedClassForApply}
                 cloudinaryCloudName={settings.cloudinaryCloudName || ''} cloudinaryPreset={settings.cloudinaryPreset || ''}
@@ -310,22 +309,18 @@ export default function App() {
           )}
 
           {activeTab === 'parent-register' && (
-            <div className="max-w-xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
+            <div style={{ maxWidth: 560, margin: '0 auto', padding: '32px 20px' }}>
               <ParentRegisterForm onSubmit={handleParentRegister} zaloNumber={zaloNumber}
                 wards={settings.wards || DEFAULT_HANOI_WARDS} />
             </div>
-          )}
-
-          {activeTab === 'home' && (
-            <ContactSection onSubmit={handleContactSubmit} zaloNumber={zaloNumber} />
           )}
         </main>
         <PublicFooter onNavigate={setActiveTab} zaloNumber={zaloNumber} />
 
         {zaloNumber && (
           <a href={`https://zalo.me/${zaloNumber}`} target="_blank" rel="noopener noreferrer"
-            className="floating-cta w-14 h-14 bg-blue-600 hover:bg-blue-700 text-white rounded-full shadow-xl flex items-center justify-center animate-pulse-glow">
-            <svg viewBox="0 0 24 24" className="w-6 h-6 fill-current"><path d="M12 2C6.48 2 2 6.03 2 10.93c0 2.75 1.44 5.19 3.67 6.77l-.02 2.25c0 .44.52.68.87.4l2.47-1.97c.93.26 1.93.4 2.99.4 5.52 0 10-4.03 10-8.93S17.52 2 12 2z"/></svg>
+            className="floating-cta" style={{ width: 52, height: 52, background: '#2563eb', color: '#fff', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 12px rgba(37,99,235,.3)' }}>
+            <svg viewBox="0 0 24 24" style={{ width: 24, height: 24, fill: 'currentColor' }}><path d="M12 2C6.48 2 2 6.03 2 10.93c0 2.75 1.44 5.19 3.67 6.77l-.02 2.25c0 .44.52.68.87.4l2.47-1.97c.93.26 1.93.4 2.99.4 5.52 0 10-4.03 10-8.93S17.52 2 12 2z"/></svg>
           </a>
         )}
       </div>

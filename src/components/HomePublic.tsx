@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { ClassItem, TutorItem, ActiveTab } from '../types';
-import { Star, MapPin, GraduationCap, BookOpen, ShieldCheck, Clock, CheckCircle2, Phone, UserPlus, ChevronRight } from 'lucide-react';
+import { ContactMessage } from '../types';
+import { Star, MapPin, ShieldCheck, Clock, CheckCircle2, Phone, ChevronRight, Send, X, MessageCircle } from 'lucide-react';
 
 interface HomePublicProps {
   classes: ClassItem[];
@@ -11,33 +12,59 @@ interface HomePublicProps {
   onAiSearch: (query: string) => void;
   isSearching: boolean;
   zaloNumber?: string;
+  onContactSubmit?: (msg: ContactMessage) => Promise<void>;
 }
 
+const W = { maxWidth: 1024, margin: '0 auto', padding: '0 20px' } as const;
+const fmt = (v: number) => new Intl.NumberFormat('vi-VN').format(v);
+
 export const HomePublic: React.FC<HomePublicProps> = ({
-  classes, tutors, onNavigate, onSelectClassForApply, onSelectTutorForBook, zaloNumber,
+  classes, tutors, onNavigate, onSelectClassForApply, zaloNumber, onContactSubmit,
 }) => {
-  const pendingClasses = classes.filter(c => c.status === 'ĐANG TÌM' || c.status === 'KHẨN CẤP');
-  const verifiedTutors = tutors.filter(t => t.verified && t.status === 'online');
-  const fmt = (v: number) => new Intl.NumberFormat('vi-VN').format(v);
+  const pending = classes.filter(c => c.status === 'ĐANG TÌM' || c.status === 'KHẨN CẤP');
+  const verified = tutors.filter(t => t.verified && t.status === 'online');
+
+  // Contact popup state
+  const [showContact, setShowContact] = useState(false);
+  const [cName, setCName] = useState('');
+  const [cPhone, setCPhone] = useState('');
+  const [cMsg, setCMsg] = useState('');
+  const [cSent, setCSent] = useState(false);
+  const [cSending, setCSending] = useState(false);
+
+  const handleContact = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!cName || !cPhone || !onContactSubmit) return;
+    setCSending(true);
+    try {
+      await onContactSubmit({ name: cName, phone: cPhone, message: cMsg, createdAt: Date.now(), isRead: false });
+      setCSent(true);
+      setTimeout(() => { setCSent(false); setCName(''); setCPhone(''); setCMsg(''); setShowContact(false); }, 2500);
+    } catch (err) { console.error(err); }
+    finally { setCSending(false); }
+  };
 
   return (
     <div>
       {/* ===== HERO ===== */}
-      <section className="bg-gradient-to-b from-blue-600 to-blue-700 text-white">
-        <div className="max-w-5xl mx-auto px-5 sm:px-8 py-16 sm:py-20 text-center">
-          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold leading-tight mb-4">
-            Tìm gia sư giỏi tại Hà Nội
+      <section style={{ background: '#fff', borderBottom: '1px solid #f1f5f9' }}>
+        <div style={{ ...W, paddingTop: 64, paddingBottom: 64, textAlign: 'center' }}>
+          <div style={{ display: 'inline-block', background: '#eff6ff', color: '#2563eb', padding: '4px 14px', borderRadius: 20, fontSize: 12, fontWeight: 600, marginBottom: 20 }}>
+            Trung tâm gia sư uy tín Hà Nội
+          </div>
+          <h1 style={{ fontSize: 'clamp(28px, 5vw, 44px)', fontWeight: 800, color: '#0f172a', lineHeight: 1.15, marginBottom: 16 }}>
+            Tìm gia sư giỏi<br />cho con bạn
           </h1>
-          <p className="text-blue-100 text-sm sm:text-base max-w-xl mx-auto mb-8 leading-relaxed">
-            Đội ngũ gia sư đã xác minh, dạy kèm tại nhà & online. Cam kết tiến bộ hoặc đổi giáo viên miễn phí.
+          <p style={{ fontSize: 16, color: '#64748b', maxWidth: 480, margin: '0 auto 32px', lineHeight: 1.7 }}>
+            Đội ngũ gia sư đã xác minh, cam kết tiến bộ. Học thử miễn phí, đổi giáo viên nếu không hài lòng.
           </p>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+          <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
             <button onClick={() => onNavigate('parent-register')}
-              className="w-full sm:w-auto px-8 py-3.5 bg-white text-blue-700 font-bold text-sm rounded-lg shadow-lg cursor-pointer hover:bg-blue-50 transition-colors">
+              style={{ padding: '14px 32px', background: '#2563eb', color: '#fff', border: 'none', borderRadius: 8, fontSize: 15, fontWeight: 600, cursor: 'pointer' }}>
               Tìm gia sư ngay
             </button>
             <button onClick={() => onNavigate('register-tutor')}
-              className="w-full sm:w-auto px-8 py-3.5 bg-blue-500 text-white font-bold text-sm rounded-lg border border-blue-400 cursor-pointer hover:bg-blue-400 transition-colors">
+              style={{ padding: '14px 32px', background: '#f1f5f9', color: '#334155', border: '1px solid #e2e8f0', borderRadius: 8, fontSize: 15, fontWeight: 600, cursor: 'pointer' }}>
               Gia sư đăng ký dạy
             </button>
           </div>
@@ -45,100 +72,76 @@ export const HomePublic: React.FC<HomePublicProps> = ({
       </section>
 
       {/* ===== STATS ===== */}
-      <section className="bg-white border-b border-slate-100 -mt-6 relative z-10">
-        <div className="max-w-4xl mx-auto px-5 sm:px-8">
-          <div className="bg-white rounded-xl shadow-lg shadow-slate-200/60 border border-slate-100 grid grid-cols-2 sm:grid-cols-4 divide-x divide-slate-100">
+      <section style={{ background: '#f8fafc', borderBottom: '1px solid #f1f5f9' }}>
+        <div style={{ ...W, display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))', gap: 0, padding: '0 20px' }}>
+          {[
+            { v: `${Math.max(verified.length, 10)}+`, l: 'Gia sư xác minh' },
+            { v: `${pending.length}`, l: 'Lớp đang tuyển' },
+            { v: '98%', l: 'PH hài lòng' },
+            { v: '30p', l: 'Phản hồi TB' },
+          ].map((s, i) => (
+            <div key={i} style={{ textAlign: 'center', padding: '24px 8px', borderRight: i < 3 ? '1px solid #e2e8f0' : 'none' }}>
+              <div style={{ fontSize: 28, fontWeight: 800, color: '#2563eb' }}>{s.v}</div>
+              <div style={{ fontSize: 12, color: '#64748b', marginTop: 2 }}>{s.l}</div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ===== 3 STEPS ===== */}
+      <section style={{ background: '#fff', borderBottom: '1px solid #f1f5f9' }}>
+        <div style={{ ...W, paddingTop: 48, paddingBottom: 48 }}>
+          <h2 style={{ fontSize: 22, fontWeight: 700, color: '#0f172a', textAlign: 'center', marginBottom: 8 }}>Quy trình đơn giản</h2>
+          <p style={{ fontSize: 14, color: '#64748b', textAlign: 'center', marginBottom: 36 }}>3 bước — miễn phí hoàn toàn</p>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 24 }}>
             {[
-              { value: `${Math.max(tutors.length, 10)}+`, label: 'Gia sư' },
-              { value: `${pendingClasses.length}`, label: 'Lớp đang tuyển' },
-              { value: '98%', label: 'Hài lòng' },
-              { value: '24h', label: 'Phản hồi' },
+              { n: '1', t: 'Đăng ký nhu cầu', d: 'Điền môn học, lớp, khu vực, lịch học.' },
+              { n: '2', t: 'Tư vấn & ghép GS', d: 'Trung tâm tìm gia sư phù hợp trong 24h.' },
+              { n: '3', t: 'Học thử & quyết định', d: 'Học thử 1-2 buổi miễn phí.' },
             ].map((s, i) => (
-              <div key={i} className="py-5 px-3 text-center">
-                <div className="text-xl sm:text-2xl font-black text-blue-600">{s.value}</div>
-                <div className="text-[11px] sm:text-xs text-slate-500 mt-0.5">{s.label}</div>
+              <div key={i} style={{ textAlign: 'center' }}>
+                <div style={{ width: 36, height: 36, background: '#2563eb', color: '#fff', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 700, margin: '0 auto 12px' }}>{s.n}</div>
+                <div style={{ fontSize: 14, fontWeight: 700, color: '#0f172a', marginBottom: 4 }}>{s.t}</div>
+                <div style={{ fontSize: 13, color: '#64748b', lineHeight: 1.5 }}>{s.d}</div>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ===== QUY TRÌNH ===== */}
-      <section className="bg-white border-b border-slate-100">
-        <div className="max-w-4xl mx-auto px-5 sm:px-8 py-14 sm:py-16">
-          <h2 className="text-lg sm:text-xl font-bold text-slate-800 text-center mb-2">Quy trình 3 bước</h2>
-          <p className="text-sm text-slate-500 text-center mb-10">Đơn giản, nhanh chóng, miễn phí</p>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-8">
-            {[
-              { n: '1', title: 'Phụ huynh đăng ký', desc: 'Điền thông tin nhu cầu: môn học, lớp, khu vực, lịch học mong muốn.' },
-              { n: '2', title: 'Trung tâm tư vấn', desc: 'Tư vấn miễn phí qua Zalo/điện thoại, tìm gia sư phù hợp nhất trong 24h.' },
-              { n: '3', title: 'Học thử & quyết định', desc: 'Học thử 1-2 buổi miễn phí. Hài lòng mới cam kết lâu dài.' },
-            ].map((item, i) => (
-              <div key={i} className="text-center">
-                <div className="w-10 h-10 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm font-bold mx-auto mb-3">{item.n}</div>
-                <h3 className="font-bold text-slate-800 text-sm mb-1.5">{item.title}</h3>
-                <p className="text-xs text-slate-500 leading-relaxed">{item.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ===== CAM KẾT ===== */}
-      <section className="bg-slate-50 border-b border-slate-100">
-        <div className="max-w-4xl mx-auto px-5 sm:px-8 py-14 sm:py-16">
-          <h2 className="text-lg sm:text-xl font-bold text-slate-800 text-center mb-10">Vì sao chọn chúng tôi?</h2>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-5">
-            {[
-              { icon: <ShieldCheck className="w-5 h-5" />, title: 'Hồ sơ xác minh', desc: 'CCCD & bằng cấp' },
-              { icon: <CheckCircle2 className="w-5 h-5" />, title: 'Cam kết tiến bộ', desc: 'Đổi GS miễn phí' },
-              { icon: <Clock className="w-5 h-5" />, title: 'Phản hồi 24h', desc: 'Ghép GS nhanh' },
-              { icon: <MapPin className="w-5 h-5" />, title: 'Toàn Hà Nội', desc: 'Tại nhà & online' },
-            ].map((item, i) => (
-              <div key={i} className="text-center">
-                <div className="w-10 h-10 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center mx-auto mb-2.5">{item.icon}</div>
-                <h3 className="font-bold text-slate-800 text-xs mb-0.5">{item.title}</h3>
-                <p className="text-[11px] text-slate-500">{item.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ===== GIA SƯ NỔI BẬT ===== */}
-      {verifiedTutors.length > 0 && (
-        <section className="bg-white border-b border-slate-100">
-          <div className="max-w-5xl mx-auto px-5 sm:px-8 py-14 sm:py-16">
-            <div className="flex items-center justify-between mb-8">
-              <h2 className="text-lg sm:text-xl font-bold text-slate-800">Gia sư nổi bật</h2>
-              <button onClick={() => onNavigate('find-tutors')}
-                className="text-blue-600 text-xs font-bold cursor-pointer hover:underline flex items-center gap-1">
-                Xem tất cả<ChevronRight className="w-3.5 h-3.5" />
+      {/* ===== TUTORS ===== */}
+      {verified.length > 0 && (
+        <section style={{ background: '#f8fafc', borderBottom: '1px solid #f1f5f9' }}>
+          <div style={{ ...W, paddingTop: 48, paddingBottom: 48 }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24 }}>
+              <h2 style={{ fontSize: 20, fontWeight: 700, color: '#0f172a' }}>Gia sư nổi bật</h2>
+              <button onClick={() => onNavigate('find-tutors')} style={{ background: 'none', border: 'none', color: '#2563eb', fontSize: 13, fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 4 }}>
+                Xem tất cả <ChevronRight size={14} />
               </button>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {verifiedTutors.slice(0, 6).map((t) => (
-                <div key={t.id || t.code}
-                  className="border border-slate-200 rounded-xl p-4 hover:border-blue-300 hover:shadow-sm transition-all cursor-pointer"
-                  onClick={() => { onSelectTutorForBook(t); onNavigate('find-tutors'); }}>
-                  <div className="flex items-start gap-3">
-                    <div className={`w-10 h-10 rounded-lg ${t.avatarColor || 'bg-blue-500'} flex items-center justify-center font-bold text-white text-sm shrink-0`}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 16 }}>
+              {verified.slice(0, 6).map(t => (
+                <div key={t.id || t.code} onClick={() => onNavigate('find-tutors')}
+                  style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 10, padding: 16, cursor: 'pointer', transition: 'border-color .15s' }}>
+                  <div style={{ display: 'flex', gap: 12, alignItems: 'flex-start' }}>
+                    <div style={{ width: 40, height: 40, borderRadius: 8, background: t.avatarColor || '#3b82f6', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontWeight: 700, fontSize: 14, flexShrink: 0 }}>
                       {t.avatar}
                     </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-1.5 mb-0.5">
-                        <span className="font-bold text-slate-800 text-sm truncate">{t.name}</span>
-                        <span className="text-[9px] bg-blue-600 text-white px-1.5 py-px rounded font-bold">✓</span>
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 2 }}>
+                        <span style={{ fontWeight: 700, fontSize: 14, color: '#0f172a' }}>{t.name}</span>
+                        <span style={{ background: '#2563eb', color: '#fff', fontSize: 9, fontWeight: 700, padding: '1px 5px', borderRadius: 4 }}>✓</span>
                       </div>
-                      <div className="text-[11px] text-slate-500 mb-2">
-                        <Star className="w-3 h-3 text-amber-500 fill-amber-500 inline mr-0.5" />{t.rating} • {t.experience || t.qualification}
+                      <div style={{ fontSize: 12, color: '#64748b', marginBottom: 6 }}>
+                        <Star size={12} style={{ display: 'inline', verticalAlign: '-2px', color: '#f59e0b', fill: '#f59e0b', marginRight: 2 }} />
+                        {t.rating} · {t.experience || t.qualification}
                       </div>
-                      <div className="flex flex-wrap gap-1 mb-2">
-                        {t.subjects.slice(0, 3).map((sub, si) => (
-                          <span key={si} className="px-1.5 py-px bg-slate-100 text-slate-600 rounded text-[10px] font-medium">{sub}</span>
+                      <div style={{ display: 'flex', gap: 4, flexWrap: 'wrap', marginBottom: 6 }}>
+                        {t.subjects.slice(0, 3).map((s, si) => (
+                          <span key={si} style={{ background: '#f1f5f9', color: '#475569', padding: '2px 8px', borderRadius: 4, fontSize: 11, fontWeight: 500 }}>{s}</span>
                         ))}
                       </div>
-                      <div className="text-xs font-bold text-blue-600">{fmt(t.hourlyRate)}đ/buổi</div>
+                      <div style={{ fontSize: 13, fontWeight: 700, color: '#2563eb' }}>{fmt(t.hourlyRate)}đ/buổi</div>
                     </div>
                   </div>
                 </div>
@@ -148,32 +151,32 @@ export const HomePublic: React.FC<HomePublicProps> = ({
         </section>
       )}
 
-      {/* ===== LỚP CẦN GIA SƯ ===== */}
-      {pendingClasses.length > 0 && (
-        <section className="bg-slate-50 border-b border-slate-100">
-          <div className="max-w-5xl mx-auto px-5 sm:px-8 py-14 sm:py-16">
-            <div className="flex items-center justify-between mb-8">
-              <h2 className="text-lg sm:text-xl font-bold text-slate-800">Lớp đang cần gia sư</h2>
-              <button onClick={() => onNavigate('register-tutor')}
-                className="text-blue-600 text-xs font-bold cursor-pointer hover:underline flex items-center gap-1">
-                Ứng tuyển<ChevronRight className="w-3.5 h-3.5" />
+      {/* ===== CLASSES ===== */}
+      {pending.length > 0 && (
+        <section style={{ background: '#fff', borderBottom: '1px solid #f1f5f9' }}>
+          <div style={{ ...W, paddingTop: 48, paddingBottom: 48 }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24 }}>
+              <h2 style={{ fontSize: 20, fontWeight: 700, color: '#0f172a' }}>Lớp đang cần gia sư</h2>
+              <button onClick={() => onNavigate('register-tutor')} style={{ background: 'none', border: 'none', color: '#2563eb', fontSize: 13, fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 4 }}>
+                Ứng tuyển <ChevronRight size={14} />
               </button>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {pendingClasses.slice(0, 6).map((cls) => (
-                <div key={cls.id || cls.code}
-                  className="bg-white border border-slate-200 rounded-xl p-4 hover:border-blue-300 hover:shadow-sm transition-all cursor-pointer"
-                  onClick={() => { onSelectClassForApply(cls); onNavigate('register-tutor'); }}>
-                  <div className="flex items-center justify-between mb-2">
-                    <span className={`text-[10px] font-bold px-2 py-0.5 rounded ${
-                      cls.status === 'KHẨN CẤP' ? 'bg-red-100 text-red-700' : 'bg-amber-100 text-amber-700'
-                    }`}>{cls.status}</span>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 16 }}>
+              {pending.slice(0, 6).map(cls => (
+                <div key={cls.id || cls.code} onClick={() => { onSelectClassForApply(cls); onNavigate('register-tutor'); }}
+                  style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 10, padding: 16, cursor: 'pointer' }}>
+                  <div style={{ marginBottom: 8 }}>
+                    <span style={{
+                      fontSize: 10, fontWeight: 700, padding: '2px 8px', borderRadius: 4,
+                      background: cls.status === 'KHẨN CẤP' ? '#fef2f2' : '#fffbeb',
+                      color: cls.status === 'KHẨN CẤP' ? '#dc2626' : '#d97706',
+                    }}>{cls.status}</span>
                   </div>
-                  <h4 className="font-bold text-slate-800 text-sm mb-1">{cls.subject}</h4>
-                  {cls.studentInfo && <p className="text-[11px] text-slate-500 mb-2 truncate">{cls.studentInfo}</p>}
-                  <div className="flex items-center justify-between text-[11px] text-slate-500 pt-2 border-t border-slate-100">
-                    <span className="flex items-center gap-1"><MapPin className="w-3 h-3" />{cls.location}</span>
-                    <span className="font-bold text-blue-600">{fmt(cls.fee)}đ/buổi</span>
+                  <div style={{ fontWeight: 700, fontSize: 14, color: '#0f172a', marginBottom: 4 }}>{cls.subject}</div>
+                  {cls.studentInfo && <div style={{ fontSize: 12, color: '#64748b', marginBottom: 8 }}>{cls.studentInfo}</div>}
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: 12, color: '#64748b', borderTop: '1px solid #e2e8f0', paddingTop: 8 }}>
+                    <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}><MapPin size={12} />{cls.location}</span>
+                    <span style={{ fontWeight: 700, color: '#2563eb' }}>{fmt(cls.fee)}đ/buổi</span>
                   </div>
                 </div>
               ))}
@@ -183,28 +186,62 @@ export const HomePublic: React.FC<HomePublicProps> = ({
       )}
 
       {/* ===== CTA ===== */}
-      <section className="bg-blue-600 text-white">
-        <div className="max-w-3xl mx-auto px-5 sm:px-8 py-14 sm:py-16 text-center">
-          <h2 className="text-xl sm:text-2xl font-bold mb-3">Sẵn sàng tìm gia sư?</h2>
-          <p className="text-blue-100 text-sm mb-8 max-w-md mx-auto">Đăng ký miễn phí, nhận tư vấn trong 30 phút.</p>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+      <section style={{ background: '#0f172a', color: '#fff' }}>
+        <div style={{ ...W, paddingTop: 48, paddingBottom: 48, textAlign: 'center' }}>
+          <h2 style={{ fontSize: 24, fontWeight: 700, marginBottom: 8 }}>Bạn cần tìm gia sư?</h2>
+          <p style={{ fontSize: 14, color: '#94a3b8', marginBottom: 28 }}>Đăng ký miễn phí · Tư vấn trong 30 phút</p>
+          <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
             <button onClick={() => onNavigate('parent-register')}
-              className="w-full sm:w-auto px-8 py-3.5 bg-white text-blue-700 font-bold text-sm rounded-lg cursor-pointer hover:bg-blue-50 transition-colors">
-              Phụ huynh đăng ký
+              style={{ padding: '12px 28px', background: '#2563eb', color: '#fff', border: 'none', borderRadius: 8, fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>
+              Đăng ký tìm gia sư
             </button>
-            <button onClick={() => onNavigate('register-tutor')}
-              className="w-full sm:w-auto px-8 py-3.5 bg-blue-500 text-white font-bold text-sm rounded-lg border border-blue-400 cursor-pointer hover:bg-blue-400 transition-colors">
-              Gia sư đăng ký
+            <button onClick={() => setShowContact(true)}
+              style={{ padding: '12px 28px', background: 'transparent', color: '#fff', border: '1px solid #334155', borderRadius: 8, fontSize: 14, fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6 }}>
+              <MessageCircle size={16} /> Gửi yêu cầu tư vấn
             </button>
             {zaloNumber && (
               <a href={`https://zalo.me/${zaloNumber}`} target="_blank" rel="noopener noreferrer"
-                className="w-full sm:w-auto px-8 py-3.5 bg-blue-500 text-white font-bold text-sm rounded-lg border border-blue-400 hover:bg-blue-400 transition-colors flex items-center justify-center gap-2">
-                <Phone className="w-4 h-4" />Zalo tư vấn
+                style={{ padding: '12px 28px', background: 'transparent', color: '#fff', border: '1px solid #334155', borderRadius: 8, fontSize: 14, fontWeight: 600, textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 6 }}>
+                <Phone size={16} /> Zalo
               </a>
             )}
           </div>
         </div>
       </section>
+
+      {/* ===== CONTACT POPUP ===== */}
+      {showContact && (
+        <div style={{ position: 'fixed', inset: 0, zIndex: 60, background: 'rgba(0,0,0,.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 16 }}
+          onClick={(e) => { if (e.target === e.currentTarget) setShowContact(false); }}>
+          <div style={{ background: '#fff', borderRadius: 12, maxWidth: 420, width: '100%', padding: 24, position: 'relative' }}>
+            <button onClick={() => setShowContact(false)} style={{ position: 'absolute', top: 12, right: 12, background: 'none', border: 'none', cursor: 'pointer', color: '#94a3b8' }}>
+              <X size={20} />
+            </button>
+            <h3 style={{ fontSize: 18, fontWeight: 700, color: '#0f172a', marginBottom: 4 }}>Yêu cầu tư vấn</h3>
+            <p style={{ fontSize: 13, color: '#64748b', marginBottom: 20 }}>Để lại thông tin, trung tâm sẽ liên hệ trong 30 phút.</p>
+
+            {cSent ? (
+              <div style={{ textAlign: 'center', padding: '24px 0' }}>
+                <CheckCircle2 size={40} color="#22c55e" style={{ margin: '0 auto 8px', display: 'block' }} />
+                <div style={{ fontWeight: 700, color: '#0f172a' }}>Đã gửi thành công!</div>
+              </div>
+            ) : (
+              <form onSubmit={handleContact} style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                <input required value={cName} onChange={e => setCName(e.target.value)} placeholder="Họ tên *"
+                  style={{ padding: '10px 14px', border: '1px solid #e2e8f0', borderRadius: 8, fontSize: 14, outline: 'none' }} />
+                <input required value={cPhone} onChange={e => setCPhone(e.target.value)} placeholder="Số điện thoại *" type="tel"
+                  style={{ padding: '10px 14px', border: '1px solid #e2e8f0', borderRadius: 8, fontSize: 14, outline: 'none' }} />
+                <textarea value={cMsg} onChange={e => setCMsg(e.target.value)} placeholder="Nội dung cần tư vấn..." rows={3}
+                  style={{ padding: '10px 14px', border: '1px solid #e2e8f0', borderRadius: 8, fontSize: 14, outline: 'none', resize: 'none' }} />
+                <button type="submit" disabled={cSending}
+                  style={{ padding: '12px 0', background: '#2563eb', color: '#fff', border: 'none', borderRadius: 8, fontSize: 14, fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
+                  <Send size={16} /> {cSending ? 'Đang gửi...' : 'Gửi yêu cầu'}
+                </button>
+              </form>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 };
