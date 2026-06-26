@@ -85,7 +85,7 @@ export const FindTutorPublic: React.FC<FindTutorPublicProps> = ({ tutors, onBook
       <div className="flex gap-2 overflow-x-auto pb-1 -mx-1 px-1 scrollbar-hide">
         {subjects.map(sub => (
           <button key={sub} onClick={() => setSelectedSubject(sub)}
-            className={`px-4 py-2.5 rounded-xl text-xs font-semibold border whitespace-nowrap cursor-pointer transition-all shrink-0 ${
+            className={`px-3 py-2 rounded-lg text-xs font-medium border whitespace-nowrap cursor-pointer transition-all shrink-0 ${
               selectedSubject === sub
                 ? 'bg-blue-600 text-white border-blue-600'
                 : 'bg-white text-slate-600 border-slate-200 hover:border-blue-300'
