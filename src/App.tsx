@@ -295,7 +295,7 @@ export default function App() {
 
 
           {activeTab === 'find-tutors' && (
-            <div className="max-w-6xl mx-auto px-5 sm:px-8 py-8 sm:py-12">
+            <div className="max-w-5xl mx-auto px-5 sm:px-8 py-8 sm:py-12">
               <FindTutorPublic tutors={tutors} onBookTutor={handleBookTutor} onPostRequest={handlePostRequest} />
             </div>
           )}
