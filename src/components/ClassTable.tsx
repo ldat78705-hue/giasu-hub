@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { ClassItem } from '../types';
-import { Plus, Sparkles, Filter, Trash2, CheckCircle2 } from 'lucide-react';
+import { Plus, Sparkles, Filter, Trash2, CheckCircle2, Download } from 'lucide-react';
 
 interface ClassTableProps {
   classes: ClassItem[];
@@ -87,13 +87,23 @@ export const ClassTable: React.FC<ClassTableProps> = ({
             </select>
           </div>
 
+          <button onClick={() => {
+            const header = 'M\u00e3,M\u00f4n,H\u1ecdc sinh,\u0110\u1ecba \u0111i\u1ec3m,Ph\u00ed,H\u00ecnh th\u1ee9c,Y\u00eau c\u1ea7u,Tr\u1ea1ng th\u00e1i\n';
+            const rows = classes.map(c => `${c.code},"${c.subject}","${c.studentInfo}","${c.location}",${c.fee},"${c.teachMode || ''}","${(c.requirements || '').replace(/"/g, '""')}","${c.status}"`).join('\n');
+            const blob = new Blob(['\uFEFF' + header + rows], { type: 'text/csv;charset=utf-8' });
+            const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = `lop-hoc-${new Date().toISOString().slice(0,10)}.csv`; a.click(); URL.revokeObjectURL(url);
+          }}
+            className="px-3 py-1.5 bg-white border border-slate-200 hover:border-slate-300 rounded-xl text-xs font-bold text-slate-600 cursor-pointer flex items-center gap-1.5">
+            <Download className="w-3.5 h-3.5" /> Export
+          </button>
+
           <button
             onClick={onOpenAiGenerator}
             className="px-3 py-1.5 bg-purple-50 hover:bg-purple-100 text-purple-700 font-bold text-xs rounded-xl border border-purple-200 transition-colors flex items-center gap-1.5"
-            title="Dùng AI soạn nhanh yêu cầu lớp học"
+            title="D\u00f9ng AI so\u1ea1n nhanh y\u00eau c\u1ea7u l\u1edbp h\u1ecdc"
           >
             <Sparkles className="w-3.5 h-3.5" />
-            <span>AI Soạn thảo</span>
+            <span>AI So\u1ea1n th\u1ea3o</span>
           </button>
 
           <button
