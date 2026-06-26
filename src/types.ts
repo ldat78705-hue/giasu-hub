@@ -163,4 +163,4 @@ export interface NotificationItem {
   relatedId?: string;
 }
 
-export type ActiveTab = 'home' | 'find-tutors' | 'register-tutor' | 'parent-register' | 'dashboard' | 'classes' | 'tutors' | 'students' | 'finance' | 'seo' | 'applications' | 'registrations' | 'settings';
+export type ActiveTab = 'home' | 'find-tutors' | 'register-tutor' | 'parent-register' | 'status-lookup' | 'dashboard' | 'classes' | 'tutors' | 'students' | 'finance' | 'seo' | 'applications' | 'registrations' | 'contacts' | 'settings';

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { TutorItem } from '../types';
-import { Plus, Star, Trash2, Phone, Search, ShieldCheck, ShieldX, Clock, CheckCircle2, MapPin, ExternalLink, FileText } from 'lucide-react';
+import { Plus, Star, Trash2, Phone, Search, ShieldCheck, ShieldX, MapPin, FileText, X, Eye, Mail } from 'lucide-react';
 
 interface TutorTabProps {
   tutors: TutorItem[];
@@ -20,6 +20,7 @@ export const TutorTab: React.FC<TutorTabProps> = ({ tutors, onAddTutor, onUpdate
   const [experience, setExperience] = useState('');
   const [hourlyRate, setHourlyRate] = useState(200000);
   const [phone, setPhone] = useState('');
+  const [previewTutor, setPreviewTutor] = useState<TutorItem | null>(null);
 
   const colors = ['bg-blue-500', 'bg-purple-500', 'bg-emerald-500', 'bg-amber-500', 'bg-rose-500', 'bg-indigo-500'];
 
@@ -51,6 +52,19 @@ export const TutorTab: React.FC<TutorTabProps> = ({ tutors, onAddTutor, onUpdate
     });
     setShowModal(false);
     setName(''); setSubjects(''); setQualification(''); setExperience(''); setPhone('');
+  };
+
+  const docCount = (t: TutorItem) => {
+    if (!t.documentUrls) return 0;
+    let c = 0;
+    if (t.documentUrls.cccdFrontUrl) c++;
+    if (t.documentUrls.cccdBackUrl) c++;
+    if (t.documentUrls.degreeUrls) c += t.documentUrls.degreeUrls.length;
+    if (t.documentUrls.otherUrls) c += t.documentUrls.otherUrls.length;
+    // Legacy
+    if ((t.documentUrls as any).cccdUrl) c++;
+    if ((t.documentUrls as any).degreeUrl) c++;
+    return c;
   };
 
   return (
@@ -118,6 +132,7 @@ export const TutorTab: React.FC<TutorTabProps> = ({ tutors, onAddTutor, onUpdate
                   </div>
                   <p className="text-[11px] text-slate-500 font-mono">{t.code}</p>
                   {t.phone && <p className="text-[11px] text-slate-500 flex items-center gap-1 mt-0.5"><Phone className="w-3 h-3" />{t.phone}</p>}
+                  {t.email && <p className="text-[11px] text-slate-500 flex items-center gap-1"><Mail className="w-3 h-3" />{t.email}</p>}
                 </div>
               </div>
 
@@ -151,22 +166,22 @@ export const TutorTab: React.FC<TutorTabProps> = ({ tutors, onAddTutor, onUpdate
                 <p>{t.experience} • <span className="flex items-center gap-0.5 inline text-amber-500"><Star className="w-3 h-3 fill-current inline" />{t.rating}</span></p>
               </div>
 
-              {/* Documents */}
-              {t.documentUrls && (t.documentUrls.cccdUrl || t.documentUrls.degreeUrl) && (
-                <div className="flex gap-2 mb-2">
-                  {t.documentUrls.cccdUrl && (
-                    <a href={t.documentUrls.cccdUrl} target="_blank" rel="noopener noreferrer"
-                      className="flex items-center gap-1 px-2 py-1 bg-amber-50 text-amber-700 rounded-lg text-[10px] font-semibold border border-amber-200 hover:bg-amber-100 transition-colors">
-                      <FileText className="w-3 h-3" /><span>CCCD</span><ExternalLink className="w-2.5 h-2.5" />
-                    </a>
-                  )}
-                  {t.documentUrls.degreeUrl && (
-                    <a href={t.documentUrls.degreeUrl} target="_blank" rel="noopener noreferrer"
-                      className="flex items-center gap-1 px-2 py-1 bg-indigo-50 text-indigo-700 rounded-lg text-[10px] font-semibold border border-indigo-200 hover:bg-indigo-100 transition-colors">
-                      <FileText className="w-3 h-3" /><span>Bằng cấp</span><ExternalLink className="w-2.5 h-2.5" />
-                    </a>
-                  )}
+              {/* Emergency Contacts */}
+              {t.emergencyContacts && t.emergencyContacts.length > 0 && (
+                <div className="text-[10px] text-slate-500 mb-2">
+                  <span className="font-semibold text-slate-600">Liên hệ khẩn cấp:</span>
+                  {t.emergencyContacts.map((c, i) => (
+                    <span key={i} className="ml-1">{c.name} ({c.relation}) <a href={`tel:${c.phone}`} className="text-blue-600">{c.phone}</a>{i < t.emergencyContacts!.length - 1 ? ',' : ''}</span>
+                  ))}
                 </div>
+              )}
+
+              {/* Documents Button */}
+              {docCount(t) > 0 && (
+                <button onClick={() => setPreviewTutor(t)}
+                  className="flex items-center gap-1.5 px-2.5 py-1.5 bg-amber-50 text-amber-700 rounded-lg text-[10px] font-semibold border border-amber-200 hover:bg-amber-100 transition-colors mb-2 cursor-pointer">
+                  <Eye className="w-3 h-3" /><span>Xem hồ sơ ({docCount(t)} file)</span>
+                </button>
               )}
 
               {/* Actions */}
@@ -197,6 +212,93 @@ export const TutorTab: React.FC<TutorTabProps> = ({ tutors, onAddTutor, onUpdate
               </div>
             </div>
           ))}
+        </div>
+      )}
+
+      {/* ===== DOCUMENT PREVIEW MODAL ===== */}
+      {previewTutor && previewTutor.documentUrls && (
+        <div className="fixed inset-0 z-50 bg-slate-900/70 backdrop-blur-xs flex items-center justify-center p-4"
+          onClick={() => setPreviewTutor(null)}>
+          <div className="bg-white rounded-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto p-6 shadow-2xl border border-slate-200"
+            onClick={e => e.stopPropagation()}>
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <h3 className="text-lg font-bold text-slate-800">Hồ sơ: {previewTutor.name}</h3>
+                <p className="text-xs text-slate-500">{previewTutor.code} · {previewTutor.phone}</p>
+              </div>
+              <button onClick={() => setPreviewTutor(null)} className="p-2 hover:bg-slate-100 rounded-xl cursor-pointer"><X className="w-5 h-5 text-slate-400" /></button>
+            </div>
+
+            {/* CCCD */}
+            <div className="mb-6">
+              <h4 className="text-sm font-bold text-slate-700 mb-3 flex items-center gap-2"><FileText className="w-4 h-4 text-amber-600" /> CCCD / CMND</h4>
+              <div className="grid grid-cols-2 gap-4">
+                {previewTutor.documentUrls.cccdFrontUrl ? (
+                  <div>
+                    <p className="text-[10px] font-semibold text-slate-500 mb-1">Mặt trước</p>
+                    <a href={previewTutor.documentUrls.cccdFrontUrl} target="_blank" rel="noopener noreferrer">
+                      <img src={previewTutor.documentUrls.cccdFrontUrl} alt="CCCD trước" className="w-full h-48 object-cover rounded-xl border border-slate-200 hover:border-blue-400 transition-colors cursor-pointer" />
+                    </a>
+                  </div>
+                ) : (
+                  <div className="flex items-center justify-center h-48 bg-slate-50 rounded-xl border border-dashed border-slate-300 text-xs text-slate-400">Chưa có mặt trước</div>
+                )}
+                {previewTutor.documentUrls.cccdBackUrl ? (
+                  <div>
+                    <p className="text-[10px] font-semibold text-slate-500 mb-1">Mặt sau</p>
+                    <a href={previewTutor.documentUrls.cccdBackUrl} target="_blank" rel="noopener noreferrer">
+                      <img src={previewTutor.documentUrls.cccdBackUrl} alt="CCCD sau" className="w-full h-48 object-cover rounded-xl border border-slate-200 hover:border-blue-400 transition-colors cursor-pointer" />
+                    </a>
+                  </div>
+                ) : (
+                  <div className="flex items-center justify-center h-48 bg-slate-50 rounded-xl border border-dashed border-slate-300 text-xs text-slate-400">Chưa có mặt sau</div>
+                )}
+                {/* Legacy single cccdUrl */}
+                {(previewTutor.documentUrls as any).cccdUrl && !previewTutor.documentUrls.cccdFrontUrl && (
+                  <div className="col-span-2">
+                    <p className="text-[10px] font-semibold text-slate-500 mb-1">CCCD (ảnh cũ)</p>
+                    <a href={(previewTutor.documentUrls as any).cccdUrl} target="_blank" rel="noopener noreferrer">
+                      <img src={(previewTutor.documentUrls as any).cccdUrl} alt="CCCD" className="w-full max-h-64 object-contain rounded-xl border border-slate-200 cursor-pointer" />
+                    </a>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Bằng cấp */}
+            <div className="mb-6">
+              <h4 className="text-sm font-bold text-slate-700 mb-3 flex items-center gap-2"><FileText className="w-4 h-4 text-indigo-600" /> Bằng cấp / Chứng chỉ</h4>
+              {previewTutor.documentUrls.degreeUrls && previewTutor.documentUrls.degreeUrls.length > 0 ? (
+                <div className="grid grid-cols-3 gap-3">
+                  {previewTutor.documentUrls.degreeUrls.map((url, i) => (
+                    <a key={i} href={url} target="_blank" rel="noopener noreferrer">
+                      <img src={url} alt={`Bằng cấp ${i + 1}`} className="w-full h-32 object-cover rounded-xl border border-slate-200 hover:border-indigo-400 transition-colors cursor-pointer" />
+                    </a>
+                  ))}
+                </div>
+              ) : (previewTutor.documentUrls as any).degreeUrl ? (
+                <a href={(previewTutor.documentUrls as any).degreeUrl} target="_blank" rel="noopener noreferrer">
+                  <img src={(previewTutor.documentUrls as any).degreeUrl} alt="Bằng cấp" className="max-h-48 object-contain rounded-xl border border-slate-200 cursor-pointer" />
+                </a>
+              ) : (
+                <div className="py-6 text-center text-xs text-slate-400 bg-slate-50 rounded-xl border border-dashed border-slate-300">Chưa tải lên bằng cấp</div>
+              )}
+            </div>
+
+            {/* File khác */}
+            {previewTutor.documentUrls.otherUrls && previewTutor.documentUrls.otherUrls.length > 0 && (
+              <div>
+                <h4 className="text-sm font-bold text-slate-700 mb-3 flex items-center gap-2"><FileText className="w-4 h-4 text-slate-600" /> Tài liệu khác</h4>
+                <div className="grid grid-cols-3 gap-3">
+                  {previewTutor.documentUrls.otherUrls.map((url, i) => (
+                    <a key={i} href={url} target="_blank" rel="noopener noreferrer">
+                      <img src={url} alt={`File ${i + 1}`} className="w-full h-32 object-cover rounded-xl border border-slate-200 hover:border-slate-400 transition-colors cursor-pointer" />
+                    </a>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       )}
 

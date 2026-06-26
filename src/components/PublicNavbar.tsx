@@ -22,6 +22,7 @@ export const PublicNavbar: React.FC<PublicNavbarProps> = ({ activeTab, onNavigat
     { id: 'home', label: 'Trang chủ' },
     { id: 'find-tutors', label: 'Tìm gia sư' },
     { id: 'register-tutor', label: 'Đăng ký dạy' },
+    { id: 'status-lookup', label: 'Tra cứu' },
   ];
 
   const mobileItems: { id: ActiveTab; label: string; icon: React.ReactNode }[] = [

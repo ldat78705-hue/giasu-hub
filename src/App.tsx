@@ -19,6 +19,7 @@ import { SettingsTab } from './components/SettingsTab';
 import { ApplicationsTab } from './components/ApplicationsTab';
 import { SeoConfigTab } from './components/SeoConfigTab';
 import { RegistrationsTab } from './components/RegistrationsTab';
+import { ContactsTab } from './components/ContactsTab';
 
 // Public Components
 import { PublicNavbar } from './components/PublicNavbar';
@@ -28,8 +29,9 @@ import { FindTutorPublic } from './components/FindTutorPublic';
 import { RegisterTutorPublic } from './components/RegisterTutorPublic';
 import { ParentRegisterForm } from './components/ParentRegisterForm';
 import { FloatingActions } from './components/FloatingActions';
+import { StatusLookup } from './components/StatusLookup';
 
-const publicTabs: ActiveTab[] = ['home', 'find-tutors', 'register-tutor', 'parent-register'];
+const publicTabs: ActiveTab[] = ['home', 'find-tutors', 'register-tutor', 'parent-register', 'status-lookup'];
 
 const DEFAULT_SETTINGS: AdminSettings = {
   centerName: 'Gia Sư Thành Đạt',
@@ -55,6 +57,7 @@ export default function App() {
     '/tim-gia-su': 'find-tutors',
     '/dang-ky-hoc': 'parent-register',
     '/dang-ky-day': 'register-tutor',
+    '/tra-cuu': 'status-lookup',
     '/dashboard': 'dashboard',
   };
 
@@ -63,6 +66,7 @@ export default function App() {
     'find-tutors': '/tim-gia-su',
     'parent-register': '/dang-ky-hoc',
     'register-tutor': '/dang-ky-day',
+    'status-lookup': '/tra-cuu',
     'dashboard': '/dashboard',
   };
 
@@ -71,6 +75,7 @@ export default function App() {
     '/tim-gia-su': 'Tìm Gia Sư Giỏi Tại Hà Nội | Gia Sư Thành Đạt',
     '/dang-ky-hoc': 'Đăng Ký Tìm Gia Sư - Phụ Huynh | Gia Sư Thành Đạt',
     '/dang-ky-day': 'Đăng Ký Làm Gia Sư | Gia Sư Thành Đạt',
+    '/tra-cuu': 'Tra Cứu Trạng Thái Đăng Ký | Gia Sư Thành Đạt',
     '/dashboard': 'Quản Trị | Gia Sư Thành Đạt',
   };
 
@@ -99,6 +104,7 @@ export default function App() {
   const [bookings, setBookings] = useState<TutorBooking[]>([]);
   const [notifications, setNotifications] = useState<NotificationItem[]>([]);
   const [registrations, setRegistrations] = useState<ParentRegistration[]>([]);
+  const [contacts, setContacts] = useState<ContactMessage[]>([]);
   const [settings, setSettings] = useState<AdminSettings>(DEFAULT_SETTINGS);
 
   // AI States
@@ -158,6 +164,11 @@ export default function App() {
         const regs = snap.docs.map(d => ({ id: d.id, ...d.data() } as ParentRegistration));
         regs.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
         setRegistrations(regs);
+      }),
+      onSnapshot(collection(db, 'contacts'), (snap) => {
+        const msgs = snap.docs.map(d => ({ id: d.id, ...d.data() } as ContactMessage));
+        msgs.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+        setContacts(msgs);
       }),
       onSnapshot(doc(db, 'settings', 'admin'), (snap) => {
         if (snap.exists()) {
@@ -328,6 +339,14 @@ export default function App() {
   const pendingRegistrations = registrations.filter(r => r.status === 'Mới').length;
   const pendingTutorVerify = tutors.filter(t => !t.verified).length;
   const totalRevenue = transactions.filter(t => t.type === 'Thu phí gia sư' && t.status === 'Thành công').reduce((s, t) => s + t.amount, 0);
+  const unreadContactsCount = contacts.filter(c => !c.isRead).length;
+
+  const handleMarkContactRead = async (id: string) => {
+    await updateDoc(doc(db, 'contacts', id), { isRead: true });
+  };
+  const handleDeleteContact = async (id: string) => {
+    await deleteDoc(doc(db, 'contacts', id));
+  };
 
   // ===================== PUBLIC VIEW =====================
   if (isPublicView) {
@@ -362,6 +381,11 @@ export default function App() {
                   wards={settings.wards || DEFAULT_HANOI_WARDS} />
               </div>
             } />
+            <Route path="/tra-cuu" element={
+              <div style={{ maxWidth: 560, margin: '0 auto', padding: '32px 20px' }}>
+                <StatusLookup tutors={tutors} registrations={registrations} zaloNumber={zaloNumber} />
+              </div>
+            } />
             <Route path="*" element={
               <HomePublic classes={classes} tutors={tutors} onNavigate={setActiveTab}
                 onSelectClassForApply={setSelectedClassForApply}
@@ -389,7 +413,8 @@ export default function App() {
     <div className="w-full h-screen bg-[#F1F5F9] flex font-sans overflow-hidden text-slate-800 select-text">
       <Sidebar activeTab={adminTab} setActiveTab={(tab) => { setAdminTab(tab); }}
         pendingClassesCount={pendingClassesCount}
-        pendingApplicationsCount={pendingApplicationsCount + pendingRegistrations + pendingTutorVerify} />
+        pendingApplicationsCount={pendingApplicationsCount + pendingRegistrations + pendingTutorVerify}
+        unreadContactsCount={unreadContactsCount} />
 
 
       <main className="flex-1 flex flex-col h-full overflow-hidden">
@@ -447,6 +472,10 @@ export default function App() {
 
           {adminTab === 'registrations' && (
             <RegistrationsTab registrations={registrations} onUpdateStatus={handleUpdateRegistrationStatus} />
+          )}
+
+          {adminTab === 'contacts' && (
+            <ContactsTab contacts={contacts} onMarkRead={handleMarkContactRead} onDelete={handleDeleteContact} />
           )}
 
           {adminTab === 'finance' && (

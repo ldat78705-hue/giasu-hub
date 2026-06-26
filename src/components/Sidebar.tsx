@@ -1,15 +1,16 @@
 import React from 'react';
 import { ActiveTab } from '../types';
-import { LayoutDashboard, BookOpen, Users, GraduationCap, DollarSign, ClipboardList, Settings, ExternalLink, Globe, UserPlus } from 'lucide-react';
+import { LayoutDashboard, BookOpen, Users, GraduationCap, DollarSign, ClipboardList, Settings, ExternalLink, Globe, UserPlus, MessageCircle } from 'lucide-react';
 
 interface SidebarProps {
   activeTab: ActiveTab;
   setActiveTab: (tab: ActiveTab) => void;
   pendingClassesCount: number;
   pendingApplicationsCount: number;
+  unreadContactsCount?: number;
 }
 
-export const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab, pendingClassesCount, pendingApplicationsCount }) => {
+export const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab, pendingClassesCount, pendingApplicationsCount, unreadContactsCount = 0 }) => {
   const navItems: { id: ActiveTab; label: string; icon: React.ReactNode; badge?: number }[] = [
     { id: 'dashboard', label: 'Bảng điều khiển', icon: <LayoutDashboard className="w-4 h-4" /> },
     { id: 'classes', label: 'Quản lý lớp', icon: <BookOpen className="w-4 h-4" />, badge: pendingClassesCount },
@@ -17,6 +18,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab, pendi
     { id: 'students', label: 'Quản lý học viên', icon: <Users className="w-4 h-4" /> },
     { id: 'registrations', label: 'Đăng ký học', icon: <UserPlus className="w-4 h-4" /> },
     { id: 'applications', label: 'Đơn ứng tuyển', icon: <ClipboardList className="w-4 h-4" />, badge: pendingApplicationsCount },
+    { id: 'contacts', label: 'Liên hệ & Tư vấn', icon: <MessageCircle className="w-4 h-4" />, badge: unreadContactsCount },
     { id: 'finance', label: 'Tài chính', icon: <DollarSign className="w-4 h-4" /> },
     { id: 'seo', label: 'SEO & Marketing', icon: <Globe className="w-4 h-4" /> },
     { id: 'settings', label: 'Cài đặt', icon: <Settings className="w-4 h-4" /> },
