@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { ParentRegistration } from '../types';
-import { UserPlus, Phone, MapPin, Clock, CheckCircle2, XCircle, Download, Search, ArrowUpDown } from 'lucide-react';
+import { UserPlus, Phone, MapPin, Clock, CheckCircle2, XCircle, Download, Search, ArrowUpDown, AlertTriangle } from 'lucide-react';
+import { getOverdueRegistrations } from '../utils';
 
 interface RegistrationsTabProps {
   registrations: ParentRegistration[];
@@ -14,6 +15,23 @@ export const RegistrationsTab: React.FC<RegistrationsTabProps> = ({ registration
   const [sortBy, setSortBy] = useState<'newest' | 'oldest' | 'name' | 'status'>('newest');
   const [editingNote, setEditingNote] = useState<string | null>(null);
   const [noteText, setNoteText] = useState('');
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+
+  const overdueRegs = getOverdueRegistrations(registrations);
+
+  const toggleSelect = (id: string) => {
+    const next = new Set(selectedIds);
+    if (next.has(id)) next.delete(id); else next.add(id);
+    setSelectedIds(next);
+  };
+  const toggleAll = () => {
+    if (selectedIds.size === filtered.length) setSelectedIds(new Set());
+    else setSelectedIds(new Set(filtered.map(r => r.id!).filter(Boolean)));
+  };
+  const batchUpdateStatus = (status: ParentRegistration['status']) => {
+    selectedIds.forEach(id => onUpdateStatus(id, status));
+    setSelectedIds(new Set());
+  };
 
   const fmt = (ts: number) => new Date(ts).toLocaleString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
 
@@ -108,6 +126,45 @@ export const RegistrationsTab: React.FC<RegistrationsTabProps> = ({ registration
         </div>
       )}
 
+      {/* Overdue Alert - #22 Reminder */}
+      {overdueRegs.length > 0 && (
+        <div className="bg-amber-50 border border-amber-200 rounded-xl p-3 flex items-center gap-3">
+          <AlertTriangle className="w-5 h-5 text-amber-600 shrink-0" />
+          <div className="flex-1">
+            <p className="text-xs font-bold text-amber-800">{overdueRegs.length} đơn đăng ký quá 24h chưa liên hệ!</p>
+            <p className="text-[10px] text-amber-600 mt-0.5">{overdueRegs.map(r => r.parentName).join(', ')}</p>
+          </div>
+          <button onClick={() => { setStatusFilter('Mới'); setSortBy('oldest'); }}
+            className="px-3 py-1.5 bg-amber-600 text-white text-[10px] font-bold rounded-lg cursor-pointer">Xem ngay</button>
+        </div>
+      )}
+
+      {/* Batch Actions - #21 */}
+      {selectedIds.size > 0 && (
+        <div className="bg-blue-50 border border-blue-200 rounded-xl p-3 flex items-center gap-3 flex-wrap">
+          <span className="text-xs font-bold text-blue-800">Đã chọn {selectedIds.size} đơn</span>
+          <div className="flex gap-2">
+            <button onClick={() => batchUpdateStatus('Đã liên hệ')}
+              className="px-3 py-1.5 bg-blue-600 text-white text-[10px] font-bold rounded-lg cursor-pointer flex items-center gap-1"><Phone className="w-3 h-3" /> Đã liên hệ</button>
+            <button onClick={() => batchUpdateStatus('Đã xếp lớp')}
+              className="px-3 py-1.5 bg-emerald-600 text-white text-[10px] font-bold rounded-lg cursor-pointer flex items-center gap-1"><CheckCircle2 className="w-3 h-3" /> Xếp lớp</button>
+            <button onClick={() => batchUpdateStatus('Hủy')}
+              className="px-3 py-1.5 bg-red-100 text-red-700 text-[10px] font-bold rounded-lg cursor-pointer flex items-center gap-1"><XCircle className="w-3 h-3" /> Hủy</button>
+            <button onClick={() => setSelectedIds(new Set())}
+              className="px-3 py-1.5 bg-slate-200 text-slate-600 text-[10px] font-bold rounded-lg cursor-pointer">Bỏ chọn</button>
+          </div>
+        </div>
+      )}
+
+      {/* Select All */}
+      {filtered.length > 0 && (
+        <div className="flex items-center gap-2">
+          <input type="checkbox" checked={selectedIds.size === filtered.length && filtered.length > 0} onChange={toggleAll}
+            className="w-4 h-4 rounded cursor-pointer" />
+          <span className="text-[10px] text-slate-500">Chọn tất cả ({filtered.length})</span>
+        </div>
+      )}
+
       {/* List */}
       {filtered.length === 0 ? (
         <div className="bg-white rounded-2xl border border-slate-200 p-10 text-center">
@@ -120,8 +177,10 @@ export const RegistrationsTab: React.FC<RegistrationsTabProps> = ({ registration
       ) : (
         <div className="space-y-3">
           {filtered.map(reg => (
-            <div key={reg.id} className={`bg-white rounded-2xl border p-5 transition-all ${reg.status === 'Mới' ? 'border-blue-300 shadow-sm' : 'border-slate-200'}`}>
-              <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
+            <div key={reg.id} className={`bg-white rounded-2xl border p-5 transition-all ${reg.status === 'Mới' ? 'border-blue-300 shadow-sm' : selectedIds.has(reg.id || '') ? 'border-blue-400 ring-2 ring-blue-100' : 'border-slate-200'}`}>
+              <div className="flex items-start gap-3">
+                {reg.id && <input type="checkbox" checked={selectedIds.has(reg.id)} onChange={() => toggleSelect(reg.id!)}
+                  className="w-4 h-4 mt-1 rounded cursor-pointer shrink-0" />}
                 <div className="flex-1 space-y-2">
                   {/* Parent info */}
                   <div className="flex items-center gap-3 flex-wrap">

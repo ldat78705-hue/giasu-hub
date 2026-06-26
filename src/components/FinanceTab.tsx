@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { TransactionItem } from '../types';
-import { Plus, ArrowDownLeft, ArrowUpRight, CheckCircle2, Trash2, DollarSign, Clock, Download, Search } from 'lucide-react';
+import { Plus, ArrowDownLeft, ArrowUpRight, CheckCircle2, Trash2, DollarSign, Clock, Download, Search, Printer } from 'lucide-react';
+import { generateReceiptPDF } from '../utils';
 
 interface FinanceTabProps {
   transactions: TransactionItem[];
@@ -181,12 +182,18 @@ export const FinanceTab: React.FC<FinanceTabProps> = ({ transactions, onAddTrans
                       </span>
                     </td>
                     <td className="px-6 py-4 text-right">
-                      {tr.id && onDeleteTransaction && (
-                        <button onClick={() => { if (window.confirm(`Xóa giao dịch ${tr.receiptId}?`)) onDeleteTransaction(tr.id!); }}
-                          className="p-1.5 hover:bg-red-50 text-slate-400 hover:text-red-600 rounded-lg transition-colors cursor-pointer">
-                          <Trash2 className="w-3.5 h-3.5" />
+                      <div className="flex items-center justify-end gap-1">
+                        <button onClick={() => generateReceiptPDF(tr)}
+                          className="p-1.5 hover:bg-blue-50 text-slate-400 hover:text-blue-600 rounded-lg transition-colors cursor-pointer" title="In phiếu">
+                          <Printer className="w-3.5 h-3.5" />
                         </button>
-                      )}
+                        {tr.id && onDeleteTransaction && (
+                          <button onClick={() => { if (window.confirm(`Xóa giao dịch ${tr.receiptId}?`)) onDeleteTransaction(tr.id!); }}
+                            className="p-1.5 hover:bg-red-50 text-slate-400 hover:text-red-600 rounded-lg transition-colors cursor-pointer">
+                            <Trash2 className="w-3.5 h-3.5" />
+                          </button>
+                        )}
+                      </div>
                     </td>
                   </tr>
                 ))}

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import { db, initSettingsIfEmpty, seedSampleData } from './firebase';
 import { collection, onSnapshot, addDoc, doc, updateDoc, deleteDoc, setDoc, arrayUnion } from 'firebase/firestore';
-import { ClassItem, TutorItem, StudentItem, TransactionItem, ActiveTab, TutorBooking, ClassApplication, AdminSettings, NotificationItem, ParentRegistration, ContactMessage, ClassMatch } from './types';
+import { ClassItem, TutorItem, StudentItem, TransactionItem, ActiveTab, TutorBooking, ClassApplication, AdminSettings, NotificationItem, ParentRegistration, ContactMessage, ClassMatch, TutorReview, AttendanceRecord } from './types';
 import { aiSmartSearch, aiMatchTutors, aiOptimizeSeo, aiGenerateClass, testApiKey } from './aiService';
 import { DEFAULT_HANOI_WARDS } from './hanoiWards';
 
@@ -21,6 +21,12 @@ import { SeoConfigTab } from './components/SeoConfigTab';
 import { RegistrationsTab } from './components/RegistrationsTab';
 import { ContactsTab } from './components/ContactsTab';
 import { MatchesTab } from './components/MatchesTab';
+import { KPIDashboard } from './components/KPIDashboard';
+import { TemplatesTab } from './components/TemplatesTab';
+import { ReviewsTab } from './components/ReviewsTab';
+import { AttendanceTab } from './components/AttendanceTab';
+import { CalendarView } from './components/CalendarView';
+import { ImportTab } from './components/ImportTab';
 
 // Public Components
 import { PublicNavbar } from './components/PublicNavbar';
@@ -107,6 +113,8 @@ export default function App() {
   const [registrations, setRegistrations] = useState<ParentRegistration[]>([]);
   const [contacts, setContacts] = useState<ContactMessage[]>([]);
   const [matches, setMatches] = useState<ClassMatch[]>([]);
+  const [reviews, setReviews] = useState<TutorReview[]>([]);
+  const [attendance, setAttendance] = useState<AttendanceRecord[]>([]);
   const [settings, setSettings] = useState<AdminSettings>(DEFAULT_SETTINGS);
 
   // AI States
@@ -173,6 +181,12 @@ export default function App() {
         const m = snap.docs.map(d => ({ id: d.id, ...d.data() } as ClassMatch));
         m.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
         setMatches(m);
+      }),
+      onSnapshot(collection(db, 'reviews'), (snap) => {
+        setReviews(snap.docs.map(d => ({ id: d.id, ...d.data() } as TutorReview)));
+      }),
+      onSnapshot(collection(db, 'attendance'), (snap) => {
+        setAttendance(snap.docs.map(d => ({ id: d.id, ...d.data() } as AttendanceRecord)));
       }),
       onSnapshot(doc(db, 'settings', 'admin'), (snap) => {
         if (snap.exists()) {
@@ -279,6 +293,56 @@ export default function App() {
   };
   const handleUpdateRegistrationNote = async (id: string, note: string) => {
     await updateDoc(doc(db, 'registrations', id), { adminNote: note });
+  };
+
+  // Reviews
+  const handleAddReview = async (r: TutorReview) => { await addDoc(collection(db, 'reviews'), r); };
+  const handleDeleteReview = async (id: string) => { await deleteDoc(doc(db, 'reviews', id)); };
+
+  // Attendance
+  const handleAddAttendance = async (r: AttendanceRecord) => { await addDoc(collection(db, 'attendance'), r); };
+  const handleDeleteAttendance = async (id: string) => { await deleteDoc(doc(db, 'attendance', id)); };
+
+  // Import
+  const handleImportTutors = async (items: Partial<TutorItem>[]) => {
+    for (const item of items) {
+      if (!item.name) continue;
+      const tutor: TutorItem = {
+        code: `#GS${Math.floor(1000 + Math.random() * 9000)}`,
+        name: item.name,
+        avatar: item.name.charAt(0).toUpperCase(),
+        avatarColor: '#3b82f6',
+        subjects: item.subjects || [],
+        qualification: item.qualification || '',
+        experience: item.experience || '',
+        rating: 0,
+        status: 'offline',
+        hourlyRate: 200000,
+        phone: item.phone || '',
+        email: item.email || '',
+        verified: false,
+        registeredAt: Date.now(),
+        area: item.area || '',
+      };
+      await addDoc(collection(db, 'tutors'), tutor);
+    }
+  };
+  const handleImportStudents = async (items: Partial<StudentItem>[]) => {
+    for (const item of items) {
+      if (!item.name) continue;
+      const student: StudentItem = {
+        name: item.name,
+        grade: item.grade || '',
+        parentName: item.parentName || '',
+        parentPhone: item.parentPhone || '',
+        school: item.school || '',
+        enrolledClasses: 0,
+        status: 'Chờ xếp lớp',
+        phone: item.parentPhone || '',
+        createdAt: Date.now(),
+      };
+      await addDoc(collection(db, 'students'), student);
+    }
   };
 
   const handleSaveSettings = async (partial: Partial<AdminSettings>) => {
@@ -520,6 +584,30 @@ export default function App() {
 
           {adminTab === 'seo' && (
             <SeoConfigTab onRunAiSeo={runAiSeo} />
+          )}
+
+          {adminTab === 'reviews' && (
+            <ReviewsTab reviews={reviews} tutors={tutors} onAddReview={handleAddReview} onDeleteReview={handleDeleteReview} />
+          )}
+
+          {adminTab === 'attendance' && (
+            <AttendanceTab attendance={attendance} matches={matches} onAddRecord={handleAddAttendance} onDeleteRecord={handleDeleteAttendance} />
+          )}
+
+          {adminTab === 'calendar' && (
+            <CalendarView matches={matches} attendance={attendance} />
+          )}
+
+          {adminTab === 'templates' && (
+            <TemplatesTab />
+          )}
+
+          {(adminTab as string) === 'import' && (
+            <ImportTab tutors={tutors} students={students} onImportTutors={handleImportTutors} onImportStudents={handleImportStudents} />
+          )}
+
+          {(adminTab as string) === 'kpi' && (
+            <KPIDashboard matches={matches} registrations={registrations} tutors={tutors} />
           )}
 
           {adminTab === 'settings' && (

@@ -183,4 +183,28 @@ export interface ClassMatch {
   createdAt: number;
 }
 
-export type ActiveTab = 'home' | 'find-tutors' | 'register-tutor' | 'parent-register' | 'status-lookup' | 'dashboard' | 'classes' | 'tutors' | 'students' | 'finance' | 'seo' | 'applications' | 'registrations' | 'contacts' | 'matches' | 'settings';
+export interface TutorReview {
+  id?: string;
+  tutorCode: string;
+  tutorName: string;
+  parentName: string;
+  parentPhone: string;
+  rating: number;
+  comment: string;
+  createdAt: number;
+}
+
+export interface AttendanceRecord {
+  id?: string;
+  matchId: string;
+  classCode: string;
+  tutorCode: string;
+  tutorName: string;
+  studentName: string;
+  date: string;
+  status: 'Đã dạy' | 'Nghỉ GS' | 'Nghỉ HS' | 'Hủy';
+  note?: string;
+  createdAt: number;
+}
+
+export type ActiveTab = 'home' | 'find-tutors' | 'register-tutor' | 'parent-register' | 'status-lookup' | 'dashboard' | 'classes' | 'tutors' | 'students' | 'finance' | 'seo' | 'applications' | 'registrations' | 'contacts' | 'matches' | 'settings' | 'reviews' | 'attendance' | 'templates' | 'calendar' | 'kpi' | 'import';
