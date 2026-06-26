@@ -119,9 +119,6 @@ export default function App() {
   const [rawNotes, setRawNotes] = useState('');
   const [genLoading, setGenLoading] = useState(false);
 
-  // Public page states
-  const [selectedClassForApply, setSelectedClassForApply] = useState<ClassItem | null>(null);
-
   const isPublicView = publicTabs.includes(activeTab);
   const apiKey = settings.geminiApiKey || '';
   const zaloNumber = settings.zaloNumber || '';
@@ -295,17 +292,6 @@ export default function App() {
 
   const handlePostRequest = async (cls: ClassItem) => { await addDoc(collection(db, 'classes'), cls); };
 
-  const handleApplyClass = async (cls: ClassItem, tutorName: string, phone: string, intro: string) => {
-    await addDoc(collection(db, 'applications'), {
-      classCode: cls.code, classSubject: cls.subject, tutorName, tutorPhone: phone,
-      tutorNote: intro, appliedAt: new Date().toISOString(), status: 'Chờ duyệt',
-    });
-    await addDoc(collection(db, 'notifications'), {
-      type: 'application', title: 'Gia sư ứng tuyển nhận lớp',
-      message: `${tutorName} ứng tuyển lớp ${cls.code} - ${cls.subject}`,
-      isRead: false, createdAt: Date.now(),
-    });
-  };
 
   const handleRegisterTutorProfile = async (tutor: TutorItem) => {
     await addDoc(collection(db, 'tutors'), tutor);
@@ -357,8 +343,6 @@ export default function App() {
           <Routes>
             <Route path="/" element={
               <HomePublic classes={classes} tutors={tutors} onNavigate={setActiveTab}
-                onSelectClassForApply={setSelectedClassForApply}
-                onSelectTutorForBook={() => {}}
                 onAiSearch={handleAiSearch} isSearching={isSearching}
                 zaloNumber={zaloNumber} onContactSubmit={handleContactSubmit} />
             } />
@@ -388,8 +372,6 @@ export default function App() {
             } />
             <Route path="*" element={
               <HomePublic classes={classes} tutors={tutors} onNavigate={setActiveTab}
-                onSelectClassForApply={setSelectedClassForApply}
-                onSelectTutorForBook={() => {}}
                 onAiSearch={handleAiSearch} isSearching={isSearching}
                 zaloNumber={zaloNumber} onContactSubmit={handleContactSubmit} />
             } />

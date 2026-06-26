@@ -1,14 +1,11 @@
 import React, { useState } from 'react';
-import { ClassItem, TutorItem, ActiveTab } from '../types';
-import { ContactMessage } from '../types';
+import { ClassItem, TutorItem, ActiveTab, ContactMessage } from '../types';
 import { Star, MapPin, ShieldCheck, Clock, CheckCircle2, Phone, ChevronRight, Send, X, MessageCircle } from 'lucide-react';
 
 interface HomePublicProps {
   classes: ClassItem[];
   tutors: TutorItem[];
   onNavigate: (tab: ActiveTab) => void;
-  onSelectClassForApply: (cls: ClassItem) => void;
-  onSelectTutorForBook: (tutor: TutorItem) => void;
   onAiSearch: (query: string) => void;
   isSearching: boolean;
   zaloNumber?: string;
@@ -19,7 +16,7 @@ const W = { maxWidth: 1024, margin: '0 auto', padding: '0 20px' } as const;
 const fmt = (v: number) => new Intl.NumberFormat('vi-VN').format(v);
 
 export const HomePublic: React.FC<HomePublicProps> = ({
-  classes, tutors, onNavigate, onSelectClassForApply, zaloNumber, onContactSubmit,
+  classes, tutors, onNavigate, zaloNumber, onContactSubmit,
 }) => {
   const pending = classes.filter(c => c.status === 'ĐANG TÌM' || c.status === 'KHẨN CẤP');
   const verified = tutors.filter(t => t.verified && t.status === 'online');

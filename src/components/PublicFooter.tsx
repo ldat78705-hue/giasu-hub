@@ -30,6 +30,7 @@ export const PublicFooter: React.FC<PublicFooterProps> = ({ onNavigate, zaloNumb
               { label: 'Tìm gia sư', tab: 'find-tutors' as ActiveTab },
               { label: 'Đăng ký tìm gia sư', tab: 'parent-register' as ActiveTab },
               { label: 'Đăng ký làm gia sư', tab: 'register-tutor' as ActiveTab },
+              { label: 'Tra cứu đơn đăng ký', tab: 'status-lookup' as ActiveTab },
             ].map((l, i) => (
               <button key={i} onClick={() => onNavigate(l.tab)}
                 style={{ display: 'block', background: 'none', border: 'none', color: '#94a3b8', fontSize: 13, cursor: 'pointer', padding: '3px 0', textAlign: 'left' }}>
