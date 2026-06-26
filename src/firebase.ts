@@ -113,6 +113,7 @@ const SAMPLE_CLASSES: Omit<ClassItem, 'id'>[] = [
     status: 'ĐANG TÌM', createdAt: Date.now() - 86400000 * 2,
     schedule: 'Thứ 3, 5, 7 - Tối 19h-21h',
     requirements: 'GS có kinh nghiệm luyện thi, kiên nhẫn',
+    teachMode: 'Tại nhà',
   },
   {
     code: '#LH002', subject: 'Tiếng Anh giao tiếp + IELTS',
@@ -121,6 +122,7 @@ const SAMPLE_CLASSES: Omit<ClassItem, 'id'>[] = [
     status: 'KHẨN CẤP', createdAt: Date.now() - 86400000,
     schedule: 'Linh hoạt, 3 buổi/tuần',
     requirements: 'GS IELTS 7.0+, có phương pháp rõ ràng',
+    teachMode: 'Online',
   },
   {
     code: '#LH003', subject: 'Ngữ Văn lớp 9 - Luyện thi vào 10',
@@ -129,6 +131,7 @@ const SAMPLE_CLASSES: Omit<ClassItem, 'id'>[] = [
     status: 'ĐANG TÌM', createdAt: Date.now() - 86400000 * 3,
     schedule: 'Thứ 2, 4, 6 - Chiều 14h-16h',
     requirements: 'GS nữ ưu tiên, có kinh nghiệm luyện thi',
+    teachMode: 'Tại nhà',
   },
   {
     code: '#LH004', subject: 'Vật Lý + Hóa Học lớp 11',
@@ -137,6 +140,7 @@ const SAMPLE_CLASSES: Omit<ClassItem, 'id'>[] = [
     status: 'ĐANG TÌM', createdAt: Date.now() - 86400000 * 4,
     schedule: 'Thứ 7, CN - Sáng 8h-10h',
     requirements: 'SV hoặc GV trường top',
+    teachMode: 'Cả hai',
   },
   {
     code: '#LH005', subject: 'Toán + Tiếng Việt lớp 3',
@@ -145,6 +149,7 @@ const SAMPLE_CLASSES: Omit<ClassItem, 'id'>[] = [
     status: 'ĐANG TÌM', createdAt: Date.now() - 86400000 * 5,
     schedule: 'Thứ 2-6, chiều 16h-17h30',
     requirements: 'GS kiên nhẫn, có kinh nghiệm dạy tiểu học',
+    teachMode: 'Tại nhà',
   },
   {
     code: '#LH006', subject: 'Lập trình Python cơ bản',
@@ -153,6 +158,7 @@ const SAMPLE_CLASSES: Omit<ClassItem, 'id'>[] = [
     status: 'KHẨN CẤP', createdAt: Date.now(),
     schedule: 'Thứ 7, CN - Tối 19h-21h',
     requirements: 'GS có kinh nghiệm dạy lập trình cho trẻ',
+    teachMode: 'Cả hai',
   },
 ];
 

@@ -29,6 +29,7 @@ export const FindTutorPublic: React.FC<FindTutorPublicProps> = ({ tutors, onBook
   const [reqGrade, setReqGrade] = useState('');
   const [reqLocation, setReqLocation] = useState('');
   const [reqNotes, setReqNotes] = useState('');
+  const [reqTeachMode, setReqTeachMode] = useState<'Tại nhà' | 'Online' | 'Cả hai'>('Tại nhà');
   const [requestSuccess, setRequestSuccess] = useState(false);
 
   const verifiedTutors = tutors.filter(t => t.verified);
@@ -56,6 +57,7 @@ export const FindTutorPublic: React.FC<FindTutorPublicProps> = ({ tutors, onBook
       subject: `${reqSubject} (${reqGrade || 'Phổ thông'})`,
       studentInfo: reqGrade, location: reqLocation, fee: 300000,
       status: 'ĐANG TÌM', createdAt: Date.now(), requirements: reqNotes,
+      teachMode: reqTeachMode,
     });
     setRequestSuccess(true);
     setTimeout(() => { setRequestSuccess(false); setShowRequestModal(false); setReqSubject(''); setReqGrade(''); setReqLocation(''); setReqNotes(''); }, 2500);
@@ -228,6 +230,17 @@ export const FindTutorPublic: React.FC<FindTutorPublicProps> = ({ tutors, onBook
                   <input required value={reqSubject} onChange={e => setReqSubject(e.target.value)} placeholder="Môn học cần tìm GS *" style={inputStyle} />
                   <input value={reqGrade} onChange={e => setReqGrade(e.target.value)} placeholder="Lớp / Trình độ" style={inputStyle} />
                   <input required value={reqLocation} onChange={e => setReqLocation(e.target.value)} placeholder="Khu vực (VD: Cầu Giấy) *" style={inputStyle} />
+                  <div>
+                    <div style={{ fontSize: 12, fontWeight: 600, color: '#475569', marginBottom: 6 }}>Hình thức học</div>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 6 }}>
+                      {([['Tại nhà', '🏠 Trực tiếp'] as const, ['Online', '💻 Trực tuyến'] as const, ['Cả hai', '🔄 Cả hai'] as const]).map(([val, label]) => (
+                        <button key={val} type="button" onClick={() => setReqTeachMode(val)}
+                          style={{ padding: '8px 6px', borderRadius: 6, border: '1px solid', fontSize: 11, fontWeight: 600, cursor: 'pointer', textAlign: 'center', background: reqTeachMode === val ? '#eff6ff' : '#fff', borderColor: reqTeachMode === val ? '#2563eb' : '#e2e8f0', color: reqTeachMode === val ? '#2563eb' : '#475569' }}>
+                          {label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
                   <textarea rows={2} value={reqNotes} onChange={e => setReqNotes(e.target.value)} placeholder="Yêu cầu thêm..." style={{ ...inputStyle, resize: 'none' }} />
                   <button type="submit"
                     style={{ padding: '12px 0', background: '#2563eb', color: '#fff', border: 'none', borderRadius: 8, fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>

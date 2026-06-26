@@ -31,6 +31,7 @@ export const ClassTable: React.FC<ClassTableProps> = ({
   const [location, setLocation] = useState('');
   const [fee, setFee] = useState<number>(300000);
   const [requirements, setRequirements] = useState('');
+  const [teachMode, setTeachMode] = useState<ClassItem['teachMode']>('Tại nhà');
 
   const filteredClasses = classes.filter((c) => {
     if (statusFilter === 'ALL') return true;
@@ -49,6 +50,7 @@ export const ClassTable: React.FC<ClassTableProps> = ({
       status: 'ĐANG TÌM',
       createdAt: Date.now(),
       requirements: requirements || 'Gia sư tận tâm, đúng giờ.',
+      teachMode,
     });
     setShowAddModal(false);
     setSubject('');
@@ -140,7 +142,10 @@ export const ClassTable: React.FC<ClassTableProps> = ({
                         <span>{cls.subject}</span>
                         {isSelected && <span className="w-1.5 h-1.5 bg-blue-600 rounded-full animate-pulse"></span>}
                       </div>
-                      <div className="text-xs text-slate-500 mt-0.5">{cls.studentInfo}</div>
+                      <div className="text-xs text-slate-500 mt-0.5">
+                        {cls.studentInfo}
+                        {cls.teachMode && <span className={`ml-2 px-1.5 py-0.5 rounded text-[9px] font-bold ${cls.teachMode === 'Online' ? 'bg-purple-100 text-purple-700' : cls.teachMode === 'Tại nhà' ? 'bg-green-100 text-green-700' : 'bg-blue-100 text-blue-700'}`}>{cls.teachMode === 'Online' ? '💻 Online' : cls.teachMode === 'Tại nhà' ? '🏠 Trực tiếp' : '🔄 Cả hai'}</span>}
+                      </div>
                     </td>
                     <td className="px-6 py-4 text-slate-600 text-xs">{cls.location}</td>
                     <td className="px-6 py-4 font-bold text-blue-600 text-xs">{formatCurrency(cls.fee)}</td>
@@ -244,6 +249,18 @@ export const ClassTable: React.FC<ClassTableProps> = ({
                   onChange={(e) => setLocation(e.target.value)}
                   className="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:bg-white focus:border-blue-500 text-sm"
                 />
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold uppercase text-slate-600 mb-1">Hình thức học</label>
+                <div className="flex gap-2">
+                  {([['Tại nhà', '🏠 Trực tiếp'], ['Online', '💻 Trực tuyến'], ['Cả hai', '🔄 Cả hai']] as const).map(([val, label]) => (
+                    <button key={val} type="button" onClick={() => setTeachMode(val)}
+                      className={`flex-1 py-2 rounded-xl text-xs font-semibold border cursor-pointer transition-all ${teachMode === val ? 'bg-blue-600 text-white border-blue-600' : 'bg-white text-slate-600 border-slate-200 hover:border-blue-300'}`}>
+                      {label}
+                    </button>
+                  ))}
+                </div>
               </div>
 
               <div>

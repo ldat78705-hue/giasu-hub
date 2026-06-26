@@ -560,7 +560,10 @@ export const RegisterTutorPublic: React.FC<RegisterTutorPublicProps> = ({
                 <div key={cls.id || cls.code} style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 10, padding: 16, cursor: 'pointer' }}
                   onClick={() => setSelectedClass(cls)}>
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
-                    <span style={{ fontSize: 11, fontWeight: 700, padding: '2px 8px', borderRadius: 4, background: cls.status === 'KHẨN CẤP' ? '#fef2f2' : '#fffbeb', color: cls.status === 'KHẨN CẤP' ? '#dc2626' : '#d97706' }}>{cls.status}</span>
+                    <div style={{ display: 'flex', gap: 4 }}>
+                      <span style={{ fontSize: 11, fontWeight: 700, padding: '2px 8px', borderRadius: 4, background: cls.status === 'KHẨN CẤP' ? '#fef2f2' : '#fffbeb', color: cls.status === 'KHẨN CẤP' ? '#dc2626' : '#d97706' }}>{cls.status}</span>
+                      {cls.teachMode && <span style={{ fontSize: 10, fontWeight: 600, padding: '2px 8px', borderRadius: 4, background: '#f0fdf4', color: '#16a34a' }}>{cls.teachMode === 'Online' ? '💻 Online' : cls.teachMode === 'Tại nhà' ? '🏠 Trực tiếp' : '🔄 Cả hai'}</span>}
+                    </div>
                     <span style={{ fontSize: 11, color: '#94a3b8' }}>{cls.code}</span>
                   </div>
                   <div style={{ fontWeight: 700, fontSize: 14, color: '#0f172a', marginBottom: 4 }}>{cls.subject}</div>
