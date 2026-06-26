@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { ClassItem, TutorItem, ActiveTab } from '../types';
 import { Star, MapPin, GraduationCap, BookOpen, ShieldCheck, Clock, Award, CheckCircle2, Phone, UserPlus, Sparkles, ChevronRight, Search, Users, Heart, ArrowRight, Calculator, Beaker, BookA, Monitor, PenTool, Globe2 } from 'lucide-react';
 
