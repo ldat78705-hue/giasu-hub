@@ -8,18 +8,20 @@ interface SidebarProps {
   pendingClassesCount: number;
   pendingApplicationsCount: number;
   unreadContactsCount?: number;
+  pendingRegistrationsCount?: number;
+  activeMatchesCount?: number;
 }
 
-export const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab, pendingClassesCount, pendingApplicationsCount, unreadContactsCount = 0 }) => {
+export const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab, pendingClassesCount, pendingApplicationsCount, unreadContactsCount = 0, pendingRegistrationsCount = 0, activeMatchesCount = 0 }) => {
   const navItems: { id: ActiveTab; label: string; icon: React.ReactNode; badge?: number }[] = [
-    { id: 'dashboard', label: 'Bảng điều khiển', icon: <LayoutDashboard className="w-4 h-4" /> },
-    { id: 'classes', label: 'Quản lý lớp', icon: <BookOpen className="w-4 h-4" />, badge: pendingClassesCount },
-    { id: 'matches', label: 'Ghép lớp', icon: <ExternalLink className="w-4 h-4" /> },
-    { id: 'tutors', label: 'Quản lý gia sư', icon: <GraduationCap className="w-4 h-4" /> },
-    { id: 'students', label: 'Quản lý học viên', icon: <Users className="w-4 h-4" /> },
-    { id: 'registrations', label: 'Đăng ký học', icon: <UserPlus className="w-4 h-4" /> },
-    { id: 'applications', label: 'Đơn ứng tuyển', icon: <ClipboardList className="w-4 h-4" />, badge: pendingApplicationsCount },
-    { id: 'contacts', label: 'Liên hệ & Tư vấn', icon: <MessageCircle className="w-4 h-4" />, badge: unreadContactsCount },
+    { id: 'dashboard', label: 'B\u1ea3ng \u0111i\u1ec1u khi\u1ec3n', icon: <LayoutDashboard className="w-4 h-4" /> },
+    { id: 'classes', label: 'Qu\u1ea3n l\u00fd l\u1edbp', icon: <BookOpen className="w-4 h-4" />, badge: pendingClassesCount },
+    { id: 'matches', label: 'Gh\u00e9p l\u1edbp', icon: <ExternalLink className="w-4 h-4" />, badge: activeMatchesCount },
+    { id: 'tutors', label: 'Qu\u1ea3n l\u00fd gia s\u01b0', icon: <GraduationCap className="w-4 h-4" /> },
+    { id: 'students', label: 'Qu\u1ea3n l\u00fd h\u1ecdc vi\u00ean', icon: <Users className="w-4 h-4" /> },
+    { id: 'registrations', label: '\u0110\u0103ng k\u00fd h\u1ecdc', icon: <UserPlus className="w-4 h-4" />, badge: pendingRegistrationsCount },
+    { id: 'applications', label: '\u0110\u01a1n \u1ee9ng tuy\u1ec3n', icon: <ClipboardList className="w-4 h-4" />, badge: pendingApplicationsCount },
+    { id: 'contacts', label: 'Li\u00ean h\u1ec7 & T\u01b0 v\u1ea5n', icon: <MessageCircle className="w-4 h-4" />, badge: unreadContactsCount },
     { id: 'finance', label: 'Tài chính', icon: <DollarSign className="w-4 h-4" /> },
     { id: 'seo', label: 'SEO & Marketing', icon: <Globe className="w-4 h-4" /> },
     { id: 'settings', label: 'Cài đặt', icon: <Settings className="w-4 h-4" /> },

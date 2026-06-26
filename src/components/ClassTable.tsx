@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { ClassItem } from '../types';
-import { Plus, Sparkles, Filter, Trash2, CheckCircle2, Download } from 'lucide-react';
+import { Plus, Sparkles, Filter, Trash2, CheckCircle2, Download, Search } from 'lucide-react';
 
 interface ClassTableProps {
   classes: ClassItem[];
@@ -23,6 +23,7 @@ export const ClassTable: React.FC<ClassTableProps> = ({
 }) => {
   const [showAddModal, setShowAddModal] = useState(false);
   const [statusFilter, setStatusFilter] = useState<string>('ALL');
+  const [searchTerm, setSearchTerm] = useState('');
   
   // New Class Form State
   const [code, setCode] = useState(`#CS${Math.floor(2300 + Math.random() * 100)}`);
@@ -34,8 +35,11 @@ export const ClassTable: React.FC<ClassTableProps> = ({
   const [teachMode, setTeachMode] = useState<ClassItem['teachMode']>('Tại nhà');
 
   const filteredClasses = classes.filter((c) => {
-    if (statusFilter === 'ALL') return true;
-    return c.status === statusFilter;
+    const matchStatus = statusFilter === 'ALL' || c.status === statusFilter;
+    if (!matchStatus) return false;
+    if (!searchTerm) return true;
+    const q = searchTerm.toLowerCase();
+    return c.code.toLowerCase().includes(q) || c.subject.toLowerCase().includes(q) || c.location.toLowerCase().includes(q) || (c.studentInfo || '').toLowerCase().includes(q);
   });
 
   const handleCreate = (e: React.FormEvent) => {
@@ -87,6 +91,12 @@ export const ClassTable: React.FC<ClassTableProps> = ({
             </select>
           </div>
 
+          <div className="relative">
+            <Search className="w-3.5 h-3.5 absolute left-2.5 top-2 text-slate-400" />
+            <input type="text" value={searchTerm} onChange={e => setSearchTerm(e.target.value)}
+              placeholder="Tìm mã, môn, khu vực..."
+              className="pl-8 pr-3 py-1.5 bg-slate-50 border border-slate-200 rounded-xl text-xs outline-none focus:bg-white focus:border-blue-500 w-40" />
+          </div>
           <button onClick={() => {
             const header = 'M\u00e3,M\u00f4n,H\u1ecdc sinh,\u0110\u1ecba \u0111i\u1ec3m,Ph\u00ed,H\u00ecnh th\u1ee9c,Y\u00eau c\u1ea7u,Tr\u1ea1ng th\u00e1i\n';
             const rows = classes.map(c => `${c.code},"${c.subject}","${c.studentInfo}","${c.location}",${c.fee},"${c.teachMode || ''}","${(c.requirements || '').replace(/"/g, '""')}","${c.status}"`).join('\n');
@@ -188,7 +198,7 @@ export const ClassTable: React.FC<ClassTableProps> = ({
                         </button>
                         {cls.id && (
                           <button
-                            onClick={() => onDeleteClass(cls.id!)}
+                            onClick={() => { if (window.confirm(`Xóa lớp ${cls.code} - ${cls.subject}?`)) onDeleteClass(cls.id!); }}
                             className="p-1.5 hover:bg-red-50 text-slate-400 hover:text-red-600 rounded-lg transition-colors"
                             title="Xóa lớp"
                           >

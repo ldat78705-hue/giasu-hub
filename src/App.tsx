@@ -427,8 +427,10 @@ export default function App() {
     <div className="w-full h-screen bg-[#F1F5F9] flex font-sans overflow-hidden text-slate-800 select-text">
       <Sidebar activeTab={adminTab} setActiveTab={(tab) => { setAdminTab(tab); }}
         pendingClassesCount={pendingClassesCount}
-        pendingApplicationsCount={pendingApplicationsCount + pendingRegistrations + pendingTutorVerify}
-        unreadContactsCount={unreadContactsCount} />
+        pendingApplicationsCount={pendingApplicationsCount + pendingTutorVerify}
+        unreadContactsCount={unreadContactsCount}
+        pendingRegistrationsCount={pendingRegistrations}
+        activeMatchesCount={matches.filter(m => m.status === 'Đang dạy').length} />
 
 
       <main className="flex-1 flex flex-col h-full overflow-hidden">

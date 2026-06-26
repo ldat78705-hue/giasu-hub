@@ -164,7 +164,7 @@ export const MatchesTab: React.FC<MatchesTabProps> = ({ matches, classes, tutors
                             </button>
                           </>
                         )}
-                        <button onClick={() => m.id && onDeleteMatch(m.id)}
+                        <button onClick={() => m.id && window.confirm(`Xóa ghép lớp ${m.classSubject} - ${m.tutorName}?`) && onDeleteMatch(m.id)}
                           className="px-2 py-1 hover:bg-red-50 text-slate-400 hover:text-red-600 rounded-lg cursor-pointer">
                           <Trash2 className="w-3 h-3" />
                         </button>

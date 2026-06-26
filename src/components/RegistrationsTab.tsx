@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { ParentRegistration } from '../types';
-import { UserPlus, Phone, MapPin, BookOpen, Clock, CheckCircle2, XCircle, Download } from 'lucide-react';
+import { UserPlus, Phone, MapPin, Clock, CheckCircle2, XCircle, Download, Search, Filter } from 'lucide-react';
 
 interface RegistrationsTabProps {
   registrations: ParentRegistration[];
@@ -8,6 +8,9 @@ interface RegistrationsTabProps {
 }
 
 export const RegistrationsTab: React.FC<RegistrationsTabProps> = ({ registrations, onUpdateStatus }) => {
+  const [statusFilter, setStatusFilter] = useState<string>('all');
+  const [searchTerm, setSearchTerm] = useState('');
+
   const fmt = (ts: number) => new Date(ts).toLocaleString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
 
   const statusColors: Record<string, string> = {
@@ -19,9 +22,29 @@ export const RegistrationsTab: React.FC<RegistrationsTabProps> = ({ registration
 
   const newCount = registrations.filter(r => r.status === 'Mới').length;
 
+  const filtered = registrations
+    .filter(r => statusFilter === 'all' || r.status === statusFilter)
+    .filter(r => {
+      if (!searchTerm) return true;
+      const q = searchTerm.toLowerCase();
+      return r.parentName.toLowerCase().includes(q) || r.phone.includes(q) ||
+        (r.studentName || '').toLowerCase().includes(q) || r.subjects.some(s => s.toLowerCase().includes(q)) ||
+        (r.district || '').toLowerCase().includes(q);
+    });
+
+  const exportCsv = () => {
+    const header = 'Phụ huynh,SĐT,Học sinh,Lớp,Môn học,Quận,Hình thức,Lịch học,Ghi chú,Ngày đăng ký,Trạng thái\n';
+    const rows = registrations.map(r =>
+      `"${r.parentName}","${r.phone}","${r.studentName}","${r.grade}","${r.subjects.join(', ')}","${r.district}","${r.mode}","${r.schedule}","${r.note}","${fmt(r.createdAt)}","${r.status}"`
+    ).join('\n');
+    const blob = new Blob(['\uFEFF' + header + rows], { type: 'text/csv;charset=utf-8' });
+    const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = `dang-ky-${new Date().toISOString().slice(0,10)}.csv`; a.click(); URL.revokeObjectURL(url);
+  };
+
   return (
-    <div className="col-span-12 space-y-6">
-      <div className="flex items-center justify-between">
+    <div className="col-span-12 space-y-5">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
         <div>
           <h2 className="text-xl font-bold text-slate-800 flex items-center gap-2">
             <UserPlus className="w-5 h-5 text-blue-600" />
@@ -31,26 +54,50 @@ export const RegistrationsTab: React.FC<RegistrationsTabProps> = ({ registration
             {registrations.length} đăng ký • {newCount > 0 && <span className="text-blue-600 font-bold">{newCount} mới chưa xử lý</span>}
           </p>
         </div>
-        <button onClick={() => {
-          const header = 'Ph\u1ee5 huynh,S\u0110T,H\u1ecdc sinh,L\u1edbp,M\u00f4n h\u1ecdc,Qu\u1eadn,H\u00ecnh th\u1ee9c,L\u1ecbch h\u1ecdc,Ghi ch\u00fa,Ng\u00e0y \u0111\u0103ng k\u00fd,Tr\u1ea1ng th\u00e1i\n';
-          const rows = registrations.map(r => `"${r.parentName}","${r.phone}","${r.studentName}","${r.grade}","${r.subjects.join(', ')}","${r.district}","${r.mode}","${r.schedule}","${r.note}","${fmt(r.createdAt)}","${r.status}"`).join('\n');
-          const blob = new Blob(['\uFEFF' + header + rows], { type: 'text/csv;charset=utf-8' });
-          const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = `dang-ky-${new Date().toISOString().slice(0,10)}.csv`; a.click(); URL.revokeObjectURL(url);
-        }}
+        <button onClick={exportCsv}
           className="px-3 py-2 bg-white border border-slate-200 hover:border-slate-300 rounded-xl text-xs font-bold text-slate-600 cursor-pointer flex items-center gap-1.5">
           <Download className="w-3.5 h-3.5" /> Export
         </button>
       </div>
 
-      {registrations.length === 0 ? (
+      {/* Filter + Search */}
+      {registrations.length > 0 && (
+        <div className="flex flex-col sm:flex-row gap-3">
+          <div className="relative flex-1 max-w-sm">
+            <Search className="w-4 h-4 absolute left-3 top-2.5 text-slate-400" />
+            <input type="text" value={searchTerm} onChange={e => setSearchTerm(e.target.value)}
+              placeholder="Tìm theo tên, SĐT, môn, quận..."
+              className="w-full pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm outline-none focus:bg-white focus:border-blue-500" />
+          </div>
+          <div className="flex gap-2 flex-wrap">
+            {[
+              { val: 'all', label: 'Tất cả', color: '' },
+              { val: 'Mới', label: `Mới${newCount > 0 ? ` (${newCount})` : ''}`, color: 'text-blue-600' },
+              { val: 'Đã liên hệ', label: 'Đã liên hệ', color: 'text-amber-600' },
+              { val: 'Đã xếp lớp', label: 'Đã xếp lớp', color: 'text-emerald-600' },
+              { val: 'Hủy', label: 'Hủy', color: 'text-red-600' },
+            ].map(f => (
+              <button key={f.val} onClick={() => setStatusFilter(f.val)}
+                className={`px-3 py-2 rounded-xl text-xs font-semibold border cursor-pointer transition-all ${
+                  statusFilter === f.val ? 'bg-blue-600 text-white border-blue-600' : `bg-white ${f.color || 'text-slate-600'} border-slate-200 hover:border-blue-300`
+                }`}>{f.label}</button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* List */}
+      {filtered.length === 0 ? (
         <div className="bg-white rounded-2xl border border-slate-200 p-10 text-center">
           <UserPlus className="w-10 h-10 text-slate-300 mx-auto mb-3" />
-          <p className="text-sm font-semibold text-slate-600">Chưa có đăng ký nào</p>
-          <p className="text-xs text-slate-400 mt-1">Phụ huynh đăng ký trên trang công khai sẽ hiển thị tại đây</p>
+          <p className="text-sm font-semibold text-slate-600">{registrations.length === 0 ? 'Chưa có đăng ký nào' : 'Không tìm thấy kết quả'}</p>
+          <p className="text-xs text-slate-400 mt-1">
+            {registrations.length === 0 ? 'Phụ huynh đăng ký trên trang công khai sẽ hiển thị tại đây' : 'Thử thay đổi bộ lọc hoặc từ khóa tìm kiếm'}
+          </p>
         </div>
       ) : (
         <div className="space-y-3">
-          {registrations.map(reg => (
+          {filtered.map(reg => (
             <div key={reg.id} className={`bg-white rounded-2xl border p-5 transition-all ${reg.status === 'Mới' ? 'border-blue-300 shadow-sm' : 'border-slate-200'}`}>
               <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
                 <div className="flex-1 space-y-2">

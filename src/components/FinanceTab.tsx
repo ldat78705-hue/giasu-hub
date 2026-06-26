@@ -152,7 +152,7 @@ export const FinanceTab: React.FC<FinanceTabProps> = ({ transactions, onAddTrans
                     </td>
                     <td className="px-6 py-4 text-right">
                       {tr.id && onDeleteTransaction && (
-                        <button onClick={() => onDeleteTransaction(tr.id!)}
+                        <button onClick={() => { if (window.confirm(`Xóa giao dịch ${tr.receiptId}?`)) onDeleteTransaction(tr.id!); }}
                           className="p-1.5 hover:bg-red-50 text-slate-400 hover:text-red-600 rounded-lg transition-colors cursor-pointer">
                           <Trash2 className="w-3.5 h-3.5" />
                         </button>

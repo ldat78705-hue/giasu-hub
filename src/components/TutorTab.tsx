@@ -240,7 +240,7 @@ export const TutorTab: React.FC<TutorTabProps> = ({ tutors, onAddTutor, onUpdate
                     <option value="offline">⚫ Offline</option>
                   </select>
                 </div>
-                <button onClick={() => t.id && onDeleteTutor(t.id)}
+                <button onClick={() => t.id && window.confirm(`Xóa gia sư ${t.name}?`) && onDeleteTutor(t.id)}
                   className="p-1.5 hover:bg-red-50 text-slate-400 hover:text-red-600 rounded-lg cursor-pointer transition-colors">
                   <Trash2 className="w-3.5 h-3.5" />
                 </button>

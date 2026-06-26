@@ -114,7 +114,7 @@ export const StudentTab: React.FC<StudentTabProps> = ({ students, onAddStudent, 
                 </select>
                 <div className="flex items-center gap-2">
                   {st.id && (
-                    <button onClick={(e) => { e.stopPropagation(); onDeleteStudent(st.id!); }}
+                    <button onClick={(e) => { e.stopPropagation(); if (window.confirm(`Xóa học sinh ${st.name}?`)) onDeleteStudent(st.id!); }}
                       className="p-1.5 hover:bg-red-50 text-slate-400 hover:text-red-600 rounded-lg transition-colors cursor-pointer">
                       <Trash2 className="w-4 h-4" />
                     </button>
