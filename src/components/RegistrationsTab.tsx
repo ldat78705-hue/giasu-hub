@@ -1,6 +1,6 @@
 import React from 'react';
 import { ParentRegistration } from '../types';
-import { UserPlus, Phone, MapPin, BookOpen, Clock, CheckCircle2, XCircle } from 'lucide-react';
+import { UserPlus, Phone, MapPin, BookOpen, Clock, CheckCircle2, XCircle, Download } from 'lucide-react';
 
 interface RegistrationsTabProps {
   registrations: ParentRegistration[];
@@ -31,6 +31,15 @@ export const RegistrationsTab: React.FC<RegistrationsTabProps> = ({ registration
             {registrations.length} đăng ký • {newCount > 0 && <span className="text-blue-600 font-bold">{newCount} mới chưa xử lý</span>}
           </p>
         </div>
+        <button onClick={() => {
+          const header = 'Ph\u1ee5 huynh,S\u0110T,H\u1ecdc sinh,L\u1edbp,M\u00f4n h\u1ecdc,Qu\u1eadn,H\u00ecnh th\u1ee9c,L\u1ecbch h\u1ecdc,Ghi ch\u00fa,Ng\u00e0y \u0111\u0103ng k\u00fd,Tr\u1ea1ng th\u00e1i\n';
+          const rows = registrations.map(r => `"${r.parentName}","${r.phone}","${r.studentName}","${r.grade}","${r.subjects.join(', ')}","${r.district}","${r.mode}","${r.schedule}","${r.note}","${fmt(r.createdAt)}","${r.status}"`).join('\n');
+          const blob = new Blob(['\uFEFF' + header + rows], { type: 'text/csv;charset=utf-8' });
+          const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = `dang-ky-${new Date().toISOString().slice(0,10)}.csv`; a.click(); URL.revokeObjectURL(url);
+        }}
+          className="px-3 py-2 bg-white border border-slate-200 hover:border-slate-300 rounded-xl text-xs font-bold text-slate-600 cursor-pointer flex items-center gap-1.5">
+          <Download className="w-3.5 h-3.5" /> Export
+        </button>
       </div>
 
       {registrations.length === 0 ? (
