@@ -103,6 +103,8 @@ export interface ParentRegistration {
   note: string;
   createdAt: number;
   status: 'Mới' | 'Đã liên hệ' | 'Đã xếp lớp' | 'Hủy';
+  adminNote?: string;
+  statusHistory?: { status: string; timestamp: number; }[];
 }
 
 export interface ContactMessage {

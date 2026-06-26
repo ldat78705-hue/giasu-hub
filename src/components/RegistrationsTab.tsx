@@ -1,15 +1,19 @@
 import React, { useState } from 'react';
 import { ParentRegistration } from '../types';
-import { UserPlus, Phone, MapPin, Clock, CheckCircle2, XCircle, Download, Search, Filter } from 'lucide-react';
+import { UserPlus, Phone, MapPin, Clock, CheckCircle2, XCircle, Download, Search, ArrowUpDown } from 'lucide-react';
 
 interface RegistrationsTabProps {
   registrations: ParentRegistration[];
   onUpdateStatus: (id: string, status: ParentRegistration['status']) => void;
+  onUpdateNote?: (id: string, note: string) => void;
 }
 
-export const RegistrationsTab: React.FC<RegistrationsTabProps> = ({ registrations, onUpdateStatus }) => {
+export const RegistrationsTab: React.FC<RegistrationsTabProps> = ({ registrations, onUpdateStatus, onUpdateNote }) => {
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [searchTerm, setSearchTerm] = useState('');
+  const [sortBy, setSortBy] = useState<'newest' | 'oldest' | 'name' | 'status'>('newest');
+  const [editingNote, setEditingNote] = useState<string | null>(null);
+  const [noteText, setNoteText] = useState('');
 
   const fmt = (ts: number) => new Date(ts).toLocaleString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
 
@@ -22,6 +26,8 @@ export const RegistrationsTab: React.FC<RegistrationsTabProps> = ({ registration
 
   const newCount = registrations.filter(r => r.status === 'Mới').length;
 
+  const statusOrder: Record<string, number> = { 'Mới': 0, 'Đã liên hệ': 1, 'Đã xếp lớp': 2, 'Hủy': 3 };
+
   const filtered = registrations
     .filter(r => statusFilter === 'all' || r.status === statusFilter)
     .filter(r => {
@@ -30,12 +36,18 @@ export const RegistrationsTab: React.FC<RegistrationsTabProps> = ({ registration
       return r.parentName.toLowerCase().includes(q) || r.phone.includes(q) ||
         (r.studentName || '').toLowerCase().includes(q) || r.subjects.some(s => s.toLowerCase().includes(q)) ||
         (r.district || '').toLowerCase().includes(q);
+    })
+    .sort((a, b) => {
+      if (sortBy === 'newest') return b.createdAt - a.createdAt;
+      if (sortBy === 'oldest') return a.createdAt - b.createdAt;
+      if (sortBy === 'name') return a.parentName.localeCompare(b.parentName, 'vi');
+      return (statusOrder[a.status] || 0) - (statusOrder[b.status] || 0);
     });
 
   const exportCsv = () => {
-    const header = 'Phụ huynh,SĐT,Học sinh,Lớp,Môn học,Quận,Hình thức,Lịch học,Ghi chú,Ngày đăng ký,Trạng thái\n';
+    const header = 'Phụ huynh,SĐT,Học sinh,Lớp,Môn học,Quận,Hình thức,Lịch học,Ghi chú,Ghi chú admin,Ngày đăng ký,Trạng thái\n';
     const rows = registrations.map(r =>
-      `"${r.parentName}","${r.phone}","${r.studentName}","${r.grade}","${r.subjects.join(', ')}","${r.district}","${r.mode}","${r.schedule}","${r.note}","${fmt(r.createdAt)}","${r.status}"`
+      `"${r.parentName}","${r.phone}","${r.studentName}","${r.grade}","${r.subjects.join(', ')}","${r.district}","${r.mode}","${r.schedule}","${r.note}","${(r.adminNote || '').replace(/"/g, '""')}","${fmt(r.createdAt)}","${r.status}"`
     ).join('\n');
     const blob = new Blob(['\uFEFF' + header + rows], { type: 'text/csv;charset=utf-8' });
     const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = `dang-ky-${new Date().toISOString().slice(0,10)}.csv`; a.click(); URL.revokeObjectURL(url);
@@ -82,6 +94,16 @@ export const RegistrationsTab: React.FC<RegistrationsTabProps> = ({ registration
                   statusFilter === f.val ? 'bg-blue-600 text-white border-blue-600' : `bg-white ${f.color || 'text-slate-600'} border-slate-200 hover:border-blue-300`
                 }`}>{f.label}</button>
             ))}
+          </div>
+          <div className="relative">
+            <ArrowUpDown className="w-3.5 h-3.5 absolute left-2.5 top-2.5 text-slate-400" />
+            <select value={sortBy} onChange={e => setSortBy(e.target.value as any)}
+              className="pl-8 pr-3 py-2 bg-white border border-slate-200 rounded-xl text-xs font-semibold text-slate-600 outline-none cursor-pointer">
+              <option value="newest">Mới nhất</option>
+              <option value="oldest">Cũ nhất</option>
+              <option value="name">Tên A-Z</option>
+              <option value="status">Trạng thái</option>
+            </select>
           </div>
         </div>
       )}
@@ -130,6 +152,37 @@ export const RegistrationsTab: React.FC<RegistrationsTabProps> = ({ registration
                   {reg.note && <p className="text-xs text-slate-500 italic">"{reg.note}"</p>}
 
                   <p className="text-[10px] text-slate-400">{fmt(reg.createdAt)}</p>
+
+                  {/* Status History */}
+                  {reg.statusHistory && reg.statusHistory.length > 0 && (
+                    <div className="flex flex-wrap gap-1 mt-1">
+                      {reg.statusHistory.map((h, i) => (
+                        <span key={i} className="text-[9px] text-slate-400 bg-slate-50 px-1.5 py-0.5 rounded">
+                          {h.status} · {new Date(h.timestamp).toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit' })}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Admin Note */}
+                  <div className="pt-1.5 mt-1.5 border-t border-slate-100">
+                    {editingNote === reg.id ? (
+                      <div className="flex gap-1">
+                        <input type="text" value={noteText} onChange={e => setNoteText(e.target.value)}
+                          placeholder="VD: Cần GS nữ, kiên nhẫn..." autoFocus
+                          className="flex-1 px-2 py-1 text-xs border border-blue-300 rounded bg-blue-50 outline-none" />
+                        <button onClick={() => { if (reg.id && onUpdateNote) { onUpdateNote(reg.id, noteText); } setEditingNote(null); }}
+                          className="px-2 py-1 bg-blue-600 text-white rounded text-[10px] font-bold cursor-pointer">Lưu</button>
+                        <button onClick={() => setEditingNote(null)}
+                          className="px-2 py-1 bg-slate-200 text-slate-600 rounded text-[10px] cursor-pointer">✕</button>
+                      </div>
+                    ) : (
+                      <button onClick={() => { setEditingNote(reg.id || null); setNoteText(reg.adminNote || ''); }}
+                        className="text-[10px] text-slate-400 hover:text-blue-600 cursor-pointer transition-colors">
+                        {reg.adminNote ? <span className="text-slate-500 italic">📝 {reg.adminNote}</span> : '+ Ghi chú admin'}
+                      </button>
+                    )}
+                  </div>
                 </div>
 
                 {/* Actions */}

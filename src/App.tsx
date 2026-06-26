@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import { db, initSettingsIfEmpty, seedSampleData } from './firebase';
-import { collection, onSnapshot, addDoc, doc, updateDoc, deleteDoc, setDoc } from 'firebase/firestore';
+import { collection, onSnapshot, addDoc, doc, updateDoc, deleteDoc, setDoc, arrayUnion } from 'firebase/firestore';
 import { ClassItem, TutorItem, StudentItem, TransactionItem, ActiveTab, TutorBooking, ClassApplication, AdminSettings, NotificationItem, ParentRegistration, ContactMessage, ClassMatch } from './types';
 import { aiSmartSearch, aiMatchTutors, aiOptimizeSeo, aiGenerateClass, testApiKey } from './aiService';
 import { DEFAULT_HANOI_WARDS } from './hanoiWards';
@@ -271,7 +271,15 @@ export default function App() {
 
   const handleUpdateApplicationStatus = async (id: string, st: ClassApplication['status']) => { await updateDoc(doc(db, 'applications', id), { status: st }); };
   const handleUpdateBookingStatus = async (id: string, st: TutorBooking['status']) => { await updateDoc(doc(db, 'bookings', id), { status: st }); };
-  const handleUpdateRegistrationStatus = async (id: string, st: ParentRegistration['status']) => { await updateDoc(doc(db, 'registrations', id), { status: st }); };
+  const handleUpdateRegistrationStatus = async (id: string, st: ParentRegistration['status']) => {
+    await updateDoc(doc(db, 'registrations', id), {
+      status: st,
+      statusHistory: arrayUnion({ status: st, timestamp: Date.now() }),
+    });
+  };
+  const handleUpdateRegistrationNote = async (id: string, note: string) => {
+    await updateDoc(doc(db, 'registrations', id), { adminNote: note });
+  };
 
   const handleSaveSettings = async (partial: Partial<AdminSettings>) => {
     await setDoc(doc(db, 'settings', 'admin'), { ...settings, ...partial, updatedAt: Date.now() }, { merge: true });
@@ -459,7 +467,8 @@ export default function App() {
                 onUpdateStatus={handleUpdateClassStatus} onDeleteClass={handleDeleteClass}
                 onOpenAiGenerator={() => setShowAiGenModal(true)} />
               <SideWidgets selectedClass={selectedClass} tutors={tutors} aiMatches={aiMatches}
-                isMatchingLoading={isMatchingLoading} onRunMatch={() => runAiMatch()} hasApiKey={!!apiKey} />
+                isMatchingLoading={isMatchingLoading} onRunMatch={() => runAiMatch()} hasApiKey={!!apiKey}
+                matches={matches} />
             </>
           )}
 
@@ -497,7 +506,8 @@ export default function App() {
           )}
 
           {adminTab === 'registrations' && (
-            <RegistrationsTab registrations={registrations} onUpdateStatus={handleUpdateRegistrationStatus} />
+            <RegistrationsTab registrations={registrations} onUpdateStatus={handleUpdateRegistrationStatus}
+              onUpdateNote={handleUpdateRegistrationNote} />
           )}
 
           {adminTab === 'contacts' && (

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { TutorItem } from '../types';
-import { Plus, Star, Trash2, Phone, Search, ShieldCheck, ShieldX, MapPin, FileText, X, Eye, Mail, Download, StickyNote, Save } from 'lucide-react';
+import { Plus, Star, Trash2, Phone, Search, ShieldCheck, ShieldX, MapPin, FileText, X, Eye, Mail, Download, StickyNote, Save, ArrowUpDown } from 'lucide-react';
 
 interface TutorTabProps {
   tutors: TutorItem[];
@@ -24,6 +24,7 @@ export const TutorTab: React.FC<TutorTabProps> = ({ tutors, onAddTutor, onUpdate
   const [previewTutor, setPreviewTutor] = useState<TutorItem | null>(null);
   const [editingNote, setEditingNote] = useState<string | null>(null);
   const [noteText, setNoteText] = useState('');
+  const [sortBy, setSortBy] = useState<'newest' | 'name' | 'rating' | 'verified'>('newest');
 
   const colors = ['bg-blue-500', 'bg-purple-500', 'bg-emerald-500', 'bg-amber-500', 'bg-rose-500', 'bg-indigo-500'];
 
@@ -35,6 +36,11 @@ export const TutorTab: React.FC<TutorTabProps> = ({ tutors, onAddTutor, onUpdate
       (filter === 'verified' && t.verified) ||
       (filter === 'pending' && !t.verified);
     return matchSearch && matchFilter;
+  }).sort((a, b) => {
+    if (sortBy === 'newest') return (b.registeredAt || 0) - (a.registeredAt || 0);
+    if (sortBy === 'name') return a.name.localeCompare(b.name, 'vi');
+    if (sortBy === 'rating') return (b.rating || 0) - (a.rating || 0);
+    return (b.verified ? 1 : 0) - (a.verified ? 1 : 0);
   });
 
   const pendingCount = tutors.filter(t => !t.verified).length;
@@ -116,6 +122,16 @@ export const TutorTab: React.FC<TutorTabProps> = ({ tutors, onAddTutor, onUpdate
                   filter === f.key ? 'bg-blue-600 text-white border-blue-600' : 'bg-white text-slate-600 border-slate-200 hover:border-blue-300'
                 }`}>{f.label}</button>
             ))}
+          </div>
+          <div className="relative">
+            <ArrowUpDown className="w-3.5 h-3.5 absolute left-2.5 top-2.5 text-slate-400" />
+            <select value={sortBy} onChange={e => setSortBy(e.target.value as any)}
+              className="pl-8 pr-3 py-2 bg-white border border-slate-200 rounded-xl text-xs font-semibold text-slate-600 outline-none cursor-pointer">
+              <option value="newest">Mới nhất</option>
+              <option value="name">Tên A-Z</option>
+              <option value="rating">Rating cao</option>
+              <option value="verified">Đã xác minh</option>
+            </select>
           </div>
         </div>
       )}

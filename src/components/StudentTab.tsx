@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { StudentItem, EmergencyContact } from '../types';
-import { Plus, Phone, Trash2, X, ChevronDown, ChevronUp, Mail, MapPin, User, Users, Download, StickyNote, Save } from 'lucide-react';
+import { Plus, Phone, Trash2, X, ChevronDown, ChevronUp, Mail, MapPin, User, Users, Download, StickyNote, Save, Search, ArrowUpDown } from 'lucide-react';
 
 interface StudentTabProps {
   students: StudentItem[];
@@ -15,6 +15,21 @@ export const StudentTab: React.FC<StudentTabProps> = ({ students, onAddStudent, 
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [editingNote, setEditingNote] = useState<string | null>(null);
   const [noteText, setNoteText] = useState('');
+  const [searchTerm, setSearchTerm] = useState('');
+  const [sortBy, setSortBy] = useState<'newest' | 'name' | 'grade'>('newest');
+
+  const filtered = students
+    .filter(st => {
+      if (!searchTerm) return true;
+      const q = searchTerm.toLowerCase();
+      return st.name.toLowerCase().includes(q) || (st.parentName || '').toLowerCase().includes(q) ||
+        (st.parentPhone || st.phone || '').includes(q) || st.grade.toLowerCase().includes(q);
+    })
+    .sort((a, b) => {
+      if (sortBy === 'name') return a.name.localeCompare(b.name, 'vi');
+      if (sortBy === 'grade') return a.grade.localeCompare(b.grade, 'vi');
+      return (b.createdAt || 0) - (a.createdAt || 0);
+    });
 
   // Form fields
   const [name, setName] = useState('');
@@ -79,15 +94,36 @@ export const StudentTab: React.FC<StudentTabProps> = ({ students, onAddStudent, 
         </div>
       </div>
 
-      {students.length === 0 ? (
+      {/* Search + Sort */}
+      {students.length > 0 && (
+        <div className="flex gap-3 flex-wrap">
+          <div className="relative flex-1 max-w-xs">
+            <Search className="w-4 h-4 absolute left-3 top-2.5 text-slate-400" />
+            <input type="text" value={searchTerm} onChange={e => setSearchTerm(e.target.value)}
+              placeholder="Tìm học sinh, phụ huynh, SĐT..."
+              className="w-full pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm outline-none focus:bg-white focus:border-blue-500" />
+          </div>
+          <div className="relative">
+            <ArrowUpDown className="w-3.5 h-3.5 absolute left-2.5 top-2.5 text-slate-400" />
+            <select value={sortBy} onChange={e => setSortBy(e.target.value as any)}
+              className="pl-8 pr-3 py-2 bg-white border border-slate-200 rounded-xl text-xs font-semibold text-slate-600 outline-none cursor-pointer">
+              <option value="newest">Mới nhất</option>
+              <option value="name">Tên A-Z</option>
+              <option value="grade">Lớp</option>
+            </select>
+          </div>
+        </div>
+      )}
+
+      {filtered.length === 0 ? (
         <div className="py-12 text-center text-slate-400">
           <Users className="w-10 h-10 mx-auto mb-3 text-slate-300" />
-          <p className="font-semibold text-sm">Chưa có học sinh nào</p>
-          <p className="text-xs mt-1">Nhấn "Thêm học sinh" để bắt đầu quản lý</p>
+          <p className="font-semibold text-sm">{students.length === 0 ? 'Chưa có học sinh nào' : 'Không tìm thấy kết quả'}</p>
+          {students.length === 0 && <p className="text-xs mt-1">Nhấn "Thêm học sinh" để bắt đầu quản lý</p>}
         </div>
       ) : (
         <div className="space-y-3">
-          {students.map((st) => (
+          {filtered.map((st) => (
             <div key={st.id || st.phone} className="border border-slate-200 rounded-xl overflow-hidden">
               {/* Main row */}
               <div className="flex items-center px-5 py-3.5 hover:bg-slate-50/80 transition-colors cursor-pointer"

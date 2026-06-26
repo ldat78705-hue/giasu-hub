@@ -1,6 +1,6 @@
 import React from 'react';
-import { ClassItem, TutorItem } from '../types';
-import { Sparkles, RefreshCw, Star } from 'lucide-react';
+import { ClassItem, TutorItem, ClassMatch } from '../types';
+import { Sparkles, RefreshCw, Star, Trophy } from 'lucide-react';
 
 interface SideWidgetsProps {
   selectedClass?: ClassItem;
@@ -9,10 +9,11 @@ interface SideWidgetsProps {
   isMatchingLoading: boolean;
   onRunMatch: () => void;
   hasApiKey: boolean;
+  matches?: ClassMatch[];
 }
 
 export const SideWidgets: React.FC<SideWidgetsProps> = ({
-  selectedClass, tutors, aiMatches, isMatchingLoading, onRunMatch, hasApiKey,
+  selectedClass, tutors, aiMatches, isMatchingLoading, onRunMatch, hasApiKey, matches = [],
 }) => {
   const recommendedList = aiMatches && aiMatches.length > 0
     ? aiMatches.map((match) => {
@@ -111,6 +112,45 @@ export const SideWidgets: React.FC<SideWidgetsProps> = ({
           </div>
         </div>
       </div>
+
+      {/* Top GS hoạt động */}
+      {matches.length > 0 && (() => {
+        const tutorMatchCount: Record<string, { name: string; count: number; active: number }> = {};
+        matches.forEach(m => {
+          if (!tutorMatchCount[m.tutorCode]) tutorMatchCount[m.tutorCode] = { name: m.tutorName, count: 0, active: 0 };
+          tutorMatchCount[m.tutorCode].count++;
+          if (m.status === 'Đang dạy') tutorMatchCount[m.tutorCode].active++;
+        });
+        const top5 = Object.entries(tutorMatchCount)
+          .sort(([,a], [,b]) => b.count - a.count)
+          .slice(0, 5);
+        if (top5.length === 0) return null;
+        return (
+          <div className="bg-white rounded-2xl border border-slate-200 shadow-xs p-5">
+            <div className="flex items-center gap-2 mb-3">
+              <Trophy className="w-4 h-4 text-amber-500" />
+              <h3 className="font-bold text-sm text-slate-800">Top GS hoạt động</h3>
+            </div>
+            <div className="space-y-2">
+              {top5.map(([code, data], i) => (
+                <div key={code} className="flex items-center gap-3">
+                  <span className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold ${
+                    i === 0 ? 'bg-amber-100 text-amber-700' : i === 1 ? 'bg-slate-200 text-slate-700' : i === 2 ? 'bg-orange-100 text-orange-700' : 'bg-slate-100 text-slate-500'
+                  }`}>{i + 1}</span>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-xs font-semibold text-slate-800 truncate">{data.name}</p>
+                    <p className="text-[10px] text-slate-400 font-mono">{code}</p>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-xs font-bold text-blue-600">{data.count} lớp</p>
+                    {data.active > 0 && <p className="text-[10px] text-emerald-600">{data.active} đang dạy</p>}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        );
+      })()}
     </div>
   );
 };
