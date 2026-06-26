@@ -300,22 +300,23 @@ export default function App() {
             </div>
           )}
 
-          {(activeTab === 'register-tutor' || activeTab === 'parent-register') && (
-            <div className="max-w-2xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
-              {activeTab === 'register-tutor' && (
-                <RegisterTutorPublic classes={classes} onApplyClass={handleApplyClass}
-                  onRegisterProfile={handleRegisterTutorProfile} initialClass={selectedClassForApply}
-                  cloudinaryCloudName={settings.cloudinaryCloudName || ''} cloudinaryPreset={settings.cloudinaryPreset || ''}
-                  wards={settings.wards || DEFAULT_HANOI_WARDS} />
-              )}
-              {activeTab === 'parent-register' && (
-                <ParentRegisterForm onSubmit={handleParentRegister} zaloNumber={zaloNumber}
-                  wards={settings.wards || DEFAULT_HANOI_WARDS} />
-              )}
+          {activeTab === 'register-tutor' && (
+            <div className="max-w-3xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
+              <RegisterTutorPublic classes={classes} onApplyClass={handleApplyClass}
+                onRegisterProfile={handleRegisterTutorProfile} initialClass={selectedClassForApply}
+                cloudinaryCloudName={settings.cloudinaryCloudName || ''} cloudinaryPreset={settings.cloudinaryPreset || ''}
+                wards={settings.wards || DEFAULT_HANOI_WARDS} />
             </div>
           )}
 
-          {(activeTab === 'home' || activeTab === 'find-tutors') && (
+          {activeTab === 'parent-register' && (
+            <div className="max-w-xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
+              <ParentRegisterForm onSubmit={handleParentRegister} zaloNumber={zaloNumber}
+                wards={settings.wards || DEFAULT_HANOI_WARDS} />
+            </div>
+          )}
+
+          {activeTab === 'home' && (
             <ContactSection onSubmit={handleContactSubmit} zaloNumber={zaloNumber} />
           )}
         </main>

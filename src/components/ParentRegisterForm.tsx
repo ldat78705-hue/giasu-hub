@@ -47,7 +47,7 @@ export const ParentRegisterForm: React.FC<ParentRegisterFormProps> = ({ onSubmit
   if (success) {
     return (
       <div className="pb-24 lg:pb-8">
-        <div className="max-w-lg mx-auto bg-white rounded-2xl border border-emerald-200 p-8 sm:p-10 text-center animate-scale-in">
+        <div className="bg-white rounded-2xl border border-emerald-200 p-8 sm:p-10 text-center animate-scale-in">
           <div className="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4">
             <CheckCircle2 className="w-8 h-8 text-emerald-600" />
           </div>
@@ -80,7 +80,7 @@ export const ParentRegisterForm: React.FC<ParentRegisterFormProps> = ({ onSubmit
       </div>
 
       {/* Form */}
-      <form onSubmit={handleSubmit} className="max-w-lg mx-auto space-y-5">
+      <form onSubmit={handleSubmit} className="space-y-5">
         {/* Thông tin PH */}
         <div className="bg-white rounded-2xl border border-slate-200 p-5 sm:p-6 space-y-4">
           <h3 className="font-bold text-slate-800 text-sm flex items-center gap-2">
