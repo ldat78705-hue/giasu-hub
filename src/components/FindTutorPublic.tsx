@@ -60,7 +60,7 @@ export const FindTutorPublic: React.FC<FindTutorPublicProps> = ({ tutors, onBook
   const fmt = (v: number) => new Intl.NumberFormat('vi-VN').format(v);
 
   return (
-    <div className="col-span-12 space-y-6 pb-24 md:pb-16">
+    <div className="space-y-6 pb-24 md:pb-16">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>

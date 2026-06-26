@@ -28,7 +28,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ onSubmit, zaloNu
 
   return (
     <section className="bg-white border-t border-slate-200 py-10 sm:py-14">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6">
+      <div className="max-w-5xl mx-auto px-5 sm:px-8">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
           {/* Left - Info */}
           <div className="space-y-4">

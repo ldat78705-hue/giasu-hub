@@ -285,15 +285,16 @@ export default function App() {
       <div className="min-h-screen bg-[#F8FAFC] flex flex-col font-sans text-slate-800 select-text">
         <PublicNavbar activeTab={activeTab} onNavigate={setActiveTab} zaloNumber={zaloNumber} />
         <main className="flex-1 pt-14 sm:pt-16">
-          <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
-            <div className="grid grid-cols-12 gap-6">
-              {activeTab === 'home' && (
-                <HomePublic classes={classes} tutors={tutors} onNavigate={setActiveTab}
-                  onSelectClassForApply={setSelectedClassForApply}
-                  onSelectTutorForBook={() => {}}
-                  onAiSearch={handleAiSearch} isSearching={isSearching}
-                  zaloNumber={zaloNumber} />
-              )}
+          {activeTab === 'home' && (
+            <HomePublic classes={classes} tutors={tutors} onNavigate={setActiveTab}
+              onSelectClassForApply={setSelectedClassForApply}
+              onSelectTutorForBook={() => {}}
+              onAiSearch={handleAiSearch} isSearching={isSearching}
+              zaloNumber={zaloNumber} />
+          )}
+
+          {activeTab !== 'home' && (
+            <div className="max-w-3xl mx-auto px-4 sm:px-6 py-6 sm:py-10">
               {activeTab === 'find-tutors' && (
                 <FindTutorPublic tutors={tutors} onBookTutor={handleBookTutor} onPostRequest={handlePostRequest} />
               )}
@@ -308,12 +309,14 @@ export default function App() {
                   wards={settings.wards || DEFAULT_HANOI_WARDS} />
               )}
             </div>
-          </div>
-          <ContactSection onSubmit={handleContactSubmit} zaloNumber={zaloNumber} />
+          )}
+
+          {(activeTab === 'home' || activeTab === 'find-tutors') && (
+            <ContactSection onSubmit={handleContactSubmit} zaloNumber={zaloNumber} />
+          )}
         </main>
         <PublicFooter onNavigate={setActiveTab} zaloNumber={zaloNumber} />
 
-        {/* Floating Zalo CTA (mobile only) */}
         {zaloNumber && (
           <a href={`https://zalo.me/${zaloNumber}`} target="_blank" rel="noopener noreferrer"
             className="floating-cta w-14 h-14 bg-blue-600 hover:bg-blue-700 text-white rounded-full shadow-xl flex items-center justify-center animate-pulse-glow">

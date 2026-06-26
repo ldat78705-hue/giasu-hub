@@ -178,7 +178,7 @@ export const RegisterTutorPublic: React.FC<RegisterTutorPublicProps> = ({
   // ===== SUCCESS =====
   if (regSuccess) {
     return (
-      <div className="col-span-12 pb-24 md:pb-16">
+      <div className="pb-24 md:pb-16">
         <div className="max-w-lg mx-auto bg-white rounded-2xl border border-emerald-200 p-8 sm:p-10 text-center animate-scale-in">
           <div className="w-16 h-16 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-4">
             <ShieldCheck className="w-8 h-8 text-amber-600" />
@@ -207,7 +207,7 @@ export const RegisterTutorPublic: React.FC<RegisterTutorPublicProps> = ({
   }
 
   return (
-    <div className="col-span-12 space-y-6 pb-24 md:pb-16">
+    <div className="space-y-6 pb-24 md:pb-16">
       {/* Header */}
       <div className="text-center">
         <div className="inline-flex items-center gap-2 bg-indigo-50 text-indigo-700 px-4 py-1.5 rounded-full text-xs font-bold mb-3 border border-indigo-200">
