@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import { db, initSettingsIfEmpty } from './firebase';
 import { collection, onSnapshot, addDoc, doc, updateDoc, deleteDoc, setDoc } from 'firebase/firestore';
 import { ClassItem, TutorItem, StudentItem, TransactionItem, ActiveTab, TutorBooking, ClassApplication, AdminSettings, NotificationItem, ParentRegistration, ContactMessage } from './types';
@@ -26,7 +27,7 @@ import { HomePublic } from './components/HomePublic';
 import { FindTutorPublic } from './components/FindTutorPublic';
 import { RegisterTutorPublic } from './components/RegisterTutorPublic';
 import { ParentRegisterForm } from './components/ParentRegisterForm';
-import { ContactSection } from './components/ContactSection';
+import { FloatingActions } from './components/FloatingActions';
 
 const publicTabs: ActiveTab[] = ['home', 'find-tutors', 'register-tutor', 'parent-register'];
 
@@ -45,7 +46,49 @@ const DEFAULT_SETTINGS: AdminSettings = {
 };
 
 export default function App() {
-  const [activeTab, setActiveTab] = useState<ActiveTab>('home');
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  // Route <-> Tab mapping
+  const routeToTab: Record<string, ActiveTab> = {
+    '/': 'home',
+    '/tim-gia-su': 'find-tutors',
+    '/dang-ky-hoc': 'parent-register',
+    '/dang-ky-day': 'register-tutor',
+    '/dashboard': 'dashboard',
+  };
+
+  const tabToRoute: Record<string, string> = {
+    'home': '/',
+    'find-tutors': '/tim-gia-su',
+    'parent-register': '/dang-ky-hoc',
+    'register-tutor': '/dang-ky-day',
+    'dashboard': '/dashboard',
+  };
+
+  const pageTitles: Record<string, string> = {
+    '/': 'Gia Sư Thành Đạt - Trung Tâm Gia Sư Uy Tín Hàng Đầu Hà Nội',
+    '/tim-gia-su': 'Tìm Gia Sư Giỏi Tại Hà Nội | Gia Sư Thành Đạt',
+    '/dang-ky-hoc': 'Đăng Ký Tìm Gia Sư - Phụ Huynh | Gia Sư Thành Đạt',
+    '/dang-ky-day': 'Đăng Ký Làm Gia Sư | Gia Sư Thành Đạt',
+    '/dashboard': 'Quản Trị | Gia Sư Thành Đạt',
+  };
+
+  // Derive activeTab from URL
+  const currentPath = location.pathname;
+  const activeTab: ActiveTab = routeToTab[currentPath] || 'home';
+
+  // Navigate function that updates URL
+  const setActiveTab = (tab: ActiveTab) => {
+    const route = tabToRoute[tab];
+    if (route) {
+      navigate(route);
+    }
+    // Admin sub-tabs keep same URL
+  };
+
+  // Admin sub-tab
+  const [adminTab, setAdminTab] = useState<ActiveTab>('dashboard');
 
   // Data States
   const [classes, setClasses] = useState<ClassItem[]>([]);
@@ -76,6 +119,11 @@ export default function App() {
   const isPublicView = publicTabs.includes(activeTab);
   const apiKey = settings.geminiApiKey || '';
   const zaloNumber = settings.zaloNumber || '';
+
+  // Update document title on route change
+  useEffect(() => {
+    document.title = pageTitles[currentPath] || 'Gia Sư Thành Đạt';
+  }, [currentPath]);
 
   // Initialize & Subscribe
   useEffect(() => {
@@ -120,10 +168,11 @@ export default function App() {
     return () => unsubs.forEach(u => u());
   }, []);
 
-  // Scroll to top on tab change
+  // Scroll to top on route change
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
-  }, [activeTab]);
+  }, [currentPath]);
+
 
   // ======= AI HANDLERS (client-side) =======
   const runAiMatch = async (clsToMatch?: ClassItem) => {
@@ -285,44 +334,51 @@ export default function App() {
       <div style={{ minHeight: '100vh', background: '#F8FAFC', display: 'flex', flexDirection: 'column', fontFamily: "'Inter', -apple-system, sans-serif", color: '#1e293b' }}>
         <PublicNavbar activeTab={activeTab} onNavigate={setActiveTab} zaloNumber={zaloNumber} />
         <main style={{ flex: 1, paddingTop: 56 }}>
-          {activeTab === 'home' && (
-            <HomePublic classes={classes} tutors={tutors} onNavigate={setActiveTab}
-              onSelectClassForApply={setSelectedClassForApply}
-              onSelectTutorForBook={() => {}}
-              onAiSearch={handleAiSearch} isSearching={isSearching}
-              zaloNumber={zaloNumber} onContactSubmit={handleContactSubmit} />
-          )}
-
-          {activeTab === 'find-tutors' && (
-            <div style={{ maxWidth: 1024, margin: '0 auto', padding: '32px 20px' }}>
-              <FindTutorPublic tutors={tutors} onBookTutor={handleBookTutor} onPostRequest={handlePostRequest} />
-            </div>
-          )}
-
-          {activeTab === 'register-tutor' && (
-            <div style={{ maxWidth: 768, margin: '0 auto', padding: '32px 20px' }}>
-              <RegisterTutorPublic classes={classes} onApplyClass={handleApplyClass}
-                onRegisterProfile={handleRegisterTutorProfile} initialClass={selectedClassForApply}
-                cloudinaryCloudName={settings.cloudinaryCloudName || ''} cloudinaryPreset={settings.cloudinaryPreset || ''}
-                wards={settings.wards || DEFAULT_HANOI_WARDS} />
-            </div>
-          )}
-
-          {activeTab === 'parent-register' && (
-            <div style={{ maxWidth: 560, margin: '0 auto', padding: '32px 20px' }}>
-              <ParentRegisterForm onSubmit={handleParentRegister} zaloNumber={zaloNumber}
-                wards={settings.wards || DEFAULT_HANOI_WARDS} />
-            </div>
-          )}
+          <Routes>
+            <Route path="/" element={
+              <HomePublic classes={classes} tutors={tutors} onNavigate={setActiveTab}
+                onSelectClassForApply={setSelectedClassForApply}
+                onSelectTutorForBook={() => {}}
+                onAiSearch={handleAiSearch} isSearching={isSearching}
+                zaloNumber={zaloNumber} onContactSubmit={handleContactSubmit} />
+            } />
+            <Route path="/tim-gia-su" element={
+              <div style={{ maxWidth: 1024, margin: '0 auto', padding: '32px 20px' }}>
+                <FindTutorPublic tutors={tutors} onBookTutor={handleBookTutor} onPostRequest={handlePostRequest} />
+              </div>
+            } />
+            <Route path="/dang-ky-day" element={
+              <div style={{ maxWidth: 768, margin: '0 auto', padding: '32px 20px' }}>
+                <RegisterTutorPublic classes={classes} onApplyClass={handleApplyClass}
+                  onRegisterProfile={handleRegisterTutorProfile} initialClass={selectedClassForApply}
+                  cloudinaryCloudName={settings.cloudinaryCloudName || ''} cloudinaryPreset={settings.cloudinaryPreset || ''}
+                  wards={settings.wards || DEFAULT_HANOI_WARDS} />
+              </div>
+            } />
+            <Route path="/dang-ky-hoc" element={
+              <div style={{ maxWidth: 560, margin: '0 auto', padding: '32px 20px' }}>
+                <ParentRegisterForm onSubmit={handleParentRegister} zaloNumber={zaloNumber}
+                  wards={settings.wards || DEFAULT_HANOI_WARDS} />
+              </div>
+            } />
+            <Route path="*" element={
+              <HomePublic classes={classes} tutors={tutors} onNavigate={setActiveTab}
+                onSelectClassForApply={setSelectedClassForApply}
+                onSelectTutorForBook={() => {}}
+                onAiSearch={handleAiSearch} isSearching={isSearching}
+                zaloNumber={zaloNumber} onContactSubmit={handleContactSubmit} />
+            } />
+          </Routes>
         </main>
         <PublicFooter onNavigate={setActiveTab} zaloNumber={zaloNumber} />
 
-        {zaloNumber && (
-          <a href={`https://zalo.me/${zaloNumber}`} target="_blank" rel="noopener noreferrer"
-            className="floating-cta" style={{ width: 52, height: 52, background: '#2563eb', color: '#fff', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 12px rgba(37,99,235,.3)' }}>
-            <svg viewBox="0 0 24 24" style={{ width: 24, height: 24, fill: 'currentColor' }}><path d="M12 2C6.48 2 2 6.03 2 10.93c0 2.75 1.44 5.19 3.67 6.77l-.02 2.25c0 .44.52.68.87.4l2.47-1.97c.93.26 1.93.4 2.99.4 5.52 0 10-4.03 10-8.93S17.52 2 12 2z"/></svg>
-          </a>
-        )}
+        {/* Floating Action Buttons */}
+        <FloatingActions
+          zaloNumber={zaloNumber}
+          phoneNumber={settings.centerPhone || zaloNumber}
+          onNavigateRegister={() => setActiveTab('parent-register')}
+          onContactSubmit={handleContactSubmit}
+        />
       </div>
     );
   }
@@ -330,14 +386,15 @@ export default function App() {
   // ===================== ADMIN VIEW =====================
   return (
     <div className="w-full h-screen bg-[#F1F5F9] flex font-sans overflow-hidden text-slate-800 select-text">
-      <Sidebar activeTab={activeTab} setActiveTab={setActiveTab}
+      <Sidebar activeTab={adminTab} setActiveTab={(tab) => { setAdminTab(tab); }}
         pendingClassesCount={pendingClassesCount}
         pendingApplicationsCount={pendingApplicationsCount + pendingRegistrations + pendingTutorVerify} />
+
 
       <main className="flex-1 flex flex-col h-full overflow-hidden">
         <Header onAiSearch={handleAiSearch} isSearching={isSearching} hasApiKey={!!apiKey}
           notifications={notifications} onMarkNotifRead={handleMarkNotifRead}
-          onMarkAllNotifsRead={handleMarkAllNotifsRead} onNavigate={setActiveTab} />
+          onMarkAllNotifsRead={handleMarkAllNotifsRead} onNavigate={setAdminTab} />
 
         {aiSearchSummary && (
           <div className="bg-blue-600 text-white px-8 py-2 text-xs font-medium flex items-center justify-between shrink-0">
@@ -347,7 +404,7 @@ export default function App() {
         )}
 
         <section className="flex-1 p-6 lg:p-8 grid grid-cols-12 gap-6 content-start overflow-y-auto">
-          {activeTab === 'dashboard' && (
+          {adminTab === 'dashboard' && (
             <>
               <StatsCards totalClasses={classes.length} pendingClasses={pendingClassesCount}
                 totalTutors={tutors.length} totalStudents={students.length}
@@ -361,45 +418,45 @@ export default function App() {
             </>
           )}
 
-          {activeTab === 'classes' && (
+          {adminTab === 'classes' && (
             <div className="col-span-12">
-              <ClassTable classes={classes} onSelectClassForMatch={(cls) => { setSelectedClass(cls); setActiveTab('dashboard'); }}
+              <ClassTable classes={classes} onSelectClassForMatch={(cls) => { setSelectedClass(cls); setAdminTab('dashboard'); }}
                 selectedClassCode={selectedClass?.code} onAddClass={handleAddClass}
                 onUpdateStatus={handleUpdateClassStatus} onDeleteClass={handleDeleteClass}
                 onOpenAiGenerator={() => setShowAiGenModal(true)} />
             </div>
           )}
 
-          {activeTab === 'tutors' && (
+          {adminTab === 'tutors' && (
             <TutorTab tutors={tutors} onAddTutor={handleAddTutor}
               onUpdateStatus={handleUpdateTutorStatus} onDeleteTutor={handleDeleteTutor}
               onVerifyTutor={handleVerifyTutor} />
           )}
 
-          {activeTab === 'students' && (
+          {adminTab === 'students' && (
             <StudentTab students={students} onAddStudent={handleAddStudent}
               onDeleteStudent={handleDeleteStudent} onUpdateStatus={handleUpdateStudentStatus} />
           )}
 
-          {activeTab === 'applications' && (
+          {adminTab === 'applications' && (
             <ApplicationsTab applications={applications} bookings={bookings}
               onUpdateApplicationStatus={handleUpdateApplicationStatus}
               onUpdateBookingStatus={handleUpdateBookingStatus} />
           )}
 
-          {activeTab === 'registrations' && (
+          {adminTab === 'registrations' && (
             <RegistrationsTab registrations={registrations} onUpdateStatus={handleUpdateRegistrationStatus} />
           )}
 
-          {activeTab === 'finance' && (
+          {adminTab === 'finance' && (
             <FinanceTab transactions={transactions} onAddTransaction={handleAddTransaction} onDeleteTransaction={handleDeleteTransaction} />
           )}
 
-          {activeTab === 'seo' && (
+          {adminTab === 'seo' && (
             <SeoConfigTab onRunAiSeo={runAiSeo} />
           )}
 
-          {activeTab === 'settings' && (
+          {adminTab === 'settings' && (
             <SettingsTab settings={settings} onSaveSettings={handleSaveSettings} onTestApiKey={handleTestApiKey} />
           )}
         </section>
