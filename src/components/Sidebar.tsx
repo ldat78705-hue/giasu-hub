@@ -14,6 +14,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab, pendi
   const navItems: { id: ActiveTab; label: string; icon: React.ReactNode; badge?: number }[] = [
     { id: 'dashboard', label: 'Bảng điều khiển', icon: <LayoutDashboard className="w-4 h-4" /> },
     { id: 'classes', label: 'Quản lý lớp', icon: <BookOpen className="w-4 h-4" />, badge: pendingClassesCount },
+    { id: 'matches', label: 'Ghép lớp', icon: <ExternalLink className="w-4 h-4" /> },
     { id: 'tutors', label: 'Quản lý gia sư', icon: <GraduationCap className="w-4 h-4" /> },
     { id: 'students', label: 'Quản lý học viên', icon: <Users className="w-4 h-4" /> },
     { id: 'registrations', label: 'Đăng ký học', icon: <UserPlus className="w-4 h-4" /> },

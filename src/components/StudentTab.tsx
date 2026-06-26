@@ -1,17 +1,20 @@
 import React, { useState } from 'react';
 import { StudentItem, EmergencyContact } from '../types';
-import { Plus, Phone, Trash2, X, ChevronDown, ChevronUp, Mail, MapPin, User, Users } from 'lucide-react';
+import { Plus, Phone, Trash2, X, ChevronDown, ChevronUp, Mail, MapPin, User, Users, Download, StickyNote, Save } from 'lucide-react';
 
 interface StudentTabProps {
   students: StudentItem[];
   onAddStudent: (st: StudentItem) => void;
   onDeleteStudent: (id: string) => void;
   onUpdateStatus: (id: string, status: StudentItem['status']) => void;
+  onUpdateNote?: (id: string, note: string) => void;
 }
 
-export const StudentTab: React.FC<StudentTabProps> = ({ students, onAddStudent, onDeleteStudent, onUpdateStatus }) => {
+export const StudentTab: React.FC<StudentTabProps> = ({ students, onAddStudent, onDeleteStudent, onUpdateStatus, onUpdateNote }) => {
   const [showModal, setShowModal] = useState(false);
   const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [editingNote, setEditingNote] = useState<string | null>(null);
+  const [noteText, setNoteText] = useState('');
 
   // Form fields
   const [name, setName] = useState('');
@@ -59,10 +62,21 @@ export const StudentTab: React.FC<StudentTabProps> = ({ students, onAddStudent, 
           <h2 className="text-xl font-bold text-slate-800">Quản lý Học sinh</h2>
           <p className="text-xs text-slate-500 mt-1">{students.length} học sinh · Thông tin PHHS tích hợp</p>
         </div>
-        <button onClick={() => setShowModal(true)}
-          className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold transition-colors flex items-center gap-2 shadow-md shadow-emerald-600/20 cursor-pointer">
-          <Plus className="w-4 h-4" /><span>Thêm học sinh</span>
-        </button>
+        <div className="flex gap-2">
+          <button onClick={() => {
+            const header = 'H\u1ecdc sinh,L\u1edbp,Ph\u1ee5 huynh,S\u0110T PH,Email PH,\u0110\u1ecba ch\u1ec9,Tr\u1ea1ng th\u00e1i,Ghi ch\u00fa admin\n';
+            const rows = students.map(s => `"${s.name}","${s.grade}","${s.parentName}","${s.parentPhone || s.phone}","${s.parentEmail || ''}","${s.parentAddress || ''}","${s.status}","${(s.adminNote || '').replace(/"/g, '""')}"`).join('\n');
+            const blob = new Blob(['\uFEFF' + header + rows], { type: 'text/csv;charset=utf-8' });
+            const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = `hoc-sinh-${new Date().toISOString().slice(0,10)}.csv`; a.click(); URL.revokeObjectURL(url);
+          }}
+            className="px-3 py-2 bg-white border border-slate-200 hover:border-slate-300 rounded-xl text-xs font-bold text-slate-600 cursor-pointer flex items-center gap-1.5">
+            <Download className="w-3.5 h-3.5" /> Export
+          </button>
+          <button onClick={() => setShowModal(true)}
+            className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold transition-colors flex items-center gap-2 shadow-md shadow-emerald-600/20 cursor-pointer">
+            <Plus className="w-4 h-4" /><span>Th\u00eam h\u1ecdc sinh</span>
+          </button>
+        </div>
       </div>
 
       {students.length === 0 ? (
@@ -134,6 +148,27 @@ export const StudentTab: React.FC<StudentTabProps> = ({ students, onAddStudent, 
                     </div>
                   )}
                   {st.note && <div><span className="text-slate-400 block">Ghi chú</span><span className="text-slate-700">{st.note}</span></div>}
+                  
+                  {/* Admin Note */}
+                  <div className="pt-2 border-t border-slate-200">
+                    <span className="text-slate-400 block mb-1 flex items-center gap-1"><StickyNote className="w-3 h-3" /> Ghi chú admin (nội bộ)</span>
+                    {editingNote === st.id ? (
+                      <div className="flex gap-1">
+                        <input type="text" value={noteText} onChange={e => setNoteText(e.target.value)}
+                          placeholder="VD: PH khó tính, cần GS kiên nhẫn..." autoFocus
+                          className="flex-1 px-2 py-1 text-xs border border-blue-300 rounded-md bg-blue-50 outline-none" />
+                        <button onClick={() => { if (st.id && onUpdateNote) { onUpdateNote(st.id, noteText); } setEditingNote(null); }}
+                          className="px-2 py-1 bg-blue-600 text-white rounded-md cursor-pointer text-xs flex items-center gap-1"><Save className="w-3 h-3" /> Lưu</button>
+                        <button onClick={() => setEditingNote(null)}
+                          className="px-2 py-1 bg-slate-200 text-slate-600 rounded-md cursor-pointer"><X className="w-3 h-3" /></button>
+                      </div>
+                    ) : (
+                      <button onClick={() => { setEditingNote(st.id || null); setNoteText(st.adminNote || ''); }}
+                        className="text-xs text-slate-400 hover:text-blue-600 cursor-pointer transition-colors">
+                        {st.adminNote ? <span className="text-slate-600 italic">"{st.adminNote}"</span> : '+ Thêm ghi chú'}
+                      </button>
+                    )}
+                  </div>
                 </div>
               )}
             </div>

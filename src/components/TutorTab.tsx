@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { TutorItem } from '../types';
-import { Plus, Star, Trash2, Phone, Search, ShieldCheck, ShieldX, MapPin, FileText, X, Eye, Mail } from 'lucide-react';
+import { Plus, Star, Trash2, Phone, Search, ShieldCheck, ShieldX, MapPin, FileText, X, Eye, Mail, Download, StickyNote, Save } from 'lucide-react';
 
 interface TutorTabProps {
   tutors: TutorItem[];
@@ -8,9 +8,10 @@ interface TutorTabProps {
   onUpdateStatus: (id: string, st: TutorItem['status']) => void;
   onDeleteTutor: (id: string) => void;
   onVerifyTutor: (id: string, verified: boolean) => void;
+  onUpdateNote?: (id: string, note: string) => void;
 }
 
-export const TutorTab: React.FC<TutorTabProps> = ({ tutors, onAddTutor, onUpdateStatus, onDeleteTutor, onVerifyTutor }) => {
+export const TutorTab: React.FC<TutorTabProps> = ({ tutors, onAddTutor, onUpdateStatus, onDeleteTutor, onVerifyTutor, onUpdateNote }) => {
   const [showModal, setShowModal] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [filter, setFilter] = useState<'all' | 'verified' | 'pending'>('all');
@@ -21,6 +22,8 @@ export const TutorTab: React.FC<TutorTabProps> = ({ tutors, onAddTutor, onUpdate
   const [hourlyRate, setHourlyRate] = useState(200000);
   const [phone, setPhone] = useState('');
   const [previewTutor, setPreviewTutor] = useState<TutorItem | null>(null);
+  const [editingNote, setEditingNote] = useState<string | null>(null);
+  const [noteText, setNoteText] = useState('');
 
   const colors = ['bg-blue-500', 'bg-purple-500', 'bg-emerald-500', 'bg-amber-500', 'bg-rose-500', 'bg-indigo-500'];
 
@@ -76,10 +79,21 @@ export const TutorTab: React.FC<TutorTabProps> = ({ tutors, onAddTutor, onUpdate
             {tutors.length} gia sư • {pendingCount > 0 && <span className="text-amber-600 font-bold">{pendingCount} chờ xác minh</span>}
           </p>
         </div>
-        <button onClick={() => setShowModal(true)}
-          className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold transition-colors flex items-center gap-2 shadow-md shadow-blue-600/20 cursor-pointer">
-          <Plus className="w-4 h-4" /><span>Thêm Gia sư</span>
-        </button>
+        <div className="flex gap-2">
+          <button onClick={() => {
+            const header = 'M\u00e3,H\u1ecd t\u00ean,S\u0110T,Email,M\u00f4n d\u1ea1y,B\u1eb1ng c\u1ea5p,Kinh nghi\u1ec7m,X\u00e1c minh,Ghi ch\u00fa admin\n';
+            const rows = tutors.map(t => `${t.code},"${t.name}","${t.phone || ''}","${t.email || ''}","${t.subjects.join(', ')}","${t.qualification}","${t.experience}",${t.verified ? 'C\u00f3' : 'Ch\u01b0a'},"${(t.adminNote || '').replace(/"/g, '""')}"`).join('\n');
+            const blob = new Blob(['\uFEFF' + header + rows], { type: 'text/csv;charset=utf-8' });
+            const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = `gia-su-${new Date().toISOString().slice(0,10)}.csv`; a.click(); URL.revokeObjectURL(url);
+          }}
+            className="px-3 py-2 bg-white border border-slate-200 hover:border-slate-300 rounded-xl text-xs font-bold text-slate-600 cursor-pointer flex items-center gap-1.5">
+            <Download className="w-3.5 h-3.5" /> Export
+          </button>
+          <button onClick={() => setShowModal(true)}
+            className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold transition-colors flex items-center gap-2 shadow-md shadow-blue-600/20 cursor-pointer">
+            <Plus className="w-4 h-4" /><span>Th\u00eam Gia s\u01b0</span>
+          </button>
+        </div>
       </div>
 
       {/* Filter & Search */}
@@ -183,6 +197,27 @@ export const TutorTab: React.FC<TutorTabProps> = ({ tutors, onAddTutor, onUpdate
                   <Eye className="w-3 h-3" /><span>Xem hồ sơ ({docCount(t)} file)</span>
                 </button>
               )}
+
+              {/* Admin Note */}
+              <div className="mb-2">
+                {editingNote === (t.id || t.code) ? (
+                  <div className="flex gap-1">
+                    <input type="text" value={noteText} onChange={e => setNoteText(e.target.value)}
+                      placeholder="Ghi chú nội bộ..." autoFocus
+                      className="flex-1 px-2 py-1 text-[10px] border border-blue-300 rounded-md bg-blue-50 outline-none" />
+                    <button onClick={() => { if (t.id && onUpdateNote) { onUpdateNote(t.id, noteText); } setEditingNote(null); }}
+                      className="px-1.5 py-1 bg-blue-600 text-white rounded-md cursor-pointer"><Save className="w-3 h-3" /></button>
+                    <button onClick={() => setEditingNote(null)}
+                      className="px-1.5 py-1 bg-slate-200 text-slate-600 rounded-md cursor-pointer"><X className="w-3 h-3" /></button>
+                  </div>
+                ) : (
+                  <button onClick={() => { setEditingNote(t.id || t.code); setNoteText(t.adminNote || ''); }}
+                    className="flex items-center gap-1 text-[10px] text-slate-400 hover:text-blue-600 cursor-pointer transition-colors">
+                    <StickyNote className="w-3 h-3" />
+                    {t.adminNote ? <span className="text-slate-600 italic">"{t.adminNote}"</span> : <span>Thêm ghi chú</span>}
+                  </button>
+                )}
+              </div>
 
               {/* Actions */}
               <div className="flex items-center justify-between pt-3 border-t border-slate-200/60">

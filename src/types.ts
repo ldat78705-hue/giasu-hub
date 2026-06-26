@@ -50,6 +50,7 @@ export interface TutorItem {
     degreeUrl?: string;
     otherUrl?: string;
   };
+  adminNote?: string;
 }
 
 export interface StudentItem {
@@ -73,6 +74,7 @@ export interface StudentItem {
   note?: string;
   status: 'Đang học' | 'Chờ xếp lớp' | 'Bảo lưu';
   createdAt?: number;
+  adminNote?: string;
   // Legacy compat
   phone: string;
 }
@@ -163,4 +165,20 @@ export interface NotificationItem {
   relatedId?: string;
 }
 
-export type ActiveTab = 'home' | 'find-tutors' | 'register-tutor' | 'parent-register' | 'status-lookup' | 'dashboard' | 'classes' | 'tutors' | 'students' | 'finance' | 'seo' | 'applications' | 'registrations' | 'contacts' | 'settings';
+export interface ClassMatch {
+  id?: string;
+  classCode: string;
+  classSubject: string;
+  tutorCode: string;
+  tutorName: string;
+  studentName?: string;
+  parentPhone?: string;
+  startDate: number;
+  endDate?: number;
+  status: 'Đang dạy' | 'Hoàn thành' | 'Hủy';
+  fee: number;
+  note?: string;
+  createdAt: number;
+}
+
+export type ActiveTab = 'home' | 'find-tutors' | 'register-tutor' | 'parent-register' | 'status-lookup' | 'dashboard' | 'classes' | 'tutors' | 'students' | 'finance' | 'seo' | 'applications' | 'registrations' | 'contacts' | 'matches' | 'settings';

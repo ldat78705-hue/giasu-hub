@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import { db, initSettingsIfEmpty, seedSampleData } from './firebase';
 import { collection, onSnapshot, addDoc, doc, updateDoc, deleteDoc, setDoc } from 'firebase/firestore';
-import { ClassItem, TutorItem, StudentItem, TransactionItem, ActiveTab, TutorBooking, ClassApplication, AdminSettings, NotificationItem, ParentRegistration, ContactMessage } from './types';
+import { ClassItem, TutorItem, StudentItem, TransactionItem, ActiveTab, TutorBooking, ClassApplication, AdminSettings, NotificationItem, ParentRegistration, ContactMessage, ClassMatch } from './types';
 import { aiSmartSearch, aiMatchTutors, aiOptimizeSeo, aiGenerateClass, testApiKey } from './aiService';
 import { DEFAULT_HANOI_WARDS } from './hanoiWards';
 
@@ -20,6 +20,7 @@ import { ApplicationsTab } from './components/ApplicationsTab';
 import { SeoConfigTab } from './components/SeoConfigTab';
 import { RegistrationsTab } from './components/RegistrationsTab';
 import { ContactsTab } from './components/ContactsTab';
+import { MatchesTab } from './components/MatchesTab';
 
 // Public Components
 import { PublicNavbar } from './components/PublicNavbar';
@@ -105,6 +106,7 @@ export default function App() {
   const [notifications, setNotifications] = useState<NotificationItem[]>([]);
   const [registrations, setRegistrations] = useState<ParentRegistration[]>([]);
   const [contacts, setContacts] = useState<ContactMessage[]>([]);
+  const [matches, setMatches] = useState<ClassMatch[]>([]);
   const [settings, setSettings] = useState<AdminSettings>(DEFAULT_SETTINGS);
 
   // AI States
@@ -166,6 +168,11 @@ export default function App() {
         const msgs = snap.docs.map(d => ({ id: d.id, ...d.data() } as ContactMessage));
         msgs.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
         setContacts(msgs);
+      }),
+      onSnapshot(collection(db, 'matches'), (snap) => {
+        const m = snap.docs.map(d => ({ id: d.id, ...d.data() } as ClassMatch));
+        m.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+        setMatches(m);
       }),
       onSnapshot(doc(db, 'settings', 'admin'), (snap) => {
         if (snap.exists()) {
@@ -334,6 +341,31 @@ export default function App() {
     await deleteDoc(doc(db, 'contacts', id));
   };
 
+  // Match handlers
+  const handleAddMatch = async (m: ClassMatch) => {
+    await addDoc(collection(db, 'matches'), m);
+    // Auto-update class status
+    const cls = classes.find(c => c.code === m.classCode);
+    if (cls?.id) await updateDoc(doc(db, 'classes', cls.id), { status: 'ĐÃ CÓ GIA SƯ' });
+    await addDoc(collection(db, 'notifications'), {
+      type: 'class', title: 'Đã ghép lớp thành công',
+      message: `${m.classSubject} → GS ${m.tutorName}`,
+      isRead: false, createdAt: Date.now(),
+    });
+  };
+  const handleUpdateMatchStatus = async (id: string, st: ClassMatch['status']) => {
+    await updateDoc(doc(db, 'matches', id), { status: st, ...(st === 'Hoàn thành' ? { endDate: Date.now() } : {}) });
+  };
+  const handleDeleteMatch = async (id: string) => { await deleteDoc(doc(db, 'matches', id)); };
+
+  // Admin note handlers
+  const handleUpdateTutorNote = async (id: string, note: string) => {
+    await updateDoc(doc(db, 'tutors', id), { adminNote: note });
+  };
+  const handleUpdateStudentNote = async (id: string, note: string) => {
+    await updateDoc(doc(db, 'students', id), { adminNote: note });
+  };
+
   // ===================== PUBLIC VIEW =====================
   if (isPublicView) {
     return (
@@ -416,7 +448,10 @@ export default function App() {
             <>
               <StatsCards totalClasses={classes.length} pendingClasses={pendingClassesCount}
                 totalTutors={tutors.length} totalStudents={students.length}
-                pendingApplications={pendingApplicationsCount} totalRevenue={totalRevenue} />
+                pendingApplications={pendingApplicationsCount} totalRevenue={totalRevenue}
+                unreadContacts={unreadContactsCount} totalRegistrations={registrations.length}
+                pendingRegistrations={registrations.filter(r => r.status === 'Mới').length}
+                matches={matches} />
               <ClassTable classes={classes} onSelectClassForMatch={setSelectedClass}
                 selectedClassCode={selectedClass?.code} onAddClass={handleAddClass}
                 onUpdateStatus={handleUpdateClassStatus} onDeleteClass={handleDeleteClass}
@@ -438,12 +473,19 @@ export default function App() {
           {adminTab === 'tutors' && (
             <TutorTab tutors={tutors} onAddTutor={handleAddTutor}
               onUpdateStatus={handleUpdateTutorStatus} onDeleteTutor={handleDeleteTutor}
-              onVerifyTutor={handleVerifyTutor} />
+              onVerifyTutor={handleVerifyTutor} onUpdateNote={handleUpdateTutorNote} />
+          )}
+
+          {adminTab === 'matches' && (
+            <MatchesTab matches={matches} classes={classes} tutors={tutors}
+              onAddMatch={handleAddMatch} onUpdateStatus={handleUpdateMatchStatus}
+              onDeleteMatch={handleDeleteMatch} />
           )}
 
           {adminTab === 'students' && (
             <StudentTab students={students} onAddStudent={handleAddStudent}
-              onDeleteStudent={handleDeleteStudent} onUpdateStatus={handleUpdateStudentStatus} />
+              onDeleteStudent={handleDeleteStudent} onUpdateStatus={handleUpdateStudentStatus}
+              onUpdateNote={handleUpdateStudentNote} />
           )}
 
           {adminTab === 'applications' && (
