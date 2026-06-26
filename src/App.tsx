@@ -293,11 +293,15 @@ export default function App() {
               zaloNumber={zaloNumber} />
           )}
 
-          {activeTab !== 'home' && (
-            <div className="max-w-3xl mx-auto px-4 sm:px-6 py-6 sm:py-10">
-              {activeTab === 'find-tutors' && (
-                <FindTutorPublic tutors={tutors} onBookTutor={handleBookTutor} onPostRequest={handlePostRequest} />
-              )}
+
+          {activeTab === 'find-tutors' && (
+            <div className="max-w-6xl mx-auto px-5 sm:px-8 py-8 sm:py-12">
+              <FindTutorPublic tutors={tutors} onBookTutor={handleBookTutor} onPostRequest={handlePostRequest} />
+            </div>
+          )}
+
+          {(activeTab === 'register-tutor' || activeTab === 'parent-register') && (
+            <div className="max-w-2xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
               {activeTab === 'register-tutor' && (
                 <RegisterTutorPublic classes={classes} onApplyClass={handleApplyClass}
                   onRegisterProfile={handleRegisterTutorProfile} initialClass={selectedClassForApply}

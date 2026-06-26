@@ -103,7 +103,7 @@ export const FindTutorPublic: React.FC<FindTutorPublicProps> = ({ tutors, onBook
           <p className="text-xs text-slate-400 mt-1">Hãy gửi yêu cầu, trung tâm sẽ tìm GS cho bạn</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {filtered.map((t) => (
             <div key={t.id || t.code}
               className="bg-white rounded-2xl border border-slate-200 p-5 hover:border-blue-200 hover:shadow-md transition-all cursor-pointer"

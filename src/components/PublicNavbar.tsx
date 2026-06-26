@@ -31,7 +31,7 @@ export const PublicNavbar: React.FC<PublicNavbarProps> = ({ activeTab, onNavigat
       <header className={`fixed top-0 left-0 right-0 z-50 transition-all ${
         isScrolled ? 'bg-white/95 backdrop-blur-xl shadow-lg border-b border-slate-200/80' : 'bg-white/90 backdrop-blur-md border-b border-slate-100'
       }`}>
-        <div className="max-w-5xl mx-auto px-5 sm:px-8">
+        <div className="max-w-6xl mx-auto px-5 sm:px-8">
           <div className="flex items-center justify-between h-14 sm:h-16">
             {/* Logo */}
             <div className="flex items-center gap-2.5 cursor-pointer shrink-0" onClick={() => onNavigate('home')}>
