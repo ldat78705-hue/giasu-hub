@@ -9,6 +9,13 @@ export interface ClassItem {
   createdAt: number;
   schedule?: string;
   requirements?: string;
+  teachMode?: 'Tại nhà' | 'Online' | 'Cả hai';
+}
+
+export interface EmergencyContact {
+  name: string;
+  phone: string;
+  relation: string; // "Mẹ", "Bố", "Bác", "Chú", etc.
 }
 
 export interface TutorItem {
@@ -18,7 +25,7 @@ export interface TutorItem {
   avatar: string;
   avatarColor: string;
   subjects: string[];
-  gradeLevels?: string[];       // Khối lớp dạy
+  gradeLevels?: string[];
   qualification: string;
   experience: string;
   rating: number;
@@ -30,9 +37,15 @@ export interface TutorItem {
   verified: boolean;
   verifiedAt?: number;
   registeredAt?: number;
-  area?: string;                // Khu vực dạy (text cũ, backward compat)
-  teachingAreas?: string[];     // Các xã/phường có thể dạy
-  documentUrls?: {              // Hồ sơ đính kèm (CCCD, bằng cấp)
+  area?: string;
+  teachingAreas?: string[];
+  emergencyContacts?: EmergencyContact[]; // SĐT người thân
+  documentUrls?: {
+    cccdFrontUrl?: string;   // CCCD mặt trước
+    cccdBackUrl?: string;    // CCCD mặt sau
+    degreeUrls?: string[];   // Nhiều bằng cấp
+    otherUrls?: string[];    // File khác
+    // backward compat
     cccdUrl?: string;
     degreeUrl?: string;
     otherUrl?: string;
@@ -42,11 +55,26 @@ export interface TutorItem {
 export interface StudentItem {
   id?: string;
   name: string;
-  parentName: string;
-  phone: string;
   grade: string;
+  dob?: string;
+  school?: string;
+  // Thông tin PHHS tích hợp
+  parentName: string;
+  parentPhone: string;
+  parentEmail?: string;
+  parentAddress?: string;
+  parentRelation?: string; // "Bố", "Mẹ", "Ông", "Bà"
+  emergencyContacts?: EmergencyContact[]; // SĐT khẩn cấp
+  // Quản lý
   enrolledClasses: number;
+  subjects?: string[];
+  tutorCode?: string;
+  tutorName?: string;
+  note?: string;
   status: 'Đang học' | 'Chờ xếp lớp' | 'Bảo lưu';
+  createdAt?: number;
+  // Legacy compat
+  phone: string;
 }
 
 export interface TransactionItem {
@@ -66,8 +94,8 @@ export interface ParentRegistration {
   studentName: string;
   grade: string;
   subjects: string[];
-  district: string; // legacy, giữ backward compat
-  ward?: string;    // xã/phường mới
+  district: string;
+  ward?: string;
   mode: 'Tại nhà' | 'Online' | 'Cả hai';
   schedule: string;
   note: string;
@@ -121,7 +149,7 @@ export interface AdminSettings {
   facebookUrl: string;
   cloudinaryCloudName: string;
   cloudinaryPreset: string;
-  wards: string[];              // Danh sách xã/phường (admin chỉnh sửa)
+  wards: string[];
   updatedAt: number;
 }
 

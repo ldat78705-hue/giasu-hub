@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { ParentRegistration } from '../types';
-import { UserPlus, CheckCircle2, Phone, MapPin, BookOpen, Clock, Send } from 'lucide-react';
+import { CheckCircle2, Phone, Send, BookOpen } from 'lucide-react';
 
 interface ParentRegisterFormProps {
   onSubmit: (reg: ParentRegistration) => Promise<void>;
@@ -8,9 +8,16 @@ interface ParentRegisterFormProps {
   wards: string[];
 }
 
-
 const SUBJECTS = ['Toán', 'Tiếng Anh', 'Ngữ Văn', 'Vật Lý', 'Hóa Học', 'Sinh Học', 'IELTS', 'Tin Học', 'Luyện thi vào 10', 'Luyện thi ĐH'];
 const GRADES = ['Lớp 1-5', 'Lớp 6', 'Lớp 7', 'Lớp 8', 'Lớp 9', 'Lớp 10', 'Lớp 11', 'Lớp 12', 'Đại học', 'Người đi làm'];
+const MODES = [
+  { value: 'Tại nhà' as const, icon: '🏠', label: 'Trực tiếp' },
+  { value: 'Online' as const, icon: '💻', label: 'Trực tuyến' },
+  { value: 'Cả hai' as const, icon: '🔄', label: 'Cả hai' },
+];
+
+const inp: React.CSSProperties = { width: '100%', padding: '10px 14px', border: '1px solid #e2e8f0', borderRadius: 8, fontSize: 14, outline: 'none', background: '#f8fafc' };
+const lbl: React.CSSProperties = { display: 'block', fontSize: 12, fontWeight: 600, color: '#475569', marginBottom: 4 };
 
 export const ParentRegisterForm: React.FC<ParentRegisterFormProps> = ({ onSubmit, zaloNumber, wards }) => {
   const [parentName, setParentName] = useState('');
@@ -22,6 +29,7 @@ export const ParentRegisterForm: React.FC<ParentRegisterFormProps> = ({ onSubmit
   const [mode, setMode] = useState<'Tại nhà' | 'Online' | 'Cả hai'>('Tại nhà');
   const [schedule, setSchedule] = useState('');
   const [note, setNote] = useState('');
+  const [wardSearch, setWardSearch] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
 
@@ -29,16 +37,14 @@ export const ParentRegisterForm: React.FC<ParentRegisterFormProps> = ({ onSubmit
     setSelectedSubjects(prev => prev.includes(sub) ? prev.filter(s => s !== sub) : [...prev, sub]);
   };
 
+  const filteredWards = wards.filter(w => !wardSearch || w.toLowerCase().includes(wardSearch.toLowerCase()));
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!parentName || !phone || selectedSubjects.length === 0) return;
     setIsSubmitting(true);
     try {
-      await onSubmit({
-        parentName, phone, studentName, grade,
-        subjects: selectedSubjects, district, mode, schedule, note,
-        createdAt: Date.now(), status: 'Mới',
-      });
+      await onSubmit({ parentName, phone, studentName, grade, subjects: selectedSubjects, district, mode, schedule, note, createdAt: Date.now(), status: 'Mới' });
       setSuccess(true);
     } catch (err) { console.error(err); }
     finally { setIsSubmitting(false); }
@@ -46,19 +52,15 @@ export const ParentRegisterForm: React.FC<ParentRegisterFormProps> = ({ onSubmit
 
   if (success) {
     return (
-      <div className="pb-24 lg:pb-8">
-        <div className="bg-white rounded-2xl border border-emerald-200 p-8 sm:p-10 text-center animate-scale-in">
-          <div className="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <CheckCircle2 className="w-8 h-8 text-emerald-600" />
-          </div>
-          <h2 className="text-xl font-bold text-slate-800 mb-2">Đăng ký thành công!</h2>
-          <p className="text-sm text-slate-500 mb-6 leading-relaxed">
-            Trung tâm Gia Sư Thành Đạt sẽ liên hệ tư vấn cho bạn trong vòng <b>30 phút</b> (giờ hành chính).
-          </p>
+      <div style={{ paddingBottom: 80 }}>
+        <div style={{ background: '#fff', border: '1px solid #d1fae5', borderRadius: 12, padding: '40px 24px', textAlign: 'center' }}>
+          <CheckCircle2 size={48} color="#22c55e" style={{ margin: '0 auto 12px', display: 'block' }} />
+          <h2 style={{ fontSize: 20, fontWeight: 700, color: '#0f172a', marginBottom: 8 }}>Đăng ký thành công!</h2>
+          <p style={{ fontSize: 14, color: '#64748b', marginBottom: 20 }}>Trung tâm sẽ liên hệ trong <b>30 phút</b> để tư vấn và sắp xếp gia sư phù hợp.</p>
           {zaloNumber && (
             <a href={`https://zalo.me/${zaloNumber}`} target="_blank" rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm rounded-xl transition-colors">
-              <Phone className="w-4 h-4" /><span>Nhắn Zalo để được tư vấn nhanh</span>
+              style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '10px 20px', background: '#2563eb', color: '#fff', borderRadius: 8, fontSize: 14, fontWeight: 600, textDecoration: 'none' }}>
+              <Phone size={16} /> Liên hệ Zalo ngay
             </a>
           )}
         </div>
@@ -67,125 +69,97 @@ export const ParentRegisterForm: React.FC<ParentRegisterFormProps> = ({ onSubmit
   }
 
   return (
-    <div className="pb-24 lg:pb-8">
+    <div style={{ paddingBottom: 80 }}>
       {/* Header */}
-      <div className="text-center mb-8">
-        <div className="inline-flex items-center gap-2 bg-blue-50 text-blue-700 px-4 py-1.5 rounded-full text-xs font-bold mb-3 border border-blue-200">
-          <UserPlus className="w-3.5 h-3.5" /><span>Miễn phí 100% • Không ràng buộc</span>
+      <div style={{ textAlign: 'center', marginBottom: 24 }}>
+        <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: '#f0fdf4', color: '#16a34a', padding: '4px 14px', borderRadius: 20, fontSize: 12, fontWeight: 600, marginBottom: 12 }}>
+          <BookOpen size={14} /> Dành cho phụ huynh
         </div>
-        <h1 className="text-2xl sm:text-3xl font-bold text-slate-800 mb-2">Đăng ký tìm gia sư</h1>
-        <p className="text-sm text-slate-500 max-w-md mx-auto">
-          Điền thông tin bên dưới, trung tâm sẽ tư vấn và tìm gia sư phù hợp nhất cho con bạn.
-        </p>
+        <h1 style={{ fontSize: 'clamp(22px, 4vw, 28px)', fontWeight: 800, color: '#0f172a', marginBottom: 6 }}>Đăng ký tìm gia sư</h1>
+        <p style={{ fontSize: 14, color: '#64748b' }}>Miễn phí · Tư vấn trong 30 phút · Học thử 1-2 buổi</p>
       </div>
 
-      {/* Form */}
-      <form onSubmit={handleSubmit} className="space-y-5">
-        {/* Thông tin PH */}
-        <div className="bg-white rounded-2xl border border-slate-200 p-5 sm:p-6 space-y-4">
-          <h3 className="font-bold text-slate-800 text-sm flex items-center gap-2">
-            <Phone className="w-4 h-4 text-blue-600" /><span>Thông tin liên hệ</span>
-          </h3>
-          <div>
-            <label className="block text-xs font-bold text-slate-600 mb-1.5">Họ tên phụ huynh *</label>
-            <input type="text" required value={parentName} onChange={(e) => setParentName(e.target.value)}
-              placeholder="VD: Chị Hương"
-              className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:bg-white focus:border-blue-500 transition-colors" />
+      <form onSubmit={handleSubmit} style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 12, padding: 24 }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+          {/* PH info */}
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+            <div><label style={lbl}>Họ tên phụ huynh *</label><input required value={parentName} onChange={e => setParentName(e.target.value)} placeholder="VD: Chị Lan" style={inp} /></div>
+            <div><label style={lbl}>Số điện thoại *</label><input required type="tel" value={phone} onChange={e => setPhone(e.target.value)} placeholder="0912345678" style={inp} /></div>
           </div>
-          <div>
-            <label className="block text-xs font-bold text-slate-600 mb-1.5">Số điện thoại *</label>
-            <input type="tel" required value={phone} onChange={(e) => setPhone(e.target.value)}
-              placeholder="VD: 0912345678"
-              className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:bg-white focus:border-blue-500 transition-colors" />
-          </div>
-        </div>
 
-        {/* Thông tin HS */}
-        <div className="bg-white rounded-2xl border border-slate-200 p-5 sm:p-6 space-y-4">
-          <h3 className="font-bold text-slate-800 text-sm flex items-center gap-2">
-            <BookOpen className="w-4 h-4 text-purple-600" /><span>Thông tin học sinh</span>
-          </h3>
-          <div>
-            <label className="block text-xs font-bold text-slate-600 mb-1.5">Tên con</label>
-            <input type="text" value={studentName} onChange={(e) => setStudentName(e.target.value)}
-              placeholder="VD: Minh Anh"
-              className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:bg-white focus:border-blue-500 transition-colors" />
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+            <div><label style={lbl}>Tên học sinh</label><input value={studentName} onChange={e => setStudentName(e.target.value)} placeholder="VD: Minh" style={inp} /></div>
+            <div>
+              <label style={lbl}>Lớp / Trình độ</label>
+              <select value={grade} onChange={e => setGrade(e.target.value)} style={inp}>
+                {GRADES.map(g => <option key={g} value={g}>{g}</option>)}
+              </select>
+            </div>
           </div>
+
+          {/* Môn học */}
           <div>
-            <label className="block text-xs font-bold text-slate-600 mb-1.5">Lớp / Trình độ</label>
-            <select value={grade} onChange={(e) => setGrade(e.target.value)}
-              className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:bg-white focus:border-blue-500 transition-colors">
-              {GRADES.map(g => <option key={g}>{g}</option>)}
-            </select>
-          </div>
-          <div>
-            <label className="block text-xs font-bold text-slate-600 mb-2">Môn cần học * <span className="font-normal text-slate-400">(chọn 1 hoặc nhiều)</span></label>
-            <div className="flex flex-wrap gap-2">
+            <label style={lbl}>Môn học cần tìm GS * (chọn nhiều)</label>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
               {SUBJECTS.map(sub => (
                 <button key={sub} type="button" onClick={() => toggleSubject(sub)}
-                  className={`px-3 py-2 rounded-xl text-xs font-semibold border transition-all cursor-pointer ${
-                    selectedSubjects.includes(sub)
-                      ? 'bg-blue-600 text-white border-blue-600 shadow-sm'
-                      : 'bg-white text-slate-600 border-slate-200 hover:border-blue-300'
-                  }`}>
+                  style={{ padding: '5px 12px', borderRadius: 16, fontSize: 12, fontWeight: 500, cursor: 'pointer', border: '1px solid', background: selectedSubjects.includes(sub) ? '#2563eb' : '#fff', color: selectedSubjects.includes(sub) ? '#fff' : '#475569', borderColor: selectedSubjects.includes(sub) ? '#2563eb' : '#e2e8f0' }}>
                   {sub}
                 </button>
               ))}
             </div>
           </div>
-        </div>
 
-        {/* Yêu cầu */}
-        <div className="bg-white rounded-2xl border border-slate-200 p-5 sm:p-6 space-y-4">
-          <h3 className="font-bold text-slate-800 text-sm flex items-center gap-2">
-            <MapPin className="w-4 h-4 text-emerald-600" /><span>Yêu cầu dạy</span>
-          </h3>
+          {/* Hình thức học */}
           <div>
-            <label className="block text-xs font-bold text-slate-600 mb-1.5">Xã/phường</label>
-            <input type="text" list="ward-list" value={district} onChange={(e) => setDistrict(e.target.value)}
-              placeholder="Gõ tên xã/phường..."
-              className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:bg-white focus:border-blue-500 transition-colors" />
-            <datalist id="ward-list">
-              {wards.map(w => <option key={w} value={w} />)}
-            </datalist>
-          </div>
-          <div>
-            <label className="block text-xs font-bold text-slate-600 mb-2">Hình thức học</label>
-            <div className="flex gap-2">
-              {(['Tại nhà', 'Online', 'Cả hai'] as const).map(m => (
-                <button key={m} type="button" onClick={() => setMode(m)}
-                  className={`flex-1 py-2.5 rounded-xl text-xs font-semibold border transition-all cursor-pointer ${
-                    mode === m ? 'bg-blue-600 text-white border-blue-600' : 'bg-white text-slate-600 border-slate-200'
-                  }`}>
-                  {m}
+            <label style={lbl}>Hình thức học *</label>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 8 }}>
+              {MODES.map(m => (
+                <button key={m.value} type="button" onClick={() => setMode(m.value)}
+                  style={{ padding: '10px 8px', borderRadius: 8, border: '1px solid', cursor: 'pointer', textAlign: 'center', fontSize: 12, fontWeight: 600, background: mode === m.value ? '#eff6ff' : '#fff', borderColor: mode === m.value ? '#2563eb' : '#e2e8f0', color: mode === m.value ? '#2563eb' : '#475569' }}>
+                  <div style={{ fontSize: 18, marginBottom: 2 }}>{m.icon}</div>
+                  {m.label}
                 </button>
               ))}
             </div>
           </div>
-          <div>
-            <label className="block text-xs font-bold text-slate-600 mb-1.5">Lịch mong muốn</label>
-            <input type="text" value={schedule} onChange={(e) => setSchedule(e.target.value)}
-              placeholder="VD: Tối T3, T5, T7 (19h-21h)"
-              className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:bg-white focus:border-blue-500 transition-colors" />
-          </div>
-          <div>
-            <label className="block text-xs font-bold text-slate-600 mb-1.5">Ghi chú thêm</label>
-            <textarea rows={3} value={note} onChange={(e) => setNote(e.target.value)}
-              placeholder="Yêu cầu đặc biệt, mong muốn về gia sư..."
-              className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:bg-white focus:border-blue-500 transition-colors resize-none" />
-          </div>
+
+          {/* Khu vực */}
+          {(mode === 'Tại nhà' || mode === 'Cả hai') && (
+            <div>
+              <label style={lbl}>Khu vực (chọn xã/phường)</label>
+              <input value={wardSearch} onChange={e => setWardSearch(e.target.value)} placeholder="Tìm xã/phường..." style={{ ...inp, marginBottom: 6 }} />
+              <div style={{ maxHeight: 120, overflowY: 'auto', border: '1px solid #e2e8f0', borderRadius: 8, padding: 6 }}>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
+                  {filteredWards.slice(0, 30).map(w => (
+                    <button key={w} type="button" onClick={() => setDistrict(w)}
+                      style={{ padding: '3px 10px', borderRadius: 12, fontSize: 11, fontWeight: 500, cursor: 'pointer', border: '1px solid', background: district === w ? '#2563eb' : '#fff', color: district === w ? '#fff' : '#475569', borderColor: district === w ? '#2563eb' : '#e2e8f0' }}>
+                      {w}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              {district && <div style={{ fontSize: 11, color: '#2563eb', fontWeight: 600, marginTop: 4 }}>Đã chọn: {district}</div>}
+            </div>
+          )}
+
+          {/* Lịch học */}
+          <div><label style={lbl}>Lịch học mong muốn</label><input value={schedule} onChange={e => setSchedule(e.target.value)} placeholder="VD: Thứ 3, 5, 7 tối 19h-21h" style={inp} /></div>
+
+          {/* Ghi chú */}
+          <div><label style={lbl}>Ghi chú thêm</label><textarea rows={2} value={note} onChange={e => setNote(e.target.value)} placeholder="Yêu cầu đặc biệt..." style={{ ...inp, resize: 'none' }} /></div>
         </div>
 
-        {/* Submit */}
-        <button type="submit" disabled={isSubmitting || !parentName || !phone || selectedSubjects.length === 0}
-          className="w-full py-4 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white font-bold text-sm rounded-2xl shadow-lg shadow-blue-600/25 transition-all cursor-pointer flex items-center justify-center gap-2">
-          <Send className="w-4 h-4" />
-          <span>{isSubmitting ? 'Đang gửi...' : 'Gửi đăng ký miễn phí'}</span>
+        <button type="submit" disabled={isSubmitting}
+          style={{ marginTop: 20, width: '100%', padding: '14px 0', background: '#2563eb', color: '#fff', border: 'none', borderRadius: 8, fontSize: 15, fontWeight: 600, cursor: isSubmitting ? 'wait' : 'pointer', opacity: isSubmitting ? 0.7 : 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
+          <Send size={16} /> {isSubmitting ? 'Đang gửi...' : 'Đăng ký tìm gia sư'}
         </button>
 
-        <p className="text-center text-[11px] text-slate-400">
-          Thông tin của bạn được bảo mật. Trung tâm sẽ liên hệ trong 30 phút.
-        </p>
+        {zaloNumber && (
+          <div style={{ textAlign: 'center', marginTop: 16, fontSize: 13, color: '#64748b' }}>
+            Hoặc liên hệ trực tiếp: <a href={`tel:${zaloNumber}`} style={{ fontWeight: 700, color: '#2563eb', textDecoration: 'none' }}>{zaloNumber}</a>
+          </div>
+        )}
       </form>
     </div>
   );

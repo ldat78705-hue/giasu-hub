@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
-import { db, initSettingsIfEmpty } from './firebase';
+import { db, initSettingsIfEmpty, seedSampleData } from './firebase';
 import { collection, onSnapshot, addDoc, doc, updateDoc, deleteDoc, setDoc } from 'firebase/firestore';
 import { ClassItem, TutorItem, StudentItem, TransactionItem, ActiveTab, TutorBooking, ClassApplication, AdminSettings, NotificationItem, ParentRegistration, ContactMessage } from './types';
 import { aiSmartSearch, aiMatchTutors, aiOptimizeSeo, aiGenerateClass, testApiKey } from './aiService';
@@ -128,6 +128,7 @@ export default function App() {
   // Initialize & Subscribe
   useEffect(() => {
     initSettingsIfEmpty();
+    seedSampleData();
 
     const unsubs = [
       onSnapshot(collection(db, 'classes'), (snap) => {
