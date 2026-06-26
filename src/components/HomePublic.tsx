@@ -158,13 +158,13 @@ export const HomePublic: React.FC<HomePublicProps> = ({
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24 }}>
               <h2 style={{ fontSize: 20, fontWeight: 700, color: '#0f172a' }}>Lớp đang cần gia sư</h2>
               <button onClick={() => onNavigate('register-tutor')} style={{ background: 'none', border: 'none', color: '#2563eb', fontSize: 13, fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 4 }}>
-                Ứng tuyển <ChevronRight size={14} />
+                Đăng ký dạy <ChevronRight size={14} />
               </button>
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 16 }}>
               {pending.slice(0, 6).map(cls => (
-                <div key={cls.id || cls.code} onClick={() => { onSelectClassForApply(cls); onNavigate('register-tutor'); }}
-                  style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 10, padding: 16, cursor: 'pointer' }}>
+                <div key={cls.id || cls.code}
+                  style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 10, padding: 16 }}>
                   <div style={{ marginBottom: 8, display: 'flex', gap: 6 }}>
                     <span style={{
                       fontSize: 10, fontWeight: 700, padding: '2px 8px', borderRadius: 4,

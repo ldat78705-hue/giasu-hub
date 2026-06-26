@@ -350,8 +350,8 @@ export default function App() {
             } />
             <Route path="/dang-ky-day" element={
               <div style={{ maxWidth: 768, margin: '0 auto', padding: '32px 20px' }}>
-                <RegisterTutorPublic classes={classes} onApplyClass={handleApplyClass}
-                  onRegisterProfile={handleRegisterTutorProfile} initialClass={selectedClassForApply}
+                <RegisterTutorPublic
+                  onRegisterProfile={handleRegisterTutorProfile}
                   cloudinaryCloudName={settings.cloudinaryCloudName || ''} cloudinaryPreset={settings.cloudinaryPreset || ''}
                   wards={settings.wards || DEFAULT_HANOI_WARDS} />
               </div>
