@@ -148,7 +148,7 @@ export const FinanceTab: React.FC<FinanceTabProps> = ({ transactions, onAddTrans
                   <th className="px-6 py-3 font-semibold">Số tiền</th>
                   <th className="px-6 py-3 font-semibold">Thời gian</th>
                   <th className="px-6 py-3 font-semibold">Trạng thái</th>
-                  <th className="px-6 py-3 font-semibold text-right">Xóa</th>
+                  <th className="px-6 py-3 font-semibold text-right">Thao tác</th>
                 </tr>
               </thead>
               <tbody className="text-sm divide-y divide-slate-100">

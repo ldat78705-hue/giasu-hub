@@ -161,28 +161,3 @@ export const calculateKPIs = (
   return { matchRate, revenueThisMonth, revenueLastMonth, revenueGrowth, activeTutors, tutorActiveRate, thisMonthMatches: thisMonth.length, lastMonthMatches: lastMonth.length, monthlyRevenue };
 };
 
-// ===== Review Types =====
-export interface TutorReview {
-  id?: string;
-  tutorCode: string;
-  tutorName: string;
-  parentName: string;
-  parentPhone: string;
-  rating: number; // 1-5
-  comment: string;
-  createdAt: number;
-}
-
-// ===== Attendance Types =====
-export interface AttendanceRecord {
-  id?: string;
-  matchId: string;
-  classCode: string;
-  tutorCode: string;
-  tutorName: string;
-  studentName: string;
-  date: string; // YYYY-MM-DD
-  status: 'Đã dạy' | 'Nghỉ GS' | 'Nghỉ HS' | 'Hủy';
-  note?: string;
-  createdAt: number;
-}
