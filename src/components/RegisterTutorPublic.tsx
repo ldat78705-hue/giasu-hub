@@ -209,7 +209,7 @@ export const RegisterTutorPublic: React.FC<RegisterTutorPublicProps> = ({
         <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: '#eff6ff', color: '#2563eb', padding: '4px 14px', borderRadius: 20, fontSize: 12, fontWeight: 600, marginBottom: 12 }}>
           <GraduationCap size={14} /> Cổng đăng ký dành cho gia sư
         </div>
-        <h1 style={{ fontSize: 'clamp(22px, 4vw, 28px)', fontWeight: 800, color: '#0f172a', marginBottom: 6 }}>Đăng ký làm gia sư</h1>
+        <h1 style={{ fontSize: 'clamp(22px, 4vw, 28px)', fontWeight: 800, color: '#0f172a', marginBottom: 6 }}>Trở thành gia sư</h1>
         <p style={{ fontSize: 14, color: '#64748b' }}>Thu nhập cao, lịch linh hoạt. Hồ sơ xác minh bởi trung tâm.</p>
       </div>
 
@@ -253,7 +253,7 @@ export const RegisterTutorPublic: React.FC<RegisterTutorPublicProps> = ({
                       ))}
                     </div>
                   </div>
-                  <div><label style={lbl}>Năm sinh</label><input type="number" value={regDob} onChange={e => setRegDob(e.target.value)} placeholder="VD: 2001" min="1970" max="2010" style={inp} /></div>
+                  <div><label style={lbl}>Năm sinh</label><input type="number" value={regDob} onChange={e => setRegDob(e.target.value)} placeholder="Ví dụ: 2001" min="1970" max="2010" style={inp} /></div>
                 </div>
 
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
@@ -261,9 +261,9 @@ export const RegisterTutorPublic: React.FC<RegisterTutorPublicProps> = ({
                   <div><label style={lbl}>Email</label><input type="email" value={regEmail} onChange={e => setRegEmail(e.target.value)} placeholder="email@gmail.com" style={inp} /></div>
                 </div>
 
-                <div><label style={lbl}>Nơi ở hiện tại</label><input value={regAddress} onChange={e => setRegAddress(e.target.value)} placeholder="VD: Số 5 ngõ 120 Trần Cung, Cầu Giấy" style={inp} /></div>
-                <div><label style={lbl}>Trường / Bằng cấp / Trình độ</label><input value={regQual} onChange={e => setRegQual(e.target.value)} placeholder="VD: Cử nhân ĐHSP Hà Nội / SV năm 4 ĐH Bách Khoa" style={inp} /></div>
-                <div><label style={lbl}>Kinh nghiệm giảng dạy</label><input value={regExp} onChange={e => setRegExp(e.target.value)} placeholder="VD: 3 năm dạy kèm Toán cấp 3" style={inp} /></div>
+                <div><label style={lbl}>Nơi ở hiện tại</label><input value={regAddress} onChange={e => setRegAddress(e.target.value)} placeholder="Ví dụ: Số 5 ngõ 120 Trần Cung, Cầu Giấy" style={inp} /></div>
+                <div><label style={lbl}>Trường / Bằng cấp / Trình độ</label><input value={regQual} onChange={e => setRegQual(e.target.value)} placeholder="Ví dụ: Cử nhân ĐHSP Hà Nội / SV năm 4 ĐH Bách Khoa" style={inp} /></div>
+                <div><label style={lbl}>Kinh nghiệm giảng dạy</label><input value={regExp} onChange={e => setRegExp(e.target.value)} placeholder="Ví dụ: 3 năm dạy kèm Toán cấp 3" style={inp} /></div>
 
                 {/* SĐT người thân */}
                 <div style={{ borderTop: '1px solid #f1f5f9', paddingTop: 14 }}>

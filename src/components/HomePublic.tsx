@@ -106,7 +106,7 @@ export const HomePublic: React.FC<HomePublicProps> = ({
             </button>
             <button onClick={() => onNavigate('register-tutor')}
               style={{ padding: '14px 32px', background: 'rgba(255,255,255,0.08)', color: '#e2e8f0', border: '1px solid rgba(255,255,255,0.15)', borderRadius: 10, fontSize: 15, fontWeight: 600, cursor: 'pointer' }}>
-              Gia sư đăng ký dạy
+              Trở thành gia sư
             </button>
           </div>
         </div>
@@ -118,8 +118,8 @@ export const HomePublic: React.FC<HomePublicProps> = ({
           {[
             { ref: cTutors.ref, v: `${cTutors.count}+`, l: 'Gia sư xác minh', icon: <GraduationCap size={20} style={{ color: '#2563eb' }} /> },
             { ref: cStudents.ref, v: `${cStudents.count}+`, l: 'Học sinh đã học', icon: <Users size={20} style={{ color: '#16a34a' }} /> },
-            { ref: cSatisfy.ref, v: `${cSatisfy.count}%`, l: 'PH hài lòng', icon: <CheckCircle2 size={20} style={{ color: '#f59e0b' }} /> },
-            { ref: cResponse.ref, v: `${cResponse.count}p`, l: 'Phản hồi TB', icon: <Clock size={20} style={{ color: '#8b5cf6' }} /> },
+            { ref: cSatisfy.ref, v: `${cSatisfy.count}%`, l: 'Phụ huynh hài lòng', icon: <CheckCircle2 size={20} style={{ color: '#f59e0b' }} /> },
+            { ref: cResponse.ref, v: `${cResponse.count}p`, l: 'Phản hồi trung bình', icon: <Clock size={20} style={{ color: '#8b5cf6' }} /> },
           ].map((s, i) => (
             <div key={i} ref={s.ref} style={{ textAlign: 'center', padding: '28px 8px', borderRight: i < 3 ? '1px solid #f1f5f9' : 'none' }}>
               <div style={{ marginBottom: 8 }}>{s.icon}</div>
@@ -137,9 +137,9 @@ export const HomePublic: React.FC<HomePublicProps> = ({
           <p style={{ fontSize: 14, color: '#64748b', textAlign: 'center', marginBottom: 40, maxWidth: 480, margin: '0 auto 40px' }}>3 bước đơn giản — hoàn toàn miễn phí cho phụ huynh</p>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 24 }}>
             {[
-              { n: '1', icon: <CheckCircle2 size={24} />, color: '#2563eb', bg: '#eff6ff', t: 'Đăng ký nhu cầu', d: 'Điền môn học, lớp, khu vực, lịch học. Chỉ mất 2 phút. GS đều đã xác minh CCCD & bằng cấp.' },
-              { n: '2', icon: <Sparkles size={24} />, color: '#8b5cf6', bg: '#f5f3ff', t: 'AI tìm GS phù hợp', d: 'Thuật toán AI phân tích & đề xuất gia sư tốt nhất. Phản hồi trong 30 phút.' },
-              { n: '3', icon: <Award size={24} />, color: '#16a34a', bg: '#f0fdf4', t: 'Học thử & quyết định', d: 'Học thử 1-2 buổi miễn phí. Không hài lòng — đổi GS ngay, miễn phí hoàn toàn.' },
+              { n: '1', icon: <CheckCircle2 size={24} />, color: '#2563eb', bg: '#eff6ff', t: 'Đăng ký nhu cầu', d: 'Điền môn học, lớp, khu vực, lịch học. Chỉ mất 2 phút. Gia sư đều đã xác minh CCCD và bằng cấp.' },
+              { n: '2', icon: <Sparkles size={24} />, color: '#8b5cf6', bg: '#f5f3ff', t: 'AI tìm gia sư phù hợp', d: 'Thuật toán AI phân tích và đề xuất gia sư tốt nhất. Phản hồi trong 30 phút.' },
+              { n: '3', icon: <Award size={24} />, color: '#16a34a', bg: '#f0fdf4', t: 'Học thử và quyết định', d: 'Học thử 1-2 buổi miễn phí. Không hài lòng — đổi gia sư ngay, miễn phí hoàn toàn.' },
             ].map((s, i) => (
               <div key={i} style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 16, padding: 28, textAlign: 'center', position: 'relative' }}>
                 <div style={{ width: 28, height: 28, background: '#2563eb', color: '#fff', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12, fontWeight: 700, margin: '0 auto 16px', boxShadow: '0 2px 8px rgba(37,99,235,0.3)' }}>{s.n}</div>

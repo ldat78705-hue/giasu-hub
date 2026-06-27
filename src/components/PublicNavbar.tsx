@@ -21,15 +21,15 @@ export const PublicNavbar: React.FC<PublicNavbarProps> = ({ activeTab, onNavigat
   const links: { id: ActiveTab; label: string }[] = [
     { id: 'home', label: 'Trang chủ' },
     { id: 'find-tutors', label: 'Tìm gia sư' },
-    { id: 'register-tutor', label: 'Đăng ký dạy' },
+    { id: 'register-tutor', label: 'Trở thành gia sư' },
     { id: 'status-lookup', label: 'Tra cứu' },
-    { id: 'tutor-portal', label: 'Cổng GS' },
+    { id: 'tutor-portal', label: 'Cổng gia sư' },
   ];
 
   const mobileItems: { id: ActiveTab; label: string; icon: React.ReactNode }[] = [
     { id: 'home', label: 'Trang chủ', icon: <Home size={20} /> },
-    { id: 'find-tutors', label: 'Tìm GS', icon: <Search size={20} /> },
-    { id: 'parent-register', label: 'Tìm học', icon: <UserPlus size={20} /> },
+    { id: 'find-tutors', label: 'Tìm gia sư', icon: <Search size={20} /> },
+    { id: 'parent-register', label: 'Đăng ký', icon: <UserPlus size={20} /> },
     { id: 'status-lookup', label: 'Tra cứu', icon: <Phone size={20} /> },
   ];
 

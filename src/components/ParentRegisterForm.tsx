@@ -85,12 +85,12 @@ export const ParentRegisterForm: React.FC<ParentRegisterFormProps> = ({ onSubmit
         <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
           {/* PH info */}
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
-            <div><label style={lbl}>Họ tên phụ huynh *</label><input required value={parentName} onChange={e => setParentName(e.target.value)} placeholder="VD: Chị Lan" style={inp} /></div>
+            <div><label style={lbl}>Họ tên phụ huynh *</label><input required value={parentName} onChange={e => setParentName(e.target.value)} placeholder="Ví dụ: Nguyễn Thị Lan" style={inp} /></div>
             <div><label style={lbl}>Số điện thoại *</label><input required type="tel" value={phone} onChange={e => setPhone(e.target.value)} placeholder="0912345678" style={inp} /></div>
           </div>
 
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
-            <div><label style={lbl}>Tên học sinh</label><input value={studentName} onChange={e => setStudentName(e.target.value)} placeholder="VD: Minh" style={inp} /></div>
+            <div><label style={lbl}>Tên học sinh</label><input value={studentName} onChange={e => setStudentName(e.target.value)} placeholder="Ví dụ: Nguyễn Văn Minh" style={inp} /></div>
             <div>
               <label style={lbl}>Lớp / Trình độ</label>
               <select value={grade} onChange={e => setGrade(e.target.value)} style={inp}>
@@ -101,7 +101,7 @@ export const ParentRegisterForm: React.FC<ParentRegisterFormProps> = ({ onSubmit
 
           {/* Môn học */}
           <div>
-            <label style={lbl}>Môn học cần tìm GS * (chọn nhiều)</label>
+            <label style={lbl}>Môn học cần tìm gia sư * (chọn nhiều)</label>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
               {SUBJECTS.map(sub => (
                 <button key={sub} type="button" onClick={() => toggleSubject(sub)}
@@ -146,12 +146,12 @@ export const ParentRegisterForm: React.FC<ParentRegisterFormProps> = ({ onSubmit
           )}
 
           {/* Lịch học */}
-          <div><label style={lbl}>Lịch học mong muốn</label><input value={schedule} onChange={e => setSchedule(e.target.value)} placeholder="VD: Thứ 3, 5, 7 tối 19h-21h" style={inp} /></div>
+          <div><label style={lbl}>Lịch học mong muốn</label><input value={schedule} onChange={e => setSchedule(e.target.value)} placeholder="Ví dụ: Thứ 3, 5, 7 tối 19h–21h" style={inp} /></div>
 
           {/* Nguồn & Giới thiệu */}
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
             <div>
-              <label style={lbl}>Biết đến qua *</label>
+              <label style={lbl}>Biết đến trung tâm qua *</label>
               <select value={source} onChange={e => setSource(e.target.value as typeof source)} style={inp}>
                 <option value="Website">Website</option>
                 <option value="Zalo">Zalo</option>
@@ -163,7 +163,7 @@ export const ParentRegisterForm: React.FC<ParentRegisterFormProps> = ({ onSubmit
             </div>
             <div>
               <label style={lbl}>Mã giới thiệu (nếu có)</label>
-              <input value={referralCode} onChange={e => setReferralCode(e.target.value)} placeholder="VD: PH001" style={inp} />
+              <input value={referralCode} onChange={e => setReferralCode(e.target.value)} placeholder="Ví dụ: PH001" style={inp} />
             </div>
           </div>
 

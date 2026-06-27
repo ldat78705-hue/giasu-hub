@@ -111,10 +111,10 @@ export const RegistrationsTab: React.FC<RegistrationsTabProps> = ({ registration
   const tagColors: Record<string, string> = {
     'VIP': 'bg-amber-100 text-amber-800 border-amber-200',
     'Gấp': 'bg-red-100 text-red-800 border-red-200',
-    'Cần GS nữ': 'bg-pink-100 text-pink-800 border-pink-200',
+    'Cần gia sư nữ': 'bg-pink-100 text-pink-800 border-pink-200',
     'Học online': 'bg-cyan-100 text-cyan-800 border-cyan-200',
-    'Chờ PH xác nhận': 'bg-orange-100 text-orange-800 border-orange-200',
-    'Khó tìm GS': 'bg-slate-100 text-slate-800 border-slate-200',
+    'Chờ phụ huynh xác nhận': 'bg-orange-100 text-orange-800 border-orange-200',
+    'Khó tìm gia sư': 'bg-slate-100 text-slate-800 border-slate-200',
     'Học thử OK': 'bg-emerald-100 text-emerald-800 border-emerald-200',
     'Đã gọi 2 lần': 'bg-violet-100 text-violet-800 border-violet-200',
   };
@@ -217,7 +217,7 @@ export const RegistrationsTab: React.FC<RegistrationsTabProps> = ({ registration
               {editingNote === reg.id ? (
                 <div className="flex gap-1">
                   <input type="text" value={noteText} onChange={e => setNoteText(e.target.value)}
-                    placeholder="VD: Cần GS nữ, kiên nhẫn..." autoFocus
+                    placeholder="Ví dụ: Cần gia sư nữ, kiên nhẫn..." autoFocus
                     className="flex-1 px-2 py-1 text-xs border border-blue-300 rounded bg-blue-50 outline-none" />
                   <button onClick={() => { if (reg.id && onUpdateNote) { onUpdateNote(reg.id, noteText); } setEditingNote(null); }}
                     className="px-2 py-1 bg-blue-600 text-white rounded text-[10px] font-bold cursor-pointer">Lưu</button>
@@ -568,7 +568,7 @@ export const RegistrationsTab: React.FC<RegistrationsTabProps> = ({ registration
               <div>
                 <label className="text-xs font-bold text-slate-600 block mb-1">Ghi chú</label>
                 <textarea value={logNote} onChange={e => setLogNote(e.target.value)}
-                  placeholder="VD: PH đồng ý học thử, hẹn T3 tuần sau..."
+                  placeholder="Ví dụ: Phụ huynh đồng ý học thử, hẹn thứ 3 tuần sau..."
                   rows={2} className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm outline-none" />
               </div>
               <div className="flex gap-2 pt-2">

@@ -58,7 +58,7 @@ export const FindTutorPublic: React.FC<FindTutorPublicProps> = ({ tutors, onBook
         </h1>
         <p style={{ fontSize: 14, color: '#64748b' }}>
           {verifiedTutors.length > 0
-            ? `${verifiedTutors.length} gia sư đã xác minh · Chọn GS và đặt lịch học thử miễn phí`
+            ? `${verifiedTutors.length} gia sư đã xác minh · Chọn và đặt lịch học thử miễn phí`
             : 'Đăng ký để trung tâm tìm gia sư phù hợp nhất cho bạn'}
         </p>
       </div>
@@ -200,7 +200,7 @@ export const FindTutorPublic: React.FC<FindTutorPublicProps> = ({ tutors, onBook
       {compareCodes.length >= 2 && (
         <div style={{ position: 'fixed', bottom: 80, left: '50%', transform: 'translateX(-50%)', background: '#0f172a', color: '#fff', padding: '12px 24px', borderRadius: 16, display: 'flex', alignItems: 'center', gap: 12, boxShadow: '0 8px 32px rgba(0,0,0,0.3)', zIndex: 40, animation: 'slideUp 0.3s ease' }}>
           <GitCompareArrows size={18} />
-          <span style={{ fontSize: 13, fontWeight: 600 }}>{compareCodes.length} GS đã chọn</span>
+          <span style={{ fontSize: 13, fontWeight: 600 }}>{compareCodes.length} gia sư đã chọn</span>
           <button onClick={() => setShowCompare(true)} style={{ padding: '8px 16px', background: '#2563eb', color: '#fff', border: 'none', borderRadius: 8, fontSize: 12, fontWeight: 600, cursor: 'pointer' }}>So sánh ngay</button>
           <button onClick={() => setCompareCodes([])} style={{ padding: '8px 12px', background: 'rgba(255,255,255,0.1)', color: '#94a3b8', border: 'none', borderRadius: 8, fontSize: 12, cursor: 'pointer' }}>Xóa</button>
         </div>
@@ -238,7 +238,7 @@ export const FindTutorPublic: React.FC<FindTutorPublicProps> = ({ tutors, onBook
                     </div>
                     <button onClick={() => { setSelectedTutor(t); setShowCompare(false); }}
                       style={{ marginTop: 16, width: '100%', padding: '10px', background: '#2563eb', color: '#fff', border: 'none', borderRadius: 8, fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>
-                      Chọn GS này
+                      Chọn gia sư này
                     </button>
                   </div>
                 ))}
@@ -277,7 +277,7 @@ export const FindTutorPublic: React.FC<FindTutorPublicProps> = ({ tutors, onBook
                 <form onSubmit={handleBook} style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
                   <div>
                     <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: '#475569', marginBottom: 4 }}>Họ tên phụ huynh *</label>
-                    <input required value={studentName} onChange={e => setStudentName(e.target.value)} placeholder="VD: Chị Lan" style={inputStyle} />
+                    <input required value={studentName} onChange={e => setStudentName(e.target.value)} placeholder="Ví dụ: Nguyễn Thị Lan" style={inputStyle} />
                   </div>
                   <div>
                     <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: '#475569', marginBottom: 4 }}>Số điện thoại *</label>

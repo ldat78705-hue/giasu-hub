@@ -93,7 +93,7 @@ export default function App() {
     '/': 'Gia Sư Thành Đạt - Trung Tâm Gia Sư Uy Tín Hàng Đầu Hà Nội',
     '/tim-gia-su': 'Tìm Gia Sư Giỏi Tại Hà Nội — Top Gia Sư Đã Xác Minh | Gia Sư Thành Đạt',
     '/dang-ky-hoc': 'Đăng Ký Tìm Gia Sư Miễn Phí — Phụ Huynh | Gia Sư Thành Đạt',
-    '/dang-ky-day': 'Đăng Ký Làm Gia Sư — Thu Nhập Cao, Lịch Linh Hoạt | Gia Sư Thành Đạt',
+    '/dang-ky-day': 'Trở Thành Gia Sư — Thu Nhập Cao, Lịch Linh Hoạt | Gia Sư Thành Đạt',
     '/tra-cuu': 'Tra Cứu Đơn Đăng Ký & Lịch Học | Gia Sư Thành Đạt',
     '/cong-gia-su': 'Cổng Gia Sư — Quản Lý Lớp Dạy & Thu Nhập | Gia Sư Thành Đạt',
     '/quan-tri': 'Quản Trị Hệ Thống | Gia Sư Thành Đạt',

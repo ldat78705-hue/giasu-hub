@@ -29,7 +29,7 @@ export const TutorPortal: React.FC<TutorPortalProps> = ({ tutors, matches, atten
       setTutor(found);
       setLoggedIn(true);
     } else {
-      alert('Không tìm thấy. Vui lòng kiểm tra mã GS và SĐT.');
+      alert('Không tìm thấy. Vui lòng kiểm tra mã gia sư và số điện thoại.');
     }
   };
 
@@ -41,12 +41,12 @@ export const TutorPortal: React.FC<TutorPortalProps> = ({ tutors, matches, atten
             <GraduationCap size={28} color="#fff" />
           </div>
           <h1 style={{ fontSize: 24, fontWeight: 800, color: '#0f172a', marginBottom: 4 }}>Cổng Gia Sư</h1>
-          <p style={{ fontSize: 14, color: '#64748b' }}>Đăng nhập bằng mã GS và số điện thoại</p>
+          <p style={{ fontSize: 14, color: '#64748b' }}>Đăng nhập bằng mã gia sư và số điện thoại</p>
         </div>
         <form onSubmit={handleLogin} style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 16, padding: 24, display: 'flex', flexDirection: 'column', gap: 16 }}>
           <div>
             <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: '#475569', marginBottom: 6 }}>Mã gia sư</label>
-            <input type="text" value={gsCode} onChange={e => setGsCode(e.target.value)} placeholder="VD: GS001" required
+            <input type="text" value={gsCode} onChange={e => setGsCode(e.target.value)} placeholder="Ví dụ: GS001" required
               style={{ width: '100%', padding: '12px 14px', border: '1px solid #e2e8f0', borderRadius: 10, fontSize: 15, outline: 'none', background: '#f8fafc' }} />
           </div>
           <div>

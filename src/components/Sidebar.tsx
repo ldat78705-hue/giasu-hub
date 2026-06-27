@@ -58,7 +58,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab, pendi
       label: 'Tài chính & KPI',
       items: [
         { id: 'finance', label: 'Tài chính', icon: <DollarSign className="w-4 h-4" /> },
-        { id: 'performance', label: 'Hiệu suất GS', icon: <Award className="w-4 h-4" /> },
+        { id: 'performance', label: 'Hiệu suất gia sư', icon: <Award className="w-4 h-4" /> },
         { id: 'kpi', label: 'KPI & Thống kê', icon: <BarChart3 className="w-4 h-4" /> },
         { id: 'reviews', label: 'Đánh giá', icon: <Star className="w-4 h-4" /> },
       ],
@@ -66,7 +66,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab, pendi
     {
       label: 'Công cụ',
       items: [
-        { id: 'activity', label: 'Lịch sử HĐ', icon: <Activity className="w-4 h-4" /> },
+        { id: 'activity', label: 'Lịch sử hoạt động', icon: <Activity className="w-4 h-4" /> },
         { id: 'import', label: 'Import', icon: <Upload className="w-4 h-4" /> },
         { id: 'blog', label: 'Blog & SEO', icon: <FileText className="w-4 h-4" /> },
         { id: 'advanced', label: 'Nâng cao', icon: <Wrench className="w-4 h-4" /> },
