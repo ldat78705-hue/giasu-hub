@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { AdminSettings } from '../types';
-import { Settings, Key, Building2, Phone, Mail, MapPin, Save, CheckCircle2, AlertCircle, Eye, EyeOff, Sparkles, RefreshCw, Trash2, Shield, MessageCircle, Globe, Cloud, Plus, X, Search } from 'lucide-react';
+import { AdminSettings, FeeConfigItem } from '../types';
+import { Settings, Key, Building2, Phone, Mail, MapPin, Save, CheckCircle2, AlertCircle, Eye, EyeOff, Sparkles, RefreshCw, Trash2, Shield, MessageCircle, Globe, Cloud, Plus, X, Search, DollarSign } from 'lucide-react';
 import { DEFAULT_HANOI_WARDS } from '../hanoiWards';
+
+const SUBJECTS_FEE = ['Toán', 'Văn', 'Anh', 'Lý', 'Hóa', 'Sinh', 'Sử', 'Địa', 'Tin học', 'IELTS', 'Tiếng Nhật', 'Tiếng Hàn', 'Piano', 'Guitar'];
+const GRADES_FEE = ['Lớp 1-5', 'Lớp 6-9', 'Lớp 10-12', 'Đại học', 'Người đi làm'];
 
 interface SettingsTabProps {
   settings: AdminSettings;
@@ -27,6 +30,14 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({ settings, onSaveSettin
   const [saveSuccess, setSaveSuccess] = useState(false);
   const [isTesting, setIsTesting] = useState(false);
   const [testResult, setTestResult] = useState<'success' | 'fail' | null>(null);
+  // Feature 8: Fee configuration
+  const [feeConfig, setFeeConfig] = useState<FeeConfigItem[]>(settings.feeConfig || []);
+  const [showFeeForm, setShowFeeForm] = useState(false);
+  const [feeSubject, setFeeSubject] = useState('Toán');
+  const [feeGrade, setFeeGrade] = useState('Lớp 10-12');
+  const [feeArea, setFeeArea] = useState('Toàn TP');
+  const [feeOffline, setFeeOffline] = useState(200000);
+  const [feeOnline, setFeeOnline] = useState(150000);
 
   useEffect(() => {
     setCenterName(settings.centerName || 'Gia Sư Thành Đạt');
@@ -39,6 +50,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({ settings, onSaveSettin
     setCloudinaryCloudName(settings.cloudinaryCloudName || '');
     setCloudinaryPreset(settings.cloudinaryPreset || '');
     setWards(settings.wards || DEFAULT_HANOI_WARDS);
+    setFeeConfig(settings.feeConfig || []);
   }, [settings]);
 
   const handleSaveAll = async () => {
@@ -55,6 +67,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({ settings, onSaveSettin
         cloudinaryCloudName,
         cloudinaryPreset,
         wards,
+        feeConfig,
         updatedAt: Date.now(),
       });
       setSaveSuccess(true);
@@ -424,6 +437,104 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({ settings, onSaveSettin
           <p className="text-[10px] text-slate-400">
             Nhấn <b>Lưu tất cả cài đặt</b> để áp dụng. Danh sách này hiển thị ở form đăng ký gia sư và form đăng ký học.
           </p>
+        </div>
+
+        {/* Feature 8: Fee Configuration */}
+        <div className="bg-white rounded-2xl border border-slate-200 shadow-xs p-6 space-y-5 col-span-1 lg:col-span-2">
+          <div className="flex items-center justify-between border-b border-slate-100 pb-4">
+            <div className="flex items-center gap-2">
+              <div className="p-2 bg-amber-50 text-amber-600 rounded-xl">
+                <DollarSign className="w-5 h-5" />
+              </div>
+              <div>
+                <h3 className="font-bold text-slate-800">Cấu hình biểu phí</h3>
+                <p className="text-[11px] text-slate-500">Tự động gợi ý phí khi tạo lớp mới • {feeConfig.length} quy tắc</p>
+              </div>
+            </div>
+            <button type="button" onClick={() => setShowFeeForm(!showFeeForm)}
+              className="px-3 py-1.5 bg-amber-600 hover:bg-amber-700 text-white text-[10px] font-bold rounded-lg cursor-pointer flex items-center gap-1">
+              <Plus className="w-3 h-3" /><span>Thêm quy tắc</span>
+            </button>
+          </div>
+
+          {showFeeForm && (
+            <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 space-y-3">
+              <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
+                <div>
+                  <label className="text-[10px] font-bold text-slate-600 block mb-1">Môn</label>
+                  <select value={feeSubject} onChange={e => setFeeSubject(e.target.value)}
+                    className="w-full px-2 py-2 border border-slate-200 rounded-lg text-xs outline-none">
+                    {SUBJECTS_FEE.map(s => <option key={s}>{s}</option>)}
+                  </select>
+                </div>
+                <div>
+                  <label className="text-[10px] font-bold text-slate-600 block mb-1">Cấp</label>
+                  <select value={feeGrade} onChange={e => setFeeGrade(e.target.value)}
+                    className="w-full px-2 py-2 border border-slate-200 rounded-lg text-xs outline-none">
+                    {GRADES_FEE.map(g => <option key={g}>{g}</option>)}
+                  </select>
+                </div>
+                <div>
+                  <label className="text-[10px] font-bold text-slate-600 block mb-1">Khu vực</label>
+                  <input value={feeArea} onChange={e => setFeeArea(e.target.value)} placeholder="Toàn TP"
+                    className="w-full px-2 py-2 border border-slate-200 rounded-lg text-xs outline-none" />
+                </div>
+                <div>
+                  <label className="text-[10px] font-bold text-slate-600 block mb-1">Phí Offline</label>
+                  <input type="number" value={feeOffline} onChange={e => setFeeOffline(+e.target.value)}
+                    className="w-full px-2 py-2 border border-slate-200 rounded-lg text-xs outline-none" />
+                </div>
+                <div>
+                  <label className="text-[10px] font-bold text-slate-600 block mb-1">Phí Online</label>
+                  <input type="number" value={feeOnline} onChange={e => setFeeOnline(+e.target.value)}
+                    className="w-full px-2 py-2 border border-slate-200 rounded-lg text-xs outline-none" />
+                </div>
+              </div>
+              <button onClick={() => {
+                const newFee: FeeConfigItem = { id: `fee${Date.now()}`, subject: feeSubject, grade: feeGrade, area: feeArea, feeOffline, feeOnline };
+                setFeeConfig(prev => [...prev, newFee]);
+                setShowFeeForm(false);
+              }}
+                className="px-4 py-2 bg-amber-600 text-white text-xs font-bold rounded-lg cursor-pointer">Thêm quy tắc phí</button>
+            </div>
+          )}
+
+          {feeConfig.length > 0 ? (
+            <div className="overflow-x-auto">
+              <table className="w-full text-xs">
+                <thead>
+                  <tr className="bg-slate-50">
+                    <th className="px-3 py-2 text-left font-bold text-slate-600">Môn</th>
+                    <th className="px-3 py-2 text-left font-bold text-slate-600">Cấp</th>
+                    <th className="px-3 py-2 text-left font-bold text-slate-600">Khu vực</th>
+                    <th className="px-3 py-2 text-right font-bold text-slate-600">Offline (đ/buổi)</th>
+                    <th className="px-3 py-2 text-right font-bold text-slate-600">Online (đ/buổi)</th>
+                    <th className="px-3 py-2 text-center font-bold text-slate-600">Xóa</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {feeConfig.map(f => (
+                    <tr key={f.id} className="border-t border-slate-100 hover:bg-slate-50">
+                      <td className="px-3 py-2 font-semibold text-slate-700">{f.subject}</td>
+                      <td className="px-3 py-2 text-slate-600">{f.grade}</td>
+                      <td className="px-3 py-2 text-slate-600">{f.area}</td>
+                      <td className="px-3 py-2 text-right font-bold text-emerald-700">{new Intl.NumberFormat('vi-VN').format(f.feeOffline)}đ</td>
+                      <td className="px-3 py-2 text-right font-bold text-blue-700">{new Intl.NumberFormat('vi-VN').format(f.feeOnline)}đ</td>
+                      <td className="px-3 py-2 text-center">
+                        <button onClick={() => setFeeConfig(prev => prev.filter(x => x.id !== f.id))}
+                          className="p-1 hover:bg-red-50 text-slate-400 hover:text-red-600 rounded cursor-pointer">
+                          <Trash2 className="w-3 h-3" />
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          ) : (
+            <p className="text-xs text-slate-400 text-center py-4">Chưa có quy tắc phí nào. Nhấn "Thêm quy tắc" để bắt đầu.</p>
+          )}
+          <p className="text-[10px] text-slate-400">Nhấn <b>Lưu tất cả cài đặt</b> để áp dụng. Khi tạo lớp mới, hệ thống sẽ tự động gợi ý phí theo cấu hình này.</p>
         </div>
       </div>
     </div>

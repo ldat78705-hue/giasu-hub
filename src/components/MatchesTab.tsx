@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { ClassMatch, ClassItem, TutorItem } from '../types';
-import { Plus, CheckCircle2, XCircle, Clock, Trash2, Search, Download } from 'lucide-react';
+import { ClassMatch, ClassItem, TutorItem, InternalNote } from '../types';
+import { Plus, CheckCircle2, XCircle, Clock, Trash2, Search, Download, MessageSquare, Pin } from 'lucide-react';
 
 interface MatchesTabProps {
   matches: ClassMatch[];
@@ -9,12 +9,15 @@ interface MatchesTabProps {
   onAddMatch: (m: ClassMatch) => void;
   onUpdateStatus: (id: string, status: ClassMatch['status']) => void;
   onDeleteMatch: (id: string) => void;
+  onAddNote?: (matchId: string, note: InternalNote) => void;
 }
 
-export const MatchesTab: React.FC<MatchesTabProps> = ({ matches, classes, tutors, onAddMatch, onUpdateStatus, onDeleteMatch }) => {
+export const MatchesTab: React.FC<MatchesTabProps> = ({ matches, classes, tutors, onAddMatch, onUpdateStatus, onDeleteMatch, onAddNote }) => {
   const [showAdd, setShowAdd] = useState(false);
   const [filter, setFilter] = useState<'all' | 'Đang dạy' | 'Hoàn thành' | 'Hủy'>('all');
   const [search, setSearch] = useState('');
+  const [expandedNotes, setExpandedNotes] = useState<string | null>(null);
+  const [newNoteText, setNewNoteText] = useState('');
 
   // Form
   const [selClass, setSelClass] = useState('');
@@ -128,7 +131,8 @@ export const MatchesTab: React.FC<MatchesTabProps> = ({ matches, classes, tutors
               </thead>
               <tbody>
                 {filtered.map(m => (
-                  <tr key={m.id} className="border-b border-slate-100 hover:bg-slate-50/50 transition-colors">
+                  <React.Fragment key={m.id}>
+                  <tr className="border-b border-slate-100 hover:bg-slate-50/50 transition-colors">
                     <td className="px-4 py-3">
                       <span className="font-mono font-bold text-blue-600 text-xs">{m.classCode}</span>
                       <p className="text-xs text-slate-600 mt-0.5">{m.classSubject}</p>
@@ -169,8 +173,54 @@ export const MatchesTab: React.FC<MatchesTabProps> = ({ matches, classes, tutors
                           <Trash2 className="w-3 h-3" />
                         </button>
                       </div>
+                      <button onClick={() => setExpandedNotes(expandedNotes === m.id ? null : (m.id || null))}
+                        className="px-2 py-1 hover:bg-blue-50 text-slate-400 hover:text-blue-600 rounded-lg cursor-pointer relative">
+                        <MessageSquare className="w-3 h-3" />
+                        {(m.internalNotes || []).length > 0 && (
+                          <span className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-blue-600 text-white rounded-full text-[8px] flex items-center justify-center font-bold">{(m.internalNotes || []).length}</span>
+                        )}
+                      </button>
                     </td>
                   </tr>
+                  {/* Feature 4: Internal Notes row */}
+                  {expandedNotes === m.id && (
+                    <tr>
+                      <td colSpan={7} className="px-4 py-3 bg-slate-50">
+                        <div className="space-y-2">
+                          <div className="flex items-center gap-2 mb-2">
+                            <MessageSquare className="w-3.5 h-3.5 text-blue-600" />
+                            <span className="text-xs font-bold text-slate-700">Ghi chú nội bộ</span>
+                          </div>
+                          {(m.internalNotes || []).length > 0 ? (
+                            <div className="space-y-1.5">
+                              {(m.internalNotes || []).sort((a, b) => b.createdAt - a.createdAt).map(n => (
+                                <div key={n.id} className={`text-xs p-2 rounded-lg ${n.pinned ? 'bg-amber-50 border border-amber-200' : 'bg-white border border-slate-200'}`}>
+                                  <div className="flex justify-between">
+                                    <span className="font-bold text-slate-700">{n.author}</span>
+                                    <span className="text-[9px] text-slate-400">{new Date(n.createdAt).toLocaleString('vi-VN', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' })}</span>
+                                  </div>
+                                  <p className="text-slate-600 mt-0.5">{n.text}</p>
+                                </div>
+                              ))}
+                            </div>
+                          ) : <p className="text-xs text-slate-400">Chưa có ghi chú</p>}
+                          {onAddNote && (
+                            <div className="flex gap-1.5 mt-2">
+                              <input value={newNoteText} onChange={e => setNewNoteText(e.target.value)}
+                                placeholder="Thêm ghi chú..." className="flex-1 px-2 py-1.5 text-xs border border-slate-200 rounded-lg outline-none" />
+                              <button onClick={() => {
+                                if (m.id && newNoteText.trim()) {
+                                  onAddNote(m.id, { id: `n${Date.now()}`, text: newNoteText.trim(), author: 'Admin', createdAt: Date.now() });
+                                  setNewNoteText('');
+                                }
+                              }} className="px-3 py-1.5 bg-blue-600 text-white text-[10px] font-bold rounded-lg cursor-pointer">Gửi</button>
+                            </div>
+                          )}
+                        </div>
+                      </td>
+                    </tr>
+                  )}
+                  </React.Fragment>
                 ))}
               </tbody>
             </table>

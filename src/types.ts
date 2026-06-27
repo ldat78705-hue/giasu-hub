@@ -105,6 +105,15 @@ export interface ParentRegistration {
   status: 'Mới' | 'Đã liên hệ' | 'Đã xếp lớp' | 'Hủy';
   adminNote?: string;
   statusHistory?: { status: string; timestamp: number; }[];
+  // Feature 1: Trial booking
+  trialDate?: string;
+  trialTime?: string;
+  trialTutorCode?: string;
+  trialStatus?: 'Chưa đặt' | 'Đã đặt' | 'Đã học thử' | 'Hủy thử';
+  // Feature 5: Lead source
+  source?: 'Zalo' | 'Facebook' | 'Google' | 'Giới thiệu' | 'Website' | 'Khác';
+  // Feature 6: Referral
+  referralCode?: string;
 }
 
 export interface ContactMessage {
@@ -155,6 +164,17 @@ export interface AdminSettings {
   cloudinaryPreset: string;
   wards: string[];
   updatedAt: number;
+  // Feature 8: Fee config
+  feeConfig?: FeeConfigItem[];
+}
+
+export interface FeeConfigItem {
+  id: string;
+  subject: string;
+  grade: string;
+  area: string;
+  feeOffline: number;
+  feeOnline: number;
 }
 
 export interface NotificationItem {
@@ -181,6 +201,16 @@ export interface ClassMatch {
   fee: number;
   note?: string;
   createdAt: number;
+  // Feature 4: Internal notes
+  internalNotes?: InternalNote[];
+}
+
+export interface InternalNote {
+  id: string;
+  text: string;
+  author: string;
+  createdAt: number;
+  pinned?: boolean;
 }
 
 export interface TutorReview {
@@ -205,6 +235,9 @@ export interface AttendanceRecord {
   status: 'Đã dạy' | 'Nghỉ GS' | 'Nghỉ HS' | 'Hủy';
   note?: string;
   createdAt: number;
+  // Feature 7: GS feedback
+  tutorFeedback?: string;
 }
 
 export type ActiveTab = 'home' | 'find-tutors' | 'register-tutor' | 'parent-register' | 'status-lookup' | 'dashboard' | 'classes' | 'tutors' | 'students' | 'finance' | 'applications' | 'registrations' | 'contacts' | 'matches' | 'settings' | 'reviews' | 'attendance' | 'calendar' | 'kpi' | 'import' | 'advanced' | 'blog' | 'performance' | 'activity' | 'zalonotify';
+

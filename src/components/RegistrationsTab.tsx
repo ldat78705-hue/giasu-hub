@@ -1,22 +1,29 @@
 import React, { useState } from 'react';
-import { ParentRegistration } from '../types';
-import { UserPlus, Phone, MapPin, Clock, CheckCircle2, XCircle, Download, Search, ArrowUpDown, AlertTriangle, Sparkles } from 'lucide-react';
+import { ParentRegistration, TutorItem } from '../types';
+import { UserPlus, Phone, MapPin, Clock, CheckCircle2, XCircle, Download, Search, ArrowUpDown, AlertTriangle, Sparkles, Calendar, Share2, Megaphone } from 'lucide-react';
 import { getOverdueRegistrations } from '../utils';
 
 interface RegistrationsTabProps {
   registrations: ParentRegistration[];
+  tutors?: TutorItem[];
   onUpdateStatus: (id: string, status: ParentRegistration['status']) => void;
   onUpdateNote?: (id: string, note: string) => void;
   onSuggestTutor?: (reg: ParentRegistration) => void;
+  onUpdateTrial?: (id: string, data: { trialDate: string; trialTime: string; trialTutorCode?: string; trialStatus: string }) => void;
 }
 
-export const RegistrationsTab: React.FC<RegistrationsTabProps> = ({ registrations, onUpdateStatus, onUpdateNote, onSuggestTutor }) => {
+export const RegistrationsTab: React.FC<RegistrationsTabProps> = ({ registrations, tutors = [], onUpdateStatus, onUpdateNote, onSuggestTutor, onUpdateTrial }) => {
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState<'newest' | 'oldest' | 'name' | 'status'>('newest');
   const [editingNote, setEditingNote] = useState<string | null>(null);
   const [noteText, setNoteText] = useState('');
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  // Feature 1: Trial booking
+  const [trialModal, setTrialModal] = useState<string | null>(null);
+  const [trialDate, setTrialDate] = useState('');
+  const [trialTime, setTrialTime] = useState('18:00');
+  const [trialTutorCode, setTrialTutorCode] = useState('');
 
   const overdueRegs = getOverdueRegistrations(registrations);
 
@@ -64,9 +71,9 @@ export const RegistrationsTab: React.FC<RegistrationsTabProps> = ({ registration
     });
 
   const exportCsv = () => {
-    const header = 'Phụ huynh,SĐT,Học sinh,Lớp,Môn học,Quận,Hình thức,Lịch học,Ghi chú,Ghi chú admin,Ngày đăng ký,Trạng thái\n';
+    const header = 'Ph\u1ee5 huynh,S\u0110T,H\u1ecdc sinh,L\u1edbp,M\u00f4n h\u1ecdc,Qu\u1eadn,H\u00ecnh th\u1ee9c,L\u1ecbch h\u1ecdc,Ngu\u1ed3n,M\u00e3 GT,Ghi ch\u00fa,Ghi ch\u00fa admin,Ng\u00e0y \u0111\u0103ng k\u00fd,Tr\u1ea1ng th\u00e1i,H\u1ecdc th\u1eed\n';
     const rows = registrations.map(r =>
-      `"${r.parentName}","${r.phone}","${r.studentName}","${r.grade}","${r.subjects.join(', ')}","${r.district}","${r.mode}","${r.schedule}","${r.note}","${(r.adminNote || '').replace(/"/g, '""')}","${fmt(r.createdAt)}","${r.status}"`
+      `"${r.parentName}","${r.phone}","${r.studentName}","${r.grade}","${r.subjects.join(', ')}","${r.district}","${r.mode}","${r.schedule}","${r.source || ''}","${r.referralCode || ''}","${r.note}","${(r.adminNote || '').replace(/"/g, '""')}","${fmt(r.createdAt)}","${r.status}","${r.trialDate ? r.trialDate + ' ' + (r.trialTime || '') : ''}"`
     ).join('\n');
     const blob = new Blob(['\uFEFF' + header + rows], { type: 'text/csv;charset=utf-8' });
     const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = `dang-ky-${new Date().toISOString().slice(0,10)}.csv`; a.click(); URL.revokeObjectURL(url);
@@ -200,16 +207,40 @@ export const RegistrationsTab: React.FC<RegistrationsTabProps> = ({ registration
                     <span>{reg.mode}</span>
                   </div>
 
-                  {/* Subjects */}
+                  {/* Source + Referral badges (F5, F6) */}
                   <div className="flex flex-wrap gap-1.5">
                     {reg.subjects.map((sub, i) => (
                       <span key={i} className="px-2 py-0.5 bg-blue-50 text-blue-700 rounded text-[10px] font-semibold">{sub}</span>
                     ))}
+                    {reg.source && (
+                      <span className="px-2 py-0.5 bg-purple-50 text-purple-700 rounded text-[10px] font-semibold flex items-center gap-0.5">
+                        <Megaphone className="w-2.5 h-2.5" />{reg.source}
+                      </span>
+                    )}
+                    {reg.referralCode && (
+                      <span className="px-2 py-0.5 bg-emerald-50 text-emerald-700 rounded text-[10px] font-semibold flex items-center gap-0.5">
+                        <Share2 className="w-2.5 h-2.5" />GT: {reg.referralCode}
+                      </span>
+                    )}
                   </div>
 
                   {/* Schedule & Note */}
                   {reg.schedule && <p className="text-xs text-slate-500 flex items-center gap-1"><Clock className="w-3 h-3" />{reg.schedule}</p>}
                   {reg.note && <p className="text-xs text-slate-500 italic">"{reg.note}"</p>}
+
+                  {/* Trial booking info (F1) */}
+                  {reg.trialDate && (
+                    <div className={`text-[10px] font-bold flex items-center gap-1 px-2 py-1 rounded-lg ${
+                      reg.trialStatus === 'Đã học thử' ? 'bg-emerald-50 text-emerald-700' :
+                      reg.trialStatus === 'Hủy thử' ? 'bg-red-50 text-red-600' :
+                      'bg-purple-50 text-purple-700'
+                    }`}>
+                      <Calendar className="w-3 h-3" />
+                      Học thử: {reg.trialDate} {reg.trialTime || ''}
+                      {reg.trialTutorCode && ` · GS: ${reg.trialTutorCode}`}
+                      {reg.trialStatus && ` · ${reg.trialStatus}`}
+                    </div>
+                  )}
 
                   <p className="text-[10px] text-slate-400">{fmt(reg.createdAt)}</p>
 
@@ -253,6 +284,13 @@ export const RegistrationsTab: React.FC<RegistrationsTabProps> = ({ registration
                       <Sparkles className="w-3 h-3" /><span>Đề xuất GS</span>
                     </button>
                   )}
+                  {/* Feature 1: Trial booking button */}
+                  {onUpdateTrial && (reg.status === 'Mới' || reg.status === 'Đã liên hệ') && !reg.trialDate && (
+                    <button onClick={() => { setTrialModal(reg.id || null); setTrialDate(''); setTrialTime('18:00'); setTrialTutorCode(''); }}
+                      className="px-3 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-[10px] font-bold rounded-lg cursor-pointer flex items-center gap-1">
+                      <Calendar className="w-3 h-3" /><span>Đặt học thử</span>
+                    </button>
+                  )}
                   {reg.status === 'Mới' && (
                     <button onClick={() => reg.id && onUpdateStatus(reg.id, 'Đã liên hệ')}
                       className="px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white text-[10px] font-bold rounded-lg cursor-pointer flex items-center gap-1">
@@ -275,6 +313,56 @@ export const RegistrationsTab: React.FC<RegistrationsTabProps> = ({ registration
               </div>
             </div>
           ))}
+        </div>
+      )}
+      {/* Feature 1: Trial Booking Modal */}
+      {trialModal && (
+        <div style={{ position: 'fixed', inset: 0, zIndex: 60, background: 'rgba(0,0,0,.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 16 }}
+          onClick={() => setTrialModal(null)}>
+          <div style={{ background: '#fff', borderRadius: 16, maxWidth: 400, width: '100%', padding: 24 }} onClick={e => e.stopPropagation()}>
+            <h3 className="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+              <Calendar className="w-5 h-5 text-indigo-600" /> Đặt lịch học thử
+            </h3>
+            <div className="space-y-3">
+              <div>
+                <label className="text-xs font-bold text-slate-600 block mb-1">Ngày học thử *</label>
+                <input type="date" value={trialDate} onChange={e => setTrialDate(e.target.value)}
+                  min={new Date().toISOString().split('T')[0]}
+                  className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm outline-none" />
+              </div>
+              <div>
+                <label className="text-xs font-bold text-slate-600 block mb-1">Giờ</label>
+                <input type="time" value={trialTime} onChange={e => setTrialTime(e.target.value)}
+                  className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm outline-none" />
+              </div>
+              <div>
+                <label className="text-xs font-bold text-slate-600 block mb-1">Gia sư dạy thử</label>
+                <select value={trialTutorCode} onChange={e => setTrialTutorCode(e.target.value)}
+                  className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm outline-none">
+                  <option value="">-- Chọn GS --</option>
+                  {tutors.filter(t => t.verified).map(t => (
+                    <option key={t.code} value={t.code}>{t.name} ({t.code})</option>
+                  ))}
+                </select>
+              </div>
+              <div className="flex gap-2 pt-2">
+                <button onClick={() => {
+                  if (trialModal && trialDate && onUpdateTrial) {
+                    onUpdateTrial(trialModal, { trialDate, trialTime, trialTutorCode: trialTutorCode || undefined, trialStatus: 'Đã đặt' });
+                    setTrialModal(null);
+                  }
+                }}
+                  disabled={!trialDate}
+                  className="flex-1 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-bold rounded-xl cursor-pointer disabled:opacity-50">
+                  Xác nhận đặt lịch
+                </button>
+                <button onClick={() => setTrialModal(null)}
+                  className="px-4 py-2.5 bg-slate-100 text-slate-600 text-sm font-bold rounded-xl cursor-pointer">
+                  Hủy
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
       )}
     </div>

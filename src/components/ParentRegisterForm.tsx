@@ -30,6 +30,8 @@ export const ParentRegisterForm: React.FC<ParentRegisterFormProps> = ({ onSubmit
   const [schedule, setSchedule] = useState('');
   const [note, setNote] = useState('');
   const [wardSearch, setWardSearch] = useState('');
+  const [source, setSource] = useState<'Zalo' | 'Facebook' | 'Google' | 'Giới thiệu' | 'Website' | 'Khác'>('Website');
+  const [referralCode, setReferralCode] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
 
@@ -44,7 +46,7 @@ export const ParentRegisterForm: React.FC<ParentRegisterFormProps> = ({ onSubmit
     if (!parentName || !phone || selectedSubjects.length === 0) return;
     setIsSubmitting(true);
     try {
-      await onSubmit({ parentName, phone, studentName, grade, subjects: selectedSubjects, district, mode, schedule, note, createdAt: Date.now(), status: 'Mới' });
+      await onSubmit({ parentName, phone, studentName, grade, subjects: selectedSubjects, district, mode, schedule, note, source, referralCode: referralCode || undefined, createdAt: Date.now(), status: 'Mới' });
       setSuccess(true);
     } catch (err) { console.error(err); }
     finally { setIsSubmitting(false); }
@@ -145,6 +147,25 @@ export const ParentRegisterForm: React.FC<ParentRegisterFormProps> = ({ onSubmit
 
           {/* Lịch học */}
           <div><label style={lbl}>Lịch học mong muốn</label><input value={schedule} onChange={e => setSchedule(e.target.value)} placeholder="VD: Thứ 3, 5, 7 tối 19h-21h" style={inp} /></div>
+
+          {/* Nguồn & Giới thiệu */}
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+            <div>
+              <label style={lbl}>Biết đến qua *</label>
+              <select value={source} onChange={e => setSource(e.target.value as typeof source)} style={inp}>
+                <option value="Website">Website</option>
+                <option value="Zalo">Zalo</option>
+                <option value="Facebook">Facebook</option>
+                <option value="Google">Google tìm kiếm</option>
+                <option value="Giới thiệu">Người giới thiệu</option>
+                <option value="Khác">Khác</option>
+              </select>
+            </div>
+            <div>
+              <label style={lbl}>Mã giới thiệu (nếu có)</label>
+              <input value={referralCode} onChange={e => setReferralCode(e.target.value)} placeholder="VD: PH001" style={inp} />
+            </div>
+          </div>
 
           {/* Ghi chú */}
           <div><label style={lbl}>Ghi chú thêm</label><textarea rows={2} value={note} onChange={e => setNote(e.target.value)} placeholder="Yêu cầu đặc biệt..." style={{ ...inp, resize: 'none' }} /></div>

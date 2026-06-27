@@ -1,6 +1,6 @@
 import React from 'react';
-import { ActiveTab, TutorItem, ParentRegistration, ClassMatch, AttendanceRecord, TutorReview } from '../types';
-import { AlertTriangle, UserCheck, Clock, ArrowRight, ShieldAlert, Zap, Award, TrendingDown, XCircle } from 'lucide-react';
+import { ActiveTab, TutorItem, ParentRegistration, ClassMatch, AttendanceRecord, TutorReview, TransactionItem } from '../types';
+import { AlertTriangle, UserCheck, Clock, ArrowRight, ShieldAlert, Zap, Award, TrendingDown, XCircle, Calendar, DollarSign, Bell } from 'lucide-react';
 
 interface QuickActionsProps {
   tutors: TutorItem[];
@@ -8,11 +8,12 @@ interface QuickActionsProps {
   matches: ClassMatch[];
   attendance: AttendanceRecord[];
   reviews: TutorReview[];
+  transactions?: TransactionItem[];
   onNavigate: (tab: ActiveTab) => void;
 }
 
-// Feature A1: Quick Actions + A2: Cancel Analytics
-export const QuickActions: React.FC<QuickActionsProps> = ({ tutors, registrations, matches, attendance, reviews, onNavigate }) => {
+// Feature A1: Quick Actions + A2: Cancel Analytics + Feature 1: Trial reminders + Feature 3: Task reminders
+export const QuickActions: React.FC<QuickActionsProps> = ({ tutors, registrations, matches, attendance, reviews, transactions = [], onNavigate }) => {
   const unverifiedTutors = tutors.filter(t => !t.verified).length;
   const newRegs = registrations.filter(r => r.status === 'Mới').length;
   const overdueRegs = registrations.filter(r => r.status === 'Mới' && (Date.now() - r.createdAt) > 24 * 60 * 60 * 1000).length;
@@ -30,26 +31,45 @@ export const QuickActions: React.FC<QuickActionsProps> = ({ tutors, registration
     return t.verified && (Date.now() - lastActivity) > 30 * 24 * 60 * 60 * 1000;
   });
 
+  // Feature 3: Task Reminders
+  const regsOver2h = registrations.filter(r => r.status === 'Mới' && (Date.now() - r.createdAt) > 2 * 60 * 60 * 1000).length;
+  
+  // Feature 1: Trial reminders — trials scheduled for today/tomorrow
+  const today = new Date().toISOString().split('T')[0];
+  const tomorrow = new Date(Date.now() + 86400000).toISOString().split('T')[0];
+  const upcomingTrials = registrations.filter(r => r.trialDate && (r.trialDate === today || r.trialDate === tomorrow) && r.trialStatus === 'Đã đặt').length;
+
+  // Overdue payments (matched > 7 days but no payment)
+  const overduePayments = matches.filter(m => {
+    if (m.status !== 'Đang dạy') return false;
+    const daysSinceStart = (Date.now() - m.startDate) / (1000 * 60 * 60 * 24);
+    const hasPayment = transactions.some(t => t.targetName.includes(m.studentName || '') && t.type === 'Thu phí gia sư');
+    return daysSinceStart > 30 && !hasPayment;
+  }).length;
+
   const actions = [
+    { show: regsOver2h > 0, color: 'red', icon: <Bell className="w-4 h-4" />, label: `${regsOver2h} đơn chưa gọi > 2h`, sub: '⏰ Cần liên hệ ngay!', tab: 'registrations' as ActiveTab, urgent: true },
+    { show: upcomingTrials > 0, color: 'purple', icon: <Calendar className="w-4 h-4" />, label: `${upcomingTrials} buổi học thử sắp tới`, sub: 'Hôm nay/ngày mai', tab: 'registrations' as ActiveTab, urgent: false },
     { show: newRegs > 0, color: 'blue', icon: <Clock className="w-4 h-4" />, label: `${newRegs} đơn mới chưa xử lý`, sub: overdueRegs > 0 ? `⚠️ ${overdueRegs} quá 24h!` : 'Nhấn để xử lý', tab: 'registrations' as ActiveTab, urgent: overdueRegs > 0 },
     { show: unverifiedTutors > 0, color: 'amber', icon: <UserCheck className="w-4 h-4" />, label: `${unverifiedTutors} GS chờ xác minh`, sub: 'Duyệt hồ sơ gia sư', tab: 'tutors' as ActiveTab, urgent: false },
     { show: dormantTutors.length > 0, color: 'orange', icon: <ShieldAlert className="w-4 h-4" />, label: `${dormantTutors.length} GS "ngủ đông"`, sub: '>30 ngày không hoạt động', tab: 'tutors' as ActiveTab, urgent: false },
+    { show: overduePayments > 0, color: 'red', icon: <DollarSign className="w-4 h-4" />, label: `${overduePayments} lớp chưa thu phí`, sub: '>30 ngày chưa thanh toán', tab: 'finance' as ActiveTab, urgent: overduePayments > 2 },
     { show: cancelRate > 15, color: 'red', icon: <TrendingDown className="w-4 h-4" />, label: `Tỷ lệ hủy: ${cancelRate}%`, sub: `${cancelledRegs}/${registrations.length} đơn bị hủy`, tab: 'kpi' as ActiveTab, urgent: cancelRate > 30 },
   ].filter(a => a.show);
 
   if (actions.length === 0) return null;
 
-  const urgentColors: Record<string, string> = { blue: 'border-blue-300 bg-blue-50', amber: 'border-amber-300 bg-amber-50', orange: 'border-orange-300 bg-orange-50', red: 'border-red-300 bg-red-50' };
-  const iconColors: Record<string, string> = { blue: 'text-blue-600', amber: 'text-amber-600', orange: 'text-orange-600', red: 'text-red-600' };
+  const urgentColors: Record<string, string> = { blue: 'border-blue-300 bg-blue-50', amber: 'border-amber-300 bg-amber-50', orange: 'border-orange-300 bg-orange-50', red: 'border-red-300 bg-red-50', purple: 'border-purple-300 bg-purple-50' };
+  const iconColors: Record<string, string> = { blue: 'text-blue-600', amber: 'text-amber-600', orange: 'text-orange-600', red: 'text-red-600', purple: 'text-purple-600' };
 
   return (
     <div className="col-span-12">
       <div className="flex items-center gap-2 mb-3">
         <Zap className="w-4 h-4 text-amber-500" />
-        <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500">Cần xử lý ngay</h3>
+        <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500">Cần xử lý ngay ({actions.length})</h3>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-        {actions.map((action, i) => (
+        {actions.slice(0, 8).map((action, i) => (
           <button key={i} onClick={() => onNavigate(action.tab)}
             className={`p-4 rounded-2xl border-2 text-left cursor-pointer transition-all hover:shadow-md ${action.urgent ? urgentColors[action.color] + ' animate-pulse' : urgentColors[action.color]}`}>
             <div className="flex items-start justify-between">

@@ -1,20 +1,24 @@
 import React, { useState } from 'react';
-import { TutorItem, ParentRegistration } from '../types';
-import { Search, CheckCircle2, Clock, ShieldCheck, AlertCircle, Phone, BookOpen, GraduationCap, XCircle } from 'lucide-react';
+import { TutorItem, ParentRegistration, ClassMatch, AttendanceRecord } from '../types';
+import { Search, CheckCircle2, Clock, ShieldCheck, AlertCircle, Phone, BookOpen, GraduationCap, XCircle, Calendar, Users, Star } from 'lucide-react';
 
 interface StatusLookupProps {
   tutors: TutorItem[];
   registrations: ParentRegistration[];
+  matches?: ClassMatch[];
+  attendance?: AttendanceRecord[];
   zaloNumber?: string;
 }
 
 const inp: React.CSSProperties = { width: '100%', padding: '12px 16px', border: '1px solid #e2e8f0', borderRadius: 10, fontSize: 15, outline: 'none', background: '#f8fafc' };
 
-export const StatusLookup: React.FC<StatusLookupProps> = ({ tutors, registrations, zaloNumber }) => {
+export const StatusLookup: React.FC<StatusLookupProps> = ({ tutors, registrations, matches = [], attendance = [], zaloNumber }) => {
   const [phone, setPhone] = useState('');
   const [searched, setSearched] = useState(false);
   const [foundTutors, setFoundTutors] = useState<TutorItem[]>([]);
   const [foundRegs, setFoundRegs] = useState<ParentRegistration[]>([]);
+  const [foundMatches, setFoundMatches] = useState<ClassMatch[]>([]);
+  const [foundAttendance, setFoundAttendance] = useState<AttendanceRecord[]>([]);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -22,10 +26,17 @@ export const StatusLookup: React.FC<StatusLookupProps> = ({ tutors, registration
     const cleaned = phone.replace(/\s/g, '');
     setFoundTutors(tutors.filter(t => t.phone === cleaned));
     setFoundRegs(registrations.filter(r => r.phone === cleaned));
+    // Feature 7: Also find matches & attendance for this parent
+    setFoundMatches(matches.filter(m => m.parentPhone === cleaned));
+    setFoundAttendance(attendance.filter(a => {
+      const matchForA = matches.find(m => m.id === a.matchId);
+      return matchForA?.parentPhone === cleaned;
+    }));
     setSearched(true);
   };
 
   const formatDate = (ts: number) => new Date(ts).toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+  const fmt = (v: number) => new Intl.NumberFormat('vi-VN').format(v);
 
   return (
     <div style={{ paddingBottom: 80 }}>
@@ -33,11 +44,11 @@ export const StatusLookup: React.FC<StatusLookupProps> = ({ tutors, registration
         <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: '#fef3c7', color: '#d97706', padding: '4px 14px', borderRadius: 20, fontSize: 12, fontWeight: 600, marginBottom: 12 }}>
           <Search size={14} /> Tra cứu trạng thái
         </div>
-        <h1 style={{ fontSize: 'clamp(22px, 4vw, 28px)', fontWeight: 800, color: '#0f172a', marginBottom: 6 }}>Tra cứu đơn đăng ký</h1>
-        <p style={{ fontSize: 14, color: '#64748b' }}>Nhập số điện thoại để kiểm tra trạng thái đăng ký của bạn.</p>
+        <h1 style={{ fontSize: 'clamp(22px, 4vw, 28px)', fontWeight: 800, color: '#0f172a', marginBottom: 6 }}>Tra cứu & Theo dõi</h1>
+        <p style={{ fontSize: 14, color: '#64748b' }}>Nhập SĐT để xem đơn đăng ký, gia sư đang dạy, lịch học và điểm danh.</p>
       </div>
 
-      <div style={{ maxWidth: 480, margin: '0 auto' }}>
+      <div style={{ maxWidth: 560, margin: '0 auto' }}>
         <form onSubmit={handleSearch} style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 12, padding: 24, marginBottom: 20 }}>
           <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#475569', marginBottom: 8 }}>Số điện thoại đã đăng ký</label>
           <div style={{ display: 'flex', gap: 8 }}>
@@ -139,6 +150,13 @@ export const StatusLookup: React.FC<StatusLookupProps> = ({ tutors, registration
                         <span style={{ color: '#64748b' }}>Ngày đăng ký</span>
                         <span style={{ fontWeight: 500, color: '#475569' }}>{formatDate(r.createdAt)}</span>
                       </div>
+                      {/* Trial info */}
+                      {r.trialDate && (
+                        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, background: '#f5f3ff', padding: '6px 10px', borderRadius: 6, marginTop: 4 }}>
+                          <span style={{ color: '#7c3aed', fontWeight: 600 }}>📅 Học thử</span>
+                          <span style={{ fontWeight: 600, color: '#7c3aed' }}>{r.trialDate} {r.trialTime || ''} {r.trialStatus ? `· ${r.trialStatus}` : ''}</span>
+                        </div>
+                      )}
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: 13, paddingTop: 8, borderTop: '1px solid #f1f5f9' }}>
                         <span style={{ color: '#64748b' }}>Trạng thái</span>
                         <span style={{
@@ -152,6 +170,61 @@ export const StatusLookup: React.FC<StatusLookupProps> = ({ tutors, registration
                     </div>
                   </div>
                 ))}
+
+                {/* Feature 7: Active matches for this parent */}
+                {foundMatches.length > 0 && (
+                  <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 12, padding: 20 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
+                      <Users size={18} color="#8b5cf6" />
+                      <span style={{ fontSize: 14, fontWeight: 700, color: '#0f172a' }}>Gia sư đang dạy</span>
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                      {foundMatches.map(m => {
+                        const matchAttendance = foundAttendance.filter(a => a.matchId === m.id);
+                        const totalSessions = matchAttendance.length;
+                        const completedSessions = matchAttendance.filter(a => a.status === 'Đã dạy').length;
+                        return (
+                          <div key={m.id} style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 8, padding: 14 }}>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
+                              <span style={{ fontWeight: 700, fontSize: 14, color: '#0f172a' }}>{m.classSubject}</span>
+                              <span style={{
+                                padding: '2px 8px', borderRadius: 4, fontSize: 10, fontWeight: 700,
+                                background: m.status === 'Đang dạy' ? '#dcfce7' : '#e2e8f0',
+                                color: m.status === 'Đang dạy' ? '#16a34a' : '#64748b',
+                              }}>{m.status}</span>
+                            </div>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: 4, fontSize: 12, color: '#64748b' }}>
+                              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                <span>Gia sư</span>
+                                <span style={{ fontWeight: 600, color: '#0f172a' }}>{m.tutorName}</span>
+                              </div>
+                              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                <span>Học phí</span>
+                                <span style={{ fontWeight: 600, color: '#2563eb' }}>{fmt(m.fee)}đ/buổi</span>
+                              </div>
+                              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                <span>Bắt đầu</span>
+                                <span>{new Date(m.startDate).toLocaleDateString('vi-VN')}</span>
+                              </div>
+                              {totalSessions > 0 && (
+                                <div style={{ display: 'flex', justifyContent: 'space-between', paddingTop: 6, borderTop: '1px solid #e2e8f0', marginTop: 4 }}>
+                                  <span>Điểm danh</span>
+                                  <span style={{ fontWeight: 600, color: '#16a34a' }}>{completedSessions}/{totalSessions} buổi đã dạy</span>
+                                </div>
+                              )}
+                            </div>
+                            {/* Last attendance feedback */}
+                            {matchAttendance.length > 0 && matchAttendance[0].tutorFeedback && (
+                              <div style={{ marginTop: 8, background: '#faf5ff', border: '1px solid #e9d5ff', borderRadius: 6, padding: 8, fontSize: 11, color: '#7c3aed' }}>
+                                <strong>Nhận xét GS (buổi gần nhất):</strong> {matchAttendance[0].tutorFeedback}
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
               </div>
             )}
           </div>

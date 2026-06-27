@@ -347,6 +347,11 @@ export default function App() {
     await updateDoc(doc(db, 'registrations', id), { adminNote: note });
   };
 
+  // Feature 1: Trial booking handler
+  const handleUpdateTrial = async (id: string, data: { trialDate: string; trialTime: string; trialTutorCode?: string; trialStatus: string }) => {
+    await updateDoc(doc(db, 'registrations', id), data);
+  };
+
   // Reviews
   const handleAddReview = async (r: TutorReview) => { await addDoc(collection(db, 'reviews'), r); };
   const handleDeleteReview = async (id: string) => { await deleteDoc(doc(db, 'reviews', id)); };
@@ -486,6 +491,11 @@ export default function App() {
     logActivity('Xóa ghép lớp', id, '', 'match');
   };
 
+  // Feature 4: Internal notes for matches
+  const handleAddMatchNote = async (matchId: string, note: { id: string; text: string; author: string; createdAt: number }) => {
+    await updateDoc(doc(db, 'matches', matchId), { internalNotes: arrayUnion(note) });
+  };
+
   // Admin note handlers
   const handleUpdateTutorNote = async (id: string, note: string) => {
     await updateDoc(doc(db, 'tutors', id), { adminNote: note });
@@ -527,7 +537,7 @@ export default function App() {
             } />
             <Route path="/tra-cuu" element={
               <div style={{ maxWidth: 560, margin: '0 auto', padding: '32px 20px' }}>
-                <StatusLookup tutors={tutors} registrations={registrations} zaloNumber={zaloNumber} />
+                <StatusLookup tutors={tutors} registrations={registrations} matches={matches} attendance={attendance} zaloNumber={zaloNumber} />
               </div>
             } />
             <Route path="*" element={
@@ -578,7 +588,7 @@ export default function App() {
           {adminTab === 'dashboard' && (
             <>
               <QuickActions tutors={tutors} registrations={registrations} matches={matches}
-                attendance={attendance} reviews={reviews} onNavigate={setAdminTab} />
+                attendance={attendance} reviews={reviews} transactions={transactions} onNavigate={setAdminTab} />
               <StatsCards totalClasses={classes.length} pendingClasses={pendingClassesCount}
                 totalTutors={tutors.length} totalStudents={students.length}
                 pendingApplications={pendingApplicationsCount} totalRevenue={totalRevenue}
@@ -613,7 +623,7 @@ export default function App() {
           {adminTab === 'matches' && (
             <MatchesTab matches={matches} classes={classes} tutors={tutors}
               onAddMatch={handleAddMatch} onUpdateStatus={handleUpdateMatchStatus}
-              onDeleteMatch={handleDeleteMatch} />
+              onDeleteMatch={handleDeleteMatch} onAddNote={handleAddMatchNote} />
           )}
 
           {adminTab === 'students' && (
@@ -629,8 +639,8 @@ export default function App() {
           )}
 
           {adminTab === 'registrations' && (
-            <RegistrationsTab registrations={registrations} onUpdateStatus={handleUpdateRegistrationStatus}
-              onUpdateNote={handleUpdateRegistrationNote} onSuggestTutor={setSuggestReg} />
+            <RegistrationsTab registrations={registrations} tutors={tutors} onUpdateStatus={handleUpdateRegistrationStatus}
+              onUpdateNote={handleUpdateRegistrationNote} onSuggestTutor={setSuggestReg} onUpdateTrial={handleUpdateTrial} />
           )}
 
           {adminTab === 'contacts' && (
@@ -660,7 +670,7 @@ export default function App() {
           )}
 
           {(adminTab as string) === 'kpi' && (
-            <KPIDashboard matches={matches} registrations={registrations} tutors={tutors} />
+            <KPIDashboard matches={matches} registrations={registrations} tutors={tutors} transactions={transactions} attendance={attendance} />
           )}
 
           {adminTab === 'settings' && (
