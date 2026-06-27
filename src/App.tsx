@@ -72,6 +72,9 @@ export default function App() {
     '/dang-ky-hoc': 'parent-register',
     '/dang-ky-day': 'register-tutor',
     '/tra-cuu': 'status-lookup',
+    '/cong-gia-su': 'tutor-portal',
+    '/quan-tri': 'dashboard',
+    // Legacy redirects
     '/gia-su-portal': 'tutor-portal',
     '/dashboard': 'dashboard',
   };
@@ -82,18 +85,27 @@ export default function App() {
     'parent-register': '/dang-ky-hoc',
     'register-tutor': '/dang-ky-day',
     'status-lookup': '/tra-cuu',
-    'tutor-portal': '/gia-su-portal',
-    'dashboard': '/dashboard',
+    'tutor-portal': '/cong-gia-su',
+    'dashboard': '/quan-tri',
   };
 
   const pageTitles: Record<string, string> = {
     '/': 'Gia Sư Thành Đạt - Trung Tâm Gia Sư Uy Tín Hàng Đầu Hà Nội',
-    '/tim-gia-su': 'Tìm Gia Sư Giỏi Tại Hà Nội | Gia Sư Thành Đạt',
-    '/dang-ky-hoc': 'Đăng Ký Tìm Gia Sư - Phụ Huynh | Gia Sư Thành Đạt',
-    '/dang-ky-day': 'Đăng Ký Làm Gia Sư | Gia Sư Thành Đạt',
-    '/tra-cuu': 'Tra Cứu Trạng Thái Đăng Ký | Gia Sư Thành Đạt',
-    '/gia-su-portal': 'Cổng Gia Sư | Gia Sư Thành Đạt',
-    '/dashboard': 'Quản Trị | Gia Sư Thành Đạt',
+    '/tim-gia-su': 'Tìm Gia Sư Giỏi Tại Hà Nội — Top Gia Sư Đã Xác Minh | Gia Sư Thành Đạt',
+    '/dang-ky-hoc': 'Đăng Ký Tìm Gia Sư Miễn Phí — Phụ Huynh | Gia Sư Thành Đạt',
+    '/dang-ky-day': 'Đăng Ký Làm Gia Sư — Thu Nhập Cao, Lịch Linh Hoạt | Gia Sư Thành Đạt',
+    '/tra-cuu': 'Tra Cứu Đơn Đăng Ký & Lịch Học | Gia Sư Thành Đạt',
+    '/cong-gia-su': 'Cổng Gia Sư — Quản Lý Lớp Dạy & Thu Nhập | Gia Sư Thành Đạt',
+    '/quan-tri': 'Quản Trị Hệ Thống | Gia Sư Thành Đạt',
+  };
+
+  const pageDescriptions: Record<string, string> = {
+    '/': 'Trung tâm gia sư uy tín #1 Hà Nội. Đội ngũ gia sư giỏi đã xác minh từ ĐHQG, Bách Khoa, Sư Phạm. Cam kết tiến bộ sau 4 buổi. Tư vấn miễn phí.',
+    '/tim-gia-su': 'Tìm và so sánh gia sư giỏi đã xác minh tại Hà Nội. Lọc theo môn học, khu vực, đánh giá. Đặt lịch học thử miễn phí.',
+    '/dang-ky-hoc': 'Đăng ký tìm gia sư miễn phí cho con bạn. Phản hồi trong 30 phút. Học thử 1-2 buổi. Đổi gia sư miễn phí nếu không hài lòng.',
+    '/dang-ky-day': 'Đăng ký làm gia sư tại Gia Sư Thành Đạt. Thu nhập cao, lịch linh hoạt. Hồ sơ được xác minh bởi trung tâm.',
+    '/tra-cuu': 'Tra cứu trạng thái đơn đăng ký, lịch học, đánh giá gia sư bằng số điện thoại hoặc mã gia sư.',
+    '/cong-gia-su': 'Cổng thông tin dành cho gia sư. Quản lý lớp dạy, lịch tuần, thu nhập, đánh giá từ phụ huynh.',
   };
 
   // Derive activeTab from URL
@@ -145,9 +157,23 @@ export default function App() {
   const apiKey = settings.geminiApiKey || '';
   const zaloNumber = settings.zaloNumber || '';
 
-  // Update document title on route change
+  // Admin login gate
+  const [adminAuthenticated, setAdminAuthenticated] = useState(false);
+  const [adminPwInput, setAdminPwInput] = useState('');
+  const [adminPwError, setAdminPwError] = useState(false);
+
+  // Update document title + meta description on route change
   useEffect(() => {
     document.title = pageTitles[currentPath] || 'Gia Sư Thành Đạt';
+    // Update meta description
+    const desc = pageDescriptions[currentPath];
+    if (desc) {
+      let meta = document.querySelector('meta[name="description"]') as HTMLMetaElement;
+      if (meta) meta.content = desc;
+    }
+    // Redirect legacy URLs
+    if (currentPath === '/gia-su-portal') navigate('/cong-gia-su', { replace: true });
+    if (currentPath === '/dashboard') navigate('/quan-tri', { replace: true });
   }, [currentPath]);
 
   // Initialize & Subscribe
@@ -630,7 +656,7 @@ export default function App() {
                   onSubmitReview={async (review) => { await addDoc(collection(db, 'reviews'), review); logActivity('PH đánh giá GS', review.tutorCode, `${review.rating}⭐ — ${review.tutorName}`, 'system'); }} />
               </div>
             } />
-            <Route path="/gia-su-portal" element={
+            <Route path="/cong-gia-su" element={
               <div style={{ maxWidth: 800, margin: '0 auto', padding: '32px 20px' }}>
                 <TutorPortal tutors={tutors} matches={matches} attendance={attendance} reviews={reviews} classes={classes}
                   onLogout={() => setActiveTab('home')}
@@ -679,6 +705,43 @@ export default function App() {
           onContactSubmit={handleContactSubmit}
         />
         <ChatbotWidget apiKey={settings.geminiApiKey} centerName={settings.centerName || 'Gia Sư Thành Đạt'} />
+      </div>
+    );
+  }
+
+  // ===================== ADMIN LOGIN GATE =====================
+  if (!adminAuthenticated) {
+    const handleAdminLogin = (e: React.FormEvent) => {
+      e.preventDefault();
+      const pw = settings.adminPassword || 'admin123';
+      if (adminPwInput === pw) {
+        setAdminAuthenticated(true);
+        setAdminPwError(false);
+      } else {
+        setAdminPwError(true);
+      }
+    };
+    return (
+      <div style={{ minHeight: '100vh', background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: "'Inter', sans-serif", padding: 20 }}>
+        <div style={{ maxWidth: 400, width: '100%', background: '#fff', borderRadius: 20, padding: 40, boxShadow: '0 20px 60px rgba(0,0,0,.3)' }}>
+          <div style={{ textAlign: 'center', marginBottom: 32 }}>
+            <div style={{ width: 56, height: 56, background: 'linear-gradient(135deg, #2563eb, #7c3aed)', borderRadius: 16, display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px', color: '#fff', fontWeight: 800, fontSize: 18 }}>TĐ</div>
+            <h1 style={{ fontSize: 22, fontWeight: 800, color: '#0f172a', marginBottom: 4 }}>Quản trị hệ thống</h1>
+            <p style={{ fontSize: 13, color: '#64748b' }}>Nhập mật khẩu để truy cập bảng điều khiển</p>
+          </div>
+          <form onSubmit={handleAdminLogin}>
+            <input type="password" value={adminPwInput} onChange={e => { setAdminPwInput(e.target.value); setAdminPwError(false); }}
+              placeholder="Mật khẩu quản trị" autoFocus
+              style={{ width: '100%', padding: '14px 16px', border: `2px solid ${adminPwError ? '#ef4444' : '#e2e8f0'}`, borderRadius: 12, fontSize: 15, outline: 'none', background: '#f8fafc', marginBottom: 8 }} />
+            {adminPwError && <div style={{ fontSize: 12, color: '#ef4444', fontWeight: 600, marginBottom: 8 }}>❌ Mật khẩu không đúng</div>}
+            <button type="submit" style={{ width: '100%', padding: '14px', background: '#2563eb', color: '#fff', border: 'none', borderRadius: 12, fontSize: 15, fontWeight: 700, cursor: 'pointer', marginTop: 8 }}>
+              Đăng nhập
+            </button>
+          </form>
+          <button onClick={() => navigate('/')} style={{ display: 'block', width: '100%', textAlign: 'center', marginTop: 16, fontSize: 13, color: '#64748b', background: 'none', border: 'none', cursor: 'pointer' }}>
+            ← Về trang chủ
+          </button>
+        </div>
       </div>
     );
   }

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { ClassItem, TutorItem, ActiveTab, ContactMessage, TutorReview } from '../types';
-import { Star, MapPin, Phone, ChevronRight, Search, CheckCircle2, Users, GraduationCap, Clock, Shield, Award, Sparkles, MessageCircle } from 'lucide-react';
+import { Star, MapPin, Phone, ChevronRight, Search, CheckCircle2, Users, GraduationCap, Clock, Award, Sparkles, MessageCircle } from 'lucide-react';
 
 interface HomePublicProps {
   classes: ClassItem[];
@@ -130,44 +130,22 @@ export const HomePublic: React.FC<HomePublicProps> = ({
         </div>
       </section>
 
-      {/* ===== F26: WHY CHOOSE US ===== */}
+      {/* ===== HOW IT WORKS (merged USP + 3 Steps) ===== */}
       <section style={{ background: '#f8fafc', borderBottom: '1px solid #f1f5f9' }}>
         <div style={{ ...W, paddingTop: 56, paddingBottom: 56 }}>
-          <h2 style={{ fontSize: 24, fontWeight: 800, color: '#0f172a', textAlign: 'center', marginBottom: 8 }}>Tại sao chọn Gia Sư Thành Đạt?</h2>
-          <p style={{ fontSize: 14, color: '#64748b', textAlign: 'center', marginBottom: 40, maxWidth: 480, margin: '0 auto 40px' }}>Cam kết chất lượng — Minh bạch — Chuyên nghiệp</p>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 20 }}>
+          <h2 style={{ fontSize: 24, fontWeight: 800, color: '#0f172a', textAlign: 'center', marginBottom: 8 }}>Cách hoạt động</h2>
+          <p style={{ fontSize: 14, color: '#64748b', textAlign: 'center', marginBottom: 40, maxWidth: 480, margin: '0 auto 40px' }}>3 bước đơn giản — hoàn toàn miễn phí cho phụ huynh</p>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 24 }}>
             {[
-              { icon: <Shield size={24} />, color: '#2563eb', bg: '#eff6ff', t: 'GS đã xác minh', d: 'CCCD, bằng cấp, kinh nghiệm được kiểm tra kỹ.' },
-              { icon: <Award size={24} />, color: '#f59e0b', bg: '#fffbeb', t: 'Học thử miễn phí', d: '1-2 buổi học thử, không hài lòng — đổi ngay.' },
-              { icon: <Sparkles size={24} />, color: '#8b5cf6', bg: '#f5f3ff', t: 'AI ghép GS thông minh', d: 'Thuật toán AI phân tích phù hợp GS-HS.' },
-              { icon: <MessageCircle size={24} />, color: '#16a34a', bg: '#f0fdf4', t: 'Hỗ trợ 24/7', d: 'Tư vấn Zalo/điện thoại trong 30 phút.' },
-            ].map((item, i) => (
-              <div key={i} style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 16, padding: 24, textAlign: 'center', transition: 'all 0.2s' }}>
-                <div style={{ width: 48, height: 48, background: item.bg, color: item.color, borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}>{item.icon}</div>
-                <div style={{ fontSize: 15, fontWeight: 700, color: '#0f172a', marginBottom: 6 }}>{item.t}</div>
-                <div style={{ fontSize: 13, color: '#64748b', lineHeight: 1.6 }}>{item.d}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ===== 3 STEPS PROCESS ===== */}
-      <section style={{ background: '#fff', borderBottom: '1px solid #f1f5f9' }}>
-        <div style={{ ...W, paddingTop: 56, paddingBottom: 56 }}>
-          <h2 style={{ fontSize: 24, fontWeight: 800, color: '#0f172a', textAlign: 'center', marginBottom: 8 }}>Quy trình đơn giản</h2>
-          <p style={{ fontSize: 14, color: '#64748b', textAlign: 'center', marginBottom: 40 }}>3 bước — hoàn toàn miễn phí</p>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 32 }}>
-            {[
-              { n: '1', emoji: '📝', t: 'Đăng ký nhu cầu', d: 'Điền môn học, lớp, khu vực, lịch mong muốn. Chỉ mất 2 phút.' },
-              { n: '2', emoji: '🤖', t: 'AI tìm GS phù hợp', d: 'Hệ thống AI phân tích & đề xuất gia sư tốt nhất trong 24h.' },
-              { n: '3', emoji: '🎓', t: 'Học thử & quyết định', d: 'Học thử 1-2 buổi miễn phí. Không hài lòng — đổi GS ngay.' },
+              { n: '1', icon: <CheckCircle2 size={24} />, color: '#2563eb', bg: '#eff6ff', t: 'Đăng ký nhu cầu', d: 'Điền môn học, lớp, khu vực, lịch học. Chỉ mất 2 phút. GS đều đã xác minh CCCD & bằng cấp.' },
+              { n: '2', icon: <Sparkles size={24} />, color: '#8b5cf6', bg: '#f5f3ff', t: 'AI tìm GS phù hợp', d: 'Thuật toán AI phân tích & đề xuất gia sư tốt nhất. Phản hồi trong 30 phút.' },
+              { n: '3', icon: <Award size={24} />, color: '#16a34a', bg: '#f0fdf4', t: 'Học thử & quyết định', d: 'Học thử 1-2 buổi miễn phí. Không hài lòng — đổi GS ngay, miễn phí hoàn toàn.' },
             ].map((s, i) => (
-              <div key={i} style={{ textAlign: 'center', position: 'relative' }}>
-                <div style={{ fontSize: 36, marginBottom: 12 }}>{s.emoji}</div>
-                <div style={{ width: 28, height: 28, background: '#2563eb', color: '#fff', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12, fontWeight: 700, margin: '0 auto 12px', boxShadow: '0 2px 8px rgba(37,99,235,0.3)' }}>{s.n}</div>
-                <div style={{ fontSize: 15, fontWeight: 700, color: '#0f172a', marginBottom: 6 }}>{s.t}</div>
-                <div style={{ fontSize: 13, color: '#64748b', lineHeight: 1.6 }}>{s.d}</div>
+              <div key={i} style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 16, padding: 28, textAlign: 'center', position: 'relative' }}>
+                <div style={{ width: 28, height: 28, background: '#2563eb', color: '#fff', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12, fontWeight: 700, margin: '0 auto 16px', boxShadow: '0 2px 8px rgba(37,99,235,0.3)' }}>{s.n}</div>
+                <div style={{ width: 48, height: 48, background: s.bg, color: s.color, borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}>{s.icon}</div>
+                <div style={{ fontSize: 16, fontWeight: 700, color: '#0f172a', marginBottom: 8 }}>{s.t}</div>
+                <div style={{ fontSize: 13, color: '#64748b', lineHeight: 1.7 }}>{s.d}</div>
               </div>
             ))}
           </div>
@@ -245,44 +223,7 @@ export const HomePublic: React.FC<HomePublicProps> = ({
         </div>
       </section>
 
-      {/* ===== CLASSES ===== */}
-      {pending.length > 0 && (
-        <section style={{ background: '#f8fafc', borderBottom: '1px solid #f1f5f9' }}>
-          <div style={{ ...W, paddingTop: 48, paddingBottom: 48 }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24 }}>
-              <h2 style={{ fontSize: 20, fontWeight: 700, color: '#0f172a' }}>Lớp đang cần gia sư</h2>
-              <button onClick={() => onNavigate('register-tutor')} style={{ background: 'none', border: 'none', color: '#2563eb', fontSize: 13, fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 4 }}>
-                Đăng ký dạy <ChevronRight size={14} />
-              </button>
-            </div>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 16 }}>
-              {pending.slice(0, 6).map(cls => (
-                <div key={cls.id || cls.code}
-                  style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 10, padding: 16 }}>
-                  <div style={{ marginBottom: 8, display: 'flex', gap: 6 }}>
-                    <span style={{
-                      fontSize: 10, fontWeight: 700, padding: '2px 8px', borderRadius: 4,
-                      background: cls.status === 'KHẨN CẤP' ? '#fef2f2' : '#fffbeb',
-                      color: cls.status === 'KHẨN CẤP' ? '#dc2626' : '#d97706',
-                    }}>{cls.status}</span>
-                    {cls.teachMode && (
-                      <span style={{ fontSize: 10, fontWeight: 600, padding: '2px 8px', borderRadius: 4, background: '#f0fdf4', color: '#16a34a' }}>
-                        {cls.teachMode === 'Online' ? '💻 Trực tuyến' : cls.teachMode === 'Tại nhà' ? '🏠 Trực tiếp' : '🔄 Cả hai'}
-                      </span>
-                    )}
-                  </div>
-                  <div style={{ fontWeight: 700, fontSize: 14, color: '#0f172a', marginBottom: 4 }}>{cls.subject}</div>
-                  {cls.studentInfo && <div style={{ fontSize: 12, color: '#64748b', marginBottom: 8 }}>{cls.studentInfo}</div>}
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: 12, color: '#64748b', borderTop: '1px solid #e2e8f0', paddingTop: 8 }}>
-                    <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}><MapPin size={12} />{cls.location}</span>
-                    <span style={{ fontWeight: 700, color: '#2563eb' }}>{fmt(cls.fee)}đ/buổi</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
+
 
       {/* ===== CONTACT CTA ===== */}
       <section style={{ background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)', color: '#fff' }}>

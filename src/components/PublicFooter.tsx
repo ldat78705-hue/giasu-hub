@@ -50,8 +50,9 @@ export const PublicFooter: React.FC<PublicFooterProps> = ({ onNavigate, zaloNumb
         </div>
 
         {/* Bottom */}
-        <div style={{ borderTop: '1px solid #1e293b', marginTop: 32, paddingTop: 16, fontSize: 12, textAlign: 'center' }}>
-          © 2026 Gia Sư Thành Đạt
+        <div style={{ borderTop: '1px solid #1e293b', marginTop: 32, paddingTop: 16, fontSize: 12, textAlign: 'center', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 16 }}>
+          <span>© 2026 Gia Sư Thành Đạt</span>
+          <button onClick={() => onNavigate('dashboard')} style={{ background: 'none', border: 'none', color: '#475569', fontSize: 11, cursor: 'pointer' }}>Quản trị</button>
         </div>
       </div>
     </footer>

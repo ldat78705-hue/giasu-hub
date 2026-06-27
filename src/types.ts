@@ -178,6 +178,8 @@ export interface AdminSettings {
   bankAccount?: string; // Số TK
   bankAccountName?: string; // Tên TK
   bankBin?: string; // Mã BIN ngân hàng (VD: 970407)
+  // Admin login
+  adminPassword?: string; // Mật khẩu admin, mặc định 'admin123'
 }
 
 export interface FeeConfigItem {

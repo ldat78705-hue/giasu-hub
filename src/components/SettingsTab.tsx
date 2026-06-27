@@ -45,6 +45,8 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({ settings, onSaveSettin
   const [bankAccount, setBankAccount] = useState(settings.bankAccount || '');
   const [bankAccountName, setBankAccountName] = useState(settings.bankAccountName || '');
   const [bankBin, setBankBin] = useState(settings.bankBin || '');
+  // Admin password
+  const [adminPassword, setAdminPassword] = useState(settings.adminPassword || 'admin123');
 
   useEffect(() => {
     setCenterName(settings.centerName || 'Gia Sư Thành Đạt');
@@ -63,6 +65,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({ settings, onSaveSettin
     setBankAccount(settings.bankAccount || '');
     setBankAccountName(settings.bankAccountName || '');
     setBankBin(settings.bankBin || '');
+    setAdminPassword(settings.adminPassword || 'admin123');
   }, [settings]);
 
   const handleSaveAll = async () => {
@@ -82,6 +85,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({ settings, onSaveSettin
         feeConfig,
         adminRole,
         bankName, bankAccount, bankAccountName, bankBin,
+        adminPassword,
         updatedAt: Date.now(),
       });
       setSaveSuccess(true);
@@ -427,6 +431,25 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({ settings, onSaveSettin
               ✅ Đã cấu hình — QR sẽ hiện khi thu phí kết nối
             </div>
           )}
+        </div>
+
+        {/* Admin Password */}
+        <div className="bg-white rounded-2xl border border-slate-200 shadow-xs p-6 space-y-4">
+          <div className="flex items-center gap-2 border-b border-slate-100 pb-4">
+            <div className="p-2 bg-red-50 text-red-600 rounded-xl">
+              <Shield className="w-5 h-5" />
+            </div>
+            <div>
+              <h3 className="font-bold text-slate-800">Mật khẩu quản trị</h3>
+              <p className="text-[11px] text-slate-500">Dùng để đăng nhập tại /quan-tri</p>
+            </div>
+          </div>
+          <div>
+            <label className="block text-[11px] font-bold uppercase text-slate-600 mb-1">Mật khẩu hiện tại</label>
+            <input type="text" value={adminPassword} onChange={e => setAdminPassword(e.target.value)} placeholder="admin123"
+              className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-blue-500 text-sm" />
+            <p className="text-[10px] text-slate-400 mt-1">Mặc định: admin123 — Hãy đổi sang mật khẩu mạnh hơn</p>
+          </div>
         </div>
 
         {/* Ward Management */}
