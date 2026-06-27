@@ -207,4 +207,4 @@ export interface AttendanceRecord {
   createdAt: number;
 }
 
-export type ActiveTab = 'home' | 'find-tutors' | 'register-tutor' | 'parent-register' | 'status-lookup' | 'dashboard' | 'classes' | 'tutors' | 'students' | 'finance' | 'seo' | 'applications' | 'registrations' | 'contacts' | 'matches' | 'settings' | 'reviews' | 'attendance' | 'templates' | 'calendar' | 'kpi' | 'import' | 'advanced' | 'blog' | 'performance' | 'activity' | 'zalonotify';
+export type ActiveTab = 'home' | 'find-tutors' | 'register-tutor' | 'parent-register' | 'status-lookup' | 'dashboard' | 'classes' | 'tutors' | 'students' | 'finance' | 'applications' | 'registrations' | 'contacts' | 'matches' | 'settings' | 'reviews' | 'attendance' | 'calendar' | 'kpi' | 'import' | 'advanced' | 'blog' | 'performance' | 'activity' | 'zalonotify';

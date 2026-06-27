@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { TutorItem, ClassItem } from '../types';
-import { Search, Star, MapPin, GraduationCap, CheckCircle2, Send, X, UserPlus, Phone, BookOpen, Clock } from 'lucide-react';
+import { TutorItem, ActiveTab } from '../types';
+import { Search, Star, MapPin, GraduationCap, CheckCircle2, Send, X, UserPlus, Phone } from 'lucide-react';
 
 interface FindTutorPublicProps {
   tutors: TutorItem[];
   onBookTutor: (tutor: TutorItem, studentName: string, phone: string, notes: string) => Promise<void>;
-  onPostRequest: (cls: ClassItem) => Promise<void>;
+  onNavigate: (tab: ActiveTab) => void;
 }
 
 const fmt = (v: number) => new Intl.NumberFormat('vi-VN').format(v);
@@ -16,7 +16,7 @@ const inputStyle: React.CSSProperties = {
   fontSize: 14, outline: 'none', background: '#f8fafc',
 };
 
-export const FindTutorPublic: React.FC<FindTutorPublicProps> = ({ tutors, onBookTutor, onPostRequest }) => {
+export const FindTutorPublic: React.FC<FindTutorPublicProps> = ({ tutors, onBookTutor, onNavigate }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedSubject, setSelectedSubject] = useState('Tất cả');
   const [selectedTutor, setSelectedTutor] = useState<TutorItem | null>(null);
@@ -24,13 +24,6 @@ export const FindTutorPublic: React.FC<FindTutorPublicProps> = ({ tutors, onBook
   const [phone, setPhone] = useState('');
   const [notes, setNotes] = useState('');
   const [bookingSuccess, setBookingSuccess] = useState(false);
-  const [showRequestModal, setShowRequestModal] = useState(false);
-  const [reqSubject, setReqSubject] = useState('');
-  const [reqGrade, setReqGrade] = useState('');
-  const [reqLocation, setReqLocation] = useState('');
-  const [reqNotes, setReqNotes] = useState('');
-  const [reqTeachMode, setReqTeachMode] = useState<'Tại nhà' | 'Online' | 'Cả hai'>('Tại nhà');
-  const [requestSuccess, setRequestSuccess] = useState(false);
 
   const verifiedTutors = tutors.filter(t => t.verified);
 
@@ -49,20 +42,6 @@ export const FindTutorPublic: React.FC<FindTutorPublicProps> = ({ tutors, onBook
     setTimeout(() => { setBookingSuccess(false); setSelectedTutor(null); setStudentName(''); setPhone(''); setNotes(''); }, 2500);
   };
 
-  const handleRequest = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!reqSubject || !reqLocation) return;
-    await onPostRequest({
-      code: `#YC${Math.floor(1000 + Math.random() * 9000)}`,
-      subject: `${reqSubject} (${reqGrade || 'Phổ thông'})`,
-      studentInfo: reqGrade, location: reqLocation, fee: 300000,
-      status: 'ĐANG TÌM', createdAt: Date.now(), requirements: reqNotes,
-      teachMode: reqTeachMode,
-    });
-    setRequestSuccess(true);
-    setTimeout(() => { setRequestSuccess(false); setShowRequestModal(false); setReqSubject(''); setReqGrade(''); setReqLocation(''); setReqNotes(''); }, 2500);
-  };
-
   return (
     <div style={{ paddingBottom: 80 }}>
       {/* Header */}
@@ -71,9 +50,9 @@ export const FindTutorPublic: React.FC<FindTutorPublicProps> = ({ tutors, onBook
           <h1 style={{ fontSize: 24, fontWeight: 800, color: '#0f172a', marginBottom: 4 }}>Tìm gia sư</h1>
           <p style={{ fontSize: 14, color: '#64748b' }}>{filtered.length} gia sư đã xác minh</p>
         </div>
-        <button onClick={() => setShowRequestModal(true)}
+        <button onClick={() => onNavigate('parent-register')}
           style={{ padding: '10px 20px', background: '#2563eb', color: '#fff', border: 'none', borderRadius: 8, fontSize: 13, fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6 }}>
-          <UserPlus size={16} /> Gửi yêu cầu tìm GS
+          <UserPlus size={16} /> Đăng ký tìm gia sư
         </button>
       </div>
 
@@ -107,11 +86,11 @@ export const FindTutorPublic: React.FC<FindTutorPublicProps> = ({ tutors, onBook
           <GraduationCap size={40} style={{ color: '#cbd5e1', margin: '0 auto 12px', display: 'block' }} />
           <h3 style={{ fontSize: 16, fontWeight: 700, color: '#334155', marginBottom: 6 }}>Chưa tìm thấy gia sư phù hợp</h3>
           <p style={{ fontSize: 14, color: '#94a3b8', marginBottom: 20, maxWidth: 360, margin: '0 auto 20px' }}>
-            Hãy gửi yêu cầu, trung tâm sẽ tìm gia sư phù hợp cho bạn trong vòng 24 giờ.
+            Hãy đăng ký, trung tâm sẽ tìm gia sư phù hợp cho bạn trong vòng 24 giờ.
           </p>
-          <button onClick={() => setShowRequestModal(true)}
+          <button onClick={() => onNavigate('parent-register')}
             style={{ padding: '10px 24px', background: '#2563eb', color: '#fff', border: 'none', borderRadius: 8, fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>
-            Gửi yêu cầu tìm gia sư
+            Đăng ký tìm gia sư
           </button>
         </div>
       ) : (
@@ -158,6 +137,15 @@ export const FindTutorPublic: React.FC<FindTutorPublicProps> = ({ tutors, onBook
         </div>
       )}
 
+      {/* CTA bottom */}
+      <div style={{ marginTop: 32, background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 12, padding: '24px', textAlign: 'center' }}>
+        <p style={{ fontSize: 14, color: '#475569', marginBottom: 12 }}>Không tìm thấy gia sư phù hợp? Để lại yêu cầu, trung tâm sẽ tìm giúp bạn!</p>
+        <button onClick={() => onNavigate('parent-register')}
+          style={{ padding: '10px 24px', background: '#2563eb', color: '#fff', border: 'none', borderRadius: 8, fontSize: 14, fontWeight: 600, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+          <UserPlus size={16} /> Đăng ký tìm gia sư miễn phí
+        </button>
+      </div>
+
       {/* ===== BOOKING MODAL ===== */}
       {selectedTutor && (
         <div style={{ position: 'fixed', inset: 0, zIndex: 60, background: 'rgba(0,0,0,.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 16 }}
@@ -200,51 +188,6 @@ export const FindTutorPublic: React.FC<FindTutorPublicProps> = ({ tutors, onBook
                   <button type="submit"
                     style={{ padding: '12px 0', background: '#2563eb', color: '#fff', border: 'none', borderRadius: 8, fontSize: 14, fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
                     <Send size={16} /> Đặt lịch thuê gia sư
-                  </button>
-                </form>
-              </>
-            )}
-          </div>
-        </div>
-      )}
-
-      {/* ===== REQUEST MODAL ===== */}
-      {showRequestModal && (
-        <div style={{ position: 'fixed', inset: 0, zIndex: 60, background: 'rgba(0,0,0,.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 16 }}
-          onClick={() => !requestSuccess && setShowRequestModal(false)}>
-          <div style={{ background: '#fff', borderRadius: 12, maxWidth: 440, width: '100%', padding: 24, position: 'relative' }} onClick={e => e.stopPropagation()}>
-            <button onClick={() => setShowRequestModal(false)} style={{ position: 'absolute', top: 12, right: 12, background: 'none', border: 'none', cursor: 'pointer', color: '#94a3b8' }}><X size={20} /></button>
-
-            {requestSuccess ? (
-              <div style={{ textAlign: 'center', padding: '24px 0' }}>
-                <CheckCircle2 size={40} color="#22c55e" style={{ margin: '0 auto 8px', display: 'block' }} />
-                <div style={{ fontWeight: 700, color: '#0f172a', fontSize: 16 }}>Đã gửi yêu cầu!</div>
-                <p style={{ fontSize: 13, color: '#64748b', marginTop: 4 }}>Trung tâm sẽ tìm gia sư phù hợp cho bạn.</p>
-              </div>
-            ) : (
-              <>
-                <h3 style={{ fontSize: 18, fontWeight: 700, color: '#0f172a', marginBottom: 4 }}>Gửi yêu cầu tìm gia sư</h3>
-                <p style={{ fontSize: 13, color: '#64748b', marginBottom: 20 }}>Trung tâm sẽ tìm GS phù hợp trong 24h.</p>
-
-                <form onSubmit={handleRequest} style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-                  <input required value={reqSubject} onChange={e => setReqSubject(e.target.value)} placeholder="Môn học cần tìm GS *" style={inputStyle} />
-                  <input value={reqGrade} onChange={e => setReqGrade(e.target.value)} placeholder="Lớp / Trình độ" style={inputStyle} />
-                  <input required value={reqLocation} onChange={e => setReqLocation(e.target.value)} placeholder="Khu vực (VD: Cầu Giấy) *" style={inputStyle} />
-                  <div>
-                    <div style={{ fontSize: 12, fontWeight: 600, color: '#475569', marginBottom: 6 }}>Hình thức học</div>
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 6 }}>
-                      {([['Tại nhà', '🏠 Trực tiếp'] as const, ['Online', '💻 Trực tuyến'] as const, ['Cả hai', '🔄 Cả hai'] as const]).map(([val, label]) => (
-                        <button key={val} type="button" onClick={() => setReqTeachMode(val)}
-                          style={{ padding: '8px 6px', borderRadius: 6, border: '1px solid', fontSize: 11, fontWeight: 600, cursor: 'pointer', textAlign: 'center', background: reqTeachMode === val ? '#eff6ff' : '#fff', borderColor: reqTeachMode === val ? '#2563eb' : '#e2e8f0', color: reqTeachMode === val ? '#2563eb' : '#475569' }}>
-                          {label}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                  <textarea rows={2} value={reqNotes} onChange={e => setReqNotes(e.target.value)} placeholder="Yêu cầu thêm..." style={{ ...inputStyle, resize: 'none' }} />
-                  <button type="submit"
-                    style={{ padding: '12px 0', background: '#2563eb', color: '#fff', border: 'none', borderRadius: 8, fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>
-                    Gửi yêu cầu
                   </button>
                 </form>
               </>

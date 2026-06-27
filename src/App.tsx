@@ -508,7 +508,7 @@ export default function App() {
             } />
             <Route path="/tim-gia-su" element={
               <div style={{ maxWidth: 1024, margin: '0 auto', padding: '32px 20px' }}>
-                <FindTutorPublic tutors={tutors} onBookTutor={handleBookTutor} onPostRequest={handlePostRequest} />
+                <FindTutorPublic tutors={tutors} onBookTutor={handleBookTutor} onNavigate={(tab) => setActiveTab(tab)} />
               </div>
             } />
             <Route path="/dang-ky-day" element={
