@@ -59,6 +59,10 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({ settings, onSaveSettin
     setWards(settings.wards || DEFAULT_HANOI_WARDS);
     setFeeConfig(settings.feeConfig || []);
     setAdminRole(settings.adminRole || 'super_admin');
+    setBankName(settings.bankName || '');
+    setBankAccount(settings.bankAccount || '');
+    setBankAccountName(settings.bankAccountName || '');
+    setBankBin(settings.bankBin || '');
   }, [settings]);
 
   const handleSaveAll = async () => {

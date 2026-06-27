@@ -186,6 +186,16 @@ export const TutorPortal: React.FC<TutorPortalProps> = ({ tutors, matches, atten
                   <div>📅 {new Date(m.startDate).toLocaleDateString('vi-VN')}</div>
                   <div>✅ {taught}/{matchAtt.length} buổi đã dạy</div>
                 </div>
+                {/* F45: Fee status for GS */}
+                {m.feePaid ? (
+                  <div style={{ marginTop: 8, padding: '6px 12px', background: '#dcfce7', borderRadius: 8, fontSize: 11, fontWeight: 700, color: '#16a34a', display: 'inline-block' }}>
+                    ✅ Đã nộp phí kết nối {m.feeAmount ? `(${fmt(m.feeAmount)}đ)` : ''}
+                  </div>
+                ) : (
+                  <div style={{ marginTop: 8, padding: '6px 12px', background: '#fef3c7', borderRadius: 8, fontSize: 11, fontWeight: 700, color: '#d97706', display: 'inline-block' }}>
+                    ⚠️ Chưa nộp phí kết nối — {fmt(Math.round(m.fee * (m.sessionsPerMonth || 8) * (m.feePercent || 40) / 100))}đ
+                  </div>
+                )}
                 {onReturnClass && (
                   <button onClick={async () => {
                     const reason = window.prompt('Lý do trả lớp:');
