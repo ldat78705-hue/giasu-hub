@@ -218,6 +218,22 @@ export const MatchesTab: React.FC<MatchesTabProps> = ({ matches, classes, tutors
                     <tr>
                       <td colSpan={7} className="px-4 py-3 bg-slate-50">
                         <div className="space-y-2">
+                          {/* F50: Status History Timeline */}
+                          {m.statusHistory && m.statusHistory.length > 0 && (
+                            <div className="mb-3 pb-3 border-b border-slate-200">
+                              <div className="text-[10px] font-bold text-slate-500 uppercase mb-2">📋 Lịch sử trạng thái</div>
+                              <div className="flex flex-wrap gap-2">
+                                {m.statusHistory.map((h, i) => (
+                                  <div key={i} className="text-[10px] px-2 py-1 bg-white border border-slate-200 rounded-lg">
+                                    <span className={`font-bold ${h.status === 'Đang dạy' ? 'text-emerald-600' : h.status === 'Hủy' ? 'text-red-600' : 'text-blue-600'}`}>{h.status}</span>
+                                    <span className="text-slate-400 ml-1">{new Date(h.date).toLocaleDateString('vi-VN')}</span>
+                                    {h.by && <span className="text-slate-400 ml-1">· {h.by}</span>}
+                                    {h.reason && <span className="text-slate-500 ml-1 italic">({h.reason})</span>}
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          )}
                           <div className="flex items-center gap-2 mb-2">
                             <MessageSquare className="w-3.5 h-3.5 text-blue-600" />
                             <span className="text-xs font-bold text-slate-700">Ghi chú nội bộ</span>

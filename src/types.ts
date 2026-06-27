@@ -220,6 +220,8 @@ export interface ClassMatch {
   feeAmount?: number;
   feePercent?: number; // Default 40, adjustable per match
   sessionsPerMonth?: number; // Số buổi/tháng, default 8
+  // F50: Status history
+  statusHistory?: { status: string; date: number; by?: string; reason?: string }[];
 }
 
 export interface InternalNote {

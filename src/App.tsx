@@ -543,7 +543,12 @@ export default function App() {
     logActivity('Ghép lớp', m.classCode, `${m.classSubject} → GS ${m.tutorName}`, 'match');
   };
   const handleUpdateMatchStatus = async (id: string, st: ClassMatch['status']) => {
-    await updateDoc(doc(db, 'matches', id), { status: st, ...(st === 'Hoàn thành' ? { endDate: Date.now() } : {}) });
+    await updateDoc(doc(db, 'matches', id), {
+      status: st,
+      ...(st === 'Hoàn thành' ? { endDate: Date.now() } : {}),
+      // F50: Append status history
+      statusHistory: arrayUnion({ status: st, date: Date.now(), by: 'Admin' }),
+    });
     logActivity('Đổi TT ghép lớp', id, `→ ${st}`, 'match');
   };
   const handleDeleteMatch = async (id: string) => {
@@ -638,7 +643,7 @@ export default function App() {
                     const match = matches.find(m => m.id === matchId);
                     if (!match) return;
                     // Cancel match
-                    await updateDoc(doc(db, 'matches', matchId), { status: 'Hủy', note: `GS trả lớp: ${reason}`, endDate: Date.now() });
+                    await updateDoc(doc(db, 'matches', matchId), { status: 'Hủy', note: `GS trả lớp: ${reason}`, endDate: Date.now(), statusHistory: arrayUnion({ status: 'Hủy', date: Date.now(), by: `GS ${match.tutorName}`, reason }) });
                     // Reopen class
                     const cls = classes.find(c => c.code === match.classCode);
                     if (cls?.id) await updateDoc(doc(db, 'classes', cls.id), { status: 'ĐANG TÌM' });
@@ -823,7 +828,35 @@ export default function App() {
 
       {/* Auto-suggest modal */}
       {suggestReg && (
-        <AutoSuggestPanel registration={suggestReg} tutors={tutors} matches={matches} onClose={() => setSuggestReg(null)} />
+        <AutoSuggestPanel registration={suggestReg} tutors={tutors} matches={matches} onClose={() => setSuggestReg(null)}
+          onQuickMatch={async (reg, tutor) => {
+            // F48: 1-click workflow: Đơn → Lớp → Match → Thông báo
+            const classCode = `LOP-${Math.floor(1000 + Math.random() * 9000)}`;
+            const subjectList = reg.subjects.join(', ');
+            // 1. Create class
+            await addDoc(collection(db, 'classes'), {
+              code: classCode, subject: subjectList,
+              studentInfo: `${reg.studentName} — ${reg.grade}`,
+              location: `${reg.district}${reg.ward ? ', ' + reg.ward : ''}`,
+              fee: 250000, status: 'ĐÃ CÓ GIA SƯ', createdAt: Date.now(),
+              schedule: reg.schedule, teachMode: reg.mode,
+            });
+            // 2. Create match
+            await addDoc(collection(db, 'matches'), {
+              classCode, classSubject: subjectList,
+              tutorCode: tutor.code, tutorName: tutor.name,
+              studentName: reg.studentName, parentPhone: reg.phone,
+              fee: 250000, sessionsPerMonth: 8, feePercent: 40,
+              startDate: Date.now(), status: 'Đang dạy', createdAt: Date.now(),
+              note: `Auto-match từ đơn PH ${reg.parentName}`,
+            });
+            // 3. Update registration
+            if (reg.id) await updateDoc(doc(db, 'registrations', reg.id), { status: 'Đã xếp lớp' });
+            // 4. Notifications
+            await addDoc(collection(db, 'notifications'), { type: 'system', title: 'Ghép lớp tự động', message: `Đã ghép GS ${tutor.name} cho PH ${reg.parentName} — ${subjectList}`, isRead: false, createdAt: Date.now() });
+            logActivity('Ghép lớp 1-click', classCode, `${tutor.name} ← ${reg.parentName} (${subjectList})`, 'match');
+            setSuggestReg(null);
+          }} />
       )}
 
       {/* AI Generator Modal */}

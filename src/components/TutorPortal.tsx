@@ -280,6 +280,55 @@ export const TutorPortal: React.FC<TutorPortalProps> = ({ tutors, matches, atten
             <div style={{ fontSize: 32, fontWeight: 800 }}>{fmt(estimatedIncome)}đ</div>
             <div style={{ fontSize: 12, opacity: 0.7, marginTop: 4 }}>{monthAttendance.length} buổi × phí/buổi (100% về gia sư)</div>
           </div>
+
+          {/* F47: 3-month income chart */}
+          {(() => {
+            const months: { label: string; income: number }[] = [];
+            for (let i = 2; i >= 0; i--) {
+              const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+              const prefix = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+              const label = `T${d.getMonth() + 1}`;
+              const inc = myAttendance.filter(a => a.date.startsWith(prefix) && a.status === 'Đã dạy')
+                .reduce((sum, a) => {
+                  const m = activeMatches.find(m2 => m2.id === a.matchId);
+                  return sum + (m ? m.fee : 0);
+                }, 0);
+              months.push({ label, income: inc });
+            }
+            const maxInc = Math.max(...months.map(m => m.income), 1);
+            const totalAbsent = myAttendance.filter(a => a.status === 'Vắng').length;
+            const absRate = myAttendance.length > 0 ? Math.round(totalAbsent / myAttendance.length * 100) : 0;
+            return (
+              <>
+                <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 12, padding: 16, marginBottom: 12 }}>
+                  <h4 style={{ fontSize: 12, fontWeight: 700, color: '#64748b', marginBottom: 12, textTransform: 'uppercase', letterSpacing: 1 }}>📊 Thu nhập 3 tháng gần nhất</h4>
+                  <div style={{ display: 'flex', alignItems: 'flex-end', gap: 12, height: 80 }}>
+                    {months.map((m, i) => {
+                      const h = Math.max(Math.round(m.income / maxInc * 70), 4);
+                      return (
+                        <div key={i} style={{ flex: 1, textAlign: 'center' }}>
+                          <div style={{ fontSize: 9, fontWeight: 700, color: '#059669', marginBottom: 4 }}>{m.income > 0 ? fmt(m.income) + 'đ' : '—'}</div>
+                          <div style={{ height: h, borderRadius: '6px 6px 0 0', background: i === 2 ? 'linear-gradient(135deg, #059669, #10b981)' : '#d1fae5', transition: 'all .3s' }} />
+                          <div style={{ fontSize: 10, fontWeight: 600, color: '#64748b', marginTop: 4 }}>{m.label}</div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, marginBottom: 12 }}>
+                  <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 12, padding: 12, textAlign: 'center' }}>
+                    <div style={{ fontSize: 18, fontWeight: 800, color: absRate > 15 ? '#dc2626' : '#16a34a' }}>{absRate}%</div>
+                    <div style={{ fontSize: 10, color: '#64748b' }}>Tỷ lệ vắng</div>
+                  </div>
+                  <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 12, padding: 12, textAlign: 'center' }}>
+                    <div style={{ fontSize: 18, fontWeight: 800, color: '#2563eb' }}>{myAttendance.filter(a => a.status === 'Đã dạy').length}</div>
+                    <div style={{ fontSize: 10, color: '#64748b' }}>Tổng buổi đã dạy</div>
+                  </div>
+                </div>
+              </>
+            );
+          })()}
+
           <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 12, padding: 16 }}>
             <h4 style={{ fontSize: 13, fontWeight: 700, color: '#334155', marginBottom: 12 }}>Chi tiết theo lớp</h4>
             {activeMatches.map(m => {

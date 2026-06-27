@@ -214,6 +214,36 @@ export const TutorTab: React.FC<TutorTabProps> = ({ tutors, onAddTutor, onUpdate
                 </button>
               )}
 
+              {/* F49: Onboarding checklist */}
+              {!t.verified && (() => {
+                const checks = [
+                  { label: 'CCCD', done: !!(t.documentUrls?.cccdFrontUrl || (t.documentUrls as any)?.cccdUrl) },
+                  { label: 'Bằng cấp', done: !!((t.documentUrls?.degreeUrls?.length || 0) > 0 || (t.documentUrls as any)?.degreeUrl) },
+                  { label: 'SĐT', done: !!t.phone },
+                  { label: 'Xác minh', done: t.verified },
+                ];
+                const done = checks.filter(c => c.done).length;
+                const pct = Math.round(done / checks.length * 100);
+                return (
+                  <div className="mb-2 p-2 bg-blue-50 rounded-lg border border-blue-100">
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="text-[9px] font-bold text-blue-600 uppercase">Onboarding</span>
+                      <span className="text-[9px] font-bold text-blue-700">{done}/{checks.length}</span>
+                    </div>
+                    <div className="w-full h-1.5 bg-blue-100 rounded-full overflow-hidden mb-1">
+                      <div className="h-full bg-blue-600 rounded-full transition-all" style={{ width: `${pct}%` }} />
+                    </div>
+                    <div className="flex gap-1 flex-wrap">
+                      {checks.map((c, i) => (
+                        <span key={i} className={`text-[8px] font-bold px-1.5 py-0.5 rounded ${c.done ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-400'}`}>
+                          {c.done ? '✓' : '○'} {c.label}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                );
+              })()}
+
               {/* Admin Note */}
               <div className="mb-2">
                 {editingNote === (t.id || t.code) ? (

@@ -52,6 +52,11 @@ export const ZaloNotifyTab: React.FC<ZaloNotifyTabProps> = ({ registrations, mat
 
   const newRegs = registrations.filter(r => r.status === 'Mới');
 
+  // F46: Recent matches needing notification (last 7 days, not yet old)
+  const recentMatches = matches.filter(m => m.status === 'Đang dạy' && (Date.now() - m.createdAt) < 7 * 86400000);
+  // F51: Matches > 30 days without review reminder
+  const needReviewReminder = matches.filter(m => m.status === 'Đang dạy' && (Date.now() - m.startDate) > 30 * 86400000);
+
   const fillTemplate = (tmpl: string) => {
     let filled = tmpl;
     if (useManual || !selectedReg) {
@@ -103,6 +108,66 @@ export const ZaloNotifyTab: React.FC<ZaloNotifyTabProps> = ({ registrations, mat
           </button>
         </div>
       </div>
+
+      {/* F46: Pending notifications for recent matches */}
+      {recentMatches.length > 0 && (
+        <div className="bg-emerald-50 border border-emerald-200 rounded-2xl p-4">
+          <h3 className="text-xs font-bold uppercase text-emerald-600 mb-2 flex items-center gap-1">
+            <Send className="w-3 h-3" /> Ghép lớp gần đây — cần gửi tin ({recentMatches.length})
+          </h3>
+          <div className="space-y-2">
+            {recentMatches.slice(0, 5).map(m => {
+              const tutor = tutors.find(t => t.code === m.tutorCode);
+              const gsMsgPreview = `Chào ${m.tutorName}! Bạn đã được ghép lớp ${m.classSubject}. HS: ${m.studentName || 'N/A'}. SĐT PH: ${m.parentPhone || 'N/A'}. Phí/buổi: ${new Intl.NumberFormat('vi-VN').format(m.fee)}đ. Truy cập giasu-dusky.vercel.app/gia-su-portal để xem chi tiết.`;
+              const phMsgPreview = `Chào anh/chị! Trung tâm đã ghép GS ${m.tutorName} dạy ${m.classSubject} cho bé ${m.studentName || ''}. GS sẽ liên hệ sớm. Mọi thắc mắc: 0822448444.`;
+              return (
+                <div key={m.id} className="bg-white rounded-xl p-3 flex items-center justify-between gap-3">
+                  <div className="text-xs text-slate-700">
+                    <span className="font-bold">{m.classSubject}</span> — GS: {m.tutorName} · HS: {m.studentName || 'N/A'}
+                  </div>
+                  <div className="flex gap-1.5 shrink-0">
+                    <button onClick={() => { navigator.clipboard.writeText(gsMsgPreview); setCopiedId('gs-' + m.id); setTimeout(() => setCopiedId(null), 2000); }}
+                      className={`px-2 py-1 rounded-lg text-[10px] font-bold cursor-pointer ${copiedId === 'gs-' + m.id ? 'bg-emerald-100 text-emerald-700' : 'bg-emerald-600 text-white hover:bg-emerald-700'}`}>
+                      {copiedId === 'gs-' + m.id ? '✓' : '📋'} Tin GS
+                    </button>
+                    <button onClick={() => { navigator.clipboard.writeText(phMsgPreview); setCopiedId('ph-' + m.id); setTimeout(() => setCopiedId(null), 2000); }}
+                      className={`px-2 py-1 rounded-lg text-[10px] font-bold cursor-pointer ${copiedId === 'ph-' + m.id ? 'bg-blue-100 text-blue-700' : 'bg-blue-600 text-white hover:bg-blue-700'}`}>
+                      {copiedId === 'ph-' + m.id ? '✓' : '📋'} Tin PH
+                    </button>
+                    {tutor?.phone && (
+                      <a href={`https://zalo.me/${tutor.phone}`} target="_blank" rel="noreferrer"
+                        className="px-2 py-1 rounded-lg text-[10px] font-bold bg-green-600 text-white hover:bg-green-700">
+                        Zalo GS
+                      </a>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      {/* F51: Review reminders for matches > 30 days */}
+      {needReviewReminder.length > 0 && (
+        <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4">
+          <h3 className="text-xs font-bold uppercase text-amber-600 mb-2 flex items-center gap-1">
+            ⭐ Lớp &gt;30 ngày — nhắc PH đánh giá ({needReviewReminder.length})
+          </h3>
+          <div className="flex gap-2 flex-wrap">
+            {needReviewReminder.slice(0, 6).map(m => {
+              const days = Math.floor((Date.now() - m.startDate) / 86400000);
+              const msg = `Chào anh/chị! Bé ${m.studentName || ''} đã học với GS ${m.tutorName} được ${days} ngày. Anh/chị vui lòng đánh giá tại: giasu-dusky.vercel.app/tra-cuu (nhập SĐT). Ý kiến giúp chúng tôi phục vụ tốt hơn!`;
+              return (
+                <button key={m.id} onClick={() => { navigator.clipboard.writeText(msg); setCopiedId('rv-' + m.id); setTimeout(() => setCopiedId(null), 2000); }}
+                  className={`px-3 py-2 rounded-xl text-[11px] font-bold cursor-pointer border transition-all ${copiedId === 'rv-' + m.id ? 'bg-amber-100 border-amber-400 text-amber-700' : 'bg-white border-amber-200 text-amber-700 hover:bg-amber-50'}`}>
+                  {copiedId === 'rv-' + m.id ? '✓ Đã copy' : `${m.classSubject} — ${m.studentName || m.tutorName} (${days}d)`}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
 
       {/* Mode 1: Quick pick PH */}
       {!useManual && newRegs.length > 0 && (
