@@ -624,7 +624,12 @@ export default function App() {
             <Route path="/gia-su-portal" element={
               <div style={{ maxWidth: 800, margin: '0 auto', padding: '32px 20px' }}>
                 <TutorPortal tutors={tutors} matches={matches} attendance={attendance} reviews={reviews} classes={classes}
-                  onLogout={() => setActiveTab('home')} />
+                  onLogout={() => setActiveTab('home')}
+                  onReportAbsence={async (record) => {
+                    await addDoc(collection(db, 'attendance'), record);
+                    await addDoc(collection(db, 'notifications'), { type: 'system', title: 'GS báo nghỉ', message: `${record.tutorName} báo nghỉ lớp ${record.classCode} ngày ${record.date}`, isRead: false, createdAt: Date.now() });
+                    logActivity('GS báo nghỉ (Portal)', record.classCode, `${record.tutorName} — ${record.date}`, 'tutor');
+                  }} />
               </div>
             } />
             <Route path="*" element={

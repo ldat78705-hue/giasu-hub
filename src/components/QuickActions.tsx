@@ -55,6 +55,13 @@ export const QuickActions: React.FC<QuickActionsProps> = ({ tutors, registration
     return (Date.now() - lastAtt) > 14 * 86400000;
   }).length;
 
+  // F34: Unpaid connection fees (active matches without feePaid, > 3 days old)
+  const unpaidFees = matches.filter(m => {
+    if (m.status !== 'Đang dạy') return false;
+    if (m.feePaid) return false;
+    return (Date.now() - m.startDate) > 3 * 86400000;
+  }).length;
+
   const actions = [
     { show: regsOver2h > 0, color: 'red', icon: <Bell className="w-4 h-4" />, label: `${regsOver2h} đơn chưa gọi > 2h`, sub: '⏰ Cần liên hệ ngay!', tab: 'registrations' as ActiveTab, urgent: true },
     { show: upcomingTrials > 0, color: 'purple', icon: <Calendar className="w-4 h-4" />, label: `${upcomingTrials} buổi học thử sắp tới`, sub: 'Hôm nay/ngày mai', tab: 'registrations' as ActiveTab, urgent: false },
@@ -62,6 +69,7 @@ export const QuickActions: React.FC<QuickActionsProps> = ({ tutors, registration
     { show: unverifiedTutors > 0, color: 'amber', icon: <UserCheck className="w-4 h-4" />, label: `${unverifiedTutors} GS chờ xác minh`, sub: 'Duyệt hồ sơ gia sư', tab: 'tutors' as ActiveTab, urgent: false },
     { show: dormantTutors.length > 0, color: 'orange', icon: <ShieldAlert className="w-4 h-4" />, label: `${dormantTutors.length} GS "ngủ đông"`, sub: '>30 ngày không hoạt động', tab: 'tutors' as ActiveTab, urgent: false },
     { show: staleMatches > 0, color: 'orange', icon: <AlertTriangle className="w-4 h-4" />, label: `${staleMatches} lớp có thể đã ngưng`, sub: '>14 ngày không điểm danh', tab: 'matches' as ActiveTab, urgent: staleMatches > 2 },
+    { show: unpaidFees > 0, color: 'amber', icon: <DollarSign className="w-4 h-4" />, label: `${unpaidFees} lớp chưa thu phí kết nối`, sub: 'GS nhận lớp >3 ngày', tab: 'matches' as ActiveTab, urgent: unpaidFees > 3 },
     { show: overduePayments > 0, color: 'red', icon: <DollarSign className="w-4 h-4" />, label: `${overduePayments} lớp chưa thu phí`, sub: '>28 ngày chưa thanh toán', tab: 'finance' as ActiveTab, urgent: overduePayments > 2 },
     { show: cancelRate > 15, color: 'red', icon: <TrendingDown className="w-4 h-4" />, label: `Tỷ lệ hủy: ${cancelRate}%`, sub: `${cancelledRegs}/${registrations.length} đơn bị hủy`, tab: 'kpi' as ActiveTab, urgent: cancelRate > 30 },
   ].filter(a => a.show);

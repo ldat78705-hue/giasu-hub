@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { TutorItem, ClassMatch, AttendanceRecord, TutorReview, ClassItem } from '../types';
-import { GraduationCap, BookOpen, Calendar, DollarSign, Star, CheckCircle2, Clock, XCircle, AlertCircle, LogOut, Search } from 'lucide-react';
+import { GraduationCap, BookOpen, Calendar, DollarSign, Star, CheckCircle2, Clock, XCircle, AlertCircle, LogOut, Search, PhoneOff } from 'lucide-react';
 
 interface TutorPortalProps {
   tutors: TutorItem[];
@@ -9,11 +9,12 @@ interface TutorPortalProps {
   reviews: TutorReview[];
   classes: ClassItem[];
   onLogout: () => void;
+  onReportAbsence?: (record: Omit<AttendanceRecord, 'id'>) => Promise<void>;
 }
 
 const fmt = (v: number) => new Intl.NumberFormat('vi-VN').format(v);
 
-export const TutorPortal: React.FC<TutorPortalProps> = ({ tutors, matches, attendance, reviews, classes, onLogout }) => {
+export const TutorPortal: React.FC<TutorPortalProps> = ({ tutors, matches, attendance, reviews, classes, onLogout, onReportAbsence }) => {
   const [gsCode, setGsCode] = useState('');
   const [gsPhone, setGsPhone] = useState('');
   const [loggedIn, setLoggedIn] = useState(false);
@@ -191,6 +192,7 @@ export const TutorPortal: React.FC<TutorPortalProps> = ({ tutors, matches, atten
       )}
 
       {activeTab === 'schedule' && (
+        <>
         <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 12, overflow: 'hidden' }}>
           {weekDates.map((wd, i) => {
             const dateStr = wd.toISOString().slice(0, 10);
@@ -217,6 +219,36 @@ export const TutorPortal: React.FC<TutorPortalProps> = ({ tutors, matches, atten
             );
           })}
         </div>
+
+        {/* F27: Absence report */}
+        {onReportAbsence && activeMatches.length > 0 && (
+          <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 12, padding: 16, marginTop: 12 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 10 }}>
+              <PhoneOff size={14} color="#dc2626" />
+              <span style={{ fontSize: 13, fontWeight: 700, color: '#334155' }}>Báo nghỉ hôm nay</span>
+            </div>
+            <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+              {activeMatches.map(m => (
+                <button key={m.id}
+                  onClick={async () => {
+                    const dateStr = new Date().toISOString().slice(0, 10);
+                    if (!window.confirm(`Xác nhận báo nghỉ lớp ${m.classSubject} ngày hôm nay (${dateStr})?`)) return;
+                    await onReportAbsence({
+                      matchId: m.id!, classCode: m.classCode, tutorCode: tutor.code,
+                      tutorName: tutor.name, studentName: m.studentName || '',
+                      date: dateStr, status: 'Nghỉ GS', note: 'GS tự báo nghỉ từ Portal',
+                      createdAt: Date.now(),
+                    });
+                    alert('Báo nghỉ thành công! Admin sẽ được thông báo.');
+                  }}
+                  style={{ padding: '8px 14px', background: '#fef2f2', border: '1px solid #fecaca', borderRadius: 8, fontSize: 12, fontWeight: 600, color: '#dc2626', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 4 }}>
+                  <XCircle size={12} /> Nghỉ {m.classSubject}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+        </>
       )}
 
       {activeTab === 'income' && (
