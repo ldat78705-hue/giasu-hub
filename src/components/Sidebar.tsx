@@ -1,6 +1,6 @@
 import React from 'react';
 import { ActiveTab } from '../types';
-import { LayoutDashboard, BookOpen, Users, GraduationCap, DollarSign, ClipboardList, Settings, ExternalLink, Globe, UserPlus, MessageCircle, Calendar, Star, ClipboardCheck, MessageSquareText, BarChart3, Upload, FileText, Wrench } from 'lucide-react';
+import { LayoutDashboard, BookOpen, Users, GraduationCap, DollarSign, ClipboardList, Settings, ExternalLink, Globe, UserPlus, MessageCircle, Calendar, Star, ClipboardCheck, MessageSquareText, BarChart3, Upload, FileText, Wrench, Award, Activity, Bell } from 'lucide-react';
 
 interface SidebarProps {
   activeTab: ActiveTab;
@@ -17,21 +17,24 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab, pendi
     { id: 'dashboard', label: 'Bảng điều khiển', icon: <LayoutDashboard className="w-4 h-4" /> },
     { id: 'classes', label: 'Quản lý lớp', icon: <BookOpen className="w-4 h-4" />, badge: pendingClassesCount },
     { id: 'matches', label: 'Ghép lớp', icon: <ExternalLink className="w-4 h-4" />, badge: activeMatchesCount },
-    { id: 'calendar' as ActiveTab, label: 'Lịch dạy', icon: <Calendar className="w-4 h-4" /> },
+    { id: 'calendar', label: 'Lịch dạy', icon: <Calendar className="w-4 h-4" /> },
     { id: 'tutors', label: 'Quản lý gia sư', icon: <GraduationCap className="w-4 h-4" /> },
+    { id: 'performance', label: 'Hiệu suất & Lương', icon: <Award className="w-4 h-4" /> },
     { id: 'students', label: 'Quản lý học viên', icon: <Users className="w-4 h-4" /> },
     { id: 'registrations', label: 'Đăng ký học', icon: <UserPlus className="w-4 h-4" />, badge: pendingRegistrationsCount },
     { id: 'applications', label: 'Đơn ứng tuyển', icon: <ClipboardList className="w-4 h-4" />, badge: pendingApplicationsCount },
-    { id: 'attendance' as ActiveTab, label: 'Điểm danh', icon: <ClipboardCheck className="w-4 h-4" /> },
-    { id: 'reviews' as ActiveTab, label: 'Đánh giá GS', icon: <Star className="w-4 h-4" /> },
+    { id: 'attendance', label: 'Điểm danh', icon: <ClipboardCheck className="w-4 h-4" /> },
+    { id: 'reviews', label: 'Đánh giá GS', icon: <Star className="w-4 h-4" /> },
     { id: 'contacts', label: 'Liên hệ & Tư vấn', icon: <MessageCircle className="w-4 h-4" />, badge: unreadContactsCount },
-    { id: 'templates' as ActiveTab, label: 'Mẫu tin nhắn', icon: <MessageSquareText className="w-4 h-4" /> },
+    { id: 'zalonotify', label: 'Thông báo Zalo', icon: <Bell className="w-4 h-4" /> },
+    { id: 'templates', label: 'Mẫu tin nhắn', icon: <MessageSquareText className="w-4 h-4" /> },
     { id: 'finance', label: 'Tài chính', icon: <DollarSign className="w-4 h-4" /> },
-    { id: 'kpi' as ActiveTab, label: 'KPI & Thống kê', icon: <BarChart3 className="w-4 h-4" /> },
-    { id: 'import' as ActiveTab, label: 'Import & Trùng', icon: <Upload className="w-4 h-4" /> },
-    { id: 'blog' as ActiveTab, label: 'Blog SEO', icon: <FileText className="w-4 h-4" /> },
+    { id: 'kpi', label: 'KPI & Thống kê', icon: <BarChart3 className="w-4 h-4" /> },
+    { id: 'activity', label: 'Lịch sử hoạt động', icon: <Activity className="w-4 h-4" /> },
+    { id: 'import', label: 'Import & Trùng', icon: <Upload className="w-4 h-4" /> },
+    { id: 'blog', label: 'Blog SEO', icon: <FileText className="w-4 h-4" /> },
     { id: 'seo', label: 'SEO & Marketing', icon: <Globe className="w-4 h-4" /> },
-    { id: 'advanced' as ActiveTab, label: 'Công cụ nâng cao', icon: <Wrench className="w-4 h-4" /> },
+    { id: 'advanced', label: 'Công cụ nâng cao', icon: <Wrench className="w-4 h-4" /> },
     { id: 'settings', label: 'Cài đặt', icon: <Settings className="w-4 h-4" /> },
   ];
 

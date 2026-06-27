@@ -1,15 +1,16 @@
 import React, { useState } from 'react';
 import { ParentRegistration } from '../types';
-import { UserPlus, Phone, MapPin, Clock, CheckCircle2, XCircle, Download, Search, ArrowUpDown, AlertTriangle } from 'lucide-react';
+import { UserPlus, Phone, MapPin, Clock, CheckCircle2, XCircle, Download, Search, ArrowUpDown, AlertTriangle, Sparkles } from 'lucide-react';
 import { getOverdueRegistrations } from '../utils';
 
 interface RegistrationsTabProps {
   registrations: ParentRegistration[];
   onUpdateStatus: (id: string, status: ParentRegistration['status']) => void;
   onUpdateNote?: (id: string, note: string) => void;
+  onSuggestTutor?: (reg: ParentRegistration) => void;
 }
 
-export const RegistrationsTab: React.FC<RegistrationsTabProps> = ({ registrations, onUpdateStatus, onUpdateNote }) => {
+export const RegistrationsTab: React.FC<RegistrationsTabProps> = ({ registrations, onUpdateStatus, onUpdateNote, onSuggestTutor }) => {
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState<'newest' | 'oldest' | 'name' | 'status'>('newest');
@@ -246,6 +247,12 @@ export const RegistrationsTab: React.FC<RegistrationsTabProps> = ({ registration
 
                 {/* Actions */}
                 <div className="flex sm:flex-col gap-2 shrink-0">
+                  {onSuggestTutor && (reg.status === 'Mới' || reg.status === 'Đã liên hệ') && (
+                    <button onClick={() => onSuggestTutor(reg)}
+                      className="px-3 py-2 bg-purple-600 hover:bg-purple-700 text-white text-[10px] font-bold rounded-lg cursor-pointer flex items-center gap-1">
+                      <Sparkles className="w-3 h-3" /><span>Đề xuất GS</span>
+                    </button>
+                  )}
                   {reg.status === 'Mới' && (
                     <button onClick={() => reg.id && onUpdateStatus(reg.id, 'Đã liên hệ')}
                       className="px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white text-[10px] font-bold rounded-lg cursor-pointer flex items-center gap-1">

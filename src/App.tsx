@@ -30,6 +30,11 @@ import { ImportTab } from './components/ImportTab';
 import { AdvancedToolsTab } from './components/AdvancedToolsTab';
 import { BlogTab } from './components/BlogTab';
 import { ChatbotWidget } from './components/ChatbotWidget';
+import { QuickActions } from './components/QuickActions';
+import { ActivityLogTab, ActivityEntry } from './components/ActivityLogTab';
+import { TutorPerformanceTab } from './components/TutorPerformanceTab';
+import { AutoSuggestPanel } from './components/AutoSuggestPanel';
+import { ZaloNotifyTab } from './components/ZaloNotifyTab';
 
 // Public Components
 import { PublicNavbar } from './components/PublicNavbar';
@@ -119,6 +124,8 @@ export default function App() {
   const [reviews, setReviews] = useState<TutorReview[]>([]);
   const [attendance, setAttendance] = useState<AttendanceRecord[]>([]);
   const [settings, setSettings] = useState<AdminSettings>(DEFAULT_SETTINGS);
+  const [activities, setActivities] = useState<ActivityEntry[]>([]);
+  const [suggestReg, setSuggestReg] = useState<ParentRegistration | null>(null);
 
   // AI States
   const [selectedClass, setSelectedClass] = useState<ClassItem | undefined>(undefined);
@@ -261,6 +268,11 @@ export default function App() {
     finally { setGenLoading(false); }
   };
 
+  // ======= ACTIVITY LOGGING =======
+  const logActivity = (action: string, target: string, detail: string, category: ActivityEntry['category']) => {
+    setActivities(prev => [{ id: `act-${Date.now()}`, action, target, detail, timestamp: Date.now(), category }, ...prev].slice(0, 500));
+  };
+
   // ======= CRUD HANDLERS =======
   const handleAddClass = async (c: ClassItem) => {
     await addDoc(collection(db, 'classes'), c);
@@ -268,31 +280,70 @@ export default function App() {
       type: 'class', title: 'Lớp mới được tạo', message: `${c.subject} - ${c.location}`,
       isRead: false, createdAt: Date.now(),
     });
+    logActivity('Tạo lớp mới', c.code, `${c.subject} - ${c.location}`, 'class');
   };
-  const handleUpdateClassStatus = async (id: string, st: ClassItem['status']) => { await updateDoc(doc(db, 'classes', id), { status: st }); };
-  const handleDeleteClass = async (id: string) => { await deleteDoc(doc(db, 'classes', id)); };
+  const handleUpdateClassStatus = async (id: string, st: ClassItem['status']) => {
+    await updateDoc(doc(db, 'classes', id), { status: st });
+    logActivity('Đổi trạng thái lớp', id, `→ ${st}`, 'class');
+  };
+  const handleDeleteClass = async (id: string) => {
+    await deleteDoc(doc(db, 'classes', id));
+    logActivity('Xóa lớp', id, '', 'class');
+  };
 
-  const handleAddTutor = async (t: TutorItem) => { await addDoc(collection(db, 'tutors'), t); };
-  const handleUpdateTutorStatus = async (id: string, st: TutorItem['status']) => { await updateDoc(doc(db, 'tutors', id), { status: st }); };
-  const handleDeleteTutor = async (id: string) => { await deleteDoc(doc(db, 'tutors', id)); };
+  const handleAddTutor = async (t: TutorItem) => {
+    await addDoc(collection(db, 'tutors'), t);
+    logActivity('Thêm gia sư', t.code, t.name, 'tutor');
+  };
+  const handleUpdateTutorStatus = async (id: string, st: TutorItem['status']) => {
+    await updateDoc(doc(db, 'tutors', id), { status: st });
+    logActivity('Đổi TT gia sư', id, `→ ${st}`, 'tutor');
+  };
+  const handleDeleteTutor = async (id: string) => {
+    await deleteDoc(doc(db, 'tutors', id));
+    logActivity('Xóa gia sư', id, '', 'tutor');
+  };
   const handleVerifyTutor = async (id: string, verified: boolean) => {
     await updateDoc(doc(db, 'tutors', id), { verified, verifiedAt: verified ? Date.now() : null });
+    logActivity(verified ? 'Xác minh GS' : 'Hủy xác minh GS', id, '', 'tutor');
   };
 
-  const handleAddStudent = async (st: StudentItem) => { await addDoc(collection(db, 'students'), st); };
-  const handleDeleteStudent = async (id: string) => { await deleteDoc(doc(db, 'students', id)); };
-  const handleUpdateStudentStatus = async (id: string, st: StudentItem['status']) => { await updateDoc(doc(db, 'students', id), { status: st }); };
+  const handleAddStudent = async (st: StudentItem) => {
+    await addDoc(collection(db, 'students'), st);
+    logActivity('Thêm học sinh', st.name, st.parentName, 'student');
+  };
+  const handleDeleteStudent = async (id: string) => {
+    await deleteDoc(doc(db, 'students', id));
+    logActivity('Xóa học sinh', id, '', 'student');
+  };
+  const handleUpdateStudentStatus = async (id: string, st: StudentItem['status']) => {
+    await updateDoc(doc(db, 'students', id), { status: st });
+    logActivity('Đổi TT học sinh', id, `→ ${st}`, 'student');
+  };
 
-  const handleAddTransaction = async (tr: TransactionItem) => { await addDoc(collection(db, 'transactions'), tr); };
-  const handleDeleteTransaction = async (id: string) => { await deleteDoc(doc(db, 'transactions', id)); };
+  const handleAddTransaction = async (tr: TransactionItem) => {
+    await addDoc(collection(db, 'transactions'), tr);
+    logActivity('Thêm giao dịch', tr.receiptId, `${tr.type} - ${tr.amount.toLocaleString()}đ`, 'finance');
+  };
+  const handleDeleteTransaction = async (id: string) => {
+    await deleteDoc(doc(db, 'transactions', id));
+    logActivity('Xóa giao dịch', id, '', 'finance');
+  };
 
-  const handleUpdateApplicationStatus = async (id: string, st: ClassApplication['status']) => { await updateDoc(doc(db, 'applications', id), { status: st }); };
-  const handleUpdateBookingStatus = async (id: string, st: TutorBooking['status']) => { await updateDoc(doc(db, 'bookings', id), { status: st }); };
+  const handleUpdateApplicationStatus = async (id: string, st: ClassApplication['status']) => {
+    await updateDoc(doc(db, 'applications', id), { status: st });
+    logActivity('Đổi TT đơn ứng tuyển', id, `→ ${st}`, 'tutor');
+  };
+  const handleUpdateBookingStatus = async (id: string, st: TutorBooking['status']) => {
+    await updateDoc(doc(db, 'bookings', id), { status: st });
+    logActivity('Đổi TT booking', id, `→ ${st}`, 'registration');
+  };
   const handleUpdateRegistrationStatus = async (id: string, st: ParentRegistration['status']) => {
     await updateDoc(doc(db, 'registrations', id), {
       status: st,
       statusHistory: arrayUnion({ status: st, timestamp: Date.now() }),
     });
+    logActivity('Đổi TT đăng ký', id, `→ ${st}`, 'registration');
   };
   const handleUpdateRegistrationNote = async (id: string, note: string) => {
     await updateDoc(doc(db, 'registrations', id), { adminNote: note });
@@ -419,7 +470,6 @@ export default function App() {
   // Match handlers
   const handleAddMatch = async (m: ClassMatch) => {
     await addDoc(collection(db, 'matches'), m);
-    // Auto-update class status
     const cls = classes.find(c => c.code === m.classCode);
     if (cls?.id) await updateDoc(doc(db, 'classes', cls.id), { status: 'ĐÃ CÓ GIA SƯ' });
     await addDoc(collection(db, 'notifications'), {
@@ -427,11 +477,16 @@ export default function App() {
       message: `${m.classSubject} → GS ${m.tutorName}`,
       isRead: false, createdAt: Date.now(),
     });
+    logActivity('Ghép lớp', m.classCode, `${m.classSubject} → GS ${m.tutorName}`, 'match');
   };
   const handleUpdateMatchStatus = async (id: string, st: ClassMatch['status']) => {
     await updateDoc(doc(db, 'matches', id), { status: st, ...(st === 'Hoàn thành' ? { endDate: Date.now() } : {}) });
+    logActivity('Đổi TT ghép lớp', id, `→ ${st}`, 'match');
   };
-  const handleDeleteMatch = async (id: string) => { await deleteDoc(doc(db, 'matches', id)); };
+  const handleDeleteMatch = async (id: string) => {
+    await deleteDoc(doc(db, 'matches', id));
+    logActivity('Xóa ghép lớp', id, '', 'match');
+  };
 
   // Admin note handlers
   const handleUpdateTutorNote = async (id: string, note: string) => {
@@ -524,6 +579,8 @@ export default function App() {
         <section className="flex-1 p-6 lg:p-8 grid grid-cols-12 gap-6 content-start overflow-y-auto">
           {adminTab === 'dashboard' && (
             <>
+              <QuickActions tutors={tutors} registrations={registrations} matches={matches}
+                attendance={attendance} reviews={reviews} onNavigate={setAdminTab} />
               <StatsCards totalClasses={classes.length} pendingClasses={pendingClassesCount}
                 totalTutors={tutors.length} totalStudents={students.length}
                 pendingApplications={pendingApplicationsCount} totalRevenue={totalRevenue}
@@ -575,7 +632,7 @@ export default function App() {
 
           {adminTab === 'registrations' && (
             <RegistrationsTab registrations={registrations} onUpdateStatus={handleUpdateRegistrationStatus}
-              onUpdateNote={handleUpdateRegistrationNote} />
+              onUpdateNote={handleUpdateRegistrationNote} onSuggestTutor={setSuggestReg} />
           )}
 
           {adminTab === 'contacts' && (
@@ -625,8 +682,25 @@ export default function App() {
           {adminTab === 'advanced' && (
             <AdvancedToolsTab />
           )}
+
+          {adminTab === 'performance' && (
+            <TutorPerformanceTab tutors={tutors} matches={matches} attendance={attendance} reviews={reviews} />
+          )}
+
+          {adminTab === 'activity' && (
+            <ActivityLogTab activities={activities} />
+          )}
+
+          {adminTab === 'zalonotify' && (
+            <ZaloNotifyTab registrations={registrations} matches={matches} tutors={tutors} />
+          )}
         </section>
       </main>
+
+      {/* Auto-suggest modal */}
+      {suggestReg && (
+        <AutoSuggestPanel registration={suggestReg} tutors={tutors} matches={matches} onClose={() => setSuggestReg(null)} />
+      )}
 
       {/* AI Generator Modal */}
       {showAiGenModal && (
