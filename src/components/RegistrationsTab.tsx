@@ -173,6 +173,17 @@ export const RegistrationsTab: React.FC<RegistrationsTabProps> = ({ registration
         </div>
       )}
 
+      {/* BUG-3 Fix: Overdue warning banner */}
+      {overdueRegs.length > 0 && (
+        <div className="bg-red-50 border-2 border-red-300 rounded-xl p-3 flex items-center gap-3 animate-pulse">
+          <AlertTriangle className="w-5 h-5 text-red-600 shrink-0" />
+          <div>
+            <p className="text-sm font-bold text-red-700">⏰ {overdueRegs.length} đơn quá hạn chưa liên hệ!</p>
+            <p className="text-[10px] text-red-500">Các đơn dưới đây đã đăng ký hơn 2 giờ mà chưa được xử lý. Nhấn "Đã liên hệ" sau khi gọi.</p>
+          </div>
+        </div>
+      )}
+
       {/* List */}
       {filtered.length === 0 ? (
         <div className="bg-white rounded-2xl border border-slate-200 p-10 text-center">

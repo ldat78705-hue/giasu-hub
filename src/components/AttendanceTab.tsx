@@ -17,6 +17,7 @@ export const AttendanceTab: React.FC<AttendanceTabProps> = ({ attendance, matche
   const [date, setDate] = useState(new Date().toISOString().slice(0, 10));
   const [status, setStatus] = useState<AttendanceRecord['status']>('Đã dạy');
   const [note, setNote] = useState('');
+  const [tutorFeedback, setTutorFeedback] = useState('');
 
   const activeMatches = matches.filter(m => m.status === 'Đang dạy');
 
@@ -32,13 +33,13 @@ export const AttendanceTab: React.FC<AttendanceTabProps> = ({ attendance, matche
     e.preventDefault();
     const m = activeMatches.find(x => x.id === selMatch);
     if (!m) return;
-    onAddRecord({ matchId: m.id!, classCode: m.classCode, tutorCode: m.tutorCode, tutorName: m.tutorName, studentName: m.studentName || '', date, status, note, createdAt: Date.now() });
-    setShowAdd(false); setNote('');
+    onAddRecord({ matchId: m.id!, classCode: m.classCode, tutorCode: m.tutorCode, tutorName: m.tutorName, studentName: m.studentName || '', date, status, note, tutorFeedback: tutorFeedback || undefined, createdAt: Date.now() });
+    setShowAdd(false); setNote(''); setTutorFeedback('');
   };
 
   const exportCsv = () => {
-    const header = 'Mã lớp,Gia sư,Học sinh,Ngày,Trạng thái,Ghi chú\n';
-    const rows = attendance.map(a => `"${a.classCode}","${a.tutorName}","${a.studentName}","${a.date}","${a.status}","${a.note || ''}"`).join('\n');
+    const header = 'Mã lớp,Gia sư,Học sinh,Ngày,Trạng thái,Ghi chú,Nhận xét GS\n';
+    const rows = attendance.map(a => `"${a.classCode}","${a.tutorName}","${a.studentName}","${a.date}","${a.status}","${a.note || ''}","${a.tutorFeedback || ''}"`).join('\n');
     const blob = new Blob(['\uFEFF' + header + rows], { type: 'text/csv;charset=utf-8' });
     const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `diem-danh-${new Date().toISOString().slice(0,10)}.csv`; a.click();
   };
@@ -99,6 +100,7 @@ export const AttendanceTab: React.FC<AttendanceTabProps> = ({ attendance, matche
                 <th className="px-4 py-3 font-semibold">Học sinh</th>
                 <th className="px-4 py-3 font-semibold">Trạng thái</th>
                 <th className="px-4 py-3 font-semibold">Ghi chú</th>
+                <th className="px-4 py-3 font-semibold">Nhận xét GS</th>
                 <th className="px-4 py-3 font-semibold text-right">Xóa</th>
               </tr>
             </thead>
@@ -111,6 +113,7 @@ export const AttendanceTab: React.FC<AttendanceTabProps> = ({ attendance, matche
                   <td className="px-4 py-3">{a.studentName}</td>
                   <td className="px-4 py-3"><span className={`px-2 py-1 rounded-lg text-[10px] font-bold flex items-center gap-1 w-fit border ${statusColor(a.status)}`}>{statusIcon(a.status)}{a.status}</span></td>
                   <td className="px-4 py-3 text-xs text-slate-500 italic max-w-[200px] truncate">{a.note || '—'}</td>
+                  <td className="px-4 py-3 text-xs text-purple-600 italic max-w-[200px] truncate">{a.tutorFeedback || '—'}</td>
                   <td className="px-4 py-3 text-right">
                     <button onClick={() => a.id && window.confirm('Xóa bản ghi này?') && onDeleteRecord(a.id)}
                       className="text-slate-400 hover:text-red-500 cursor-pointer p-1"><XCircle className="w-3.5 h-3.5" /></button>
@@ -160,6 +163,13 @@ export const AttendanceTab: React.FC<AttendanceTabProps> = ({ attendance, matche
                   <label className="block text-xs font-bold uppercase text-slate-600 mb-1">Ghi chú</label>
                   <input value={note} onChange={e => setNote(e.target.value)} placeholder="VD: HS vắng do ốm"
                     className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-blue-500" />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold uppercase text-purple-600 mb-1">📝 Nhận xét của GS (PH sẽ thấy khi tra cứu)</label>
+                  <textarea value={tutorFeedback} onChange={e => setTutorFeedback(e.target.value)}
+                    placeholder="VD: Bé tiếp thu tốt, cần ôn thêm phần phân số..."
+                    rows={2}
+                    className="w-full px-3 py-2.5 bg-purple-50 border border-purple-200 rounded-xl outline-none focus:border-purple-500 text-sm" />
                 </div>
                 <div className="flex justify-end gap-3 pt-2">
                   <button type="button" onClick={() => setShowAdd(false)} className="px-4 py-2 border border-slate-200 rounded-xl text-xs font-bold text-slate-600 cursor-pointer">Hủy</button>
