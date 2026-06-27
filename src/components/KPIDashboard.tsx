@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { ClassMatch, TutorItem, ParentRegistration, TransactionItem, AttendanceRecord } from '../types';
 import { calculateKPIs } from '../utils';
-import { TrendingUp, TrendingDown, Users, Target, BarChart3, Activity, Download, FileText, Share2, Megaphone } from 'lucide-react';
+import { TrendingUp, TrendingDown, Users, Target, BarChart3, Activity, Download, FileText, Share2, Megaphone, MapPin } from 'lucide-react';
 
 interface KPIDashboardProps {
   matches: ClassMatch[];
@@ -12,7 +12,7 @@ interface KPIDashboardProps {
 }
 
 export const KPIDashboard: React.FC<KPIDashboardProps> = ({ matches, registrations, tutors, transactions = [], attendance = [] }) => {
-  const [activeView, setActiveView] = useState<'kpi' | 'report' | 'sources' | 'referrals'>('kpi');
+  const [activeView, setActiveView] = useState<'kpi' | 'report' | 'sources' | 'referrals' | 'areas'>('kpi');
   const kpi = calculateKPIs(matches, registrations, tutors);
   const fmt = (v: number) => new Intl.NumberFormat('vi-VN').format(v);
   const maxRev = Math.max(...kpi.monthlyRevenue.map(m => m.revenue), 1);
@@ -85,6 +85,7 @@ export const KPIDashboard: React.FC<KPIDashboardProps> = ({ matches, registratio
     { id: 'report' as const, label: 'Báo cáo tháng', icon: <FileText className="w-3.5 h-3.5" /> },
     { id: 'sources' as const, label: 'Nguồn khách', icon: <Megaphone className="w-3.5 h-3.5" /> },
     { id: 'referrals' as const, label: 'Giới thiệu', icon: <Share2 className="w-3.5 h-3.5" /> },
+    { id: 'areas' as const, label: 'Khu vực', icon: <MapPin className="w-3.5 h-3.5" /> },
   ];
 
   return (
@@ -300,6 +301,87 @@ export const KPIDashboard: React.FC<KPIDashboardProps> = ({ matches, registratio
           )}
         </div>
       )}
+
+      {/* ===== AREA ANALYTICS (F15) ===== */}
+      {activeView === 'areas' && (() => {
+        const tutorAreas = tutors.reduce((acc, t) => {
+          const area = t.area || 'Chưa có';
+          acc[area] = (acc[area] || 0) + 1;
+          return acc;
+        }, {} as Record<string, number>);
+        const regDistricts = registrations.reduce((acc, r) => {
+          const d = r.district || 'Chưa có';
+          acc[d] = (acc[d] || 0) + 1;
+          return acc;
+        }, {} as Record<string, number>);
+        const tutorEntries = (Object.entries(tutorAreas) as [string, number][]).sort((a, b) => b[1] - a[1]);
+        const regEntries = (Object.entries(regDistricts) as [string, number][]).sort((a, b) => b[1] - a[1]);
+        const maxTutor = Math.max(...(Object.values(tutorAreas) as number[]), 1);
+        const maxReg = Math.max(...(Object.values(regDistricts) as number[]), 1);
+        return (
+          <div className="space-y-5">
+            <h3 className="text-sm font-bold text-slate-800">🗺️ Phân bổ theo khu vực</h3>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+              {/* GS by area */}
+              <div className="bg-white rounded-2xl border border-slate-200 p-5">
+                <h4 className="text-xs font-bold uppercase text-slate-400 mb-3">Gia sư theo khu vực</h4>
+                <div className="space-y-2">
+                  {tutorEntries.slice(0, 10).map(([area, count]) => (
+                    <div key={area} className="flex items-center gap-3">
+                      <span className="text-xs text-slate-600 w-28 truncate font-medium">{area}</span>
+                      <div className="flex-1 bg-slate-100 rounded-full h-5 overflow-hidden">
+                        <div className="h-full bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full flex items-center justify-end pr-2 transition-all"
+                          style={{ width: `${Math.max((count / maxTutor) * 100, 8)}%` }}>
+                          <span className="text-[9px] font-bold text-white">{count}</span>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                  {tutorEntries.length === 0 && <p className="text-xs text-slate-400 text-center py-4">Chưa có dữ liệu</p>}
+                </div>
+              </div>
+              {/* PH demand by district */}
+              <div className="bg-white rounded-2xl border border-slate-200 p-5">
+                <h4 className="text-xs font-bold uppercase text-slate-400 mb-3">Nhu cầu PH theo quận</h4>
+                <div className="space-y-2">
+                  {regEntries.slice(0, 10).map(([dist, count]) => (
+                    <div key={dist} className="flex items-center gap-3">
+                      <span className="text-xs text-slate-600 w-28 truncate font-medium">{dist}</span>
+                      <div className="flex-1 bg-slate-100 rounded-full h-5 overflow-hidden">
+                        <div className="h-full bg-gradient-to-r from-emerald-500 to-teal-500 rounded-full flex items-center justify-end pr-2 transition-all"
+                          style={{ width: `${Math.max((count / maxReg) * 100, 8)}%` }}>
+                          <span className="text-[9px] font-bold text-white">{count}</span>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                  {regEntries.length === 0 && <p className="text-xs text-slate-400 text-center py-4">Chưa có dữ liệu</p>}
+                </div>
+              </div>
+            </div>
+            {/* Gap analysis */}
+            <div className="bg-white rounded-2xl border border-slate-200 p-5">
+              <h4 className="text-xs font-bold uppercase text-slate-400 mb-3">⚠️ Phân tích thiếu hụt GS</h4>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                {regEntries.slice(0, 8).map(([dist, demand]) => {
+                  const supply = tutorAreas[dist] || 0;
+                  const gap = demand - supply;
+                  return (
+                    <div key={dist} className={`p-3 rounded-xl border ${gap > 0 ? 'bg-red-50 border-red-200' : 'bg-emerald-50 border-emerald-200'}`}>
+                      <div className="text-xs font-bold text-slate-700">{dist}</div>
+                      <div className="flex justify-between mt-1 text-[10px]">
+                        <span className="text-emerald-600">GS: {supply}</span>
+                        <span className="text-blue-600">PH: {demand}</span>
+                      </div>
+                      {gap > 0 && <div className="text-[9px] font-bold text-red-600 mt-0.5">Thiếu {gap} GS!</div>}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+        );
+      })()}
     </div>
   );
 };

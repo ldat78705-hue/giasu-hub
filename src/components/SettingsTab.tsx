@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { AdminSettings, FeeConfigItem } from '../types';
+import { AdminSettings, FeeConfigItem, AdminRole, ADMIN_ROLE_CONFIG } from '../types';
 import { Settings, Key, Building2, Phone, Mail, MapPin, Save, CheckCircle2, AlertCircle, Eye, EyeOff, Sparkles, RefreshCw, Trash2, Shield, MessageCircle, Globe, Cloud, Plus, X, Search, DollarSign } from 'lucide-react';
 import { DEFAULT_HANOI_WARDS } from '../hanoiWards';
 
@@ -38,6 +38,8 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({ settings, onSaveSettin
   const [feeArea, setFeeArea] = useState('Toàn TP');
   const [feeOffline, setFeeOffline] = useState(200000);
   const [feeOnline, setFeeOnline] = useState(150000);
+  // Feature 17: Admin role
+  const [adminRole, setAdminRole] = useState<AdminRole>(settings.adminRole || 'super_admin');
 
   useEffect(() => {
     setCenterName(settings.centerName || 'Gia Sư Thành Đạt');
@@ -51,6 +53,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({ settings, onSaveSettin
     setCloudinaryPreset(settings.cloudinaryPreset || '');
     setWards(settings.wards || DEFAULT_HANOI_WARDS);
     setFeeConfig(settings.feeConfig || []);
+    setAdminRole(settings.adminRole || 'super_admin');
   }, [settings]);
 
   const handleSaveAll = async () => {
@@ -68,6 +71,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({ settings, onSaveSettin
         cloudinaryPreset,
         wards,
         feeConfig,
+        adminRole,
         updatedAt: Date.now(),
       });
       setSaveSuccess(true);
@@ -437,6 +441,32 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({ settings, onSaveSettin
           <p className="text-[10px] text-slate-400">
             Nhấn <b>Lưu tất cả cài đặt</b> để áp dụng. Danh sách này hiển thị ở form đăng ký gia sư và form đăng ký học.
           </p>
+        </div>
+
+        {/* Feature 17: Admin Role Configuration */}
+        <div className="bg-white rounded-2xl border border-slate-200 shadow-xs p-6 space-y-4 col-span-1 lg:col-span-2">
+          <div className="flex items-center gap-2 border-b border-slate-100 pb-4">
+            <div className="p-2 bg-red-50 text-red-600 rounded-xl">
+              <Shield className="w-5 h-5" />
+            </div>
+            <div>
+              <h3 className="font-bold text-slate-800">Phân quyền Admin</h3>
+              <p className="text-[11px] text-slate-500">Chọn vai trò để giới hạn tabs hiển thị trong sidebar</p>
+            </div>
+          </div>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            {(Object.entries(ADMIN_ROLE_CONFIG) as [AdminRole, typeof ADMIN_ROLE_CONFIG[AdminRole]][]).map(([role, config]) => (
+              <button key={role} onClick={() => setAdminRole(role)}
+                className={`p-4 rounded-xl border-2 cursor-pointer transition-all text-left ${
+                  adminRole === role ? 'border-blue-500 bg-blue-50 ring-2 ring-blue-200' : 'border-slate-200 hover:border-slate-300'
+                }`}>
+                <div className="w-3 h-3 rounded-full mb-2" style={{ background: config.color }} />
+                <div className="text-sm font-bold text-slate-800">{config.label}</div>
+                <div className="text-[10px] text-slate-500 mt-0.5">{config.tabs.length} tabs</div>
+              </button>
+            ))}
+          </div>
+          <p className="text-[10px] text-slate-400">⚠️ Thay đổi vai trò sẽ ảnh hưởng đến sidebar sau khi lưu. Super Admin có toàn quyền.</p>
         </div>
 
         {/* Feature 8: Fee Configuration */}

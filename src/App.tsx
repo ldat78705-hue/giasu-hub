@@ -211,6 +211,24 @@ export default function App() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [currentPath]);
 
+  // Feature 10: Push notifications — request permission + fire on new unread
+  useEffect(() => {
+    if (!isPublicView && 'Notification' in window && Notification.permission === 'default') {
+      Notification.requestPermission();
+    }
+  }, [isPublicView]);
+
+  const prevNotifCountRef = React.useRef(0);
+  useEffect(() => {
+    const unread = notifications.filter(n => !n.isRead).length;
+    if (unread > prevNotifCountRef.current && prevNotifCountRef.current > 0 && !isPublicView) {
+      const newest = notifications.find(n => !n.isRead);
+      if (newest && 'Notification' in window && Notification.permission === 'granted') {
+        new Notification(newest.title, { body: newest.message, icon: '/icon-192.png' });
+      }
+    }
+    prevNotifCountRef.current = unread;
+  }, [notifications, isPublicView]);
 
   // ======= AI HANDLERS (client-side) =======
   const runAiMatch = async (clsToMatch?: ClassItem) => {
@@ -350,6 +368,17 @@ export default function App() {
   // Feature 1: Trial booking handler
   const handleUpdateTrial = async (id: string, data: { trialDate: string; trialTime: string; trialTutorCode?: string; trialStatus: string }) => {
     await updateDoc(doc(db, 'registrations', id), data);
+  };
+
+  // Feature 13: Tags handler
+  const handleUpdateRegistrationTags = async (id: string, tags: string[]) => {
+    await updateDoc(doc(db, 'registrations', id), { tags });
+  };
+
+  // Feature 14: Contact log handler
+  const handleAddContactLog = async (id: string, log: { id: string; action: string; note: string; result: string; author: string; timestamp: number }) => {
+    await updateDoc(doc(db, 'registrations', id), { contactLogs: arrayUnion(log) });
+    logActivity('Ghi liên hệ', id, `${log.action} → ${log.result}`, 'registration');
   };
 
   // Reviews
@@ -569,7 +598,8 @@ export default function App() {
         pendingApplicationsCount={pendingApplicationsCount + pendingTutorVerify}
         unreadContactsCount={unreadContactsCount}
         pendingRegistrationsCount={pendingRegistrations}
-        activeMatchesCount={matches.filter(m => m.status === 'Đang dạy').length} />
+        activeMatchesCount={matches.filter(m => m.status === 'Đang dạy').length}
+        adminRole={settings.adminRole} />
 
 
       <main className="flex-1 flex flex-col h-full overflow-hidden">
@@ -640,7 +670,8 @@ export default function App() {
 
           {adminTab === 'registrations' && (
             <RegistrationsTab registrations={registrations} tutors={tutors} onUpdateStatus={handleUpdateRegistrationStatus}
-              onUpdateNote={handleUpdateRegistrationNote} onSuggestTutor={setSuggestReg} onUpdateTrial={handleUpdateTrial} />
+              onUpdateNote={handleUpdateRegistrationNote} onSuggestTutor={setSuggestReg} onUpdateTrial={handleUpdateTrial}
+              onUpdateTags={handleUpdateRegistrationTags} onAddContactLog={handleAddContactLog} />
           )}
 
           {adminTab === 'contacts' && (

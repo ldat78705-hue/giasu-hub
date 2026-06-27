@@ -43,6 +43,11 @@ export const ZaloNotifyTab: React.FC<ZaloNotifyTabProps> = ({ registrations, mat
       template: 'Chào anh/chị {parentName}, Trung tâm đã ghi nhận việc hủy đăng ký cho bé {studentName}. Nếu tương lai cần tìm gia sư, đừng ngần ngại liên hệ 0822448444. Chúc gia đình khỏe mạnh!' },
     { id: 'tutor_welcome', title: 'Chào GS mới', trigger: 'Khi duyệt GS', icon: '🎉',
       template: 'Chào {tutorName}! Hồ sơ gia sư của bạn đã được xác minh ✅. Mã GS: {tutorCode}. Từ bây giờ bạn có thể nhận lớp mới. Truy cập giasu-dusky.vercel.app để xem lớp đang tuyển. Chúc bạn dạy tốt!' },
+    // F16: Email templates
+    { id: 'email_confirm', title: '📧 Email: Xác nhận đăng ký', trigger: 'Gửi email PH', icon: '📧',
+      template: 'Tiêu đề: [Gia Sư Thành Đạt] Xác nhận đăng ký tìm gia sư\n\nKính gửi Anh/Chị {parentName},\n\nTrung tâm Gia Sư Thành Đạt xin xác nhận đã nhận đơn đăng ký tìm gia sư cho bé {studentName} ({grade}).\n\nThông tin đăng ký:\n- Môn: {subjects}\n- Lịch học: {schedule}\n- Khu vực: {district}\n\nChúng tôi sẽ liên hệ Anh/Chị trong vòng 24h để trao đổi chi tiết.\n\nTrân trọng,\nGia Sư Thành Đạt\nHotline: 0822448444' },
+    { id: 'email_matched', title: '📧 Email: Đã tìm được GS', trigger: 'Gửi email ghép xong', icon: '📧',
+      template: 'Tiêu đề: [Gia Sư Thành Đạt] Đã tìm được gia sư cho bé {studentName}\n\nKính gửi Anh/Chị {parentName},\n\nChúng tôi vui mừng thông báo đã tìm được gia sư phù hợp cho bé {studentName}!\n\nThông tin gia sư:\n- Tên: {tutorName}\n- Mã GS: {tutorCode}\n\nGia sư sẽ liên hệ Anh/Chị trong 24h tới để sắp xếp buổi học thử MIỄN PHÍ.\n\nNếu có bất kỳ thắc mắc nào, vui lòng liên hệ:\n📞 Hotline: 0822448444\n💬 Zalo: 0822448444\n\nTrân trọng,\nGia Sư Thành Đạt' },
   ];
 
   const newRegs = registrations.filter(r => r.status === 'Mới');

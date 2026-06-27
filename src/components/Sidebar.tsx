@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ActiveTab } from '../types';
+import { ActiveTab, AdminRole, ADMIN_ROLE_CONFIG } from '../types';
 import { LayoutDashboard, BookOpen, Users, GraduationCap, DollarSign, ClipboardList, Settings, ExternalLink, Globe, UserPlus, MessageCircle, Calendar, Star, ClipboardCheck, BarChart3, Upload, FileText, Wrench, Award, Activity, Bell, ChevronDown, ChevronRight, Menu, X } from 'lucide-react';
 
 interface SidebarProps {
@@ -10,6 +10,7 @@ interface SidebarProps {
   unreadContactsCount?: number;
   pendingRegistrationsCount?: number;
   activeMatchesCount?: number;
+  adminRole?: AdminRole;
 }
 
 interface NavGroup {
@@ -17,9 +18,14 @@ interface NavGroup {
   items: { id: ActiveTab; label: string; icon: React.ReactNode; badge?: number }[];
 }
 
-export const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab, pendingClassesCount, pendingApplicationsCount, unreadContactsCount = 0, pendingRegistrationsCount = 0, activeMatchesCount = 0 }) => {
+export const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab, pendingClassesCount, pendingApplicationsCount, unreadContactsCount = 0, pendingRegistrationsCount = 0, activeMatchesCount = 0, adminRole }) => {
   const [collapsed, setCollapsed] = useState<Record<string, boolean>>({});
   const [mobileOpen, setMobileOpen] = useState(false);
+
+  const currentRole = adminRole || 'super_admin';
+  const allowedTabs = ADMIN_ROLE_CONFIG[currentRole]?.tabs || [];
+  const roleLabel = ADMIN_ROLE_CONFIG[currentRole]?.label || 'Admin';
+  const roleColor = ADMIN_ROLE_CONFIG[currentRole]?.color || '#2563eb';
 
   const groups: NavGroup[] = [
     {
@@ -83,7 +89,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab, pendi
         </div>
         <div className="flex-1 min-w-0">
           <div className="text-base font-bold tracking-tight text-white leading-none">Gia Sư Thành Đạt</div>
-          <div className="text-[9px] font-bold text-blue-400 uppercase tracking-[0.1em] mt-0.5">Quản trị viên</div>
+          <div className="text-[9px] font-bold uppercase tracking-[0.1em] mt-0.5" style={{ color: roleColor }}>{roleLabel}</div>
         </div>
         {/* Mobile close */}
         <button onClick={() => setMobileOpen(false)} className="lg:hidden p-1 text-slate-400 hover:text-white cursor-pointer">
@@ -93,9 +99,11 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab, pendi
 
       <nav className="flex-1 p-3 space-y-1 overflow-y-auto">
         {groups.map((group) => {
+          const filteredItems = group.items.filter(i => allowedTabs.includes(i.id));
+          if (filteredItems.length === 0) return null;
           const isCollapsed = collapsed[group.label];
-          const groupHasBadge = group.items.some(i => i.badge && i.badge > 0);
-          const groupHasActive = group.items.some(i => activeTab === i.id);
+          const groupHasBadge = filteredItems.some(i => i.badge && i.badge > 0);
+          const groupHasActive = filteredItems.some(i => activeTab === i.id);
           return (
             <div key={group.label}>
               <button
@@ -112,7 +120,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab, pendi
               </button>
               {!isCollapsed && (
                 <div className="space-y-0.5 mt-0.5">
-                  {group.items.map((item) => {
+                  {filteredItems.map((item) => {
                     const isActive = activeTab === item.id;
                     return (
                       <div

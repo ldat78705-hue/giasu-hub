@@ -114,6 +114,10 @@ export interface ParentRegistration {
   source?: 'Zalo' | 'Facebook' | 'Google' | 'Giới thiệu' | 'Website' | 'Khác';
   // Feature 6: Referral
   referralCode?: string;
+  // Feature 13: Tags
+  tags?: string[];
+  // Feature 14: Contact logs
+  contactLogs?: ContactLogEntry[];
 }
 
 export interface ContactMessage {
@@ -166,6 +170,8 @@ export interface AdminSettings {
   updatedAt: number;
   // Feature 8: Fee config
   feeConfig?: FeeConfigItem[];
+  // Feature 17: Admin role
+  adminRole?: AdminRole;
 }
 
 export interface FeeConfigItem {
@@ -241,3 +247,41 @@ export interface AttendanceRecord {
 
 export type ActiveTab = 'home' | 'find-tutors' | 'register-tutor' | 'parent-register' | 'status-lookup' | 'dashboard' | 'classes' | 'tutors' | 'students' | 'finance' | 'applications' | 'registrations' | 'contacts' | 'matches' | 'settings' | 'reviews' | 'attendance' | 'calendar' | 'kpi' | 'import' | 'advanced' | 'blog' | 'performance' | 'activity' | 'zalonotify';
 
+// Feature 13: Tags
+export const REGISTRATION_TAGS = ['VIP', 'Gấp', 'Cần GS nữ', 'Học online', 'Chờ PH xác nhận', 'Khó tìm GS', 'Học thử OK', 'Đã gọi 2 lần'] as const;
+
+// Feature 14: Contact log entry
+export interface ContactLogEntry {
+  id: string;
+  action: 'Gọi điện' | 'Nhắn Zalo' | 'Gửi SMS' | 'Email' | 'Gặp trực tiếp' | 'Khác';
+  note: string;
+  result: 'Thành công' | 'Không nghe' | 'Hẹn gọi lại' | 'Từ chối';
+  author: string;
+  timestamp: number;
+}
+
+// Feature 17: Admin roles
+export type AdminRole = 'super_admin' | 'ops_admin' | 'finance_admin' | 'content_admin';
+
+export const ADMIN_ROLE_CONFIG: Record<AdminRole, { label: string; tabs: ActiveTab[]; color: string }> = {
+  super_admin: {
+    label: 'Super Admin',
+    tabs: ['dashboard', 'classes', 'matches', 'calendar', 'tutors', 'students', 'registrations', 'applications', 'attendance', 'contacts', 'zalonotify', 'finance', 'performance', 'kpi', 'reviews', 'activity', 'import', 'blog', 'advanced', 'settings'],
+    color: '#dc2626',
+  },
+  ops_admin: {
+    label: 'Ops Admin',
+    tabs: ['dashboard', 'classes', 'matches', 'calendar', 'tutors', 'students', 'registrations', 'applications', 'attendance', 'contacts', 'zalonotify', 'reviews', 'activity'],
+    color: '#2563eb',
+  },
+  finance_admin: {
+    label: 'Finance Admin',
+    tabs: ['dashboard', 'finance', 'performance', 'kpi', 'attendance'],
+    color: '#16a34a',
+  },
+  content_admin: {
+    label: 'Content Admin',
+    tabs: ['dashboard', 'blog', 'advanced', 'reviews'],
+    color: '#9333ea',
+  },
+};
