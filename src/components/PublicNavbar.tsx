@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ActiveTab } from '../types';
-import { Home, Search, GraduationCap, UserPlus, Phone, Menu, X, MessageCircle } from 'lucide-react';
+import { Home, Search, UserPlus, Phone, Menu, X } from 'lucide-react';
 
 interface PublicNavbarProps {
   activeTab: ActiveTab;
@@ -28,9 +28,9 @@ export const PublicNavbar: React.FC<PublicNavbarProps> = ({ activeTab, onNavigat
 
   const mobileItems: { id: ActiveTab; label: string; icon: React.ReactNode }[] = [
     { id: 'home', label: 'Trang chủ', icon: <Home size={20} /> },
-    { id: 'find-tutors', label: 'Gia sư', icon: <Search size={20} /> },
-    { id: 'parent-register', label: 'Đăng ký', icon: <UserPlus size={20} /> },
-    { id: 'register-tutor', label: 'Dạy kèm', icon: <GraduationCap size={20} /> },
+    { id: 'find-tutors', label: 'Tìm GS', icon: <Search size={20} /> },
+    { id: 'parent-register', label: 'Tìm học', icon: <UserPlus size={20} /> },
+    { id: 'status-lookup', label: 'Tra cứu', icon: <Phone size={20} /> },
   ];
 
   return (
@@ -76,7 +76,7 @@ export const PublicNavbar: React.FC<PublicNavbarProps> = ({ activeTab, onNavigat
             )}
             <button onClick={() => onNavigate('parent-register')}
               style={{ padding: '7px 16px', background: '#2563eb', color: '#fff', border: 'none', borderRadius: 6, fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>
-              Tìm gia sư
+              Đăng ký học
             </button>
           </div>
 
@@ -104,7 +104,7 @@ export const PublicNavbar: React.FC<PublicNavbarProps> = ({ activeTab, onNavigat
             ))}
             <button onClick={() => { onNavigate('parent-register'); setMobileOpen(false); }}
               style={{ display: 'block', width: '100%', padding: '10px 0', background: '#2563eb', color: '#fff', border: 'none', borderRadius: 8, fontSize: 14, fontWeight: 600, cursor: 'pointer', marginTop: 8, textAlign: 'center' }}>
-              Tìm gia sư ngay
+              Đăng ký tìm gia sư
             </button>
           </div>
         )}

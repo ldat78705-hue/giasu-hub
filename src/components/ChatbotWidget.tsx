@@ -61,14 +61,15 @@ Hướng dẫn PH đăng ký tại giasu-dusky.vercel.app/dang-ky-hoc hoặc g�
   if (!isOpen) {
     return (
       <button onClick={() => setIsOpen(true)}
-        style={{ position: 'fixed', bottom: 90, right: 20, zIndex: 50, width: 52, height: 52, borderRadius: '50%', background: 'linear-gradient(135deg, #8b5cf6, #6366f1)', color: '#fff', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 20px rgba(99,102,241,.4)' }}>
+        style={{ position: 'fixed', bottom: 24, left: 20, zIndex: 50, width: 52, height: 52, borderRadius: '50%', background: 'linear-gradient(135deg, #8b5cf6, #6366f1)', color: '#fff', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 20px rgba(99,102,241,.4)' }}
+        className="lg:flex hidden">
         <Bot size={24} />
       </button>
     );
   }
 
   return (
-    <div style={{ position: 'fixed', bottom: 90, right: 20, zIndex: 55, width: 360, maxWidth: 'calc(100vw - 40px)', background: '#fff', borderRadius: 16, boxShadow: '0 8px 40px rgba(0,0,0,.15)', border: '1px solid #e2e8f0', display: 'flex', flexDirection: 'column', maxHeight: 480 }}>
+    <div style={{ position: 'fixed', bottom: 24, left: 20, zIndex: 55, width: 380, maxWidth: 'calc(100vw - 40px)', background: '#fff', borderRadius: 16, boxShadow: '0 8px 40px rgba(0,0,0,.15)', border: '1px solid #e2e8f0', display: 'flex', flexDirection: 'column', maxHeight: 480 }}>
       {/* Header */}
       <div style={{ padding: '12px 16px', background: 'linear-gradient(135deg, #8b5cf6, #6366f1)', borderRadius: '16px 16px 0 0', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>

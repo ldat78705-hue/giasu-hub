@@ -284,20 +284,22 @@ export const HomePublic: React.FC<HomePublicProps> = ({
         </section>
       )}
 
-      {/* ===== CTA ===== */}
+      {/* ===== CONTACT CTA ===== */}
       <section style={{ background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)', color: '#fff' }}>
-        <div style={{ ...W, paddingTop: 56, paddingBottom: 56, textAlign: 'center' }}>
-          <h2 style={{ fontSize: 26, fontWeight: 800, marginBottom: 8 }}>Bạn cần tìm gia sư?</h2>
-          <p style={{ fontSize: 14, color: '#94a3b8', marginBottom: 32 }}>Đăng ký miễn phí · Phản hồi trong 30 phút · Cam kết tiến bộ</p>
+        <div style={{ ...W, paddingTop: 48, paddingBottom: 48, textAlign: 'center' }}>
+          <h2 style={{ fontSize: 24, fontWeight: 800, marginBottom: 8 }}>Liên hệ tư vấn miễn phí</h2>
+          <p style={{ fontSize: 14, color: '#94a3b8', marginBottom: 28 }}>Phản hồi trong 30 phút · Cam kết tiến bộ sau 4 buổi</p>
           <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
-            <button onClick={() => onNavigate('parent-register')}
-              style={{ padding: '14px 32px', background: '#2563eb', color: '#fff', border: 'none', borderRadius: 10, fontSize: 15, fontWeight: 600, cursor: 'pointer', boxShadow: '0 4px 14px rgba(37,99,235,0.4)' }}>
-              Đăng ký tìm gia sư
-            </button>
             {zaloNumber && (
               <a href={`https://zalo.me/${zaloNumber}`} target="_blank" rel="noopener noreferrer"
-                style={{ padding: '14px 32px', background: 'rgba(255,255,255,0.08)', color: '#fff', border: '1px solid rgba(255,255,255,0.2)', borderRadius: 10, fontSize: 15, fontWeight: 600, textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 6 }}>
-                <Phone size={16} /> Zalo tư vấn
+                style={{ padding: '14px 32px', background: '#2563eb', color: '#fff', border: 'none', borderRadius: 10, fontSize: 15, fontWeight: 600, textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 8, boxShadow: '0 4px 14px rgba(37,99,235,0.4)' }}>
+                <MessageCircle size={18} /> Nhắn Zalo: {zaloNumber}
+              </a>
+            )}
+            {zaloNumber && (
+              <a href={`tel:${zaloNumber}`}
+                style={{ padding: '14px 32px', background: 'rgba(255,255,255,0.08)', color: '#fff', border: '1px solid rgba(255,255,255,0.2)', borderRadius: 10, fontSize: 15, fontWeight: 600, textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 8 }}>
+                <Phone size={18} /> Gọi ngay: {zaloNumber}
               </a>
             )}
           </div>

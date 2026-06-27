@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Phone, MessageCircle, UserPlus, HelpCircle, X, Send, CheckCircle2 } from 'lucide-react';
+import { Phone, MessageCircle, HelpCircle, X, Send, CheckCircle2 } from 'lucide-react';
 import { ContactMessage } from '../types';
 
 interface FloatingActionsProps {
@@ -52,12 +52,6 @@ export const FloatingActions: React.FC<FloatingActionsProps> = ({
             <button onClick={() => { setShowContact(true); setExpanded(false); }}
               style={{ ...btnBase, padding: '10px 18px', background: '#fff', color: '#334155' }}>
               <HelpCircle size={18} color="#2563eb" /> Yêu cầu tư vấn
-            </button>
-
-            {/* Đăng ký */}
-            <button onClick={() => { onNavigateRegister(); setExpanded(false); }}
-              style={{ ...btnBase, padding: '10px 18px', background: '#fff', color: '#334155' }}>
-              <UserPlus size={18} color="#16a34a" /> Tìm gia sư
             </button>
 
             {/* Zalo */}
