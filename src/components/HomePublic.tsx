@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { ClassItem, TutorItem, ActiveTab, ContactMessage } from '../types';
-import { Star, MapPin, ShieldCheck, Clock, CheckCircle2, Phone, ChevronRight, Send, X, MessageCircle } from 'lucide-react';
+import { Star, MapPin, Phone, ChevronRight } from 'lucide-react';
 
 interface HomePublicProps {
   classes: ClassItem[];
@@ -16,30 +16,10 @@ const W = { maxWidth: 1024, margin: '0 auto', padding: '0 20px' } as const;
 const fmt = (v: number) => new Intl.NumberFormat('vi-VN').format(v);
 
 export const HomePublic: React.FC<HomePublicProps> = ({
-  classes, tutors, onNavigate, zaloNumber, onContactSubmit,
+  classes, tutors, onNavigate, zaloNumber,
 }) => {
   const pending = classes.filter(c => c.status === 'ĐANG TÌM' || c.status === 'KHẨN CẤP');
   const verified = tutors.filter(t => t.verified && t.status === 'online');
-
-  // Contact popup state
-  const [showContact, setShowContact] = useState(false);
-  const [cName, setCName] = useState('');
-  const [cPhone, setCPhone] = useState('');
-  const [cMsg, setCMsg] = useState('');
-  const [cSent, setCSent] = useState(false);
-  const [cSending, setCSending] = useState(false);
-
-  const handleContact = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!cName || !cPhone || !onContactSubmit) return;
-    setCSending(true);
-    try {
-      await onContactSubmit({ name: cName, phone: cPhone, message: cMsg, createdAt: Date.now(), isRead: false });
-      setCSent(true);
-      setTimeout(() => { setCSent(false); setCName(''); setCPhone(''); setCMsg(''); setShowContact(false); }, 2500);
-    } catch (err) { console.error(err); }
-    finally { setCSending(false); }
-  };
 
   return (
     <div>
@@ -119,7 +99,7 @@ export const HomePublic: React.FC<HomePublicProps> = ({
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 16 }}>
               {verified.slice(0, 6).map(t => (
                 <div key={t.id || t.code} onClick={() => onNavigate('find-tutors')}
-                  style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 10, padding: 16, cursor: 'pointer', transition: 'border-color .15s' }}>
+                  style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 10, padding: 16, cursor: 'pointer' }}>
                   <div style={{ display: 'flex', gap: 12, alignItems: 'flex-start' }}>
                     <div style={{ width: 40, height: 40, borderRadius: 8, background: t.avatarColor || '#3b82f6', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontWeight: 700, fontSize: 14, flexShrink: 0 }}>
                       {t.avatar}
@@ -197,53 +177,15 @@ export const HomePublic: React.FC<HomePublicProps> = ({
               style={{ padding: '12px 28px', background: '#2563eb', color: '#fff', border: 'none', borderRadius: 8, fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>
               Đăng ký tìm gia sư
             </button>
-            <button onClick={() => setShowContact(true)}
-              style={{ padding: '12px 28px', background: 'transparent', color: '#fff', border: '1px solid #334155', borderRadius: 8, fontSize: 14, fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6 }}>
-              <MessageCircle size={16} /> Gửi yêu cầu tư vấn
-            </button>
             {zaloNumber && (
               <a href={`https://zalo.me/${zaloNumber}`} target="_blank" rel="noopener noreferrer"
                 style={{ padding: '12px 28px', background: 'transparent', color: '#fff', border: '1px solid #334155', borderRadius: 8, fontSize: 14, fontWeight: 600, textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 6 }}>
-                <Phone size={16} /> Zalo
+                <Phone size={16} /> Zalo tư vấn
               </a>
             )}
           </div>
         </div>
       </section>
-
-      {/* ===== CONTACT POPUP ===== */}
-      {showContact && (
-        <div style={{ position: 'fixed', inset: 0, zIndex: 60, background: 'rgba(0,0,0,.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 16 }}
-          onClick={(e) => { if (e.target === e.currentTarget) setShowContact(false); }}>
-          <div style={{ background: '#fff', borderRadius: 12, maxWidth: 420, width: '100%', padding: 24, position: 'relative' }}>
-            <button onClick={() => setShowContact(false)} style={{ position: 'absolute', top: 12, right: 12, background: 'none', border: 'none', cursor: 'pointer', color: '#94a3b8' }}>
-              <X size={20} />
-            </button>
-            <h3 style={{ fontSize: 18, fontWeight: 700, color: '#0f172a', marginBottom: 4 }}>Yêu cầu tư vấn</h3>
-            <p style={{ fontSize: 13, color: '#64748b', marginBottom: 20 }}>Để lại thông tin, trung tâm sẽ liên hệ trong 30 phút.</p>
-
-            {cSent ? (
-              <div style={{ textAlign: 'center', padding: '24px 0' }}>
-                <CheckCircle2 size={40} color="#22c55e" style={{ margin: '0 auto 8px', display: 'block' }} />
-                <div style={{ fontWeight: 700, color: '#0f172a' }}>Đã gửi thành công!</div>
-              </div>
-            ) : (
-              <form onSubmit={handleContact} style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-                <input required value={cName} onChange={e => setCName(e.target.value)} placeholder="Họ tên *"
-                  style={{ padding: '10px 14px', border: '1px solid #e2e8f0', borderRadius: 8, fontSize: 14, outline: 'none' }} />
-                <input required value={cPhone} onChange={e => setCPhone(e.target.value)} placeholder="Số điện thoại *" type="tel"
-                  style={{ padding: '10px 14px', border: '1px solid #e2e8f0', borderRadius: 8, fontSize: 14, outline: 'none' }} />
-                <textarea value={cMsg} onChange={e => setCMsg(e.target.value)} placeholder="Nội dung cần tư vấn..." rows={3}
-                  style={{ padding: '10px 14px', border: '1px solid #e2e8f0', borderRadius: 8, fontSize: 14, outline: 'none', resize: 'none' }} />
-                <button type="submit" disabled={cSending}
-                  style={{ padding: '12px 0', background: '#2563eb', color: '#fff', border: 'none', borderRadius: 8, fontSize: 14, fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
-                  <Send size={16} /> {cSending ? 'Đang gửi...' : 'Gửi yêu cầu'}
-                </button>
-              </form>
-            )}
-          </div>
-        </div>
-      )}
     </div>
   );
 };

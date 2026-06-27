@@ -1,17 +1,10 @@
 import React, { useState } from 'react';
-import { Mail, Send, Bell, FileText, Shield, Copy, Check, Smartphone } from 'lucide-react';
+import { Send, Bell, FileText, Shield, Copy, Check, Smartphone } from 'lucide-react';
 
-// #15 Email Templates, #16 PWA Notification, #19 Contract, #25 Role Config  
+// #19 Contract, #25 Role Config, #16 PWA
 export const AdvancedToolsTab: React.FC = () => {
-  const [activeSection, setActiveSection] = useState<'email' | 'contract' | 'roles' | 'pwa'>('email');
+  const [activeSection, setActiveSection] = useState<'contract' | 'roles' | 'pwa'>('contract');
   const [copiedId, setCopiedId] = useState<string | null>(null);
-
-  const emailTemplates = [
-    { id: 'confirm', subject: 'Xác nhận đăng ký', body: 'Kính gửi {parentName},\n\nTrung tâm Gia Sư Thành Đạt đã nhận đơn đăng ký tìm gia sư môn {subject} cho bé {studentName}.\n\nChúng tôi sẽ liên hệ anh/chị trong vòng 30 phút.\n\nTrân trọng,\nGia Sư Thành Đạt\nSĐT: 0822448444' },
-    { id: 'matched', subject: 'Đã ghép gia sư', body: 'Kính gửi {parentName},\n\nTrung tâm đã tìm được gia sư phù hợp cho bé {studentName}.\n\nGia sư: {tutorName}\nMôn: {subject}\nLịch học: {schedule}\n\nGS sẽ liên hệ anh/chị để sắp xếp buổi học thử.\n\nTrân trọng!' },
-    { id: 'invoice', subject: 'Thông báo học phí', body: 'Kính gửi {parentName},\n\nHọc phí tháng {month}:\n- Học sinh: {studentName}\n- Số buổi: {sessions}\n- Tổng: {amount}\n- Hạn thanh toán: {deadline}\n\nChuyển khoản: [STK] - [Ngân hàng]\nNội dung: HP {studentName} T{month}' },
-    { id: 'tutor_welcome', subject: 'Chào mừng gia sư mới', body: 'Chào {tutorName},\n\nChúc mừng bạn đã được xác minh thành công!\n\nMã gia sư: {tutorCode}\nSố lớp đang tuyển: {classCount}\n\nHãy kiểm tra thường xuyên để nhận lớp mới. Chúc bạn dạy tốt!' },
-  ];
 
   const contractTemplate = `HỢP ĐỒNG GIA SƯ
 Số: HD-{contractNo}
@@ -61,7 +54,6 @@ BÊN A _____________ BÊN B _____________`;
   };
 
   const sections = [
-    { id: 'email' as const, label: 'Email mẫu', icon: <Mail className="w-4 h-4" /> },
     { id: 'contract' as const, label: 'Hợp đồng', icon: <FileText className="w-4 h-4" /> },
     { id: 'roles' as const, label: 'Phân quyền', icon: <Shield className="w-4 h-4" /> },
     { id: 'pwa' as const, label: 'App & Push', icon: <Smartphone className="w-4 h-4" /> },
@@ -82,29 +74,6 @@ BÊN A _____________ BÊN B _____________`;
             }`}>{s.icon}{s.label}</button>
         ))}
       </div>
-
-      {/* #15 Email Templates */}
-      {activeSection === 'email' && (
-        <div className="space-y-3">
-          <p className="text-xs text-slate-500">Mẫu email để gửi qua Gmail/Zalo. Copy nội dung → dán vào email.</p>
-          {emailTemplates.map(tmpl => (
-            <div key={tmpl.id} className="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs">
-              <div className="flex items-start justify-between gap-3">
-                <div className="flex-1">
-                  <h3 className="text-sm font-bold text-slate-800 mb-1 flex items-center gap-2">
-                    <Mail className="w-3.5 h-3.5 text-blue-500" /> {tmpl.subject}
-                  </h3>
-                  <pre className="text-xs text-slate-600 leading-relaxed bg-slate-50 p-3 rounded-xl border border-slate-100 whitespace-pre-wrap font-sans">{tmpl.body}</pre>
-                </div>
-                <button onClick={() => copy(tmpl.id, tmpl.body)}
-                  className={`px-3 py-2 rounded-xl text-xs font-bold cursor-pointer flex items-center gap-1 shrink-0 ${
-                    copiedId === tmpl.id ? 'bg-emerald-100 text-emerald-700' : 'bg-blue-600 text-white'
-                  }`}>{copiedId === tmpl.id ? <><Check className="w-3 h-3" /> Đã copy</> : <><Copy className="w-3 h-3" /> Copy</>}</button>
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
 
       {/* #19 Contract Template */}
       {activeSection === 'contract' && (

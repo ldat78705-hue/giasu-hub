@@ -17,12 +17,10 @@ import { StudentTab } from './components/StudentTab';
 import { FinanceTab } from './components/FinanceTab';
 import { SettingsTab } from './components/SettingsTab';
 import { ApplicationsTab } from './components/ApplicationsTab';
-import { SeoConfigTab } from './components/SeoConfigTab';
 import { RegistrationsTab } from './components/RegistrationsTab';
 import { ContactsTab } from './components/ContactsTab';
 import { MatchesTab } from './components/MatchesTab';
 import { KPIDashboard } from './components/KPIDashboard';
-import { TemplatesTab } from './components/TemplatesTab';
 import { ReviewsTab } from './components/ReviewsTab';
 import { AttendanceTab } from './components/AttendanceTab';
 import { CalendarView } from './components/CalendarView';
@@ -643,9 +641,6 @@ export default function App() {
             <FinanceTab transactions={transactions} onAddTransaction={handleAddTransaction} onDeleteTransaction={handleDeleteTransaction} />
           )}
 
-          {adminTab === 'seo' && (
-            <SeoConfigTab onRunAiSeo={runAiSeo} />
-          )}
 
           {adminTab === 'reviews' && (
             <ReviewsTab reviews={reviews} tutors={tutors} onAddReview={handleAddReview} onDeleteReview={handleDeleteReview} />
@@ -659,9 +654,6 @@ export default function App() {
             <CalendarView matches={matches} attendance={attendance} />
           )}
 
-          {adminTab === 'templates' && (
-            <TemplatesTab />
-          )}
 
           {(adminTab as string) === 'import' && (
             <ImportTab tutors={tutors} students={students} onImportTutors={handleImportTutors} onImportStudents={handleImportStudents} />
@@ -676,7 +668,7 @@ export default function App() {
           )}
 
           {adminTab === 'blog' && (
-            <BlogTab />
+            <BlogTab onRunAiSeo={runAiSeo} />
           )}
 
           {adminTab === 'advanced' && (
