@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { TutorItem, ClassMatch, AttendanceRecord, TutorReview, ClassItem } from '../types';
-import { GraduationCap, BookOpen, Calendar, DollarSign, Star, CheckCircle2, Clock, XCircle, AlertCircle, LogOut, Search, PhoneOff } from 'lucide-react';
+import { GraduationCap, BookOpen, Calendar, DollarSign, Star, CheckCircle2, Clock, XCircle, AlertCircle, LogOut, Search, PhoneOff, RotateCcw } from 'lucide-react';
 
 interface TutorPortalProps {
   tutors: TutorItem[];
@@ -10,11 +10,12 @@ interface TutorPortalProps {
   classes: ClassItem[];
   onLogout: () => void;
   onReportAbsence?: (record: Omit<AttendanceRecord, 'id'>) => Promise<void>;
+  onReturnClass?: (matchId: string, tutorCode: string, reason: string) => Promise<void>;
 }
 
 const fmt = (v: number) => new Intl.NumberFormat('vi-VN').format(v);
 
-export const TutorPortal: React.FC<TutorPortalProps> = ({ tutors, matches, attendance, reviews, classes, onLogout, onReportAbsence }) => {
+export const TutorPortal: React.FC<TutorPortalProps> = ({ tutors, matches, attendance, reviews, classes, onLogout, onReportAbsence, onReturnClass }) => {
   const [gsCode, setGsCode] = useState('');
   const [gsPhone, setGsPhone] = useState('');
   const [loggedIn, setLoggedIn] = useState(false);
@@ -185,6 +186,17 @@ export const TutorPortal: React.FC<TutorPortalProps> = ({ tutors, matches, atten
                   <div>📅 {new Date(m.startDate).toLocaleDateString('vi-VN')}</div>
                   <div>✅ {taught}/{matchAtt.length} buổi đã dạy</div>
                 </div>
+                {onReturnClass && (
+                  <button onClick={async () => {
+                    const reason = window.prompt('Lý do trả lớp:');
+                    if (!reason) return;
+                    if (!window.confirm(`Xác nhận trả lớp ${m.classSubject}?\nLý do: ${reason}`)) return;
+                    await onReturnClass(m.id!, tutor.code, reason);
+                    alert('Đã gửi yêu cầu trả lớp. Admin sẽ xem xét.');
+                  }} style={{ marginTop: 10, padding: '8px 14px', background: '#fef2f2', border: '1px solid #fecaca', borderRadius: 8, fontSize: 12, fontWeight: 600, color: '#dc2626', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 4, width: 'fit-content' }}>
+                    <RotateCcw size={12} /> Trả lớp
+                  </button>
+                )}
               </div>
             );
           })}

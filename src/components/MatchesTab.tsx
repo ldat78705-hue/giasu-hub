@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { ClassMatch, ClassItem, TutorItem, InternalNote } from '../types';
-import { Plus, CheckCircle2, XCircle, Clock, Trash2, Search, Download, MessageSquare, Pin, DollarSign } from 'lucide-react';
+import { Plus, CheckCircle2, XCircle, Clock, Trash2, Search, Download, MessageSquare, Pin, DollarSign, Printer } from 'lucide-react';
+import { generateConnectionContract } from '../utils';
 
 interface MatchesTabProps {
   matches: ClassMatch[];
@@ -11,9 +12,12 @@ interface MatchesTabProps {
   onDeleteMatch: (id: string) => void;
   onAddNote?: (matchId: string, note: InternalNote) => void;
   onCollectFee?: (matchId: string, tutorName: string, classSubject: string, fee: number) => void;
+  centerName?: string;
+  centerPhone?: string;
+  bankInfo?: { bankName?: string; bankAccount?: string; bankAccountName?: string; bankBin?: string };
 }
 
-export const MatchesTab: React.FC<MatchesTabProps> = ({ matches, classes, tutors, onAddMatch, onUpdateStatus, onDeleteMatch, onAddNote, onCollectFee }) => {
+export const MatchesTab: React.FC<MatchesTabProps> = ({ matches, classes, tutors, onAddMatch, onUpdateStatus, onDeleteMatch, onAddNote, onCollectFee, centerName, centerPhone, bankInfo }) => {
   const [showAdd, setShowAdd] = useState(false);
   const [filter, setFilter] = useState<'all' | 'Đang dạy' | 'Hoàn thành' | 'Hủy'>('all');
   const [search, setSearch] = useState('');
@@ -190,6 +194,11 @@ export const MatchesTab: React.FC<MatchesTabProps> = ({ matches, classes, tutors
                             </button>
                           );
                         })()}
+                        <button onClick={() => generateConnectionContract(m, centerName || 'Gia Sư Thành Đạt', centerPhone || '', bankInfo)}
+                          title="In biên bản kết nối"
+                          className="px-2 py-1 hover:bg-blue-50 text-slate-400 hover:text-blue-600 rounded-lg cursor-pointer">
+                          <Printer className="w-3 h-3" />
+                        </button>
                         <button onClick={() => m.id && window.confirm(`Xóa ghép lớp ${m.classSubject} - ${m.tutorName}?`) && onDeleteMatch(m.id)}
                           className="px-2 py-1 hover:bg-red-50 text-slate-400 hover:text-red-600 rounded-lg cursor-pointer">
                           <Trash2 className="w-3 h-3" />

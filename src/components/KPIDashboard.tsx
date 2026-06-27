@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { ClassMatch, TutorItem, ParentRegistration, TransactionItem, AttendanceRecord } from '../types';
 import { calculateKPIs } from '../utils';
-import { TrendingUp, TrendingDown, Users, Target, BarChart3, Activity, Download, FileText, Share2, Megaphone, MapPin } from 'lucide-react';
+import { TrendingUp, TrendingDown, Users, Target, BarChart3, Activity, Download, FileText, Share2, Megaphone, MapPin, Filter } from 'lucide-react';
 
 interface KPIDashboardProps {
   matches: ClassMatch[];
@@ -12,7 +12,7 @@ interface KPIDashboardProps {
 }
 
 export const KPIDashboard: React.FC<KPIDashboardProps> = ({ matches, registrations, tutors, transactions = [], attendance = [] }) => {
-  const [activeView, setActiveView] = useState<'kpi' | 'report' | 'sources' | 'referrals' | 'areas'>('kpi');
+  const [activeView, setActiveView] = useState<'kpi' | 'report' | 'sources' | 'referrals' | 'areas' | 'funnel'>('kpi');
   const kpi = calculateKPIs(matches, registrations, tutors);
   const fmt = (v: number) => new Intl.NumberFormat('vi-VN').format(v);
   const maxRev = Math.max(...kpi.monthlyRevenue.map(m => m.revenue), 1);
@@ -86,6 +86,7 @@ export const KPIDashboard: React.FC<KPIDashboardProps> = ({ matches, registratio
     { id: 'sources' as const, label: 'Nguồn khách', icon: <Megaphone className="w-3.5 h-3.5" /> },
     { id: 'referrals' as const, label: 'Giới thiệu', icon: <Share2 className="w-3.5 h-3.5" /> },
     { id: 'areas' as const, label: 'Khu vực', icon: <MapPin className="w-3.5 h-3.5" /> },
+    { id: 'funnel' as const, label: 'Phễu', icon: <Filter className="w-3.5 h-3.5" /> },
   ];
 
   return (
@@ -377,6 +378,71 @@ export const KPIDashboard: React.FC<KPIDashboardProps> = ({ matches, registratio
                     </div>
                   );
                 })}
+              </div>
+            </div>
+          </div>
+        );
+      })()}
+      {/* F43: Conversion Funnel */}
+      {activeView === 'funnel' && (() => {
+        const totalRegs = registrations.length;
+        const contacted = registrations.filter(r => r.status === 'Đã liên hệ' || r.status === 'Đã xếp lớp').length;
+        const matched = registrations.filter(r => r.status === 'Đã xếp lớp').length;
+        const feePaid = matches.filter(m => m.feePaid).length;
+        const cancelled = registrations.filter(r => r.status === 'Hủy').length;
+
+        const funnelSteps = [
+          { label: 'Đơn đăng ký', count: totalRegs, color: '#3b82f6', icon: '📋' },
+          { label: 'Đã liên hệ', count: contacted, color: '#f59e0b', icon: '📞' },
+          { label: 'Đã ghép lớp', count: matched, color: '#22c55e', icon: '✅' },
+          { label: 'Đã thu phí KN', count: feePaid, color: '#8b5cf6', icon: '💰' },
+        ];
+
+        return (
+          <div className="bg-white rounded-2xl border border-slate-200 shadow-xs p-6">
+            <h3 className="text-sm font-bold text-slate-800 flex items-center gap-2 mb-6">
+              <Filter className="w-4 h-4 text-purple-600" /> Phễu chuyển đổi
+            </h3>
+            <div className="space-y-3">
+              {funnelSteps.map((step, i) => {
+                const pct = totalRegs > 0 ? Math.round(step.count / totalRegs * 100) : 0;
+                const dropOff = i > 0 ? funnelSteps[i - 1].count - step.count : 0;
+                const dropPct = i > 0 && funnelSteps[i - 1].count > 0 ? Math.round(dropOff / funnelSteps[i - 1].count * 100) : 0;
+                return (
+                  <div key={step.label}>
+                    <div className="flex justify-between items-center mb-1">
+                      <span className="text-xs font-bold text-slate-700">{step.icon} {step.label}</span>
+                      <div className="flex items-center gap-2">
+                        <span className="text-lg font-bold" style={{ color: step.color }}>{step.count}</span>
+                        <span className="text-[10px] font-bold px-1.5 py-0.5 rounded" style={{ background: step.color + '15', color: step.color }}>{pct}%</span>
+                        {i > 0 && dropOff > 0 && (
+                          <span className="text-[9px] font-bold text-red-500">-{dropOff} ({dropPct}%)</span>
+                        )}
+                      </div>
+                    </div>
+                    <div className="h-6 bg-slate-100 rounded-lg overflow-hidden">
+                      <div className="h-full rounded-lg transition-all duration-500" style={{ width: `${Math.max(pct, 2)}%`, background: step.color }} />
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+            <div className="mt-6 grid grid-cols-2 gap-4">
+              <div className="bg-emerald-50 rounded-xl p-4 text-center">
+                <div className="text-2xl font-bold text-emerald-600">{totalRegs > 0 ? Math.round(matched / totalRegs * 100) : 0}%</div>
+                <div className="text-[10px] font-bold text-emerald-700 mt-1">Tỷ lệ ghép thành công</div>
+              </div>
+              <div className="bg-red-50 rounded-xl p-4 text-center">
+                <div className="text-2xl font-bold text-red-600">{totalRegs > 0 ? Math.round(cancelled / totalRegs * 100) : 0}%</div>
+                <div className="text-[10px] font-bold text-red-700 mt-1">Tỷ lệ hủy</div>
+              </div>
+              <div className="bg-purple-50 rounded-xl p-4 text-center">
+                <div className="text-2xl font-bold text-purple-600">{matched > 0 ? Math.round(feePaid / matched * 100) : 0}%</div>
+                <div className="text-[10px] font-bold text-purple-700 mt-1">Tỷ lệ thu phí</div>
+              </div>
+              <div className="bg-blue-50 rounded-xl p-4 text-center">
+                <div className="text-2xl font-bold text-blue-600">{fmt(matches.filter(m => m.feePaid && m.feeAmount).reduce((s, m) => s + (m.feeAmount || 0), 0))}đ</div>
+                <div className="text-[10px] font-bold text-blue-700 mt-1">Doanh thu KN đã thu</div>
               </div>
             </div>
           </div>

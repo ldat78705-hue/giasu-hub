@@ -173,6 +173,11 @@ export interface AdminSettings {
   feeConfig?: FeeConfigItem[];
   // Feature 17: Admin role
   adminRole?: AdminRole;
+  // F42: Bank info for QR payment
+  bankName?: string; // VD: 'Techcombank'
+  bankAccount?: string; // Số TK
+  bankAccountName?: string; // Tên TK
+  bankBin?: string; // Mã BIN ngân hàng (VD: 970407)
 }
 
 export interface FeeConfigItem {

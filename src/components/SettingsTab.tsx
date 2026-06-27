@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { AdminSettings, FeeConfigItem, AdminRole, ADMIN_ROLE_CONFIG } from '../types';
-import { Settings, Key, Building2, Phone, Mail, MapPin, Save, CheckCircle2, AlertCircle, Eye, EyeOff, Sparkles, RefreshCw, Trash2, Shield, MessageCircle, Globe, Cloud, Plus, X, Search, DollarSign } from 'lucide-react';
+import { Settings, Key, Building2, Phone, Mail, MapPin, Save, CheckCircle2, AlertCircle, Eye, EyeOff, Sparkles, RefreshCw, Trash2, Shield, MessageCircle, Globe, Cloud, Plus, X, Search, DollarSign, CreditCard } from 'lucide-react';
 import { DEFAULT_HANOI_WARDS } from '../hanoiWards';
 
 const SUBJECTS_FEE = ['Toán', 'Văn', 'Anh', 'Lý', 'Hóa', 'Sinh', 'Sử', 'Địa', 'Tin học', 'IELTS', 'Tiếng Nhật', 'Tiếng Hàn', 'Piano', 'Guitar'];
@@ -40,6 +40,11 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({ settings, onSaveSettin
   const [feeOnline, setFeeOnline] = useState(150000);
   // Feature 17: Admin role
   const [adminRole, setAdminRole] = useState<AdminRole>(settings.adminRole || 'super_admin');
+  // F42: Bank info
+  const [bankName, setBankName] = useState(settings.bankName || '');
+  const [bankAccount, setBankAccount] = useState(settings.bankAccount || '');
+  const [bankAccountName, setBankAccountName] = useState(settings.bankAccountName || '');
+  const [bankBin, setBankBin] = useState(settings.bankBin || '');
 
   useEffect(() => {
     setCenterName(settings.centerName || 'Gia Sư Thành Đạt');
@@ -72,6 +77,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({ settings, onSaveSettin
         wards,
         feeConfig,
         adminRole,
+        bankName, bankAccount, bankAccountName, bankBin,
         updatedAt: Date.now(),
       });
       setSaveSuccess(true);
@@ -372,6 +378,51 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({ settings, onSaveSettin
               </span>
             )}
           </div>
+        </div>
+
+        {/* F42: Bank Info for QR */}
+        <div className="bg-white rounded-2xl border border-slate-200 shadow-xs p-6 space-y-4">
+          <div className="flex items-center gap-2 border-b border-slate-100 pb-4">
+            <div className="p-2 bg-emerald-50 text-emerald-600 rounded-xl">
+              <CreditCard className="w-5 h-5" />
+            </div>
+            <div>
+              <h3 className="font-bold text-slate-800">Tài khoản ngân hàng</h3>
+              <p className="text-[11px] text-slate-500">QR thanh toán phí kết nối cho gia sư</p>
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="block text-[11px] font-bold uppercase text-slate-600 mb-1">Ngân hàng</label>
+              <select value={bankName} onChange={e => setBankName(e.target.value)}
+                className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-blue-500 text-sm">
+                <option value="">-- Chọn --</option>
+                {['Techcombank', 'Vietcombank', 'BIDV', 'VietinBank', 'MB Bank', 'ACB', 'Sacombank', 'TPBank', 'VPBank', 'Agribank'].map(b => (
+                  <option key={b} value={b}>{b}</option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label className="block text-[11px] font-bold uppercase text-slate-600 mb-1">Mã BIN</label>
+              <input type="text" value={bankBin} onChange={e => setBankBin(e.target.value)} placeholder="VD: 970407"
+                className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-blue-500 text-sm" />
+            </div>
+          </div>
+          <div>
+            <label className="block text-[11px] font-bold uppercase text-slate-600 mb-1">Số tài khoản</label>
+            <input type="text" value={bankAccount} onChange={e => setBankAccount(e.target.value)} placeholder="0123456789"
+              className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-blue-500 text-sm" />
+          </div>
+          <div>
+            <label className="block text-[11px] font-bold uppercase text-slate-600 mb-1">Chủ tài khoản</label>
+            <input type="text" value={bankAccountName} onChange={e => setBankAccountName(e.target.value)} placeholder="NGUYEN VAN A"
+              className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-blue-500 text-sm" />
+          </div>
+          {bankAccount && bankBin && (
+            <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-3 text-xs text-emerald-700">
+              ✅ Đã cấu hình — QR sẽ hiện khi thu phí kết nối
+            </div>
+          )}
         </div>
 
         {/* Ward Management */}

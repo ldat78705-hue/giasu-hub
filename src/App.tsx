@@ -633,6 +633,27 @@ export default function App() {
                     await addDoc(collection(db, 'attendance'), record);
                     await addDoc(collection(db, 'notifications'), { type: 'system', title: 'GS báo nghỉ', message: `${record.tutorName} báo nghỉ lớp ${record.classCode} ngày ${record.date}`, isRead: false, createdAt: Date.now() });
                     logActivity('GS báo nghỉ (Portal)', record.classCode, `${record.tutorName} — ${record.date}`, 'tutor');
+                  }}
+                  onReturnClass={async (matchId, tutorCode, reason) => {
+                    const match = matches.find(m => m.id === matchId);
+                    if (!match) return;
+                    // Cancel match
+                    await updateDoc(doc(db, 'matches', matchId), { status: 'Hủy', note: `GS trả lớp: ${reason}`, endDate: Date.now() });
+                    // Reopen class
+                    const cls = classes.find(c => c.code === match.classCode);
+                    if (cls?.id) await updateDoc(doc(db, 'classes', cls.id), { status: 'ĐANG TÌM' });
+                    // Auto-refund if fee was paid
+                    if (match.feePaid && match.feeAmount) {
+                      await addDoc(collection(db, 'transactions'), {
+                        receiptId: `HT-${Math.floor(1000 + Math.random() * 9000)}`,
+                        type: 'Hoàn tiền', amount: match.feeAmount,
+                        targetName: `${match.tutorName} — Trả lớp ${match.classSubject}`,
+                        date: new Date().toLocaleDateString('vi-VN') + ' ' + new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }),
+                        status: 'Thành công', matchId,
+                      });
+                    }
+                    await addDoc(collection(db, 'notifications'), { type: 'system', title: 'GS trả lớp', message: `${match.tutorName} trả lớp ${match.classSubject}: ${reason}`, isRead: false, createdAt: Date.now() });
+                    logActivity('GS trả lớp', match.classCode, `${match.tutorName}: ${reason}`, 'match');
                   }} />
               </div>
             } />
@@ -721,7 +742,9 @@ export default function App() {
             <MatchesTab matches={matches} classes={classes} tutors={tutors}
               onAddMatch={handleAddMatch} onUpdateStatus={handleUpdateMatchStatus}
               onDeleteMatch={handleDeleteMatch} onAddNote={handleAddMatchNote}
-              onCollectFee={handleCollectFee} />
+              onCollectFee={handleCollectFee}
+              centerName={settings.centerName} centerPhone={settings.centerPhone}
+              bankInfo={{ bankName: settings.bankName, bankAccount: settings.bankAccount, bankAccountName: settings.bankAccountName, bankBin: settings.bankBin }} />
           )}
 
           {adminTab === 'students' && (

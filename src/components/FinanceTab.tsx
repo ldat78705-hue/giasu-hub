@@ -90,6 +90,40 @@ export const FinanceTab: React.FC<FinanceTabProps> = ({ transactions, onAddTrans
         </div>
       </div>
 
+      {/* F39: Monthly Revenue Trend */}
+      {transactions.length > 0 && (() => {
+        const monthlyData: Record<string, { income: number; refund: number; expense: number }> = {};
+        transactions.forEach(t => {
+          const dateParts = t.date.split(/[/, ]/);
+          const key = dateParts.length >= 2 ? `${dateParts[1]}/${dateParts[2] || new Date().getFullYear()}` : 'N/A';
+          if (!monthlyData[key]) monthlyData[key] = { income: 0, refund: 0, expense: 0 };
+          if (t.type === 'Thu phí gia sư') monthlyData[key].income += t.amount;
+          else if (t.type === 'Hoàn tiền') monthlyData[key].refund += t.amount;
+          else monthlyData[key].expense += t.amount;
+        });
+        const months = Object.entries(monthlyData).slice(-4);
+        const maxVal = Math.max(...months.map(([, d]) => d.income), 1);
+        return (
+          <div className="bg-white rounded-2xl border border-slate-200 shadow-xs p-5">
+            <h4 className="text-xs font-bold uppercase text-slate-500 tracking-wider mb-4">📊 Doanh thu phí KN theo tháng</h4>
+            <div className="flex items-end gap-3" style={{ height: 120 }}>
+              {months.map(([month, data]) => {
+                const h = Math.max(Math.round(data.income / maxVal * 100), 4);
+                const net = data.income - data.refund - data.expense;
+                return (
+                  <div key={month} className="flex-1 flex flex-col items-center">
+                    <div className="text-[9px] font-bold text-emerald-600 mb-1">{formatCurrency(data.income)}đ</div>
+                    <div className="w-full rounded-t-lg transition-all" style={{ height: h, background: net >= 0 ? 'linear-gradient(135deg, #059669, #10b981)' : 'linear-gradient(135deg, #dc2626, #ef4444)' }} />
+                    <div className="text-[10px] font-bold text-slate-600 mt-2">{month}</div>
+                    {data.refund > 0 && <div className="text-[8px] text-red-500">-{formatCurrency(data.refund)}đ</div>}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        );
+      })()}
+
       {/* Transactions Table */}
       <div className="bg-white rounded-2xl border border-slate-200 shadow-xs p-6">
         <div className="flex items-center justify-between mb-4">

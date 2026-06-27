@@ -30,6 +30,77 @@ export const generateReceiptPDF = (receipt: {
   if (w) { w.document.write(html); w.document.close(); w.print(); }
 };
 
+// F37: Connection Contract Generator
+export const generateConnectionContract = (match: {
+  classCode: string; classSubject: string; tutorName: string; tutorCode: string;
+  studentName?: string; parentPhone?: string; fee: number;
+  sessionsPerMonth?: number; feePercent?: number; feeAmount?: number;
+}, centerName: string, centerPhone: string, bankInfo?: { bankName?: string; bankAccount?: string; bankAccountName?: string; bankBin?: string }) => {
+  const fmt = (v: number) => new Intl.NumberFormat('vi-VN').format(v);
+  const sessions = match.sessionsPerMonth || 8;
+  const pct = match.feePercent || 40;
+  const connectionFee = match.feeAmount || Math.round(match.fee * sessions * pct / 100);
+  const today = new Date().toLocaleDateString('vi-VN');
+
+  const qrSection = bankInfo?.bankAccount && bankInfo?.bankBin
+    ? `<div style="text-align:center;margin:20px 0">
+        <p style="font-size:12px;color:#64748b;margin-bottom:8px">Quét QR để chuyển khoản phí kết nối:</p>
+        <img src="https://img.vietqr.io/image/${bankInfo.bankBin}-${bankInfo.bankAccount}-compact2.jpg?amount=${connectionFee}&addInfo=${encodeURIComponent(match.classCode + ' ' + match.tutorName)}&accountName=${encodeURIComponent(bankInfo.bankAccountName || '')}" style="max-width:200px;border-radius:12px;border:2px solid #e2e8f0" />
+        <p style="font-size:11px;color:#94a3b8;margin-top:6px">${bankInfo.bankName || ''} — ${bankInfo.bankAccount}</p>
+      </div>` : '';
+
+  const html = `<!DOCTYPE html><html><head><meta charset="utf-8"><title>Biên bản kết nối ${match.classCode}</title>
+<style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:'Segoe UI',sans-serif;padding:40px;max-width:700px;margin:0 auto;font-size:13px;color:#334155}
+.header{text-align:center;border-bottom:3px solid #1e40af;padding-bottom:16px;margin-bottom:24px}
+.header h1{font-size:20px;color:#1e40af;margin-bottom:4px}.header p{font-size:12px;color:#64748b}
+.title{text-align:center;font-size:16px;font-weight:700;color:#0f172a;margin:20px 0;text-transform:uppercase;letter-spacing:1px}
+table{width:100%;border-collapse:collapse;margin:16px 0}td{padding:8px 12px;border:1px solid #e2e8f0}
+td.label{background:#f8fafc;font-weight:600;width:35%;color:#475569}
+.fee-box{background:#eff6ff;border:2px solid #3b82f6;border-radius:12px;padding:16px;text-align:center;margin:20px 0}
+.fee-box .amount{font-size:28px;font-weight:800;color:#1e40af}
+.rules{background:#f8fafc;border-radius:8px;padding:16px;margin:16px 0}
+.rules h4{font-size:13px;font-weight:700;color:#0f172a;margin-bottom:8px}
+.rules li{margin:4px 0;font-size:12px;color:#475569}
+.sign{display:flex;justify-content:space-between;margin-top:40px;padding-top:20px;border-top:1px solid #e2e8f0}
+.sign div{text-align:center;width:45%}.sign p:first-child{font-weight:600;margin-bottom:60px}
+@media print{body{padding:20px}}</style></head><body>
+<div class="header"><h1>${centerName}</h1><p>SĐT: ${centerPhone}</p></div>
+<div class="title">Biên bản kết nối gia sư</div>
+<p style="text-align:center;color:#64748b;margin-bottom:16px">Ngày: ${today} — Mã: ${match.classCode}</p>
+<table>
+  <tr><td class="label">Gia sư</td><td>${match.tutorName} (${match.tutorCode})</td></tr>
+  <tr><td class="label">Môn dạy</td><td>${match.classSubject}</td></tr>
+  <tr><td class="label">Học sinh</td><td>${match.studentName || '—'}</td></tr>
+  <tr><td class="label">SĐT phụ huynh</td><td>${match.parentPhone || '—'}</td></tr>
+  <tr><td class="label">Phí/buổi</td><td>${fmt(match.fee)}đ</td></tr>
+  <tr><td class="label">Số buổi/tháng</td><td>${sessions} buổi</td></tr>
+</table>
+<div class="fee-box">
+  <p style="font-size:12px;color:#64748b;margin-bottom:8px">Phí kết nối 1 lần (${pct}% tháng đầu)</p>
+  <div class="amount">${fmt(connectionFee)} VNĐ</div>
+  <p style="font-size:11px;color:#94a3b8;margin-top:4px">= ${fmt(match.fee)}đ × ${sessions} buổi × ${pct}%</p>
+</div>
+${qrSection}
+<div class="rules">
+  <h4>📋 Quy định</h4>
+  <ol>
+    <li>Gia sư nộp phí kết nối <strong>1 lần duy nhất</strong> khi nhận lớp.</li>
+    <li>Phụ huynh thanh toán học phí <strong>trực tiếp cho gia sư</strong> theo thỏa thuận.</li>
+    <li>Trung tâm <strong>không thu thêm bất kỳ khoản nào</strong> sau phí kết nối.</li>
+    <li>Gia sư có quyền trả lớp nếu báo trước ít nhất 3 ngày.</li>
+    <li>Phí kết nối sẽ được hoàn trả nếu trung tâm không tìm được lớp phù hợp.</li>
+  </ol>
+</div>
+<div class="sign">
+  <div><p>Đại diện Trung tâm</p><p>________________</p></div>
+  <div><p>Gia sư</p><p>________________</p></div>
+</div>
+<div style="text-align:center;margin-top:24px;font-size:10px;color:#94a3b8">In ngày: ${today} — ${centerName} — ${centerPhone}</div>
+</body></html>`;
+  const w = window.open('', '_blank');
+  if (w) { w.document.write(html); w.document.close(); w.print(); }
+};
+
 // ===== Duplicate Detection =====
 export const findDuplicates = <T extends { phone?: string; parentPhone?: string; name?: string; parentName?: string }>(
   items: T[], newPhone: string, newName?: string
