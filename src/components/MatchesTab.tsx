@@ -26,6 +26,8 @@ export const MatchesTab: React.FC<MatchesTabProps> = ({ matches, classes, tutors
   const [studentName, setStudentName] = useState('');
   const [parentPhone, setParentPhone] = useState('');
   const [fee, setFee] = useState(250000);
+  const [sessionsPerMonth, setSessionsPerMonth] = useState(8);
+  const [feePercent, setFeePercent] = useState(40);
   const [note, setNote] = useState('');
 
   const filtered = matches
@@ -52,10 +54,12 @@ export const MatchesTab: React.FC<MatchesTabProps> = ({ matches, classes, tutors
       classCode: cls.code, classSubject: cls.subject,
       tutorCode: tutor.code, tutorName: tutor.name,
       studentName, parentPhone, fee: Number(fee) || 250000,
+      sessionsPerMonth: sessionsPerMonth || 8,
+      feePercent: feePercent || 40,
       startDate: Date.now(), status: 'Đang dạy', note,
       createdAt: Date.now(),
     });
-    setShowAdd(false); setSelClass(''); setSelTutor(''); setStudentName(''); setParentPhone(''); setNote('');
+    setShowAdd(false); setSelClass(''); setSelTutor(''); setStudentName(''); setParentPhone(''); setNote(''); setSessionsPerMonth(8); setFeePercent(40);
   };
 
   const exportCsv = () => {
@@ -174,12 +178,18 @@ export const MatchesTab: React.FC<MatchesTabProps> = ({ matches, classes, tutors
                             </button>
                           </>
                         )}
-                        {m.status === 'Đang dạy' && !m.feePaid && onCollectFee && (
-                          <button onClick={() => m.id && onCollectFee(m.id, m.tutorName, m.classSubject, m.fee)}
-                            className="px-2 py-1 bg-emerald-50 hover:bg-emerald-600 text-emerald-600 hover:text-white text-[10px] font-bold rounded-lg cursor-pointer flex items-center gap-1 transition-colors">
-                            <DollarSign className="w-3 h-3" /> Thu phí
-                          </button>
-                        )}
+                        {m.status === 'Đang dạy' && !m.feePaid && onCollectFee && (() => {
+                          const s = m.sessionsPerMonth || 8;
+                          const p = m.feePercent || 40;
+                          const calcFee = Math.round(m.fee * s * p / 100);
+                          return (
+                            <button onClick={() => m.id && onCollectFee(m.id, m.tutorName, m.classSubject, m.fee)}
+                              title={`${fmt(m.fee)}đ × ${s} buổi × ${p}% = ${fmt(calcFee)}đ`}
+                              className="px-2 py-1 bg-emerald-50 hover:bg-emerald-600 text-emerald-600 hover:text-white text-[10px] font-bold rounded-lg cursor-pointer flex items-center gap-1 transition-colors">
+                              <DollarSign className="w-3 h-3" /> {fmt(calcFee)}đ
+                            </button>
+                          );
+                        })()}
                         <button onClick={() => m.id && window.confirm(`Xóa ghép lớp ${m.classSubject} - ${m.tutorName}?`) && onDeleteMatch(m.id)}
                           className="px-2 py-1 hover:bg-red-50 text-slate-400 hover:text-red-600 rounded-lg cursor-pointer">
                           <Trash2 className="w-3 h-3" />
@@ -255,8 +265,9 @@ export const MatchesTab: React.FC<MatchesTabProps> = ({ matches, classes, tutors
           <div className="text-2xl font-bold text-blue-600 mt-1">{doneCount}</div>
         </div>
         <div className="bg-white rounded-xl border border-slate-200 p-4 shadow-xs">
-          <div className="text-[10px] font-bold uppercase text-slate-400 tracking-wider">Tổng phí</div>
-          <div className="text-2xl font-bold text-amber-600 mt-1">{fmt(matches.filter(m => m.status !== 'Hủy').reduce((s, m) => s + m.fee, 0))}đ</div>
+          <div className="text-[10px] font-bold uppercase text-slate-400 tracking-wider">Phí KN đã thu</div>
+          <div className="text-2xl font-bold text-amber-600 mt-1">{fmt(matches.filter(m => m.feePaid && m.feeAmount).reduce((s, m) => s + (m.feeAmount || 0), 0))}đ</div>
+          <div className="text-[10px] text-slate-400 mt-0.5">{matches.filter(m => m.feePaid).length}/{matches.filter(m => m.status === 'Đang dạy').length} lớp</div>
         </div>
       </div>
 
@@ -299,6 +310,24 @@ export const MatchesTab: React.FC<MatchesTabProps> = ({ matches, classes, tutors
                 <input type="number" value={fee} onChange={e => setFee(Number(e.target.value))} min={50000} step={10000}
                   className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-blue-500" />
               </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs font-bold uppercase text-slate-600 mb-1">Buổi/tháng</label>
+                  <input type="number" value={sessionsPerMonth} onChange={e => setSessionsPerMonth(Number(e.target.value))} min={1} max={30}
+                    className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-blue-500" />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold uppercase text-slate-600 mb-1">Phí KN (%)</label>
+                  <input type="number" value={feePercent} onChange={e => setFeePercent(Number(e.target.value))} min={10} max={100} step={5}
+                    className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-blue-500" />
+                </div>
+              </div>
+              {fee > 0 && sessionsPerMonth > 0 && (
+                <div className="bg-blue-50 border border-blue-200 rounded-xl p-3 text-xs">
+                  <div className="font-bold text-blue-800">Phí kết nối 1 lần: <span className="text-blue-600">{fmt(Math.round(fee * sessionsPerMonth * feePercent / 100))}đ</span></div>
+                  <div className="text-blue-600 mt-0.5">= {fmt(fee)}đ × {sessionsPerMonth} buổi × {feePercent}%</div>
+                </div>
+              )}
               <div>
                 <label className="block text-xs font-bold uppercase text-slate-600 mb-1">Ghi chú</label>
                 <textarea rows={2} value={note} onChange={e => setNote(e.target.value)} placeholder="Ghi chú nội bộ..."

@@ -66,7 +66,7 @@ export const FinanceTab: React.FC<FinanceTabProps> = ({ transactions, onAddTrans
         <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs">
           <div className="text-slate-500 text-xs font-bold uppercase tracking-wider">Tổng thu</div>
           <div className="text-2xl font-bold text-emerald-600 mt-1">{formatCurrency(totalIncome)}đ</div>
-          <div className="text-xs text-slate-400 mt-1">Phí kết nối 1 lần/lớp</div>
+          <div className="text-xs text-slate-400 mt-1">40% tháng đầu (có thể điều chỉnh)</div>
         </div>
         <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs">
           <div className="text-slate-500 text-xs font-bold uppercase tracking-wider">Hoàn trả</div>

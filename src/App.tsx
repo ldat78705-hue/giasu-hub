@@ -558,8 +558,12 @@ export default function App() {
 
   // F34: Collect 1-time connection fee from GS
   const handleCollectFee = async (matchId: string, tutorName: string, classSubject: string, classFee: number) => {
-    const feeAmount = Math.round(classFee * 4); // 4 buổi phí kết nối (quy định TT)
-    if (!window.confirm(`Thu phí kết nối ${new Intl.NumberFormat('vi-VN').format(feeAmount)}đ từ ${tutorName} cho lớp ${classSubject}?`)) return;
+    const match = matches.find(m => m.id === matchId);
+    const sessions = match?.sessionsPerMonth || 8;
+    const percent = match?.feePercent || 40;
+    const feeAmount = Math.round(classFee * sessions * percent / 100);
+    const desc = `${new Intl.NumberFormat('vi-VN').format(classFee)}đ × ${sessions} buổi × ${percent}% = ${new Intl.NumberFormat('vi-VN').format(feeAmount)}đ`;
+    if (!window.confirm(`Thu phí kết nối từ ${tutorName} cho lớp ${classSubject}?\n\n${desc}`)) return;
     // Mark match as paid
     await updateDoc(doc(db, 'matches', matchId), { feePaid: true, feeAmount });
     // Create transaction
