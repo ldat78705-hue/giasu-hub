@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { TutorItem, ActiveTab } from '../types';
-import { Search, Star, MapPin, GraduationCap, CheckCircle2, Send, X, UserPlus, Phone, GitCompareArrows } from 'lucide-react';
+import { Search, Star, MapPin, GraduationCap, CheckCircle2, Send, X, Phone, GitCompareArrows, Users, Clock, Shield, Award } from 'lucide-react';
 
 interface FindTutorPublicProps {
   tutors: TutorItem[];
@@ -51,104 +51,149 @@ export const FindTutorPublic: React.FC<FindTutorPublicProps> = ({ tutors, onBook
 
   return (
     <div style={{ paddingBottom: 80 }}>
-      {/* Header */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24, flexWrap: 'wrap', gap: 12 }}>
-        <div>
-          <h1 style={{ fontSize: 24, fontWeight: 800, color: '#0f172a', marginBottom: 4 }}>Tìm gia sư</h1>
-          <p style={{ fontSize: 14, color: '#64748b' }}>{filtered.length} gia sư đã xác minh</p>
+      {/* ===== HEADER ===== */}
+      <div style={{ marginBottom: 28 }}>
+        <h1 style={{ fontSize: 'clamp(22px, 4vw, 28px)', fontWeight: 800, color: '#0f172a', marginBottom: 6 }}>
+          Tìm gia sư tại Hà Nội
+        </h1>
+        <p style={{ fontSize: 14, color: '#64748b' }}>
+          {verifiedTutors.length > 0
+            ? `${verifiedTutors.length} gia sư đã xác minh · Chọn GS và đặt lịch học thử miễn phí`
+            : 'Đăng ký để trung tâm tìm gia sư phù hợp nhất cho bạn'}
+        </p>
+      </div>
+
+      {/* ===== SEARCH + FILTER BAR ===== */}
+      <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 16, padding: 20, marginBottom: 24 }}>
+        <div style={{ position: 'relative', marginBottom: 16 }}>
+          <Search size={16} style={{ position: 'absolute', left: 14, top: 13, color: '#94a3b8' }} />
+          <input value={searchTerm} onChange={e => setSearchTerm(e.target.value)}
+            placeholder="Tìm theo tên, môn dạy, khu vực..."
+            style={{ ...inputStyle, paddingLeft: 40, background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 10 }} />
         </div>
-        <button onClick={() => onNavigate('parent-register')}
-          style={{ padding: '10px 20px', background: '#2563eb', color: '#fff', border: 'none', borderRadius: 8, fontSize: 13, fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6 }}>
-          <UserPlus size={16} /> Đăng ký tìm gia sư
-        </button>
-      </div>
-
-      {/* Search */}
-      <div style={{ position: 'relative', marginBottom: 16 }}>
-        <Search size={16} style={{ position: 'absolute', left: 14, top: 13, color: '#94a3b8' }} />
-        <input value={searchTerm} onChange={e => setSearchTerm(e.target.value)}
-          placeholder="Tìm theo tên, môn dạy, khu vực..."
-          style={{ ...inputStyle, paddingLeft: 40, background: '#fff', border: '1px solid #e2e8f0' }} />
-      </div>
-
-      {/* Subject chips */}
-      <div style={{ display: 'flex', gap: 8, overflowX: 'auto', paddingBottom: 4, marginBottom: 24 }} className="scrollbar-hide">
-        {subjects.map(sub => (
-          <button key={sub} onClick={() => setSelectedSubject(sub)}
-            style={{
-              padding: '6px 14px', borderRadius: 20, fontSize: 13, fontWeight: 500, cursor: 'pointer',
-              border: '1px solid', whiteSpace: 'nowrap', flexShrink: 0, transition: 'all .15s',
-              background: selectedSubject === sub ? '#2563eb' : '#fff',
-              color: selectedSubject === sub ? '#fff' : '#475569',
-              borderColor: selectedSubject === sub ? '#2563eb' : '#e2e8f0',
-            }}>
-            {sub}
-          </button>
-        ))}
-      </div>
-
-      {/* Tutor Grid or Empty State */}
-      {filtered.length === 0 ? (
-        <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 12, padding: '48px 24px', textAlign: 'center' }}>
-          <GraduationCap size={40} style={{ color: '#cbd5e1', margin: '0 auto 12px', display: 'block' }} />
-          <h3 style={{ fontSize: 16, fontWeight: 700, color: '#334155', marginBottom: 6 }}>Chưa tìm thấy gia sư phù hợp</h3>
-          <p style={{ fontSize: 14, color: '#94a3b8', marginBottom: 20, maxWidth: 360, margin: '0 auto 20px' }}>
-            Hãy đăng ký, trung tâm sẽ tìm gia sư phù hợp cho bạn trong vòng 24 giờ.
-          </p>
-          <button onClick={() => onNavigate('parent-register')}
-            style={{ padding: '10px 24px', background: '#2563eb', color: '#fff', border: 'none', borderRadius: 8, fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>
-            Đăng ký tìm gia sư
-          </button>
-        </div>
-      ) : (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: 16 }}>
-          {filtered.map(t => (
-            <div key={t.id || t.code} onClick={() => setSelectedTutor(t)}
-              style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 12, padding: 20, cursor: 'pointer', transition: 'border-color .15s, box-shadow .15s', position: 'relative' }}
-              onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = '#93c5fd'; (e.currentTarget as HTMLElement).style.boxShadow = '0 4px 12px rgba(37,99,235,.08)'; }}
-              onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = '#e2e8f0'; (e.currentTarget as HTMLElement).style.boxShadow = 'none'; }}>
-              <div style={{ display: 'flex', gap: 14, alignItems: 'flex-start' }}>
-                <div style={{
-                  width: 52, height: 52, borderRadius: 12,
-                  background: t.avatarColor?.replace('bg-', '').includes('-') ? `var(--color-${t.avatarColor.replace('bg-', '')})` : '#3b82f6',
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  color: '#fff', fontWeight: 700, fontSize: 16, flexShrink: 0,
-                }}>{t.avatar}</div>
-                <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4 }}>
-                    <span style={{ fontWeight: 700, fontSize: 15, color: '#0f172a' }}>{t.name}</span>
-                    {t.verified && <span style={{ background: '#2563eb', color: '#fff', fontSize: 9, fontWeight: 700, padding: '1px 5px', borderRadius: 4 }}>✓</span>}
-                  </div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 13, color: '#64748b', marginBottom: 8 }}>
-                    <Star size={13} style={{ color: '#f59e0b', fill: '#f59e0b' }} />
-                    <span style={{ fontWeight: 600 }}>{t.rating}</span>
-                    <span>·</span>
-                    <span>{t.experience}</span>
-                  </div>
-                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4, marginBottom: 10 }}>
-                    {t.subjects.slice(0, 4).map((sub, i) => (
-                      <span key={i} style={{ background: '#eff6ff', color: '#2563eb', padding: '3px 8px', borderRadius: 4, fontSize: 11, fontWeight: 600 }}>{sub}</span>
-                    ))}
-                    {(t.subjects.length > 4) && <span style={{ color: '#94a3b8', fontSize: 11 }}>+{t.subjects.length - 4}</span>}
-                  </div>
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: 12, color: '#64748b', borderTop: '1px solid #f1f5f9', paddingTop: 8 }}>
-                    <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-                      <MapPin size={12} /> {t.area || t.teachingAreas?.slice(0, 2).join(', ') || 'Hà Nội'}
-                    </span>
-                    <span style={{ fontWeight: 700, color: '#2563eb', fontSize: 14 }}>{fmt(t.hourlyRate)}đ/buổi</span>
-                  </div>
-                </div>
-                {/* F20: Compare checkbox */}
-                <div style={{ position: 'absolute', top: 8, right: 8 }} onClick={e => e.stopPropagation()}>
-                  <label style={{ display: 'flex', alignItems: 'center', gap: 4, cursor: 'pointer', padding: '3px 8px', borderRadius: 6, background: compareCodes.includes(t.code) ? '#eff6ff' : '#f8fafc', border: `1px solid ${compareCodes.includes(t.code) ? '#93c5fd' : '#e2e8f0'}`, fontSize: 10, fontWeight: 600, color: compareCodes.includes(t.code) ? '#2563eb' : '#94a3b8' }}>
-                    <input type="checkbox" checked={compareCodes.includes(t.code)} onChange={() => toggleCompare(t.code)} style={{ accentColor: '#2563eb', width: 12, height: 12 }} />
-                    So sánh
-                  </label>
-                </div>
-              </div>
-            </div>
+        <div style={{ display: 'flex', gap: 8, overflowX: 'auto', paddingBottom: 4 }} className="scrollbar-hide">
+          {subjects.map(sub => (
+            <button key={sub} onClick={() => setSelectedSubject(sub)}
+              style={{
+                padding: '7px 16px', borderRadius: 20, fontSize: 13, fontWeight: 600, cursor: 'pointer',
+                border: '1px solid', whiteSpace: 'nowrap', flexShrink: 0, transition: 'all .15s',
+                background: selectedSubject === sub ? '#2563eb' : '#fff',
+                color: selectedSubject === sub ? '#fff' : '#475569',
+                borderColor: selectedSubject === sub ? '#2563eb' : '#e2e8f0',
+              }}>
+              {sub}
+            </button>
           ))}
         </div>
+        {searchTerm && (
+          <div style={{ marginTop: 10, fontSize: 12, color: '#64748b' }}>
+            Kết quả cho "<b>{searchTerm}</b>" — {filtered.length} gia sư
+          </div>
+        )}
+      </div>
+
+      {/* ===== TUTOR GRID or EMPTY STATE ===== */}
+      {filtered.length === 0 ? (
+        <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 16, padding: '56px 24px', textAlign: 'center' }}>
+          <div style={{ width: 64, height: 64, borderRadius: 16, background: '#f1f5f9', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 20px' }}>
+            <GraduationCap size={28} style={{ color: '#94a3b8' }} />
+          </div>
+          <h3 style={{ fontSize: 18, fontWeight: 700, color: '#0f172a', marginBottom: 8 }}>
+            {verifiedTutors.length === 0 ? 'Hệ thống đang cập nhật gia sư' : 'Không tìm thấy gia sư phù hợp'}
+          </h3>
+          <p style={{ fontSize: 14, color: '#64748b', maxWidth: 420, margin: '0 auto 24px', lineHeight: 1.6 }}>
+            {verifiedTutors.length === 0
+              ? 'Đội ngũ gia sư đang được xác minh. Hãy đăng ký nhu cầu, trung tâm sẽ tìm và liên hệ bạn trong 30 phút.'
+              : 'Thử tìm với từ khóa khác, hoặc đăng ký để trung tâm tìm giúp bạn.'}
+          </p>
+          <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
+            <button onClick={() => onNavigate('parent-register')}
+              style={{ padding: '12px 28px', background: '#2563eb', color: '#fff', border: 'none', borderRadius: 10, fontSize: 14, fontWeight: 600, cursor: 'pointer', boxShadow: '0 2px 8px rgba(37,99,235,0.2)' }}>
+              Đăng ký tìm gia sư miễn phí
+            </button>
+            {verifiedTutors.length > 0 && searchTerm && (
+              <button onClick={() => { setSearchTerm(''); setSelectedSubject('Tất cả'); }}
+                style={{ padding: '12px 28px', background: '#f1f5f9', color: '#475569', border: 'none', borderRadius: 10, fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>
+                Xóa bộ lọc
+              </button>
+            )}
+          </div>
+
+          {/* Trust signals — only in empty state */}
+          <div style={{ display: 'flex', gap: 16, justifyContent: 'center', marginTop: 32, flexWrap: 'wrap' }}>
+            {[
+              { icon: <Shield size={14} />, text: 'GS đã xác minh', color: '#2563eb' },
+              { icon: <Clock size={14} />, text: 'Phản hồi 30 phút', color: '#16a34a' },
+              { icon: <Award size={14} />, text: 'Học thử miễn phí', color: '#f59e0b' },
+            ].map((item, i) => (
+              <span key={i} style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 12, fontWeight: 600, color: item.color }}>
+                {item.icon} {item.text}
+              </span>
+            ))}
+          </div>
+        </div>
+      ) : (
+        <>
+          {/* Results header */}
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
+            <span style={{ fontSize: 13, color: '#64748b', fontWeight: 500 }}>
+              <Users size={14} style={{ display: 'inline', verticalAlign: 'text-bottom', marginRight: 4 }} />
+              {filtered.length} gia sư phù hợp
+            </span>
+            {compareCodes.length > 0 && (
+              <span style={{ fontSize: 12, color: '#2563eb', fontWeight: 600 }}>{compareCodes.length}/3 đã chọn so sánh</span>
+            )}
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: 16 }}>
+            {filtered.map(t => (
+              <div key={t.id || t.code} onClick={() => setSelectedTutor(t)}
+                style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 14, padding: 20, cursor: 'pointer', transition: 'border-color .15s, box-shadow .15s', position: 'relative' }}
+                onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = '#93c5fd'; (e.currentTarget as HTMLElement).style.boxShadow = '0 4px 12px rgba(37,99,235,.08)'; }}
+                onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = '#e2e8f0'; (e.currentTarget as HTMLElement).style.boxShadow = 'none'; }}>
+                <div style={{ display: 'flex', gap: 14, alignItems: 'flex-start' }}>
+                  <div style={{
+                    width: 52, height: 52, borderRadius: 12,
+                    background: t.avatarColor?.replace('bg-', '').includes('-') ? `var(--color-${t.avatarColor.replace('bg-', '')})` : '#3b82f6',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    color: '#fff', fontWeight: 700, fontSize: 16, flexShrink: 0,
+                  }}>{t.avatar}</div>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4 }}>
+                      <span style={{ fontWeight: 700, fontSize: 15, color: '#0f172a' }}>{t.name}</span>
+                      {t.verified && <span style={{ background: '#2563eb', color: '#fff', fontSize: 9, fontWeight: 700, padding: '1px 5px', borderRadius: 4 }}>✓</span>}
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 13, color: '#64748b', marginBottom: 8 }}>
+                      <Star size={13} style={{ color: '#f59e0b', fill: '#f59e0b' }} />
+                      <span style={{ fontWeight: 600 }}>{t.rating}</span>
+                      <span>·</span>
+                      <span>{t.experience}</span>
+                    </div>
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4, marginBottom: 10 }}>
+                      {t.subjects.slice(0, 4).map((sub, i) => (
+                        <span key={i} style={{ background: '#eff6ff', color: '#2563eb', padding: '3px 8px', borderRadius: 4, fontSize: 11, fontWeight: 600 }}>{sub}</span>
+                      ))}
+                      {(t.subjects.length > 4) && <span style={{ color: '#94a3b8', fontSize: 11 }}>+{t.subjects.length - 4}</span>}
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: 12, color: '#64748b', borderTop: '1px solid #f1f5f9', paddingTop: 8 }}>
+                      <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+                        <MapPin size={12} /> {t.area || t.teachingAreas?.slice(0, 2).join(', ') || 'Hà Nội'}
+                      </span>
+                      <span style={{ fontWeight: 700, color: '#2563eb', fontSize: 14 }}>{fmt(t.hourlyRate)}đ/buổi</span>
+                    </div>
+                  </div>
+                  {/* F20: Compare checkbox */}
+                  <div style={{ position: 'absolute', top: 8, right: 8 }} onClick={e => e.stopPropagation()}>
+                    <label style={{ display: 'flex', alignItems: 'center', gap: 4, cursor: 'pointer', padding: '3px 8px', borderRadius: 6, background: compareCodes.includes(t.code) ? '#eff6ff' : '#f8fafc', border: `1px solid ${compareCodes.includes(t.code) ? '#93c5fd' : '#e2e8f0'}`, fontSize: 10, fontWeight: 600, color: compareCodes.includes(t.code) ? '#2563eb' : '#94a3b8' }}>
+                      <input type="checkbox" checked={compareCodes.includes(t.code)} onChange={() => toggleCompare(t.code)} style={{ accentColor: '#2563eb', width: 12, height: 12 }} />
+                      So sánh
+                    </label>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </>
       )}
 
       {/* F20: Floating compare bar */}
@@ -203,20 +248,11 @@ export const FindTutorPublic: React.FC<FindTutorPublicProps> = ({ tutors, onBook
         );
       })()}
 
-      {/* CTA bottom */}
-      <div style={{ marginTop: 32, background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 12, padding: '24px', textAlign: 'center' }}>
-        <p style={{ fontSize: 14, color: '#475569', marginBottom: 12 }}>Không tìm thấy gia sư phù hợp? Để lại yêu cầu, trung tâm sẽ tìm giúp bạn!</p>
-        <button onClick={() => onNavigate('parent-register')}
-          style={{ padding: '10px 24px', background: '#2563eb', color: '#fff', border: 'none', borderRadius: 8, fontSize: 14, fontWeight: 600, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 6 }}>
-          <UserPlus size={16} /> Đăng ký tìm gia sư miễn phí
-        </button>
-      </div>
-
       {/* ===== BOOKING MODAL ===== */}
       {selectedTutor && (
         <div style={{ position: 'fixed', inset: 0, zIndex: 60, background: 'rgba(0,0,0,.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 16 }}
           onClick={() => !bookingSuccess && setSelectedTutor(null)}>
-          <div style={{ background: '#fff', borderRadius: 12, maxWidth: 440, width: '100%', padding: 24, position: 'relative' }} onClick={e => e.stopPropagation()}>
+          <div style={{ background: '#fff', borderRadius: 16, maxWidth: 440, width: '100%', padding: 28, position: 'relative' }} onClick={e => e.stopPropagation()}>
             <button onClick={() => setSelectedTutor(null)} style={{ position: 'absolute', top: 12, right: 12, background: 'none', border: 'none', cursor: 'pointer', color: '#94a3b8' }}><X size={20} /></button>
 
             {bookingSuccess ? (
@@ -236,7 +272,7 @@ export const FindTutorPublic: React.FC<FindTutorPublicProps> = ({ tutors, onBook
                   </div>
                 </div>
 
-                <h3 style={{ fontSize: 16, fontWeight: 700, color: '#0f172a', marginBottom: 16 }}>Đặt lịch thuê gia sư</h3>
+                <h3 style={{ fontSize: 16, fontWeight: 700, color: '#0f172a', marginBottom: 16 }}>Đặt lịch học thử miễn phí</h3>
 
                 <form onSubmit={handleBook} style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
                   <div>
@@ -252,8 +288,8 @@ export const FindTutorPublic: React.FC<FindTutorPublicProps> = ({ tutors, onBook
                     <textarea rows={2} value={notes} onChange={e => setNotes(e.target.value)} placeholder="Lớp, khu vực, yêu cầu..." style={{ ...inputStyle, resize: 'none' }} />
                   </div>
                   <button type="submit"
-                    style={{ padding: '12px 0', background: '#2563eb', color: '#fff', border: 'none', borderRadius: 8, fontSize: 14, fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
-                    <Send size={16} /> Đặt lịch thuê gia sư
+                    style={{ padding: '13px 0', background: '#2563eb', color: '#fff', border: 'none', borderRadius: 10, fontSize: 14, fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
+                    <Send size={16} /> Đặt lịch học thử
                   </button>
                 </form>
               </>
