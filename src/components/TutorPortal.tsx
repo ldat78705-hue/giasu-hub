@@ -222,9 +222,9 @@ export const TutorPortal: React.FC<TutorPortalProps> = ({ tutors, matches, atten
       {activeTab === 'income' && (
         <div>
           <div style={{ background: 'linear-gradient(135deg, #059669, #0d9488)', borderRadius: 16, padding: 28, color: '#fff', marginBottom: 16, textAlign: 'center' }}>
-            <div style={{ fontSize: 12, fontWeight: 600, opacity: 0.8, marginBottom: 4 }}>Ước tính thu nhập tháng {now.getMonth() + 1}</div>
+            <div style={{ fontSize: 12, fontWeight: 600, opacity: 0.8, marginBottom: 4 }}>Thu nhập ước tính tháng {now.getMonth() + 1}</div>
             <div style={{ fontSize: 32, fontWeight: 800 }}>{fmt(estimatedIncome)}đ</div>
-            <div style={{ fontSize: 12, opacity: 0.7, marginTop: 4 }}>{monthAttendance.length} buổi đã dạy × phí theo lớp</div>
+            <div style={{ fontSize: 12, opacity: 0.7, marginTop: 4 }}>{monthAttendance.length} buổi × phí/buổi (100% về gia sư)</div>
           </div>
           <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 12, padding: 16 }}>
             <h4 style={{ fontSize: 13, fontWeight: 700, color: '#334155', marginBottom: 12 }}>Chi tiết theo lớp</h4>

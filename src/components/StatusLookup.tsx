@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { TutorItem, ParentRegistration, ClassMatch, AttendanceRecord } from '../types';
-import { Search, CheckCircle2, Clock, ShieldCheck, AlertCircle, Phone, BookOpen, GraduationCap, XCircle, Calendar, Users, Star } from 'lucide-react';
+import { TutorItem, ParentRegistration, ClassMatch, AttendanceRecord, TutorReview } from '../types';
+import { Search, CheckCircle2, Clock, ShieldCheck, AlertCircle, Phone, BookOpen, GraduationCap, XCircle, Calendar, Users, Star, Send } from 'lucide-react';
 
 interface StatusLookupProps {
   tutors: TutorItem[];
@@ -8,17 +8,23 @@ interface StatusLookupProps {
   matches?: ClassMatch[];
   attendance?: AttendanceRecord[];
   zaloNumber?: string;
+  onSubmitReview?: (review: Omit<TutorReview, 'id'>) => Promise<void>;
 }
 
 const inp: React.CSSProperties = { width: '100%', padding: '12px 16px', border: '1px solid #e2e8f0', borderRadius: 10, fontSize: 15, outline: 'none', background: '#f8fafc' };
 
-export const StatusLookup: React.FC<StatusLookupProps> = ({ tutors, registrations, matches = [], attendance = [], zaloNumber }) => {
+export const StatusLookup: React.FC<StatusLookupProps> = ({ tutors, registrations, matches = [], attendance = [], zaloNumber, onSubmitReview }) => {
   const [phone, setPhone] = useState('');
   const [searched, setSearched] = useState(false);
   const [foundTutors, setFoundTutors] = useState<TutorItem[]>([]);
   const [foundRegs, setFoundRegs] = useState<ParentRegistration[]>([]);
   const [foundMatches, setFoundMatches] = useState<ClassMatch[]>([]);
   const [foundAttendance, setFoundAttendance] = useState<AttendanceRecord[]>([]);
+  // F28: Review state
+  const [reviewMatchId, setReviewMatchId] = useState<string | null>(null);
+  const [reviewRating, setReviewRating] = useState(5);
+  const [reviewComment, setReviewComment] = useState('');
+  const [reviewSubmitted, setReviewSubmitted] = useState(false);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -43,6 +49,8 @@ export const StatusLookup: React.FC<StatusLookupProps> = ({ tutors, registration
       }));
     }
     setSearched(true);
+    setReviewSubmitted(false);
+    setReviewMatchId(null);
   };
 
   const formatDate = (ts: number) => new Date(ts).toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
@@ -233,6 +241,67 @@ export const StatusLookup: React.FC<StatusLookupProps> = ({ tutors, registration
                         );
                       })}
                     </div>
+                  </div>
+                )}
+
+                {/* F28: PH Review Form */}
+                {foundMatches.filter(m => m.status === 'Đang dạy').length > 0 && onSubmitReview && !reviewSubmitted && (
+                  <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 12, padding: 20 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
+                      <Star size={18} color="#f59e0b" />
+                      <span style={{ fontSize: 14, fontWeight: 700, color: '#0f172a' }}>Đánh giá gia sư</span>
+                    </div>
+                    <div style={{ marginBottom: 12 }}>
+                      <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: '#475569', marginBottom: 6 }}>Chọn lớp</label>
+                      <select value={reviewMatchId || ''} onChange={e => setReviewMatchId(e.target.value || null)}
+                        style={{ width: '100%', padding: '10px 14px', border: '1px solid #e2e8f0', borderRadius: 8, fontSize: 14, outline: 'none', background: '#f8fafc' }}>
+                        <option value="">-- Chọn lớp cần đánh giá --</option>
+                        {foundMatches.filter(m => m.status === 'Đang dạy').map(m => (
+                          <option key={m.id} value={m.id}>{m.classSubject} — GS: {m.tutorName}</option>
+                        ))}
+                      </select>
+                    </div>
+                    {reviewMatchId && (() => {
+                      const m = foundMatches.find(x => x.id === reviewMatchId);
+                      if (!m) return null;
+                      return (
+                        <div>
+                          <div style={{ marginBottom: 12 }}>
+                            <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: '#475569', marginBottom: 6 }}>Đánh giá (1-5 sao)</label>
+                            <div style={{ display: 'flex', gap: 4 }}>
+                              {[1,2,3,4,5].map(s => (
+                                <button key={s} onClick={() => setReviewRating(s)} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 2 }}>
+                                  <Star size={24} style={{ color: s <= reviewRating ? '#f59e0b' : '#e2e8f0', fill: s <= reviewRating ? '#f59e0b' : 'none' }} />
+                                </button>
+                              ))}
+                            </div>
+                          </div>
+                          <div style={{ marginBottom: 12 }}>
+                            <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: '#475569', marginBottom: 6 }}>Nhận xét</label>
+                            <textarea rows={3} value={reviewComment} onChange={e => setReviewComment(e.target.value)}
+                              placeholder="Gia sư dạy như thế nào? Bé có tiến bộ không?"
+                              style={{ width: '100%', padding: '10px 14px', border: '1px solid #e2e8f0', borderRadius: 8, fontSize: 14, outline: 'none', background: '#f8fafc', resize: 'vertical' }} />
+                          </div>
+                          <button onClick={async () => {
+                            await onSubmitReview({
+                              tutorCode: m.tutorCode, tutorName: m.tutorName,
+                              parentName: m.studentName || 'Phụ huynh', parentPhone: phone,
+                              rating: reviewRating, comment: reviewComment, createdAt: Date.now(),
+                            });
+                            setReviewSubmitted(true);
+                            setReviewMatchId(null);
+                          }} style={{ padding: '10px 20px', background: '#2563eb', color: '#fff', border: 'none', borderRadius: 8, fontSize: 14, fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6 }}>
+                            <Send size={14} /> Gửi đánh giá
+                          </button>
+                        </div>
+                      );
+                    })()}
+                  </div>
+                )}
+                {reviewSubmitted && (
+                  <div style={{ background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: 12, padding: 16, textAlign: 'center' }}>
+                    <CheckCircle2 size={24} color="#16a34a" style={{ margin: '0 auto 8px', display: 'block' }} />
+                    <p style={{ fontSize: 14, fontWeight: 600, color: '#16a34a' }}>Cảm ơn bạn đã đánh giá!</p>
                   </div>
                 )}
               </div>

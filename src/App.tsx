@@ -364,6 +364,33 @@ export default function App() {
       statusHistory: arrayUnion({ status: st, timestamp: Date.now() }),
     });
     logActivity('Đổi TT đăng ký', id, `→ ${st}`, 'registration');
+
+    // F33: Auto-create class when registration is confirmed
+    if (st === 'Đã xếp lớp') {
+      const reg = registrations.find(r => r.id === id);
+      if (reg) {
+        const subjectList = reg.subjects.join(', ');
+        const classCode = `LOP-${Math.floor(1000 + Math.random() * 9000)}`;
+        const existingClass = classes.find(c =>
+          c.subject.includes(subjectList) && c.studentInfo?.includes(reg.studentName)
+        );
+        if (!existingClass) {
+          const newClass: ClassItem = {
+            code: classCode,
+            subject: subjectList,
+            studentInfo: `${reg.studentName} — ${reg.grade}`,
+            location: `${reg.district}${reg.ward ? ', ' + reg.ward : ''}`,
+            fee: 250000,
+            status: 'ĐANG TÌM',
+            createdAt: Date.now(),
+            schedule: reg.schedule,
+            teachMode: reg.mode,
+          };
+          await addDoc(collection(db, 'classes'), newClass);
+          logActivity('Tạo lớp tự động từ đơn PH', classCode, `${subjectList} — ${reg.studentName}`, 'class');
+        }
+      }
+    }
   };
   const handleUpdateRegistrationNote = async (id: string, note: string) => {
     await updateDoc(doc(db, 'registrations', id), { adminNote: note });
@@ -529,6 +556,26 @@ export default function App() {
     await updateDoc(doc(db, 'matches', matchId), { internalNotes: arrayUnion(note) });
   };
 
+  // F34: Collect 1-time connection fee from GS
+  const handleCollectFee = async (matchId: string, tutorName: string, classSubject: string, classFee: number) => {
+    const feeAmount = Math.round(classFee * 4); // 4 buổi phí kết nối (quy định TT)
+    if (!window.confirm(`Thu phí kết nối ${new Intl.NumberFormat('vi-VN').format(feeAmount)}đ từ ${tutorName} cho lớp ${classSubject}?`)) return;
+    // Mark match as paid
+    await updateDoc(doc(db, 'matches', matchId), { feePaid: true, feeAmount });
+    // Create transaction
+    const tr = {
+      receiptId: `PHI-${Math.floor(1000 + Math.random() * 9000)}`,
+      type: 'Thu phí gia sư' as const,
+      amount: feeAmount,
+      targetName: `${tutorName} — ${classSubject}`,
+      date: new Date().toLocaleDateString('vi-VN') + ' ' + new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }),
+      status: 'Thành công' as const,
+      matchId,
+    };
+    await addDoc(collection(db, 'transactions'), tr);
+    logActivity('Thu phí kết nối', matchId, `${new Intl.NumberFormat('vi-VN').format(feeAmount)}đ — ${tutorName} — ${classSubject}`, 'finance');
+  };
+
   // Admin note handlers
   const handleUpdateTutorNote = async (id: string, note: string) => {
     await updateDoc(doc(db, 'tutors', id), { adminNote: note });
@@ -570,7 +617,8 @@ export default function App() {
             } />
             <Route path="/tra-cuu" element={
               <div style={{ maxWidth: 560, margin: '0 auto', padding: '32px 20px' }}>
-                <StatusLookup tutors={tutors} registrations={registrations} matches={matches} attendance={attendance} zaloNumber={zaloNumber} />
+                <StatusLookup tutors={tutors} registrations={registrations} matches={matches} attendance={attendance} zaloNumber={zaloNumber}
+                  onSubmitReview={async (review) => { await addDoc(collection(db, 'reviews'), review); logActivity('PH đánh giá GS', review.tutorCode, `${review.rating}⭐ — ${review.tutorName}`, 'system'); }} />
               </div>
             } />
             <Route path="/gia-su-portal" element={
@@ -663,7 +711,8 @@ export default function App() {
           {adminTab === 'matches' && (
             <MatchesTab matches={matches} classes={classes} tutors={tutors}
               onAddMatch={handleAddMatch} onUpdateStatus={handleUpdateMatchStatus}
-              onDeleteMatch={handleDeleteMatch} onAddNote={handleAddMatchNote} />
+              onDeleteMatch={handleDeleteMatch} onAddNote={handleAddMatchNote}
+              onCollectFee={handleCollectFee} />
           )}
 
           {adminTab === 'students' && (

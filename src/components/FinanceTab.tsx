@@ -66,7 +66,7 @@ export const FinanceTab: React.FC<FinanceTabProps> = ({ transactions, onAddTrans
         <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs">
           <div className="text-slate-500 text-xs font-bold uppercase tracking-wider">Tổng thu</div>
           <div className="text-2xl font-bold text-emerald-600 mt-1">{formatCurrency(totalIncome)}đ</div>
-          <div className="text-xs text-slate-400 mt-1">Phí kết nối gia sư</div>
+          <div className="text-xs text-slate-400 mt-1">Phí kết nối 1 lần/lớp</div>
         </div>
         <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs">
           <div className="text-slate-500 text-xs font-bold uppercase tracking-wider">Hoàn trả</div>
@@ -76,7 +76,7 @@ export const FinanceTab: React.FC<FinanceTabProps> = ({ transactions, onAddTrans
         <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs">
           <div className="text-slate-500 text-xs font-bold uppercase tracking-wider">Chi phí</div>
           <div className="text-2xl font-bold text-amber-600 mt-1">{formatCurrency(totalSalary)}đ</div>
-          <div className="text-xs text-slate-400 mt-1">Vận hành & lương</div>
+          <div className="text-xs text-slate-400 mt-1">Vận hành, quảng cáo...</div>
         </div>
         <div className="bg-[#0F172A] text-white p-5 rounded-2xl shadow-lg">
           <div className="text-slate-400 text-xs font-bold uppercase">Lợi nhuận ròng</div>
@@ -118,9 +118,9 @@ export const FinanceTab: React.FC<FinanceTabProps> = ({ transactions, onAddTrans
             <div className="flex gap-2 flex-wrap">
               {[
                 { val: 'all', label: 'Tất cả' },
-                { val: 'Thu phí gia sư', label: 'Thu phí' },
-                { val: 'Hoàn tiền', label: 'Hoàn tiền' },
-                { val: 'Thanh toán lương', label: 'Lương' },
+                { val: 'Thu phí gia sư', label: 'Phí kết nối' },
+                { val: 'Hoàn tiền', label: 'Hoàn trả' },
+                { val: 'Thanh toán lương', label: 'Vận hành' },
               ].map(f => (
                 <button key={f.val} onClick={() => setTypeFilter(f.val)}
                   className={`px-3 py-2 rounded-xl text-xs font-semibold border cursor-pointer transition-all ${
@@ -212,9 +212,9 @@ export const FinanceTab: React.FC<FinanceTabProps> = ({ transactions, onAddTrans
                 <label className="block text-xs font-bold uppercase text-slate-600 mb-1">Loại phiếu</label>
                 <select value={type} onChange={(e) => setType(e.target.value as any)}
                   className="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:bg-white focus:border-blue-500 text-sm">
-                  <option value="Thu phí gia sư">Thu phí nhận lớp gia sư (40% phí tháng đầu)</option>
-                  <option value="Hoàn tiền">Hoàn trả tiền cho gia sư/phụ huynh</option>
-                  <option value="Thanh toán lương">Chi phí vận hành / lương</option>
+                  <option value="Thu phí gia sư">Thu phí kết nối (1 lần/lớp)</option>
+                  <option value="Hoàn tiền">Hoàn trả phí cho gia sư</option>
+                  <option value="Thanh toán lương">Chi phí vận hành / quảng cáo</option>
                 </select>
               </div>
               <div>

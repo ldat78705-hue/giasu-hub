@@ -40,6 +40,9 @@ export const RegistrationsTab: React.FC<RegistrationsTabProps> = ({ registration
   const [expandedLog, setExpandedLog] = useState<string | null>(null);
   // Feature 13: Tag filter
   const [tagFilter, setTagFilter] = useState<string>('');
+  // F36: Advanced filters
+  const [districtFilter, setDistrictFilter] = useState<string>('');
+  const [dateFilter, setDateFilter] = useState<'all' | 'today' | 'week' | 'month'>('all');
 
   const overdueRegs = getOverdueRegistrations(registrations);
 
@@ -79,6 +82,14 @@ export const RegistrationsTab: React.FC<RegistrationsTabProps> = ({ registration
       return r.parentName.toLowerCase().includes(q) || r.phone.includes(q) ||
         (r.studentName || '').toLowerCase().includes(q) || r.subjects.some(s => s.toLowerCase().includes(q)) ||
         (r.district || '').toLowerCase().includes(q);
+    })
+    .filter(r => !districtFilter || r.district === districtFilter)
+    .filter(r => {
+      if (dateFilter === 'all') return true;
+      const now = Date.now();
+      if (dateFilter === 'today') return (now - r.createdAt) < 86400000;
+      if (dateFilter === 'week') return (now - r.createdAt) < 7 * 86400000;
+      return (now - r.createdAt) < 30 * 86400000;
     })
     .sort((a, b) => {
       if (sortBy === 'newest') return b.createdAt - a.createdAt;
@@ -349,6 +360,22 @@ export const RegistrationsTab: React.FC<RegistrationsTabProps> = ({ registration
             <option value="oldest">Cũ nhất</option>
             <option value="name">Tên A-Z</option>
             <option value="status">Trạng thái</option>
+          </select>
+          {/* F36: District filter */}
+          <select value={districtFilter} onChange={e => setDistrictFilter(e.target.value)}
+            className="px-3 py-1.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold text-slate-600 outline-none cursor-pointer">
+            <option value="">📍 Tất cả quận</option>
+            {[...new Set(registrations.map(r => r.district).filter(Boolean))].sort().map(d => (
+              <option key={d} value={d}>{d}</option>
+            ))}
+          </select>
+          {/* F36: Date filter */}
+          <select value={dateFilter} onChange={e => setDateFilter(e.target.value as any)}
+            className="px-3 py-1.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold text-slate-600 outline-none cursor-pointer">
+            <option value="all">📅 Mọi lúc</option>
+            <option value="today">Hôm nay</option>
+            <option value="week">7 ngày qua</option>
+            <option value="month">30 ngày qua</option>
           </select>
         </div>
       )}

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { ClassMatch, ClassItem, TutorItem, InternalNote } from '../types';
-import { Plus, CheckCircle2, XCircle, Clock, Trash2, Search, Download, MessageSquare, Pin } from 'lucide-react';
+import { Plus, CheckCircle2, XCircle, Clock, Trash2, Search, Download, MessageSquare, Pin, DollarSign } from 'lucide-react';
 
 interface MatchesTabProps {
   matches: ClassMatch[];
@@ -10,9 +10,10 @@ interface MatchesTabProps {
   onUpdateStatus: (id: string, status: ClassMatch['status']) => void;
   onDeleteMatch: (id: string) => void;
   onAddNote?: (matchId: string, note: InternalNote) => void;
+  onCollectFee?: (matchId: string, tutorName: string, classSubject: string, fee: number) => void;
 }
 
-export const MatchesTab: React.FC<MatchesTabProps> = ({ matches, classes, tutors, onAddMatch, onUpdateStatus, onDeleteMatch, onAddNote }) => {
+export const MatchesTab: React.FC<MatchesTabProps> = ({ matches, classes, tutors, onAddMatch, onUpdateStatus, onDeleteMatch, onAddNote, onCollectFee }) => {
   const [showAdd, setShowAdd] = useState(false);
   const [filter, setFilter] = useState<'all' | 'Đang dạy' | 'Hoàn thành' | 'Hủy'>('all');
   const [search, setSearch] = useState('');
@@ -153,6 +154,11 @@ export const MatchesTab: React.FC<MatchesTabProps> = ({ matches, classes, tutors
                         m.status === 'Hoàn thành' ? 'bg-blue-100 text-blue-700' :
                         'bg-red-100 text-red-700'
                       }`}>{m.status}</span>
+                      {m.status === 'Đang dạy' && (
+                        m.feePaid
+                          ? <span className="ml-1 px-1.5 py-0.5 bg-emerald-50 text-emerald-600 text-[9px] font-bold rounded">✓ Đã thu {m.feeAmount ? fmt(m.feeAmount) + 'đ' : ''}</span>
+                          : <span className="ml-1 px-1.5 py-0.5 bg-amber-50 text-amber-600 text-[9px] font-bold rounded">Chưa thu phí</span>
+                      )}
                     </td>
                     <td className="px-4 py-3">
                       <div className="flex items-center justify-center gap-1">
@@ -167,6 +173,12 @@ export const MatchesTab: React.FC<MatchesTabProps> = ({ matches, classes, tutors
                               <XCircle className="w-3 h-3" />
                             </button>
                           </>
+                        )}
+                        {m.status === 'Đang dạy' && !m.feePaid && onCollectFee && (
+                          <button onClick={() => m.id && onCollectFee(m.id, m.tutorName, m.classSubject, m.fee)}
+                            className="px-2 py-1 bg-emerald-50 hover:bg-emerald-600 text-emerald-600 hover:text-white text-[10px] font-bold rounded-lg cursor-pointer flex items-center gap-1 transition-colors">
+                            <DollarSign className="w-3 h-3" /> Thu phí
+                          </button>
                         )}
                         <button onClick={() => m.id && window.confirm(`Xóa ghép lớp ${m.classSubject} - ${m.tutorName}?`) && onDeleteMatch(m.id)}
                           className="px-2 py-1 hover:bg-red-50 text-slate-400 hover:text-red-600 rounded-lg cursor-pointer">

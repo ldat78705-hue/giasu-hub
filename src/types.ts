@@ -87,6 +87,7 @@ export interface TransactionItem {
   targetName: string;
   date: string;
   status: 'Thành công' | 'Đang xử lý';
+  matchId?: string; // Link to ClassMatch for 1-time fee tracking
 }
 
 export interface ParentRegistration {
@@ -209,6 +210,9 @@ export interface ClassMatch {
   createdAt: number;
   // Feature 4: Internal notes
   internalNotes?: InternalNote[];
+  // Fee tracking: 1-time connection fee
+  feePaid?: boolean;
+  feeAmount?: number;
 }
 
 export interface InternalNote {
