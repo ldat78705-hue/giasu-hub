@@ -692,7 +692,7 @@ export default function App() {
           )}
 
           {adminTab === 'calendar' && (
-            <CalendarView matches={matches} attendance={attendance} />
+            <CalendarView matches={matches} attendance={attendance} registrations={registrations} />
           )}
 
 

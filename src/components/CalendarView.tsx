@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
-import { ClassMatch, AttendanceRecord } from '../types';
+import { ClassMatch, AttendanceRecord, ParentRegistration } from '../types';
 import { Calendar, ChevronLeft, ChevronRight, CheckCircle2, XCircle, Clock } from 'lucide-react';
 
 interface CalendarViewProps {
   matches: ClassMatch[];
   attendance: AttendanceRecord[];
+  registrations?: ParentRegistration[];
 }
 
-export const CalendarView: React.FC<CalendarViewProps> = ({ matches, attendance }) => {
+export const CalendarView: React.FC<CalendarViewProps> = ({ matches, attendance, registrations = [] }) => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [viewMode, setViewMode] = useState<'month' | 'week'>('month');
 
@@ -36,6 +37,11 @@ export const CalendarView: React.FC<CalendarViewProps> = ({ matches, attendance 
   const getDateAttendance = (day: number) => {
     const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
     return attendance.filter(a => a.date === dateStr);
+  };
+
+  // F21: Get trial bookings for a date
+  const getDateTrials = (dateStr: string) => {
+    return registrations.filter(r => r.trialDate === dateStr && r.trialStatus === 'Đã đặt');
   };
 
   const isToday = (day: number) => today.getDate() === day && today.getMonth() === month && today.getFullYear() === year;
@@ -102,7 +108,10 @@ export const CalendarView: React.FC<CalendarViewProps> = ({ matches, attendance 
                   <div key={i} className={`min-h-[80px] border-r border-b border-slate-100 p-1.5 ${isToday(day) ? 'bg-blue-50' : 'hover:bg-slate-50'}`}>
                     <div className={`text-xs font-bold mb-1 ${isToday(day) ? 'text-blue-600' : 'text-slate-600'}`}>{day}</div>
                     {taught > 0 && <div className="text-[9px] px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-700 font-bold mb-0.5 flex items-center gap-0.5"><CheckCircle2 className="w-2.5 h-2.5" />{taught} buổi</div>}
-                    {missed > 0 && <div className="text-[9px] px-1.5 py-0.5 rounded bg-red-100 text-red-700 font-bold flex items-center gap-0.5"><XCircle className="w-2.5 h-2.5" />{missed} vắng</div>}
+                    {missed > 0 && <div className="text-[9px] px-1.5 py-0.5 rounded bg-red-100 text-red-700 font-bold mb-0.5 flex items-center gap-0.5"><XCircle className="w-2.5 h-2.5" />{missed} vắng</div>}
+                    {getDateTrials(`${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`).map((t, ti) => (
+                      <div key={ti} className="text-[8px] px-1 py-0.5 rounded bg-purple-100 text-purple-700 font-bold mb-0.5 truncate">🎓 HT: {t.studentName}</div>
+                    ))}
                   </div>
                 );
               })}
@@ -132,6 +141,14 @@ export const CalendarView: React.FC<CalendarViewProps> = ({ matches, attendance 
                             <span className="font-bold text-slate-700">{a.classCode}</span>
                             <span className="text-slate-500">{a.tutorName} → {a.studentName}</span>
                             <span className={`px-1.5 py-0.5 rounded text-[9px] font-bold ${a.status === 'Đã dạy' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'}`}>{a.status}</span>
+                          </div>
+                        ))}
+                        {getDateTrials(dateStr).map((t, ti) => (
+                          <div key={`trial-${ti}`} className="flex items-center gap-2 text-xs">
+                            <span className="text-purple-500">🎓</span>
+                            <span className="font-bold text-purple-700">Học thử</span>
+                            <span className="text-purple-600">{t.studentName} ({t.subjects.join(', ')})</span>
+                            {t.trialTime && <span className="text-purple-400">{t.trialTime}</span>}
                           </div>
                         ))}
                       </div>

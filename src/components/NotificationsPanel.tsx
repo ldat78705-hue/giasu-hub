@@ -1,6 +1,6 @@
 import React from 'react';
 import { NotificationItem, ActiveTab } from '../types';
-import { Bell, UserCheck, BookOpen, BookOpenCheck, Settings2, Clock, CheckCircle2, X } from 'lucide-react';
+import { Bell, UserCheck, BookOpen, BookOpenCheck, Settings2, Clock, CheckCircle2, X, UserPlus, MessageCircle } from 'lucide-react';
 
 interface NotificationsPanelProps {
   notifications: NotificationItem[];
@@ -27,7 +27,12 @@ export const NotificationsPanel: React.FC<NotificationsPanelProps> = ({
         return <BookOpen className="w-4 h-4 text-blue-600" />;
       case 'class':
         return <BookOpenCheck className="w-4 h-4 text-emerald-600" />;
+      case 'registration':
+        return <UserPlus className="w-4 h-4 text-amber-600" />;
+      case 'contact':
+        return <MessageCircle className="w-4 h-4 text-cyan-600" />;
       case 'system':
+      default:
         return <Settings2 className="w-4 h-4 text-slate-600" />;
     }
   };
@@ -37,7 +42,10 @@ export const NotificationsPanel: React.FC<NotificationsPanelProps> = ({
       case 'application': return 'bg-indigo-50';
       case 'booking': return 'bg-blue-50';
       case 'class': return 'bg-emerald-50';
-      case 'system': return 'bg-slate-100';
+      case 'registration': return 'bg-amber-50';
+      case 'contact': return 'bg-cyan-50';
+      case 'system':
+      default: return 'bg-slate-100';
     }
   };
 
@@ -93,7 +101,12 @@ export const NotificationsPanel: React.FC<NotificationsPanelProps> = ({
               key={notif.id}
               onClick={() => {
                 if (notif.id) onMarkRead(notif.id);
-                if (notif.type === 'application' || notif.type === 'booking') onNavigate('applications');
+                const navMap: Record<string, ActiveTab> = {
+                  application: 'applications', booking: 'applications',
+                  class: 'matches', registration: 'registrations',
+                  contact: 'contacts', system: 'dashboard',
+                };
+                onNavigate(navMap[notif.type] || 'dashboard');
                 onClose();
               }}
               className={`px-5 py-3.5 border-b border-slate-50 hover:bg-blue-50/40 cursor-pointer transition-colors flex items-start gap-3 ${

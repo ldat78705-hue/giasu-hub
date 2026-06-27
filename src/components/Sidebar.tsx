@@ -155,7 +155,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab, pendi
 
       <div className="p-3 space-y-2 border-t border-slate-700/80 bg-slate-900/40">
         <button
-          onClick={() => { setActiveTab('home'); setMobileOpen(false); }}
+          onClick={() => { window.open('/', '_blank'); setMobileOpen(false); }}
           className="w-full px-3 py-2 bg-slate-800/60 hover:bg-slate-700 border border-slate-700/50 rounded-xl text-xs font-semibold text-slate-300 hover:text-white transition-all flex items-center justify-center gap-2 cursor-pointer"
         >
           <ExternalLink className="w-3.5 h-3.5" />

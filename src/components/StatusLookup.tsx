@@ -22,16 +22,26 @@ export const StatusLookup: React.FC<StatusLookupProps> = ({ tutors, registration
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!phone || phone.length < 9) return;
+    if (!phone || phone.length < 3) return;
     const cleaned = phone.replace(/\s/g, '');
-    setFoundTutors(tutors.filter(t => t.phone === cleaned));
-    setFoundRegs(registrations.filter(r => r.phone === cleaned));
-    // Feature 7: Also find matches & attendance for this parent
-    setFoundMatches(matches.filter(m => m.parentPhone === cleaned));
-    setFoundAttendance(attendance.filter(a => {
-      const matchForA = matches.find(m => m.id === a.matchId);
-      return matchForA?.parentPhone === cleaned;
-    }));
+    const isGsCode = cleaned.toUpperCase().startsWith('GS');
+    if (isGsCode) {
+      // Search by GS code
+      setFoundTutors(tutors.filter(t => t.code.toUpperCase() === cleaned.toUpperCase()));
+      setFoundRegs([]);
+      const tutorMatches = matches.filter(m => m.tutorCode.toUpperCase() === cleaned.toUpperCase());
+      setFoundMatches(tutorMatches);
+      setFoundAttendance(attendance.filter(a => a.tutorCode.toUpperCase() === cleaned.toUpperCase()));
+    } else {
+      // Search by phone
+      setFoundTutors(tutors.filter(t => t.phone === cleaned));
+      setFoundRegs(registrations.filter(r => r.phone === cleaned));
+      setFoundMatches(matches.filter(m => m.parentPhone === cleaned));
+      setFoundAttendance(attendance.filter(a => {
+        const matchForA = matches.find(m => m.id === a.matchId);
+        return matchForA?.parentPhone === cleaned;
+      }));
+    }
     setSearched(true);
   };
 
@@ -45,14 +55,14 @@ export const StatusLookup: React.FC<StatusLookupProps> = ({ tutors, registration
           <Search size={14} /> Tra cứu trạng thái
         </div>
         <h1 style={{ fontSize: 'clamp(22px, 4vw, 28px)', fontWeight: 800, color: '#0f172a', marginBottom: 6 }}>Tra cứu & Theo dõi</h1>
-        <p style={{ fontSize: 14, color: '#64748b' }}>Nhập SĐT để xem đơn đăng ký, gia sư đang dạy, lịch học và điểm danh.</p>
+        <p style={{ fontSize: 14, color: '#64748b' }}>Nhập SĐT hoặc mã gia sư (VD: GS001) để xem đơn đăng ký, gia sư, lịch học.</p>
       </div>
 
       <div style={{ maxWidth: 560, margin: '0 auto' }}>
         <form onSubmit={handleSearch} style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 12, padding: 24, marginBottom: 20 }}>
-          <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#475569', marginBottom: 8 }}>Số điện thoại đã đăng ký</label>
+          <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#475569', marginBottom: 8 }}>Số điện thoại hoặc Mã gia sư</label>
           <div style={{ display: 'flex', gap: 8 }}>
-            <input type="tel" value={phone} onChange={e => setPhone(e.target.value)} placeholder="0912345678" style={{ ...inp, flex: 1 }} required />
+            <input type="text" value={phone} onChange={e => setPhone(e.target.value)} placeholder="0912345678 hoặc GS001" style={{ ...inp, flex: 1 }} required />
             <button type="submit" style={{ padding: '12px 24px', background: '#2563eb', color: '#fff', border: 'none', borderRadius: 10, fontSize: 14, fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6, whiteSpace: 'nowrap' }}>
               <Search size={16} /> Tra cứu
             </button>
