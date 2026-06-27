@@ -84,20 +84,20 @@ export const QuickActions: React.FC<QuickActionsProps> = ({ tutors, registration
 
   return (
     <div className="col-span-12">
-      <div className="flex items-center gap-2 mb-3">
-        <Zap className="w-4 h-4 text-amber-500" />
-        <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500">Cần xử lý ngay ({actions.length})</h3>
+      <div className="flex items-center gap-2 mb-2">
+        <Zap className="w-3.5 h-3.5 text-amber-500" />
+        <h3 className="text-[10px] font-bold uppercase tracking-wider text-slate-500">Cần xử lý ({actions.length})</h3>
       </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+      <div className="flex flex-wrap gap-2">
         {actions.slice(0, 8).map((action, i) => (
           <button key={i} onClick={() => onNavigate(action.tab)}
-            className={`p-4 rounded-2xl border-2 text-left cursor-pointer transition-all hover:shadow-md ${action.urgent ? urgentColors[action.color] + ' animate-pulse' : urgentColors[action.color]}`}>
-            <div className="flex items-start justify-between">
-              <div className={`p-1.5 rounded-lg bg-white/80 ${iconColors[action.color]}`}>{action.icon}</div>
-              <ArrowRight className={`w-3.5 h-3.5 ${iconColors[action.color]} opacity-50`} />
+            className={`flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl border text-left cursor-pointer transition-all hover:shadow-sm ${action.urgent ? urgentColors[action.color] : urgentColors[action.color]}`}>
+            <div className={`${iconColors[action.color]} shrink-0`}>{action.icon}</div>
+            <div className="min-w-0">
+              <div className="text-xs font-bold text-slate-800 truncate">{action.label}</div>
+              <div className="text-[9px] text-slate-500">{action.sub}</div>
             </div>
-            <div className="mt-2 text-sm font-bold text-slate-800">{action.label}</div>
-            <div className="text-[10px] text-slate-500 mt-0.5">{action.sub}</div>
+            <ArrowRight className={`w-3 h-3 ${iconColors[action.color]} opacity-40 shrink-0`} />
           </button>
         ))}
       </div>
