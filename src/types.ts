@@ -276,7 +276,7 @@ export const ADMIN_ROLE_CONFIG: Record<AdminRole, { label: string; tabs: ActiveT
   },
   finance_admin: {
     label: 'Finance Admin',
-    tabs: ['dashboard', 'finance', 'performance', 'kpi', 'attendance'],
+    tabs: ['dashboard', 'finance', 'performance', 'kpi', 'attendance', 'reviews'],
     color: '#16a34a',
   },
   content_admin: {

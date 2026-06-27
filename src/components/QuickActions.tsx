@@ -39,12 +39,20 @@ export const QuickActions: React.FC<QuickActionsProps> = ({ tutors, registration
   const tomorrow = new Date(Date.now() + 86400000).toISOString().split('T')[0];
   const upcomingTrials = registrations.filter(r => r.trialDate && (r.trialDate === today || r.trialDate === tomorrow) && r.trialStatus === 'Đã đặt').length;
 
-  // Overdue payments (matched > 7 days but no payment)
+  // Overdue payments (matched > 28 days but no payment)
   const overduePayments = matches.filter(m => {
     if (m.status !== 'Đang dạy') return false;
     const daysSinceStart = (Date.now() - m.startDate) / (1000 * 60 * 60 * 24);
     const hasPayment = transactions.some(t => t.targetName.includes(m.studentName || '') && t.type === 'Thu phí gia sư');
-    return daysSinceStart > 30 && !hasPayment;
+    return daysSinceStart > 28 && !hasPayment;
+  }).length;
+
+  // F30: Stale matches — active but no attendance in >14 days
+  const staleMatches = matches.filter(m => {
+    if (m.status !== 'Đang dạy') return false;
+    const matchAtt = attendance.filter(a => a.matchId === m.id);
+    const lastAtt = matchAtt.length > 0 ? Math.max(...matchAtt.map(a => a.createdAt)) : m.startDate;
+    return (Date.now() - lastAtt) > 14 * 86400000;
   }).length;
 
   const actions = [
@@ -53,7 +61,8 @@ export const QuickActions: React.FC<QuickActionsProps> = ({ tutors, registration
     { show: newRegs > 0, color: 'blue', icon: <Clock className="w-4 h-4" />, label: `${newRegs} đơn mới chưa xử lý`, sub: overdueRegs > 0 ? `⚠️ ${overdueRegs} quá 24h!` : 'Nhấn để xử lý', tab: 'registrations' as ActiveTab, urgent: overdueRegs > 0 },
     { show: unverifiedTutors > 0, color: 'amber', icon: <UserCheck className="w-4 h-4" />, label: `${unverifiedTutors} GS chờ xác minh`, sub: 'Duyệt hồ sơ gia sư', tab: 'tutors' as ActiveTab, urgent: false },
     { show: dormantTutors.length > 0, color: 'orange', icon: <ShieldAlert className="w-4 h-4" />, label: `${dormantTutors.length} GS "ngủ đông"`, sub: '>30 ngày không hoạt động', tab: 'tutors' as ActiveTab, urgent: false },
-    { show: overduePayments > 0, color: 'red', icon: <DollarSign className="w-4 h-4" />, label: `${overduePayments} lớp chưa thu phí`, sub: '>30 ngày chưa thanh toán', tab: 'finance' as ActiveTab, urgent: overduePayments > 2 },
+    { show: staleMatches > 0, color: 'orange', icon: <AlertTriangle className="w-4 h-4" />, label: `${staleMatches} lớp có thể đã ngưng`, sub: '>14 ngày không điểm danh', tab: 'matches' as ActiveTab, urgent: staleMatches > 2 },
+    { show: overduePayments > 0, color: 'red', icon: <DollarSign className="w-4 h-4" />, label: `${overduePayments} lớp chưa thu phí`, sub: '>28 ngày chưa thanh toán', tab: 'finance' as ActiveTab, urgent: overduePayments > 2 },
     { show: cancelRate > 15, color: 'red', icon: <TrendingDown className="w-4 h-4" />, label: `Tỷ lệ hủy: ${cancelRate}%`, sub: `${cancelledRegs}/${registrations.length} đơn bị hủy`, tab: 'kpi' as ActiveTab, urgent: cancelRate > 30 },
   ].filter(a => a.show);
 

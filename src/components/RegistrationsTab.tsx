@@ -125,7 +125,7 @@ export const RegistrationsTab: React.FC<RegistrationsTabProps> = ({ registration
 
           {/* Details */}
           <div className="flex flex-wrap gap-2 text-xs text-slate-600">
-            <span className="flex items-center gap-1"><Phone className="w-3 h-3 text-blue-500" />{reg.phone}</span>
+            <a href={`tel:${reg.phone}`} className="flex items-center gap-1 hover:text-blue-600" onClick={e => e.stopPropagation()}><Phone className="w-3 h-3 text-blue-500" />{reg.phone}</a>
             {reg.studentName && <span>HS: {reg.studentName}</span>}
             <span>{reg.grade}</span>
             {reg.district && <span className="flex items-center gap-1"><MapPin className="w-3 h-3" />{reg.district}</span>}

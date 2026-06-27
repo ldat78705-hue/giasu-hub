@@ -132,7 +132,7 @@ export const TutorPortal: React.FC<TutorPortalProps> = ({ tutors, matches, atten
       </div>
 
       {/* Quick Stats */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 12, marginBottom: 24 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 12, marginBottom: 24 }}>
         {[
           { label: 'Lớp đang dạy', value: activeMatches.length, color: '#2563eb' },
           { label: 'Buổi tháng này', value: monthAttendance.length, color: '#16a34a' },
