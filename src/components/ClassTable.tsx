@@ -245,7 +245,7 @@ export const ClassTable: React.FC<ClassTableProps> = ({
                 <input
                   type="text"
                   required
-                  placeholder="VD: Tiếng Anh - IELTS 6.5, Toán Lớp 10..."
+                  placeholder="Ví dụ: Tiếng Anh - IELTS 6.5, Toán Lớp 10..."
                   value={subject}
                   onChange={(e) => setSubject(e.target.value)}
                   className="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:bg-white focus:border-blue-500 text-sm"
@@ -257,7 +257,7 @@ export const ClassTable: React.FC<ClassTableProps> = ({
                   <label className="block text-xs font-bold uppercase text-slate-600 mb-1">Thông tin học sinh</label>
                   <input
                     type="text"
-                    placeholder="VD: Học sinh lớp 12"
+                    placeholder="Ví dụ: Học sinh lớp 12"
                     value={studentInfo}
                     onChange={(e) => setStudentInfo(e.target.value)}
                     className="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:bg-white focus:border-blue-500 text-sm"
@@ -280,7 +280,7 @@ export const ClassTable: React.FC<ClassTableProps> = ({
                 <input
                   type="text"
                   required
-                  placeholder="VD: Cầu Giấy, Hà Nội hoặc Online - Zoom"
+                  placeholder="Ví dụ: Cầu Giấy, Hà Nội hoặc Online - Zoom"
                   value={location}
                   onChange={(e) => setLocation(e.target.value)}
                   className="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:bg-white focus:border-blue-500 text-sm"
@@ -303,7 +303,7 @@ export const ClassTable: React.FC<ClassTableProps> = ({
                 <label className="block text-xs font-bold uppercase text-slate-600 mb-1">Yêu cầu gia sư</label>
                 <textarea
                   rows={2}
-                  placeholder="VD: Sinh viên giỏi Bách Khoa, nhiệt tình..."
+                  placeholder="Ví dụ: Sinh viên giỏi Bách Khoa, nhiệt tình..."
                   value={requirements}
                   onChange={(e) => setRequirements(e.target.value)}
                   className="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:bg-white focus:border-blue-500 text-sm"

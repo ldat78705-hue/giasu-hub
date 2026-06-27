@@ -253,7 +253,7 @@ export const FinanceTab: React.FC<FinanceTabProps> = ({ transactions, onAddTrans
               </div>
               <div>
                 <label className="block text-xs font-bold uppercase text-slate-600 mb-1">Đối tượng nộp/nhận *</label>
-                <input type="text" required placeholder="VD: GS Nguyễn Văn A - Lớp Toán 12"
+                <input type="text" required placeholder="Ví dụ: Gia sư Nguyễn Văn A - Lớp Toán 12"
                   value={targetName} onChange={(e) => setTargetName(e.target.value)}
                   className="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:bg-white focus:border-blue-500 text-sm" />
               </div>

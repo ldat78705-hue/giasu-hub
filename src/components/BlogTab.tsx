@@ -143,7 +143,7 @@ export const BlogTab: React.FC<BlogTabProps> = ({ onRunAiSeo }) => {
             <form onSubmit={handleSeoGenerate} className="space-y-4">
               <div>
                 <label className="block text-xs font-bold uppercase text-slate-600 mb-1">Chủ đề trang / Chiến dịch SEO</label>
-                <input type="text" required placeholder="VD: Luyện thi IELTS cấp tốc tại Quận 7" value={seoTopic}
+                <input type="text" required placeholder="Ví dụ: Luyện thi IELTS cấp tốc tại Quận 7" value={seoTopic}
                   onChange={e => setSeoTopic(e.target.value)}
                   className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:bg-white focus:border-blue-500 text-sm" />
               </div>
@@ -211,7 +211,7 @@ export const BlogTab: React.FC<BlogTabProps> = ({ onRunAiSeo }) => {
             <div className="space-y-3 text-sm">
               <div>
                 <label className="block text-xs font-bold uppercase text-slate-600 mb-1">Tiêu đề *</label>
-                <input value={title} onChange={e => setTitle(e.target.value)} placeholder="VD: Cách chọn gia sư Toán giỏi..."
+                <input value={title} onChange={e => setTitle(e.target.value)} placeholder="Ví dụ: Cách chọn gia sư Toán giỏi..."
                   className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-blue-500" />
               </div>
               <div className="grid grid-cols-2 gap-3">

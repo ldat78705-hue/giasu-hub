@@ -105,7 +105,7 @@ export const ApplicationsTab: React.FC<ApplicationsTabProps> = ({
           }`}
         >
           <UserCheck className="w-3.5 h-3.5" />
-          <span>GS nhận lớp</span>
+          <span>Gia sư nhận lớp</span>
           {pendingApps > 0 && (
             <span className="px-1.5 py-0.5 bg-amber-500 text-white rounded-full text-[10px] font-bold min-w-[18px] text-center">
               {pendingApps}

@@ -115,7 +115,7 @@ export const KPIDashboard: React.FC<KPIDashboardProps> = ({ matches, registratio
               <p className="text-[10px] text-slate-500 mt-1">Đơn đăng ký → Xếp lớp</p>
             </div>
             <div className="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs">
-              <div className="flex items-center gap-2 mb-2"><Activity className="w-4 h-4 text-emerald-500" /><span className="text-[10px] font-bold uppercase text-slate-400">GS hoạt động</span></div>
+              <div className="flex items-center gap-2 mb-2"><Activity className="w-4 h-4 text-emerald-500" /><span className="text-[10px] font-bold uppercase text-slate-400">Gia sư hoạt động</span></div>
               <div className="text-3xl font-bold text-emerald-600">{kpi.activeTutors}/{tutors.length}</div>
               <p className="text-[10px] text-slate-500 mt-1">{kpi.tutorActiveRate}% online & verified</p>
             </div>

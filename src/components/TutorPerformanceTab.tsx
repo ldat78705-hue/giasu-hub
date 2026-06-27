@@ -126,14 +126,14 @@ export const TutorPerformanceTab: React.FC<TutorPerformanceTabProps> = ({ tutors
           <div className="text-[10px] text-slate-400">/{filtered.reduce((s, p) => s + p.totalSessions, 0)} tổng</div>
         </div>
         <div className="bg-white rounded-2xl border border-slate-200 p-4 shadow-xs">
-          <div className="text-[10px] font-bold uppercase text-slate-400">GS hoạt động</div>
+          <div className="text-[10px] font-bold uppercase text-slate-400">Gia sư hoạt động</div>
           <div className="text-lg font-bold text-indigo-600 mt-1">{perfs.filter(p => p.activeClasses > 0).length}</div>
           <div className="text-[10px] text-slate-400">/{tutors.length} tổng</div>
         </div>
         <div className="bg-white rounded-2xl border border-slate-200 p-4 shadow-xs">
-          <div className="text-[10px] font-bold uppercase text-slate-400">GS ngủ đông</div>
+          <div className="text-[10px] font-bold uppercase text-slate-400">Gia sư ngủ đông</div>
           <div className={`text-lg font-bold mt-1 ${dormantCount > 0 ? 'text-red-600' : 'text-emerald-600'}`}>{dormantCount}</div>
-          <div className="text-[10px] text-slate-400">&gt;30 ngày không HĐ</div>
+          <div className="text-[10px] text-slate-400">&gt;30 ngày không hoạt động</div>
         </div>
       </div>
 

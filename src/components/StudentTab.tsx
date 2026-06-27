@@ -191,7 +191,7 @@ export const StudentTab: React.FC<StudentTabProps> = ({ students, onAddStudent, 
                     {editingNote === st.id ? (
                       <div className="flex gap-1">
                         <input type="text" value={noteText} onChange={e => setNoteText(e.target.value)}
-                          placeholder="VD: PH khó tính, cần GS kiên nhẫn..." autoFocus
+                          placeholder="Ví dụ: Phụ huynh ký tính, cần gia sư kiên nhẫn..." autoFocus
                           className="flex-1 px-2 py-1 text-xs border border-blue-300 rounded-md bg-blue-50 outline-none" />
                         <button onClick={() => { if (st.id && onUpdateNote) { onUpdateNote(st.id, noteText); } setEditingNote(null); }}
                           className="px-2 py-1 bg-blue-600 text-white rounded-md cursor-pointer text-xs flex items-center gap-1"><Save className="w-3 h-3" /> Lưu</button>
@@ -246,7 +246,7 @@ export const StudentTab: React.FC<StudentTabProps> = ({ students, onAddStudent, 
                   </div>
                   <div>
                     <label className="block text-xs font-bold text-slate-600 mb-1">Trường</label>
-                    <input value={school} onChange={e => setSchool(e.target.value)} placeholder="VD: THPT Chu Văn An"
+                    <input value={school} onChange={e => setSchool(e.target.value)} placeholder="Ví dụ: THPT Chu Văn An"
                       className="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl outline-none text-sm" />
                   </div>
                 </div>

@@ -349,13 +349,13 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({ settings, onSaveSettin
             <div>
               <label className="block text-xs font-bold uppercase text-slate-600 mb-1.5">Cloud Name</label>
               <input type="text" value={cloudinaryCloudName} onChange={(e) => setCloudinaryCloudName(e.target.value)}
-                placeholder="VD: dkpvfqz1"
+                placeholder="Ví dụ: dkpvfqz1"
                 className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:bg-white focus:border-blue-500 text-sm font-mono" />
             </div>
             <div>
               <label className="block text-xs font-bold uppercase text-slate-600 mb-1.5">Upload Preset (Unsigned)</label>
               <input type="text" value={cloudinaryPreset} onChange={(e) => setCloudinaryPreset(e.target.value)}
-                placeholder="VD: o1stheydat"
+                placeholder="Ví dụ: o1stheydat"
                 className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:bg-white focus:border-blue-500 text-sm font-mono" />
             </div>
           </div>
@@ -412,7 +412,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({ settings, onSaveSettin
             </div>
             <div>
               <label className="block text-[11px] font-bold uppercase text-slate-600 mb-1">Mã BIN</label>
-              <input type="text" value={bankBin} onChange={e => setBankBin(e.target.value)} placeholder="VD: 970407"
+              <input type="text" value={bankBin} onChange={e => setBankBin(e.target.value)} placeholder="Ví dụ: 970407"
                 className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-blue-500 text-sm" />
             </div>
           </div>

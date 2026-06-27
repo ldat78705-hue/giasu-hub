@@ -161,13 +161,13 @@ export const AttendanceTab: React.FC<AttendanceTabProps> = ({ attendance, matche
                 </div>
                 <div>
                   <label className="block text-xs font-bold uppercase text-slate-600 mb-1">Ghi chú</label>
-                  <input value={note} onChange={e => setNote(e.target.value)} placeholder="VD: HS vắng do ốm"
+                  <input value={note} onChange={e => setNote(e.target.value)} placeholder="Ví dụ: HS vắng do ốm"
                     className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-blue-500" />
                 </div>
                 <div>
                   <label className="block text-xs font-bold uppercase text-purple-600 mb-1">📝 Nhận xét của GS (PH sẽ thấy khi tra cứu)</label>
                   <textarea value={tutorFeedback} onChange={e => setTutorFeedback(e.target.value)}
-                    placeholder="VD: Bé tiếp thu tốt, cần ôn thêm phần phân số..."
+                    placeholder="Ví dụ: Bé tiếp thu tốt, cần ôn thêm phần phân số..."
                     rows={2}
                     className="w-full px-3 py-2.5 bg-purple-50 border border-purple-200 rounded-xl outline-none focus:border-purple-500 text-sm" />
                 </div>
