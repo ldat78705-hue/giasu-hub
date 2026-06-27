@@ -1,6 +1,6 @@
 import React from 'react';
 import { Users, BookOpen, GraduationCap, ClipboardCheck, TrendingUp, MessageCircle, Calendar, Target } from 'lucide-react';
-import { ClassMatch } from '../types';
+import { ClassMatch, ParentRegistration } from '../types';
 
 interface StatsCardsProps {
   totalClasses: number;
@@ -13,16 +13,22 @@ interface StatsCardsProps {
   totalRegistrations: number;
   pendingRegistrations: number;
   matches: ClassMatch[];
+  registrations?: ParentRegistration[];
 }
 
 export const StatsCards: React.FC<StatsCardsProps> = ({
   totalClasses, pendingClasses, totalTutors, totalStudents, pendingApplications,
-  totalRevenue, unreadContacts, totalRegistrations, pendingRegistrations, matches,
+  totalRevenue, unreadContacts, totalRegistrations, pendingRegistrations, matches, registrations = [],
 }) => {
   const formatCurrency = (val: number) => new Intl.NumberFormat('vi-VN').format(val);
   const activeMatches = matches.filter(m => m.status === 'Đang dạy').length;
   const doneMatches = matches.filter(m => m.status === 'Hoàn thành').length;
   const matchRate = matches.length > 0 ? Math.round((doneMatches + activeMatches) / matches.length * 100) : 0;
+
+  // F23: Weekly stats
+  const weekAgo = Date.now() - 7 * 86400000;
+  const weekNewRegs = registrations.filter(r => r.createdAt > weekAgo).length;
+  const weekNewMatches = matches.filter(m => m.createdAt > weekAgo).length;
 
   // Mini chart data: last 7 days of new items
   const now = Date.now();
@@ -145,6 +151,31 @@ export const StatsCards: React.FC<StatsCardsProps> = ({
               <span className="text-sm font-bold text-emerald-600">{matchRate}%</span>
             </div>
           </div>
+        </div>
+      </div>
+
+      {/* F23: Weekly Report — Copy to Zalo */}
+      <div className="col-span-12 lg:col-span-4">
+        <div className="bg-gradient-to-br from-indigo-600 to-purple-700 rounded-2xl p-5 text-white shadow-lg shadow-indigo-600/15 h-full flex flex-col justify-between">
+          <div>
+            <div className="flex items-center gap-2 mb-3">
+              <Calendar className="w-4 h-4 text-indigo-200" />
+              <h3 className="text-xs font-bold uppercase tracking-wider text-indigo-200">Báo cáo tuần</h3>
+            </div>
+            <div className="space-y-2 text-sm">
+              <div className="flex justify-between"><span className="text-indigo-200">Đơn PH mới</span><span className="font-bold">{weekNewRegs}</span></div>
+              <div className="flex justify-between"><span className="text-indigo-200">GS ghép thành công</span><span className="font-bold">{weekNewMatches}</span></div>
+              <div className="flex justify-between"><span className="text-indigo-200">Liên hệ mới</span><span className="font-bold">{unreadContacts}</span></div>
+              <div className="flex justify-between"><span className="text-indigo-200">Tổng lớp đang dạy</span><span className="font-bold">{activeMatches}</span></div>
+            </div>
+          </div>
+          <button onClick={() => {
+            const report = `📊 BÁO CÁO TUẦN — Gia Sư Thành Đạt\n📅 ${new Date().toLocaleDateString('vi-VN')}\n\n📋 Đơn PH mới: ${weekNewRegs}\n🎓 GS ghép thành công: ${weekNewMatches}\n💬 Liên hệ mới: ${unreadContacts}\n📚 Lớp đang dạy: ${activeMatches}\n💰 Doanh thu: ${formatCurrency(totalRevenue)}đ\n📈 Tỷ lệ ghép: ${matchRate}%\n\n🔗 https://giasu-dusky.vercel.app/dashboard`;
+            navigator.clipboard.writeText(report);
+            alert('Đã copy báo cáo! Paste vào Zalo để chia sẻ.');
+          }} className="mt-4 w-full py-2.5 bg-white/15 hover:bg-white/25 text-white rounded-xl text-xs font-bold cursor-pointer border border-white/20 transition-all">
+            📋 Copy báo cáo → Zalo
+          </button>
         </div>
       </div>
     </div>

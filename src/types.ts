@@ -245,7 +245,7 @@ export interface AttendanceRecord {
   tutorFeedback?: string;
 }
 
-export type ActiveTab = 'home' | 'find-tutors' | 'register-tutor' | 'parent-register' | 'status-lookup' | 'dashboard' | 'classes' | 'tutors' | 'students' | 'finance' | 'applications' | 'registrations' | 'contacts' | 'matches' | 'settings' | 'reviews' | 'attendance' | 'calendar' | 'kpi' | 'import' | 'advanced' | 'blog' | 'performance' | 'activity' | 'zalonotify';
+export type ActiveTab = 'home' | 'find-tutors' | 'register-tutor' | 'parent-register' | 'status-lookup' | 'tutor-portal' | 'dashboard' | 'classes' | 'tutors' | 'students' | 'finance' | 'applications' | 'registrations' | 'contacts' | 'matches' | 'settings' | 'reviews' | 'attendance' | 'calendar' | 'kpi' | 'import' | 'advanced' | 'blog' | 'performance' | 'activity' | 'zalonotify';
 
 // Feature 13: Tags
 export const REGISTRATION_TAGS = ['VIP', 'Gấp', 'Cần GS nữ', 'Học online', 'Chờ PH xác nhận', 'Khó tìm GS', 'Học thử OK', 'Đã gọi 2 lần'] as const;

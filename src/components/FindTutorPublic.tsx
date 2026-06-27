@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { TutorItem, ActiveTab } from '../types';
-import { Search, Star, MapPin, GraduationCap, CheckCircle2, Send, X, UserPlus, Phone } from 'lucide-react';
+import { Search, Star, MapPin, GraduationCap, CheckCircle2, Send, X, UserPlus, Phone, GitCompareArrows } from 'lucide-react';
 
 interface FindTutorPublicProps {
   tutors: TutorItem[];
@@ -24,6 +24,13 @@ export const FindTutorPublic: React.FC<FindTutorPublicProps> = ({ tutors, onBook
   const [phone, setPhone] = useState('');
   const [notes, setNotes] = useState('');
   const [bookingSuccess, setBookingSuccess] = useState(false);
+  // F20: Compare state
+  const [compareCodes, setCompareCodes] = useState<string[]>([]);
+  const [showCompare, setShowCompare] = useState(false);
+
+  const toggleCompare = (code: string) => {
+    setCompareCodes(prev => prev.includes(code) ? prev.filter(c => c !== code) : prev.length < 3 ? [...prev, code] : prev);
+  };
 
   const verifiedTutors = tutors.filter(t => t.verified);
 
@@ -97,7 +104,7 @@ export const FindTutorPublic: React.FC<FindTutorPublicProps> = ({ tutors, onBook
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: 16 }}>
           {filtered.map(t => (
             <div key={t.id || t.code} onClick={() => setSelectedTutor(t)}
-              style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 12, padding: 20, cursor: 'pointer', transition: 'border-color .15s, box-shadow .15s' }}
+              style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 12, padding: 20, cursor: 'pointer', transition: 'border-color .15s, box-shadow .15s', position: 'relative' }}
               onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = '#93c5fd'; (e.currentTarget as HTMLElement).style.boxShadow = '0 4px 12px rgba(37,99,235,.08)'; }}
               onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = '#e2e8f0'; (e.currentTarget as HTMLElement).style.boxShadow = 'none'; }}>
               <div style={{ display: 'flex', gap: 14, alignItems: 'flex-start' }}>
@@ -131,11 +138,70 @@ export const FindTutorPublic: React.FC<FindTutorPublicProps> = ({ tutors, onBook
                     <span style={{ fontWeight: 700, color: '#2563eb', fontSize: 14 }}>{fmt(t.hourlyRate)}đ/buổi</span>
                   </div>
                 </div>
+                {/* F20: Compare checkbox */}
+                <div style={{ position: 'absolute', top: 8, right: 8 }} onClick={e => e.stopPropagation()}>
+                  <label style={{ display: 'flex', alignItems: 'center', gap: 4, cursor: 'pointer', padding: '3px 8px', borderRadius: 6, background: compareCodes.includes(t.code) ? '#eff6ff' : '#f8fafc', border: `1px solid ${compareCodes.includes(t.code) ? '#93c5fd' : '#e2e8f0'}`, fontSize: 10, fontWeight: 600, color: compareCodes.includes(t.code) ? '#2563eb' : '#94a3b8' }}>
+                    <input type="checkbox" checked={compareCodes.includes(t.code)} onChange={() => toggleCompare(t.code)} style={{ accentColor: '#2563eb', width: 12, height: 12 }} />
+                    So sánh
+                  </label>
+                </div>
               </div>
             </div>
           ))}
         </div>
       )}
+
+      {/* F20: Floating compare bar */}
+      {compareCodes.length >= 2 && (
+        <div style={{ position: 'fixed', bottom: 80, left: '50%', transform: 'translateX(-50%)', background: '#0f172a', color: '#fff', padding: '12px 24px', borderRadius: 16, display: 'flex', alignItems: 'center', gap: 12, boxShadow: '0 8px 32px rgba(0,0,0,0.3)', zIndex: 40, animation: 'slideUp 0.3s ease' }}>
+          <GitCompareArrows size={18} />
+          <span style={{ fontSize: 13, fontWeight: 600 }}>{compareCodes.length} GS đã chọn</span>
+          <button onClick={() => setShowCompare(true)} style={{ padding: '8px 16px', background: '#2563eb', color: '#fff', border: 'none', borderRadius: 8, fontSize: 12, fontWeight: 600, cursor: 'pointer' }}>So sánh ngay</button>
+          <button onClick={() => setCompareCodes([])} style={{ padding: '8px 12px', background: 'rgba(255,255,255,0.1)', color: '#94a3b8', border: 'none', borderRadius: 8, fontSize: 12, cursor: 'pointer' }}>Xóa</button>
+        </div>
+      )}
+
+      {/* F20: Compare Modal */}
+      {showCompare && (() => {
+        const compareTutors = compareCodes.map(code => verifiedTutors.find(t => t.code === code)).filter(Boolean) as TutorItem[];
+        return (
+          <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', zIndex: 50, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20 }} onClick={() => setShowCompare(false)}>
+            <div style={{ background: '#fff', borderRadius: 16, maxWidth: 800, width: '100%', maxHeight: '80vh', overflow: 'auto', padding: 32 }} onClick={e => e.stopPropagation()}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
+                <h2 style={{ fontSize: 18, fontWeight: 800, color: '#0f172a', display: 'flex', alignItems: 'center', gap: 8 }}><GitCompareArrows size={20} /> So sánh gia sư</h2>
+                <button onClick={() => setShowCompare(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#94a3b8' }}><X size={20} /></button>
+              </div>
+              <div style={{ display: 'grid', gridTemplateColumns: `repeat(${compareTutors.length}, 1fr)`, gap: 16 }}>
+                {compareTutors.map(t => (
+                  <div key={t.code} style={{ border: '1px solid #e2e8f0', borderRadius: 12, padding: 20, textAlign: 'center' }}>
+                    <div style={{ width: 48, height: 48, borderRadius: 12, background: '#3b82f6', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontWeight: 700, fontSize: 16, margin: '0 auto 12px' }}>{t.avatar}</div>
+                    <div style={{ fontWeight: 700, fontSize: 15, color: '#0f172a', marginBottom: 4 }}>{t.name}</div>
+                    <div style={{ fontSize: 11, color: '#2563eb', fontWeight: 600, background: '#eff6ff', padding: '2px 8px', borderRadius: 4, display: 'inline-block', marginBottom: 16 }}>✓ Đã xác minh</div>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 10, textAlign: 'left' }}>
+                      {[
+                        { label: 'Đánh giá', value: <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}><Star size={12} style={{ color: '#f59e0b', fill: '#f59e0b' }} />{t.rating}/5</span> },
+                        { label: 'Kinh nghiệm', value: t.experience || t.qualification },
+                        { label: 'Môn dạy', value: t.subjects.join(', ') },
+                        { label: 'Khu vực', value: t.area || 'Hà Nội' },
+                        { label: 'Học phí', value: <span style={{ fontWeight: 700, color: '#2563eb' }}>{fmt(t.hourlyRate)}đ/buổi</span> },
+                      ].map((row, ri) => (
+                        <div key={ri} style={{ borderBottom: '1px solid #f1f5f9', paddingBottom: 8 }}>
+                          <div style={{ fontSize: 10, fontWeight: 600, color: '#94a3b8', textTransform: 'uppercase', marginBottom: 2 }}>{row.label}</div>
+                          <div style={{ fontSize: 13, color: '#334155', fontWeight: 500 }}>{row.value}</div>
+                        </div>
+                      ))}
+                    </div>
+                    <button onClick={() => { setSelectedTutor(t); setShowCompare(false); }}
+                      style={{ marginTop: 16, width: '100%', padding: '10px', background: '#2563eb', color: '#fff', border: 'none', borderRadius: 8, fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>
+                      Chọn GS này
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        );
+      })()}
 
       {/* CTA bottom */}
       <div style={{ marginTop: 32, background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 12, padding: '24px', textAlign: 'center' }}>

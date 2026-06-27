@@ -43,8 +43,9 @@ import { RegisterTutorPublic } from './components/RegisterTutorPublic';
 import { ParentRegisterForm } from './components/ParentRegisterForm';
 import { FloatingActions } from './components/FloatingActions';
 import { StatusLookup } from './components/StatusLookup';
+import { TutorPortal } from './components/TutorPortal';
 
-const publicTabs: ActiveTab[] = ['home', 'find-tutors', 'register-tutor', 'parent-register', 'status-lookup'];
+const publicTabs: ActiveTab[] = ['home', 'find-tutors', 'register-tutor', 'parent-register', 'status-lookup', 'tutor-portal'];
 
 const DEFAULT_SETTINGS: AdminSettings = {
   centerName: 'Gia Sư Thành Đạt',
@@ -71,6 +72,7 @@ export default function App() {
     '/dang-ky-hoc': 'parent-register',
     '/dang-ky-day': 'register-tutor',
     '/tra-cuu': 'status-lookup',
+    '/gia-su-portal': 'tutor-portal',
     '/dashboard': 'dashboard',
   };
 
@@ -80,6 +82,7 @@ export default function App() {
     'parent-register': '/dang-ky-hoc',
     'register-tutor': '/dang-ky-day',
     'status-lookup': '/tra-cuu',
+    'tutor-portal': '/gia-su-portal',
     'dashboard': '/dashboard',
   };
 
@@ -89,6 +92,7 @@ export default function App() {
     '/dang-ky-hoc': 'Đăng Ký Tìm Gia Sư - Phụ Huynh | Gia Sư Thành Đạt',
     '/dang-ky-day': 'Đăng Ký Làm Gia Sư | Gia Sư Thành Đạt',
     '/tra-cuu': 'Tra Cứu Trạng Thái Đăng Ký | Gia Sư Thành Đạt',
+    '/gia-su-portal': 'Cổng Gia Sư | Gia Sư Thành Đạt',
     '/dashboard': 'Quản Trị | Gia Sư Thành Đạt',
   };
 
@@ -541,7 +545,7 @@ export default function App() {
         <main style={{ flex: 1, paddingTop: 56 }}>
           <Routes>
             <Route path="/" element={
-              <HomePublic classes={classes} tutors={tutors} onNavigate={setActiveTab}
+              <HomePublic classes={classes} tutors={tutors} reviews={reviews} onNavigate={setActiveTab}
                 onAiSearch={handleAiSearch} isSearching={isSearching}
                 zaloNumber={zaloNumber} onContactSubmit={handleContactSubmit} />
             } />
@@ -569,8 +573,14 @@ export default function App() {
                 <StatusLookup tutors={tutors} registrations={registrations} matches={matches} attendance={attendance} zaloNumber={zaloNumber} />
               </div>
             } />
+            <Route path="/gia-su-portal" element={
+              <div style={{ maxWidth: 800, margin: '0 auto', padding: '32px 20px' }}>
+                <TutorPortal tutors={tutors} matches={matches} attendance={attendance} reviews={reviews} classes={classes}
+                  onLogout={() => setActiveTab('home')} />
+              </div>
+            } />
             <Route path="*" element={
-              <HomePublic classes={classes} tutors={tutors} onNavigate={setActiveTab}
+              <HomePublic classes={classes} tutors={tutors} reviews={reviews} onNavigate={setActiveTab}
                 onAiSearch={handleAiSearch} isSearching={isSearching}
                 zaloNumber={zaloNumber} onContactSubmit={handleContactSubmit} />
             } />
@@ -624,14 +634,14 @@ export default function App() {
                 pendingApplications={pendingApplicationsCount} totalRevenue={totalRevenue}
                 unreadContacts={unreadContactsCount} totalRegistrations={registrations.length}
                 pendingRegistrations={registrations.filter(r => r.status === 'Mới').length}
-                matches={matches} />
+                matches={matches} registrations={registrations} />
               <ClassTable classes={classes} onSelectClassForMatch={setSelectedClass}
                 selectedClassCode={selectedClass?.code} onAddClass={handleAddClass}
                 onUpdateStatus={handleUpdateClassStatus} onDeleteClass={handleDeleteClass}
                 onOpenAiGenerator={() => setShowAiGenModal(true)} />
               <SideWidgets selectedClass={selectedClass} tutors={tutors} aiMatches={aiMatches}
                 isMatchingLoading={isMatchingLoading} onRunMatch={() => runAiMatch()} hasApiKey={!!apiKey}
-                matches={matches} />
+                matches={matches} reviews={reviews} attendance={attendance} />
             </>
           )}
 

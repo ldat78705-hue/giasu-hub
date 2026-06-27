@@ -140,10 +140,10 @@ export const NotificationsPanel: React.FC<NotificationsPanelProps> = ({
       {notifications.length > 0 && (
         <div className="px-5 py-3 border-t border-slate-100 bg-slate-50/60">
           <button
-            onClick={() => { onNavigate('applications'); onClose(); }}
+            onClick={() => { onNavigate('activity'); onClose(); }}
             className="w-full text-center text-xs font-bold text-blue-600 hover:text-blue-800 cursor-pointer"
           >
-            Xem tất cả đơn ứng tuyển →
+            Xem lịch sử hoạt động →
           </button>
         </div>
       )}
