@@ -45,7 +45,7 @@ export const StatsCards: React.FC<StatsCardsProps> = ({
   const maxDay = Math.max(...days.map(d => Math.max(d.count, d.regs)), 1);
 
   const copyWeeklyReport = () => {
-    const report = `📊 BÁO CÁO TUẦN — Gia Sư Thành Đạt\n📅 ${new Date().toLocaleDateString('vi-VN')}\n\n📋 Đơn PH mới: ${weekNewRegs}\n🎓 GS ghép thành công: ${weekNewMatches}\n📚 Lớp đang dạy: ${activeMatches}\n💰 Doanh thu: ${fmt(totalRevenue)}đ\n📈 Tỷ lệ ghép: ${matchRate}%\n\n🔗 https://giasu-dusky.vercel.app/quan-tri`;
+    const report = `📊 BÁO CÁO TUẦN — Gia Sư Thành Đạt\n📅 ${new Date().toLocaleDateString('vi-VN')}\n\n📋 Đơn phụ huynh mới: ${weekNewRegs}\n🎓 Gia sư ghép thành công: ${weekNewMatches}\n📚 Lớp đang dạy: ${activeMatches}\n💰 Doanh thu: ${fmt(totalRevenue)}đ\n📈 Tỷ lệ ghép: ${matchRate}%\n\n🔗 https://giasu-dusky.vercel.app/quan-tri`;
     navigator.clipboard.writeText(report);
     alert('Đã copy báo cáo! Paste vào Zalo để chia sẻ.');
   };
@@ -93,8 +93,8 @@ export const StatsCards: React.FC<StatsCardsProps> = ({
           </div>
           <div className="text-2xl font-extrabold text-slate-800">{pendingRegistrations + pendingApplications}</div>
           <div className="flex items-center gap-3 mt-1 text-[10px]">
-            <span className="text-amber-600 font-semibold">{pendingRegistrations} đơn PH</span>
-            <span className="text-blue-600 font-semibold">{pendingApplications} GS mới</span>
+            <span className="text-amber-600 font-semibold">{pendingRegistrations} đơn phụ huynh</span>
+            <span className="text-blue-600 font-semibold">{pendingApplications} gia sư mới</span>
           </div>
         </div>
 
@@ -162,7 +162,7 @@ export const StatsCards: React.FC<StatsCardsProps> = ({
               <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Tuần này</span>
             </div>
             <div className="space-y-2.5 text-[13px]">
-              <div className="flex justify-between"><span className="text-slate-400">Đơn PH mới</span><span className="font-bold">{weekNewRegs}</span></div>
+              <div className="flex justify-between"><span className="text-slate-400">Đơn phụ huynh mới</span><span className="font-bold">{weekNewRegs}</span></div>
               <div className="flex justify-between"><span className="text-slate-400">Ghép thành công</span><span className="font-bold text-emerald-400">{weekNewMatches}</span></div>
               <div className="flex justify-between"><span className="text-slate-400">Đang dạy</span><span className="font-bold">{activeMatches}</span></div>
             </div>

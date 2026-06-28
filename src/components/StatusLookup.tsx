@@ -234,7 +234,7 @@ export const StatusLookup: React.FC<StatusLookupProps> = ({ tutors, registration
                             {/* Last attendance feedback */}
                             {matchAttendance.length > 0 && matchAttendance[0].tutorFeedback && (
                               <div style={{ marginTop: 8, background: '#faf5ff', border: '1px solid #e9d5ff', borderRadius: 6, padding: 8, fontSize: 11, color: '#7c3aed' }}>
-                                <strong>Nhận xét GS (buổi gần nhất):</strong> {matchAttendance[0].tutorFeedback}
+                                <strong>Nhận xét gia sư (buổi gần nhất):</strong> {matchAttendance[0].tutorFeedback}
                               </div>
                             )}
                           </div>

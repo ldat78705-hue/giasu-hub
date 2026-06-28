@@ -69,7 +69,7 @@ export const AutoSuggestPanel: React.FC<AutoSuggestPanelProps> = ({ registration
     .slice(0, 5);
 
   const copyInfo = (t: SuggestedTutor) => {
-    const text = `GS đề xuất cho PH ${registration.parentName}:\n- GS: ${t.tutor.name} (${t.tutor.code})\n- Môn: ${t.tutor.subjects.join(', ')}\n- SĐT GS: ${t.tutor.phone || 'N/A'}\n- Phù hợp: ${t.score}%\n- Lý do: ${t.reasons.join(', ')}`;
+    const text = `Gia sư đề xuất cho phụ huynh ${registration.parentName}:\n- Gia sư: ${t.tutor.name} (${t.tutor.code})\n- Môn: ${t.tutor.subjects.join(', ')}\n- SĐT: ${t.tutor.phone || 'N/A'}\n- Phù hợp: ${t.score}%\n- Lý do: ${t.reasons.join(', ')}`;
     navigator.clipboard.writeText(text).then(() => {
       setCopied(t.tutor.code);
       setTimeout(() => setCopied(null), 2000);
@@ -83,10 +83,10 @@ export const AutoSuggestPanel: React.FC<AutoSuggestPanelProps> = ({ registration
           <div className="flex items-start justify-between">
             <div>
               <h3 className="text-lg font-bold text-slate-800 flex items-center gap-2">
-                <Sparkles className="w-5 h-5 text-purple-600" /> Đề xuất GS phù hợp
+                <Sparkles className="w-5 h-5 text-purple-600" /> Đề xuất gia sư phù hợp
               </h3>
               <p className="text-xs text-slate-500 mt-1">
-                PH: <strong>{registration.parentName}</strong> · Môn: <strong>{registration.subjects.join(', ')}</strong> · KV: <strong>{registration.district || 'N/A'}</strong> · {registration.mode}
+                Phụ huynh: <strong>{registration.parentName}</strong> · Môn: <strong>{registration.subjects.join(', ')}</strong> · Khu vực: <strong>{registration.district || 'N/A'}</strong> · {registration.mode}
               </p>
             </div>
             <button onClick={onClose} className="p-1.5 hover:bg-slate-100 rounded-lg cursor-pointer"><X className="w-5 h-5 text-slate-400" /></button>
@@ -95,7 +95,7 @@ export const AutoSuggestPanel: React.FC<AutoSuggestPanelProps> = ({ registration
 
         <div className="p-6 space-y-3">
           {suggestions.length === 0 ? (
-            <div className="text-center py-8 text-slate-400 text-sm">Chưa tìm được GS phù hợp. Thử tìm thủ công tại tab Gia sư.</div>
+            <div className="text-center py-8 text-slate-400 text-sm">Chưa tìm được gia sư phù hợp. Thử tìm thủ công tại tab Gia sư.</div>
           ) : suggestions.map((s, i) => (
             <div key={s.tutor.id} className={`p-4 rounded-xl border-2 transition-all ${i === 0 ? 'border-purple-300 bg-purple-50/50' : 'border-slate-200 hover:border-purple-200'}`}>
               <div className="flex items-start gap-3">
@@ -123,7 +123,7 @@ export const AutoSuggestPanel: React.FC<AutoSuggestPanelProps> = ({ registration
                 <div className="flex flex-col gap-1.5 shrink-0">
                   {onQuickMatch && (
                     <button onClick={async () => {
-                      if (!window.confirm(`Ghép GS ${s.tutor.name} cho PH ${registration.parentName}?\nAuto tạo lớp + match + thông báo`)) return;
+                      if (!window.confirm(`Ghép gia sư ${s.tutor.name} cho phụ huynh ${registration.parentName}?\nTự động tạo lớp + ghép + thông báo`)) return;
                       setMatching(s.tutor.code);
                       await onQuickMatch(registration, s.tutor);
                       setMatching(null);

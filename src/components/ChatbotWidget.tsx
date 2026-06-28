@@ -24,8 +24,8 @@ Thông tin:
 - Các môn: Toán, Lý, Hóa, Anh, Văn, và nhiều môn khác
 - Khu vực: Hà Nội
 - Học thử miễn phí 1-2 buổi
-- Đổi GS miễn phí nếu không hài lòng
-Hướng dẫn PH đăng ký tại giasu-dusky.vercel.app/dang-ky-hoc hoặc gọi 0822448444.`;
+- Đổi gia sư miễn phí nếu không hài lòng
+Hướng dẫn phụ huynh đăng ký tại giasu-dusky.vercel.app/dang-ky-hoc hoặc gọi 0822448444.`;
 
   const sendMessage = async () => {
     if (!input.trim() || loading) return;

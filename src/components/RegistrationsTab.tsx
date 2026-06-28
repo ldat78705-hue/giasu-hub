@@ -486,7 +486,7 @@ export const RegistrationsTab: React.FC<RegistrationsTabProps> = ({ registration
                 <label className="text-xs font-bold text-slate-600 block mb-1">Gia sư</label>
                 <select value={trialTutorCode} onChange={e => setTrialTutorCode(e.target.value)}
                   className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm outline-none">
-                  <option value="">-- Chọn GS --</option>
+                  <option value="">-- Chọn gia sư --</option>
                   {tutors.filter(t => t.verified).map(t => <option key={t.code} value={t.code}>{t.name} ({t.code})</option>)}
                 </select>
               </div>

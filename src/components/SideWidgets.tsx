@@ -98,7 +98,7 @@ export const SideWidgets: React.FC<SideWidgetsProps> = ({
             </div>
           ) : selectedClass && hasApiKey ? (
             <div className="bg-white/5 rounded-xl p-3 text-center text-xs text-slate-400">
-              Nhấn <b>Phân tích</b> để AI tìm GS phù hợp
+              Nhấn <b>Phân tích</b> để AI tìm gia sư phù hợp
             </div>
           ) : null}
         </div>

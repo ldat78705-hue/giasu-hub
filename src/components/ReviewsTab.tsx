@@ -55,7 +55,7 @@ export const ReviewsTab: React.FC<ReviewsTabProps> = ({ reviews, tutors, onAddRe
       {/* Search */}
       <div className="relative max-w-sm">
         <Search className="w-4 h-4 absolute left-3 top-2.5 text-slate-400" />
-        <input type="text" value={searchTerm} onChange={e => setSearchTerm(e.target.value)} placeholder="Tìm theo GS hoặc PH..."
+        <input type="text" value={searchTerm} onChange={e => setSearchTerm(e.target.value)} placeholder="Tìm theo gia sư hoặc phụ huynh..."
           className="w-full pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm outline-none focus:bg-white focus:border-blue-500" />
       </div>
 
@@ -97,13 +97,13 @@ export const ReviewsTab: React.FC<ReviewsTabProps> = ({ reviews, tutors, onAddRe
                 <label className="block text-xs font-bold uppercase text-slate-600 mb-1">Gia sư *</label>
                 <select required value={selTutor} onChange={e => setSelTutor(e.target.value)}
                   className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-blue-500 text-sm">
-                  <option value="">-- Chọn GS --</option>
+                  <option value="">-- Chọn gia sư --</option>
                   {tutors.filter(t => t.verified).map(t => <option key={t.code} value={t.code}>{t.code} - {t.name}</option>)}
                 </select>
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-bold uppercase text-slate-600 mb-1">Tên PH *</label>
+                  <label className="block text-xs font-bold uppercase text-slate-600 mb-1">Tên phụ huynh *</label>
                   <input required value={parentName} onChange={e => setParentName(e.target.value)}
                     className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-blue-500" />
                 </div>

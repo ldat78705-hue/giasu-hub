@@ -165,7 +165,7 @@ export const AttendanceTab: React.FC<AttendanceTabProps> = ({ attendance, matche
                     className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-blue-500" />
                 </div>
                 <div>
-                  <label className="block text-xs font-bold uppercase text-purple-600 mb-1">📝 Nhận xét của GS (PH sẽ thấy khi tra cứu)</label>
+                  <label className="block text-xs font-bold uppercase text-purple-600 mb-1">📝 Nhận xét của gia sư (phụ huynh sẽ thấy khi tra cứu)</label>
                   <textarea value={tutorFeedback} onChange={e => setTutorFeedback(e.target.value)}
                     placeholder="Ví dụ: Bé tiếp thu tốt, cần ôn thêm phần phân số..."
                     rows={2}

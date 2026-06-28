@@ -16,12 +16,12 @@ SĐT: 0822448444
 
 II. BÊN SỬ DỤNG DỊCH VỤ (Phụ huynh):
 Họ tên: {parentName}
-SĐT: {parentPhone}
+Số điện thoại: {parentPhone}
 Địa chỉ: {address}
 
 III. GIA SƯ PHỤ TRÁCH:
 Họ tên: {tutorName}
-Mã GS: {tutorCode}
+Mã gia sư: {tutorCode}
 
 IV. NỘI DUNG:
 - Học sinh: {studentName}
@@ -33,9 +33,9 @@ IV. NỘI DUNG:
 - Thời hạn: {duration}
 
 V. ĐIỀU KHOẢN:
-1. GS đảm bảo giảng dạy đầy đủ theo lịch.
-2. PH thanh toán học phí đúng hạn.
-3. Đổi GS miễn phí nếu không hài lòng.
+1. Gia sư đảm bảo giảng dạy đầy đủ theo lịch.
+2. Phụ huynh thanh toán học phí đúng hạn.
+3. Đổi gia sư miễn phí nếu không hài lòng.
 4. Báo trước 24h nếu hủy/dời buổi.
 
 Ngày ký: ________________

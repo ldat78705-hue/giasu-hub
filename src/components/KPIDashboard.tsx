@@ -254,7 +254,7 @@ export const KPIDashboard: React.FC<KPIDashboardProps> = ({ matches, registratio
             {sourceEntries.length === 0 && (
               <div className="col-span-3 bg-slate-50 rounded-2xl p-8 text-center">
                 <Megaphone className="w-8 h-8 text-slate-300 mx-auto mb-2" />
-                <p className="text-sm text-slate-500">Chưa có dữ liệu nguồn. PH mới đăng ký sẽ chọn nguồn biết đến.</p>
+                <p className="text-sm text-slate-500">Chưa có dữ liệu nguồn. Phụ huynh mới đăng ký sẽ chọn nguồn biết đến.</p>
               </div>
             )}
           </div>
@@ -297,7 +297,7 @@ export const KPIDashboard: React.FC<KPIDashboardProps> = ({ matches, registratio
           ) : (
             <div className="bg-slate-50 rounded-2xl p-8 text-center">
               <Share2 className="w-8 h-8 text-slate-300 mx-auto mb-2" />
-              <p className="text-sm text-slate-500">Chưa có PH nào sử dụng mã giới thiệu. Mã GT sẽ hiện khi PH nhập trong form đăng ký.</p>
+              <p className="text-sm text-slate-500">Chưa có phụ huynh nào sử dụng mã giới thiệu. Mã giới thiệu sẽ hiện khi phụ huynh nhập trong form đăng ký.</p>
             </div>
           )}
         </div>
@@ -343,7 +343,7 @@ export const KPIDashboard: React.FC<KPIDashboardProps> = ({ matches, registratio
               </div>
               {/* PH demand by district */}
               <div className="bg-white rounded-2xl border border-slate-200 p-5">
-                <h4 className="text-xs font-bold uppercase text-slate-400 mb-3">Nhu cầu PH theo quận</h4>
+                <h4 className="text-xs font-bold uppercase text-slate-400 mb-3">Nhu cầu phụ huynh theo quận</h4>
                 <div className="space-y-2">
                   {regEntries.slice(0, 10).map(([dist, count]) => (
                     <div key={dist} className="flex items-center gap-3">

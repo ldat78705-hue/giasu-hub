@@ -27,27 +27,27 @@ export const ZaloNotifyTab: React.FC<ZaloNotifyTabProps> = ({ registrations, mat
   const [useManual, setUseManual] = useState(false);
 
   const templates: NotifyTemplate[] = [
-    { id: 'new_reg', title: 'Xác nhận đơn mới', trigger: 'Khi PH vừa đăng ký', icon: '📋',
+    { id: 'new_reg', title: 'Xác nhận đơn mới', trigger: 'Khi phụ huynh vừa đăng ký', icon: '📋',
       template: 'Chào anh/chị {parentName}, Trung tâm Gia Sư Thành Đạt đã nhận đơn đăng ký tìm gia sư {subjects} cho bé {studentName} ({grade}). Chúng tôi sẽ liên hệ trong vòng 30 phút. Hotline: 0822448444' },
-    { id: 'contacted', title: 'Đã liên hệ thành công', trigger: 'Sau khi gọi PH', icon: '📞',
+    { id: 'contacted', title: 'Đã liên hệ thành công', trigger: 'Sau khi gọi phụ huynh', icon: '📞',
       template: 'Chào anh/chị {parentName}, Cảm ơn anh/chị đã trao đổi. Trung tâm đang tìm gia sư phù hợp nhất cho bé {studentName}. Dự kiến phản hồi trong 24-48h. Mọi thắc mắc liên hệ 0822448444.' },
-    { id: 'matched', title: 'Đã ghép gia sư', trigger: 'Khi ghép xong GS', icon: '✅',
-      template: 'Chào anh/chị {parentName}, Trung tâm đã tìm được gia sư phù hợp cho bé {studentName}! GS {tutorName} sẽ liên hệ anh/chị để sắp xếp buổi học thử MIỄN PHÍ. Chúc bé học tốt!' },
+    { id: 'matched', title: 'Đã ghép gia sư', trigger: 'Khi ghép xong gia sư', icon: '✅',
+      template: 'Chào anh/chị {parentName}, Trung tâm đã tìm được gia sư phù hợp cho bé {studentName}! Gia sư {tutorName} sẽ liên hệ anh/chị để sắp xếp buổi học thử MIỄN PHÍ. Chúc bé học tốt!' },
     { id: 'trial', title: 'Nhắc buổi học thử', trigger: '1 ngày trước buổi thử', icon: '🎓',
-      template: 'Nhắc nhở: Ngày mai bé {studentName} có buổi học thử môn {subjects} với GS {tutorName}. Thời gian: {schedule}. Anh/chị chuẩn bị sách vở cho bé nhé! Liên hệ: 0822448444' },
+      template: 'Nhắc nhở: Ngày mai bé {studentName} có buổi học thử môn {subjects} với gia sư {tutorName}. Thời gian: {schedule}. Anh/chị chuẩn bị sách vở cho bé nhé! Liên hệ: 0822448444' },
     { id: 'payment', title: 'Nhắc học phí', trigger: 'Cuối tháng', icon: '💰',
       template: 'Chào anh/chị {parentName}, Nhắc nhẹ về học phí tháng này cho bé {studentName}: {amount}đ. Hạn thanh toán: {deadline}. CK: [STK] - [NH]. Nội dung: HP {studentName}. Cảm ơn anh/chị!' },
     { id: 'feedback', title: 'Xin đánh giá sau 1 tháng', trigger: 'Sau 30 ngày học', icon: '⭐',
-      template: 'Chào anh/chị {parentName}, Bé {studentName} đã học với GS {tutorName} được 1 tháng. Anh/chị đánh giá chất lượng giảng dạy thế nào ạ? (Trả lời 1-5 sao). Ý kiến của anh/chị giúp chúng tôi phục vụ tốt hơn!' },
-    { id: 'cancel', title: 'Xác nhận hủy', trigger: 'Khi PH hủy đơn', icon: '❌',
+      template: 'Chào anh/chị {parentName}, Bé {studentName} đã học với gia sư {tutorName} được 1 tháng. Anh/chị đánh giá chất lượng giảng dạy thế nào ạ? (Trả lời 1-5 sao). Ý kiến của anh/chị giúp chúng tôi phục vụ tốt hơn!' },
+    { id: 'cancel', title: 'Xác nhận hủy', trigger: 'Khi phụ huynh hủy đơn', icon: '❌',
       template: 'Chào anh/chị {parentName}, Trung tâm đã ghi nhận việc hủy đăng ký cho bé {studentName}. Nếu tương lai cần tìm gia sư, đừng ngần ngại liên hệ 0822448444. Chúc gia đình khỏe mạnh!' },
-    { id: 'tutor_welcome', title: 'Chào GS mới', trigger: 'Khi duyệt GS', icon: '🎉',
-      template: 'Chào {tutorName}! Hồ sơ gia sư của bạn đã được xác minh ✅. Mã GS: {tutorCode}. Từ bây giờ bạn có thể nhận lớp mới. Truy cập giasu-dusky.vercel.app để xem lớp đang tuyển. Chúc bạn dạy tốt!' },
+    { id: 'tutor_welcome', title: 'Chào gia sư mới', trigger: 'Khi duyệt gia sư', icon: '🎉',
+      template: 'Chào {tutorName}! Hồ sơ gia sư của bạn đã được xác minh ✅. Mã gia sư: {tutorCode}. Từ bây giờ bạn có thể nhận lớp mới. Truy cập giasu-dusky.vercel.app để xem lớp đang tuyển. Chúc bạn dạy tốt!' },
     // F16: Email templates
-    { id: 'email_confirm', title: '📧 Email: Xác nhận đăng ký', trigger: 'Gửi email PH', icon: '📧',
+    { id: 'email_confirm', title: '📧 Email: Xác nhận đăng ký', trigger: 'Gửi email phụ huynh', icon: '📧',
       template: 'Tiêu đề: [Gia Sư Thành Đạt] Xác nhận đăng ký tìm gia sư\n\nKính gửi Anh/Chị {parentName},\n\nTrung tâm Gia Sư Thành Đạt xin xác nhận đã nhận đơn đăng ký tìm gia sư cho bé {studentName} ({grade}).\n\nThông tin đăng ký:\n- Môn: {subjects}\n- Lịch học: {schedule}\n- Khu vực: {district}\n\nChúng tôi sẽ liên hệ Anh/Chị trong vòng 24h để trao đổi chi tiết.\n\nTrân trọng,\nGia Sư Thành Đạt\nHotline: 0822448444' },
-    { id: 'email_matched', title: '📧 Email: Đã tìm được GS', trigger: 'Gửi email ghép xong', icon: '📧',
-      template: 'Tiêu đề: [Gia Sư Thành Đạt] Đã tìm được gia sư cho bé {studentName}\n\nKính gửi Anh/Chị {parentName},\n\nChúng tôi vui mừng thông báo đã tìm được gia sư phù hợp cho bé {studentName}!\n\nThông tin gia sư:\n- Tên: {tutorName}\n- Mã GS: {tutorCode}\n\nGia sư sẽ liên hệ Anh/Chị trong 24h tới để sắp xếp buổi học thử MIỄN PHÍ.\n\nNếu có bất kỳ thắc mắc nào, vui lòng liên hệ:\n📞 Hotline: 0822448444\n💬 Zalo: 0822448444\n\nTrân trọng,\nGia Sư Thành Đạt' },
+    { id: 'email_matched', title: '📧 Email: Đã tìm được gia sư', trigger: 'Gửi email ghép xong', icon: '📧',
+      template: 'Tiêu đề: [Gia Sư Thành Đạt] Đã tìm được gia sư cho bé {studentName}\n\nKính gửi Anh/Chị {parentName},\n\nChúng tôi vui mừng thông báo đã tìm được gia sư phù hợp cho bé {studentName}!\n\nThông tin gia sư:\n- Tên: {tutorName}\n- Mã gia sư: {tutorCode}\n\nGia sư sẽ liên hệ Anh/Chị trong 24h tới để sắp xếp buổi học thử MIỄN PHÍ.\n\nNếu có bất kỳ thắc mắc nào, vui lòng liên hệ:\n📞 Hotline: 0822448444\n💬 Zalo: 0822448444\n\nTrân trọng,\nGia Sư Thành Đạt' },
   ];
 
   const newRegs = registrations.filter(r => r.status === 'Mới');
@@ -95,7 +95,7 @@ export const ZaloNotifyTab: React.FC<ZaloNotifyTabProps> = ({ registrations, mat
           <h2 className="text-xl font-bold text-slate-800 flex items-center gap-2">
             <Bell className="w-5 h-5 text-green-600" /> Tin nhắn & Thông báo Zalo
           </h2>
-          <p className="text-xs text-slate-500 mt-0.5">{templates.length} mẫu · Chọn PH hoặc nhập thủ công → Copy → Gửi Zalo</p>
+          <p className="text-xs text-slate-500 mt-0.5">{templates.length} mẫu · Chọn phụ huynh hoặc nhập thủ công → Copy → Gửi Zalo</p>
         </div>
         <div className="flex gap-2">
           <button onClick={() => { setUseManual(false); setSelectedReg(null); }}
@@ -118,26 +118,26 @@ export const ZaloNotifyTab: React.FC<ZaloNotifyTabProps> = ({ registrations, mat
           <div className="space-y-2">
             {recentMatches.slice(0, 5).map(m => {
               const tutor = tutors.find(t => t.code === m.tutorCode);
-              const gsMsgPreview = `Chào ${m.tutorName}! Bạn đã được ghép lớp ${m.classSubject}. HS: ${m.studentName || 'N/A'}. SĐT PH: ${m.parentPhone || 'N/A'}. Phí/buổi: ${new Intl.NumberFormat('vi-VN').format(m.fee)}đ. Truy cập giasu-dusky.vercel.app/gia-su-portal để xem chi tiết.`;
-              const phMsgPreview = `Chào anh/chị! Trung tâm đã ghép GS ${m.tutorName} dạy ${m.classSubject} cho bé ${m.studentName || ''}. GS sẽ liên hệ sớm. Mọi thắc mắc: 0822448444.`;
+              const gsMsgPreview = `Chào ${m.tutorName}! Bạn đã được ghép lớp ${m.classSubject}. Học sinh: ${m.studentName || 'N/A'}. SĐT phụ huynh: ${m.parentPhone || 'N/A'}. Phí/buổi: ${new Intl.NumberFormat('vi-VN').format(m.fee)}đ. Truy cập giasu-dusky.vercel.app/cong-gia-su để xem chi tiết.`;
+              const phMsgPreview = `Chào anh/chị! Trung tâm đã ghép gia sư ${m.tutorName} dạy ${m.classSubject} cho bé ${m.studentName || ''}. Gia sư sẽ liên hệ sớm. Mọi thắc mắc: 0822448444.`;
               return (
                 <div key={m.id} className="bg-white rounded-xl p-3 flex items-center justify-between gap-3">
                   <div className="text-xs text-slate-700">
-                    <span className="font-bold">{m.classSubject}</span> — GS: {m.tutorName} · HS: {m.studentName || 'N/A'}
+                    <span className="font-bold">{m.classSubject}</span> — Gia sư: {m.tutorName} · Học sinh: {m.studentName || 'N/A'}
                   </div>
                   <div className="flex gap-1.5 shrink-0">
                     <button onClick={() => { navigator.clipboard.writeText(gsMsgPreview); setCopiedId('gs-' + m.id); setTimeout(() => setCopiedId(null), 2000); }}
                       className={`px-2 py-1 rounded-lg text-[10px] font-bold cursor-pointer ${copiedId === 'gs-' + m.id ? 'bg-emerald-100 text-emerald-700' : 'bg-emerald-600 text-white hover:bg-emerald-700'}`}>
-                      {copiedId === 'gs-' + m.id ? '✓' : '📋'} Tin GS
+                      {copiedId === 'gs-' + m.id ? '✓' : '📋'} Tin gia sư
                     </button>
                     <button onClick={() => { navigator.clipboard.writeText(phMsgPreview); setCopiedId('ph-' + m.id); setTimeout(() => setCopiedId(null), 2000); }}
                       className={`px-2 py-1 rounded-lg text-[10px] font-bold cursor-pointer ${copiedId === 'ph-' + m.id ? 'bg-blue-100 text-blue-700' : 'bg-blue-600 text-white hover:bg-blue-700'}`}>
-                      {copiedId === 'ph-' + m.id ? '✓' : '📋'} Tin PH
+                      {copiedId === 'ph-' + m.id ? '✓' : '📋'} Tin phụ huynh
                     </button>
                     {tutor?.phone && (
                       <a href={`https://zalo.me/${tutor.phone}`} target="_blank" rel="noreferrer"
                         className="px-2 py-1 rounded-lg text-[10px] font-bold bg-green-600 text-white hover:bg-green-700">
-                        Zalo GS
+                        Zalo gia sư
                       </a>
                     )}
                   </div>
@@ -152,12 +152,12 @@ export const ZaloNotifyTab: React.FC<ZaloNotifyTabProps> = ({ registrations, mat
       {needReviewReminder.length > 0 && (
         <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4">
           <h3 className="text-xs font-bold uppercase text-amber-600 mb-2 flex items-center gap-1">
-            ⭐ Lớp &gt;30 ngày — nhắc PH đánh giá ({needReviewReminder.length})
+            ⭐ Lớp &gt;30 ngày — nhắc phụ huynh đánh giá ({needReviewReminder.length})
           </h3>
           <div className="flex gap-2 flex-wrap">
             {needReviewReminder.slice(0, 6).map(m => {
               const days = Math.floor((Date.now() - m.startDate) / 86400000);
-              const msg = `Chào anh/chị! Bé ${m.studentName || ''} đã học với GS ${m.tutorName} được ${days} ngày. Anh/chị vui lòng đánh giá tại: giasu-dusky.vercel.app/tra-cuu (nhập SĐT). Ý kiến giúp chúng tôi phục vụ tốt hơn!`;
+              const msg = `Chào anh/chị! Bé ${m.studentName || ''} đã học với gia sư ${m.tutorName} được ${days} ngày. Anh/chị vui lòng đánh giá tại: giasu-dusky.vercel.app/tra-cuu (nhập số điện thoại). Ý kiến giúp chúng tôi phục vụ tốt hơn!`;
               return (
                 <button key={m.id} onClick={() => { navigator.clipboard.writeText(msg); setCopiedId('rv-' + m.id); setTimeout(() => setCopiedId(null), 2000); }}
                   className={`px-3 py-2 rounded-xl text-[11px] font-bold cursor-pointer border transition-all ${copiedId === 'rv-' + m.id ? 'bg-amber-100 border-amber-400 text-amber-700' : 'bg-white border-amber-200 text-amber-700 hover:bg-amber-50'}`}>
@@ -173,7 +173,7 @@ export const ZaloNotifyTab: React.FC<ZaloNotifyTabProps> = ({ registrations, mat
       {!useManual && newRegs.length > 0 && (
         <div className="bg-blue-50 border border-blue-200 rounded-2xl p-4">
           <h3 className="text-xs font-bold uppercase text-blue-600 mb-2 flex items-center gap-1">
-            <Users className="w-3 h-3" /> PH mới cần liên hệ ({newRegs.length})
+            <Users className="w-3 h-3" /> Phụ huynh mới cần liên hệ ({newRegs.length})
           </h3>
           <div className="flex gap-2 flex-wrap">
             {newRegs.slice(0, 10).map(r => (
