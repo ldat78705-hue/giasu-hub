@@ -96,98 +96,95 @@ export const Dashboard: React.FC<DashboardProps> = ({
   // Y-axis labels for chart
   const ySteps = [0, Math.ceil(maxC / 4), Math.ceil(maxC / 2), Math.ceil(maxC * 3 / 4), maxC];
 
-  // Reusable card shell
-  const card = "bg-white rounded-2xl shadow-sm hover:shadow transition-shadow border border-slate-100";
-  const cardHeader = "flex items-center justify-between pb-4 mb-4 border-b border-slate-100/80";
-  const cardTitle = "text-xs font-bold uppercase tracking-wider text-slate-400";
+  // ===== Card tokens (from blueprint) =====
+  const CARD = "bg-white p-5 rounded-xl border border-slate-200/75 shadow-[0_1px_2px_rgba(0,0,0,0.03)]";
+  const CARD_HEADER = "pb-3 mb-3 border-b border-slate-100 text-xs font-bold uppercase tracking-wider text-slate-400";
 
-  // ===== RENDER =====
+  // ===== KPI config =====
+  const kpis = [
+    { label: 'Doanh thu', value: fmt(totalRevenue) + 'đ', sub: 'Phí kết nối 7 ngày', icon: <DollarSign className="w-4 h-4" />, tab: 'finance' as ActiveTab },
+    { label: 'Đang dạy', value: String(activeMatches), sub: `${matchRate}% tỷ lệ ghép`, icon: <Target className="w-4 h-4" />, tab: 'matches' as ActiveTab },
+    { label: 'Chờ xử lý', value: String(pendingRegs), sub: 'Đơn phụ huynh mới', icon: <UserPlus className="w-4 h-4" />, tab: 'registrations' as ActiveTab },
+    { label: 'Cần gia sư', value: String(pendingClasses), sub: `/ ${classes.length} tổng lớp`, icon: <BookOpen className="w-4 h-4" />, tab: 'classes' as ActiveTab },
+  ];
+
+  // ===== RENDER — EXACT DOM BLUEPRINT =====
   return (
-    <div className="col-span-12 space-y-6">
+    <div className="col-span-12 space-y-6 min-w-0">
 
-      {/* ===== ALERT BAR ===== */}
+      {/* ========== 1. TOP ALERT BANNER ========== */}
       {alerts.length > 0 && (
-        <div className={`${card} px-5 py-3 flex items-center justify-between`}>
-          <div className="flex items-center gap-2 text-[13px] text-slate-600 min-w-0">
-            <Clock className="w-4 h-4 text-amber-500 shrink-0" />
+        <div className="w-full bg-amber-50 border border-amber-200/80 text-amber-900 px-4 py-3 rounded-xl flex items-center justify-between shadow-sm">
+          <div className="flex items-center gap-2 text-sm font-medium min-w-0">
+            <span className="shrink-0">⚠️</span>
             <span className="truncate">{alerts.map(a => a.label).join(' · ')}</span>
           </div>
           <button onClick={() => onNavigate(alerts[0].tab)}
-            className="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-[12px] font-semibold rounded-lg cursor-pointer transition-colors shrink-0 ml-4">
+            className="text-xs bg-amber-500 hover:bg-amber-600 text-white font-semibold px-3 py-1.5 rounded-lg transition shadow-sm cursor-pointer shrink-0 ml-3">
             Duyệt ngay
           </button>
         </div>
       )}
 
-      {/* ===== 4 METRIC CARDS ===== */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        {[
-          { label: 'Doanh thu', value: fmt(totalRevenue) + 'đ', sub: 'Phí kết nối 7 ngày', icon: <DollarSign className="w-5 h-5" />, iconBg: 'bg-blue-100 text-blue-600', tab: 'finance' as ActiveTab },
-          { label: 'Đang dạy', value: String(activeMatches), sub: `${matchRate}% tỷ lệ ghép`, icon: <Target className="w-5 h-5" />, iconBg: 'bg-green-100 text-green-600', tab: 'matches' as ActiveTab },
-          { label: 'Chờ xử lý', value: String(pendingRegs), sub: 'Đơn phụ huynh mới', icon: <UserPlus className="w-5 h-5" />, iconBg: 'bg-orange-100 text-orange-600', tab: 'registrations' as ActiveTab },
-          { label: 'Cần gia sư', value: String(pendingClasses), sub: `/ ${classes.length} tổng lớp`, icon: <BookOpen className="w-5 h-5" />, iconBg: 'bg-purple-100 text-purple-600', tab: 'classes' as ActiveTab },
-        ].map((m, i) => (
+      {/* ========== 2. TOP KPI METRICS (Strict 4-Column Grid) ========== */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        {kpis.map((m, i) => (
           <div key={i} onClick={() => onNavigate(m.tab)}
-            className={`${card} p-5 cursor-pointer hover:shadow-md`}>
-            <div className="flex items-center gap-3">
-              <div className={`w-10 h-10 rounded-xl ${m.iconBg} flex items-center justify-center`}>{m.icon}</div>
-              <span className="text-[13px] text-slate-500 font-medium">{m.label}</span>
+            className={`${CARD} flex flex-col justify-between min-w-0 cursor-pointer hover:shadow-md transition-shadow`}>
+            <div className="flex justify-between items-center">
+              <span className="text-xs font-bold uppercase tracking-wider text-slate-400 truncate">{m.label}</span>
+              <div className="p-1.5 bg-slate-50 rounded-lg text-slate-600 shrink-0">{m.icon}</div>
             </div>
-            <div className="text-2xl font-bold text-slate-900 mt-2 leading-tight" style={{ fontVariantNumeric: 'tabular-nums' }}>{m.value}</div>
-            <div className="text-[12px] text-slate-400 mt-1">{m.sub}</div>
-            {i === 3 && classes.length > 0 && (
-              <div className="mt-3 h-2 bg-slate-100 rounded-full overflow-hidden">
-                <div className="h-full bg-blue-500 rounded-full transition-all" style={{ width: `${(pendingClasses / classes.length) * 100}%` }} />
-              </div>
-            )}
+            <div className="text-2xl font-black text-slate-800 mt-3 truncate" style={{ fontVariantNumeric: 'tabular-nums' }}>{m.value}</div>
+            <span className="text-xs text-slate-400 mt-1 truncate font-medium">{m.sub}</span>
           </div>
         ))}
       </div>
 
-      {/* ===== MAIN 2:1 GRID ===== */}
+      {/* ========== 3. MAIN CONTENT SPLIT (Strict 2:1 Grid) ========== */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
 
         {/* ===== LEFT COLUMN (2/3) ===== */}
-        <div className="lg:col-span-2 space-y-6">
+        <div className="lg:col-span-2 space-y-6 min-w-0">
 
-          {/* FIX #1: Chart Card — explicit h-64 container */}
-          <div className={`${card} p-5`}>
-            <div className={cardHeader}>
-              <h3 className={cardTitle}>Hoạt động 7 ngày</h3>
+          {/* A. CHART CARD */}
+          <div className={`${CARD}`}>
+            <div className="flex justify-between items-center pb-4 mb-4 border-b border-slate-100">
+              <span className="text-sm font-bold text-slate-700">HOẠT ĐỘNG 7 NGÀY</span>
               <div className="flex items-center gap-4 text-[11px] text-slate-400">
                 <span className="flex items-center gap-1.5"><span className="w-3 h-2 bg-indigo-600 rounded-sm" /> Ghép lớp</span>
                 <span className="flex items-center gap-1.5"><span className="w-3 h-2 bg-slate-300 rounded-sm" /> Đơn đăng ký</span>
               </div>
             </div>
-            {/* FIX #1: Explicit h-64 wrapper ensures bars always render */}
-            <div className="h-64 w-full flex gap-2">
-              {/* Y-axis */}
-              <div className="flex flex-col justify-between text-[10px] text-slate-400 w-7 text-right shrink-0 py-1">
+            {/* CRITICAL: Explicit pixel height parent for bars */}
+            <div className="w-full flex gap-3" style={{ height: 280 }}>
+              {/* Y-axis labels */}
+              <div className="flex flex-col justify-between text-[10px] text-slate-400 w-6 text-right shrink-0 py-1">
                 {[...ySteps].reverse().map((v, i) => <span key={i}>{v}</span>)}
               </div>
-              {/* Bar area */}
-              <div className="flex-1 flex items-end gap-3 border-l border-b border-slate-200 pl-3 pb-1 relative">
+              {/* Bar area with grid lines */}
+              <div className="flex-1 flex items-end gap-3 border-l border-b border-slate-200 pl-3 pb-1 relative min-w-0">
                 {/* Horizontal grid lines */}
-                {[1, 2, 3, 4].map(i => (
-                  <div key={i} className="absolute left-0 right-0 border-t border-slate-100" style={{ bottom: `${i * 25}%` }} />
+                {[1, 2, 3, 4].map(n => (
+                  <div key={n} className="absolute left-0 right-0 border-t border-dashed border-slate-100" style={{ bottom: `${n * 25}%` }} />
                 ))}
+                {/* Bars */}
                 {days.map((d, i) => {
                   const total = d.regs + d.matched;
-                  const pct = total > 0 ? Math.max((total / maxC) * 100, 8) : 0;
+                  const pct = total > 0 ? Math.max((total / maxC) * 100, 10) : 0;
                   return (
-                    <div key={i} className="flex-1 flex flex-col items-center gap-2 h-full justify-end relative z-10">
-                      {/* Stacked bars: matched on bottom, regs on top */}
-                      <div className="w-full max-w-[40px] flex flex-col justify-end" style={{ height: `${pct}%`, minHeight: total > 0 ? 12 : 0 }}>
+                    <div key={i} className="flex-1 flex flex-col items-center gap-2 h-full justify-end relative z-10 min-w-0">
+                      <div className="w-full max-w-[44px] flex flex-col justify-end" style={{ height: `${pct}%`, minHeight: total > 0 ? 16 : 0 }}>
                         {d.matched > 0 && (
-                          <div className="w-full bg-indigo-600 rounded-t-md transition-all hover:bg-indigo-700"
-                            style={{ height: total > 0 ? `${(d.matched / total) * 100}%` : '0%', minHeight: 6 }} />
+                          <div className="w-full bg-indigo-600 rounded-t-md transition-colors hover:bg-indigo-700"
+                            style={{ height: total > 0 ? `${(d.matched / total) * 100}%` : '0%', minHeight: 8 }} />
                         )}
                         {d.regs > 0 && (
-                          <div className="w-full bg-slate-300 transition-all hover:bg-slate-400"
-                            style={{ height: total > 0 ? `${(d.regs / total) * 100}%` : '0%', minHeight: 6 }} />
+                          <div className="w-full bg-slate-300 rounded-b-none transition-colors hover:bg-slate-400"
+                            style={{ height: total > 0 ? `${(d.regs / total) * 100}%` : '0%', minHeight: 8 }} />
                         )}
                         {total === 0 && (
-                          <div className="w-full bg-slate-100 rounded-t-sm" style={{ height: 4 }} />
+                          <div className="w-full bg-slate-100 rounded-t-md" style={{ height: 4 }} />
                         )}
                       </div>
                       <span className="text-[11px] text-slate-500 font-medium">{d.day}</span>
@@ -198,52 +195,59 @@ export const Dashboard: React.FC<DashboardProps> = ({
             </div>
           </div>
 
-          {/* Classes Table Card */}
-          <div className={`${card} p-5`}>
-            <div className={cardHeader}>
-              <h3 className={cardTitle}>Lớp mới cần gia sư</h3>
-              {pendingClasses > 5 && (
-                <button onClick={() => onNavigate('classes')} className="text-[12px] font-medium text-blue-600 cursor-pointer hover:text-blue-700 transition-colors">Xem tất cả</button>
+          {/* B. NEW CLASSES TABLE CARD */}
+          <div className={`${CARD} overflow-hidden`}>
+            <div className="pb-4 mb-4 border-b border-slate-100 flex justify-between items-center">
+              <span className="text-sm font-bold text-slate-700">LỚP MỚI CẦN GIA SƯ</span>
+              {pendingClasses > 0 && (
+                <button onClick={() => onNavigate('classes')}
+                  className="text-xs font-semibold text-indigo-600 hover:underline cursor-pointer">
+                  Xem tất cả
+                </button>
               )}
             </div>
-            {recentPending.length === 0 ? (
-              <p className="text-sm text-slate-400 py-6 text-center">Không có lớp nào</p>
-            ) : (
-              <div className="divide-y divide-slate-100">
-                {recentPending.map(cls => (
-                  <div key={cls.id || cls.code}
-                    className="flex items-center gap-4 py-3.5 hover:bg-slate-50/75 transition-colors -mx-5 px-5">
-                    <div className="w-9 h-9 rounded-full bg-blue-50 flex items-center justify-center shrink-0">
-                      <BookOpen className="w-4 h-4 text-blue-500" />
+            <div className="overflow-x-auto">
+              {recentPending.length === 0 ? (
+                <p className="text-sm text-slate-400 py-8 text-center">Không có lớp nào đang chờ</p>
+              ) : (
+                <div>
+                  {recentPending.map((cls, idx) => (
+                    <div key={cls.id || cls.code}
+                      className={`flex items-center justify-between py-3.5 text-sm ${idx < recentPending.length - 1 ? 'border-b border-slate-50' : ''}`}>
+                      <div className="flex items-center gap-3 min-w-0 flex-1">
+                        <div className="w-8 h-8 rounded-lg bg-indigo-50 flex items-center justify-center shrink-0">
+                          <BookOpen className="w-4 h-4 text-indigo-500" />
+                        </div>
+                        <div className="min-w-0">
+                          <div className="font-semibold text-slate-800 truncate">{cls.subject}</div>
+                          <div className="text-xs text-slate-400 truncate">{cls.location}</div>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-3 shrink-0 ml-4">
+                        <span className={`text-[11px] font-bold px-2 py-0.5 rounded-md ${
+                          cls.status === 'KHẨN CẤP' ? 'bg-red-50 text-red-600' : 'bg-orange-50 text-orange-600'
+                        }`}>Cần gia sư</span>
+                        <span className="font-semibold text-slate-700 w-24 text-right tabular-nums" style={{ fontVariantNumeric: 'tabular-nums' }}>{fmt(cls.fee)}đ</span>
+                        <button onClick={() => onNavigate('classes')}
+                          className="px-2.5 py-1 border border-slate-200 rounded-lg text-xs font-medium text-slate-500 hover:bg-slate-50 cursor-pointer transition-colors">
+                          Chi tiết
+                        </button>
+                      </div>
                     </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="text-sm font-semibold text-slate-800 truncate">{cls.subject}</div>
-                      <div className="text-[12px] text-slate-400 truncate">{cls.location}</div>
-                    </div>
-                    <span className={`text-[11px] font-bold px-2.5 py-1 rounded-full shrink-0 ${
-                      cls.status === 'KHẨN CẤP' ? 'bg-red-50 text-red-600' : 'bg-orange-50 text-orange-600'
-                    }`}>Cần gia sư</span>
-                    <span className="text-sm font-semibold text-slate-700 shrink-0 w-24 text-right" style={{ fontVariantNumeric: 'tabular-nums' }}>{fmt(cls.fee)}đ</span>
-                    <button onClick={() => onNavigate('classes')}
-                      className="px-3 py-1.5 border border-slate-200 rounded-lg text-[12px] font-medium text-slate-600 hover:bg-slate-50 cursor-pointer transition-colors shrink-0">
-                      Chi tiết
-                    </button>
-                  </div>
-                ))}
-              </div>
-            )}
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
 
         </div>
 
         {/* ===== RIGHT COLUMN (1/3) ===== */}
-        <div className="lg:col-span-1 space-y-6">
+        <div className="lg:col-span-1 space-y-6 min-w-0">
 
-          {/* FIX #3: Tổng quan — clean list, NO pastel tiles */}
-          <div className={`${card} p-5`}>
-            <div className={cardHeader}>
-              <h3 className={cardTitle}>Tổng quan</h3>
-            </div>
+          {/* Card 1: TỔNG QUAN */}
+          <div className={CARD}>
+            <div className={CARD_HEADER}>Tổng quan</div>
             <div className="divide-y divide-slate-100">
               {[
                 { icon: <GraduationCap className="w-4 h-4" />, label: 'Tổng gia sư', value: String(tutors.length) },
@@ -251,48 +255,46 @@ export const Dashboard: React.FC<DashboardProps> = ({
                 { icon: <UserPlus className="w-4 h-4" />, label: 'Tổng đăng ký', value: String(registrations.length) },
                 { icon: <Star className="w-4 h-4" />, label: 'Điểm đánh giá', value: avgRating },
               ].map((item, i) => (
-                <div key={i} className="flex items-center gap-3 py-3.5 first:pt-0 last:pb-0">
-                  <div className="w-9 h-9 bg-slate-100 text-slate-400 rounded-lg flex items-center justify-center shrink-0">{item.icon}</div>
-                  <span className="text-sm text-slate-600 flex-1 min-w-0 truncate">{item.label}</span>
-                  <span className="text-base font-bold text-slate-900 shrink-0" style={{ fontVariantNumeric: 'tabular-nums' }}>{item.value}</span>
+                <div key={i} className="flex justify-between items-center py-2.5 text-sm">
+                  <div className="flex items-center gap-2.5 min-w-0">
+                    <div className="p-1.5 bg-slate-50 rounded-lg text-slate-400 shrink-0">{item.icon}</div>
+                    <span className="text-slate-600 truncate">{item.label}</span>
+                  </div>
+                  <span className="font-bold text-slate-800 shrink-0 ml-2" style={{ fontVariantNumeric: 'tabular-nums' }}>{item.value}</span>
                 </div>
               ))}
             </div>
           </div>
 
-          {/* FIX #2: Tuần này — MOVED to right column */}
-          <div className={`${card} p-5`}>
-            <div className={cardHeader}>
-              <h3 className={cardTitle}>Tuần này</h3>
-            </div>
-            <div className="space-y-0.5">
+          {/* Card 2: TUẦN NÀY */}
+          <div className={CARD}>
+            <div className={CARD_HEADER}>Tuần này</div>
+            <div className="space-y-2.5 text-sm">
               {[
                 { label: 'Đơn phụ huynh mới', value: String(weekRegs) },
                 { label: 'Ghép thành công', value: String(weekMatches) },
                 { label: 'Lớp đang dạy', value: String(activeMatches) },
                 { label: 'Doanh thu', value: fmt(totalRevenue) + 'đ' },
               ].map((r, i) => (
-                <div key={i} className="flex justify-between items-center py-2.5">
-                  <span className="text-sm text-slate-500">{r.label}</span>
-                  <span className="text-sm font-bold text-slate-900" style={{ fontVariantNumeric: 'tabular-nums' }}>{r.value}</span>
+                <div key={i} className="flex justify-between items-center py-1.5">
+                  <span className="text-slate-500">{r.label}</span>
+                  <span className="font-bold text-slate-800" style={{ fontVariantNumeric: 'tabular-nums' }}>{r.value}</span>
                 </div>
               ))}
             </div>
             <button onClick={copyReport}
-              className="w-full mt-4 py-2 px-4 bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium text-sm rounded-lg border border-slate-200/80 cursor-pointer transition-all flex items-center justify-center gap-2">
+              className="w-full mt-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs rounded-lg border border-slate-200/60 transition cursor-pointer flex items-center justify-center gap-1.5">
               <Copy className="w-3.5 h-3.5" /> Sao chép báo cáo
             </button>
           </div>
 
-          {/* Gia sư nổi bật */}
-          <div className={`${card} p-5 min-h-[260px]`}>
-            <div className={cardHeader}>
-              <h3 className={cardTitle}>Gia sư nổi bật</h3>
-            </div>
+          {/* Card 3: GIA SƯ NỔI BẬT */}
+          <div className={`${CARD} min-h-[180px]`}>
+            <div className={CARD_HEADER}>Gia sư nổi bật</div>
             {topT.length === 0 ? (
-              <div className="flex-1 flex flex-col justify-center items-center py-10">
+              <div className="flex-1 flex flex-col items-center justify-center text-center py-8">
                 <div className="bg-slate-50 p-4 rounded-full mb-3">
-                  <Trophy className="w-8 h-8 text-slate-300" />
+                  <Trophy className="w-7 h-7 text-slate-300" />
                 </div>
                 <p className="text-sm text-slate-400 font-medium">Chưa có dữ liệu</p>
               </div>
@@ -301,8 +303,8 @@ export const Dashboard: React.FC<DashboardProps> = ({
                 {topT.map(([code, data], i) => {
                   const tutor = tutors.find(t => t.code === code);
                   return (
-                    <div key={code} className="flex items-center gap-3 py-3.5 first:pt-0 last:pb-0">
-                      <div className="w-9 h-9 rounded-full flex items-center justify-center text-white text-[12px] font-bold shrink-0"
+                    <div key={code} className="flex items-center gap-3 py-2.5">
+                      <div className="w-8 h-8 rounded-full flex items-center justify-center text-white text-[11px] font-bold shrink-0"
                         style={{ background: tutor?.avatarColor || (i === 0 ? '#f59e0b' : i === 1 ? '#6366f1' : i === 2 ? '#10b981' : '#64748b') }}>
                         {tutor?.avatar || data.name.charAt(0)}
                       </div>
@@ -320,31 +322,31 @@ export const Dashboard: React.FC<DashboardProps> = ({
             )}
           </div>
 
-          {/* AI Match Card */}
+          {/* Card 4: AI MATCH (conditional) */}
           {hasApiKey && (
-            <div className={`${card} p-5`}>
-              <div className={cardHeader}>
-                <h3 className={`${cardTitle} flex items-center gap-1.5`}>
-                  <Sparkles className="w-3.5 h-3.5 text-purple-500" /> AI Ghép nối
-                </h3>
+            <div className={CARD}>
+              <div className="pb-3 mb-3 border-b border-slate-100 flex items-center justify-between">
+                <span className="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+                  <Sparkles className="w-3.5 h-3.5 text-indigo-500" /> AI Ghép nối
+                </span>
                 {selectedClass && (
                   <button onClick={onRunMatch} disabled={isMatchingLoading}
-                    className="px-3 py-1.5 text-[12px] font-semibold cursor-pointer transition-colors bg-purple-600 text-white rounded-lg hover:bg-purple-700 flex items-center gap-1.5">
+                    className="px-3 py-1 text-xs font-semibold cursor-pointer bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition flex items-center gap-1.5">
                     <RefreshCw className={`w-3 h-3 ${isMatchingLoading ? 'animate-spin' : ''}`} /> Phân tích
                   </button>
                 )}
               </div>
               {!selectedClass ? (
-                <p className="text-sm text-slate-400">Chọn 1 lớp tại <span className="text-blue-600 font-medium cursor-pointer" onClick={() => onNavigate('classes')}>Quản lý lớp</span> để AI đề xuất.</p>
+                <p className="text-sm text-slate-400">Chọn 1 lớp tại <span className="text-indigo-600 font-medium cursor-pointer hover:underline" onClick={() => onNavigate('classes')}>Quản lý lớp</span> để AI đề xuất.</p>
               ) : isMatchingLoading ? (
                 <div className="flex items-center gap-2 py-4 text-sm text-slate-400">
-                  <div className="w-4 h-4 border-2 border-purple-500 border-t-transparent rounded-full animate-spin" />
+                  <div className="w-4 h-4 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin" />
                   Đang phân tích {selectedClass.code}...
                 </div>
               ) : aiRec.length > 0 ? (
                 <div className="divide-y divide-slate-100">
                   {aiRec.map((item, idx) => (
-                    <div key={idx} className="flex items-center gap-3 py-3 first:pt-0 last:pb-0">
+                    <div key={idx} className="flex items-center gap-3 py-2.5">
                       <div className="w-8 h-8 rounded-full flex items-center justify-center font-bold text-white text-[10px] shrink-0" style={{ background: item.tutor.avatarColor || '#6366f1' }}>
                         {item.tutor.avatar}
                       </div>
@@ -352,7 +354,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
                         <div className="text-sm font-semibold text-slate-800 truncate">{item.tutor.name}</div>
                         <div className="text-[11px] text-slate-400 truncate">{item.rationale}</div>
                       </div>
-                      <span className="text-[12px] font-bold text-emerald-600 shrink-0">{item.score}%</span>
+                      <span className="text-xs font-bold text-emerald-600 shrink-0">{item.score}%</span>
                     </div>
                   ))}
                 </div>
@@ -367,3 +369,4 @@ export const Dashboard: React.FC<DashboardProps> = ({
     </div>
   );
 };
+
