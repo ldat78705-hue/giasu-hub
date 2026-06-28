@@ -30,7 +30,7 @@ export const ImportTab: React.FC<ImportTabProps> = ({ tutors, students, onImport
       const data = parseCSVImport(text);
       // Check for duplicates
       const dups = data.filter(row => {
-        const phone = (row['SĐT'] || row['Phone'] || row['Số điện thoại'] || '').trim();
+        const phone = (row['Số điện thoại'] || row['SĐT'] || row['Phone'] || '').trim();
         if (!phone) return false;
         if (importType === 'tutors') return findDuplicates(tutors, phone).length > 0;
         return findDuplicates(students, phone).length > 0;
@@ -44,14 +44,14 @@ export const ImportTab: React.FC<ImportTabProps> = ({ tutors, students, onImport
 
   const handleImport = () => {
     const nonDup = preview.filter(row => {
-      const phone = (row['SĐT'] || row['Phone'] || row['Số điện thoại'] || '').trim();
-      return !duplicates.some(d => (d['SĐT'] || d['Phone'] || d['Số điện thoại'] || '') === phone);
+      const phone = (row['Số điện thoại'] || row['SĐT'] || row['Phone'] || '').trim();
+      return !duplicates.some(d => (d['Số điện thoại'] || d['SĐT'] || d['Phone'] || '') === phone);
     });
 
     if (importType === 'tutors') {
       const items = nonDup.map(row => ({
         name: row['Tên'] || row['Họ tên'] || row['Name'] || '',
-        phone: row['SĐT'] || row['Phone'] || row['Số điện thoại'] || '',
+        phone: row['Số điện thoại'] || row['SĐT'] || row['Phone'] || '',
         subjects: (row['Môn'] || row['Subjects'] || '').split(',').map(s => s.trim()).filter(Boolean),
         qualification: row['Bằng cấp'] || row['Qualification'] || '',
         experience: row['Kinh nghiệm'] || row['Experience'] || '',
@@ -61,10 +61,10 @@ export const ImportTab: React.FC<ImportTabProps> = ({ tutors, students, onImport
       onImportTutors(items);
     } else {
       const items = nonDup.map(row => ({
-        name: row['Tên HS'] || row['Họ tên'] || row['Name'] || '',
+        name: row['Tên học sinh'] || row['Tên HS'] || row['Họ tên'] || row['Name'] || '',
         grade: row['Lớp'] || row['Grade'] || '',
-        parentName: row['PH'] || row['Phụ huynh'] || row['Tên PH'] || '',
-        parentPhone: row['SĐT PH'] || row['SĐT'] || row['Phone'] || '',
+        parentName: row['Phụ huynh'] || row['PH'] || row['Tên PH'] || '',
+        parentPhone: row['Số điện thoại phụ huynh'] || row['SĐT PH'] || row['SĐT'] || row['Phone'] || '',
         school: row['Trường'] || row['School'] || '',
       }));
       onImportStudents(items);
@@ -84,8 +84,8 @@ export const ImportTab: React.FC<ImportTabProps> = ({ tutors, students, onImport
 
   const downloadTemplate = (type: string) => {
     let csv = '';
-    if (type === 'tutors') csv = '\uFEFFTên,SĐT,Môn,Bằng cấp,Kinh nghiệm,Khu vực,Email\nNguyễn Văn A,0901234567,"Toán, Lý",Cử nhân,2 năm,Cầu Giấy,a@gmail.com';
-    else csv = '\uFEFFTên HS,Lớp,Phụ huynh,SĐT PH,Trường\nNguyễn Thị B,Lớp 8,Nguyễn Văn C,0901234567,THCS ABC';
+    if (type === 'tutors') csv = '\uFEFFTên,Số điện thoại,Môn,Bằng cấp,Kinh nghiệm,Khu vực,Email\nNguyễn Văn A,0901234567,"Toán, Lý",Cử nhân,2 năm,Cầu Giấy,a@gmail.com';
+    else csv = '\uFEFFTên học sinh,Lớp,Phụ huynh,Số điện thoại phụ huynh,Trường\nNguyễn Thị B,Lớp 8,Nguyễn Văn C,0901234567,THCS ABC';
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
     const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `mau-${type}.csv`; a.click();
   };

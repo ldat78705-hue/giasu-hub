@@ -99,7 +99,7 @@ export const RegistrationsTab: React.FC<RegistrationsTabProps> = ({ registration
     });
 
   const exportCsv = () => {
-    const header = 'Phụ huynh,SĐT,Học sinh,Lớp,Môn học,Quận,Hình thức,Lịch học,Nguồn,Mã GT,Tags,Ghi chú,Ghi chú admin,Ngày đăng ký,Trạng thái,Học thử\n';
+    const header = 'Phụ huynh,Số điện thoại,Học sinh,Lớp,Môn học,Quận,Hình thức,Lịch học,Nguồn,Mã giới thiệu,Tags,Ghi chú,Ghi chú admin,Ngày đăng ký,Trạng thái,Học thử\n';
     const rows = registrations.map(r =>
       `"${r.parentName}","${r.phone}","${r.studentName}","${r.grade}","${r.subjects.join(', ')}","${r.district}","${r.mode}","${r.schedule}","${r.source || ''}","${r.referralCode || ''}","${(r.tags || []).join(', ')}","${r.note}","${(r.adminNote || '').replace(/"/g, '""')}","${fmt(r.createdAt)}","${r.status}","${r.trialDate ? r.trialDate + ' ' + (r.trialTime || '') : ''}"`
     ).join('\n');

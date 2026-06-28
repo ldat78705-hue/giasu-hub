@@ -40,7 +40,7 @@ export const ContactsTab: React.FC<ContactsTabProps> = ({ contacts, onMarkRead, 
     .sort((a, b) => b.createdAt - a.createdAt);
 
   const exportCsv = () => {
-    const header = 'Họ tên,SĐT,Nội dung,Thời gian,Trạng thái\n';
+    const header = 'Họ tên,Số điện thoại,Nội dung,Thời gian,Trạng thái\n';
     const rows = contacts.map(c =>
       `"${c.name}","${c.phone}","${(c.message || '').replace(/"/g, '""')}","${fmtDate(c.createdAt)}","${c.isRead ? 'Đã đọc' : 'Chưa đọc'}"`
     ).join('\n');
