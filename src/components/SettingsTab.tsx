@@ -149,8 +149,8 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({ settings, onSaveSettin
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: 24 }}>
         {/* AI API Key Configuration */}
         <div className="bg-white rounded-lg border border-slate-200 shadow-xs p-6 space-y-5">
-          <div className="flex items-center gap-2 border-b border-slate-100 pb-4">
-            <div className="p-2 bg-amber-50 text-amber-600 rounded-lg">
+          <div className="flex items-center gap-3 border-b border-slate-100 pb-4">
+            <div className="p-2 bg-amber-50 text-amber-600 rounded-lg shrink-0">
               <Key className="w-5 h-5" />
             </div>
             <div>
@@ -167,7 +167,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({ settings, onSaveSettin
                 value={apiKey}
                 onChange={(e) => { setApiKey(e.target.value); setTestResult(null); }}
                 placeholder="AIzaSy... (lấy tại aistudio.google.com/apikey)"
-                className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:bg-white focus:border-indigo-500 text-sm font-mono pr-24"
+                className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:bg-white focus:border-indigo-500 text-sm font-mono" style={{ paddingRight: 96 }}
               />
               <div className="absolute right-2 top-1.5 flex items-center gap-1">
                 <button
@@ -237,8 +237,8 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({ settings, onSaveSettin
 
         {/* Center Information */}
         <div className="bg-white rounded-lg border border-slate-200 shadow-xs p-6 space-y-5">
-          <div className="flex items-center gap-2 border-b border-slate-100 pb-4">
-            <div className="p-2 bg-indigo-50 text-indigo-600 rounded-lg">
+          <div className="flex items-center gap-3 border-b border-slate-100 pb-4">
+            <div className="p-2 bg-indigo-50 text-indigo-600 rounded-lg shrink-0">
               <Building2 className="w-5 h-5" />
             </div>
             <div>
@@ -256,12 +256,12 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({ settings, onSaveSettin
                 value={centerName}
                 onChange={(e) => setCenterName(e.target.value)}
                 placeholder="Gia Sư Thành Đạt"
-                className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:bg-white focus:border-indigo-500 text-sm"
+                className="w-full pr-4 py-3 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:bg-white focus:border-indigo-500 text-sm" style={{ paddingLeft: 40 }}
               />
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
             <div>
               <label className="block text-xs font-bold uppercase text-slate-600 mb-1.5">Số điện thoại / Hotline</label>
               <div className="relative">
@@ -271,7 +271,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({ settings, onSaveSettin
                   value={centerPhone}
                   onChange={(e) => setCenterPhone(e.target.value)}
                   placeholder="1900.xxxx"
-                  className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:bg-white focus:border-indigo-500 text-sm"
+                  className="w-full pr-4 py-3 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:bg-white focus:border-indigo-500 text-sm" style={{ paddingLeft: 40 }}
                 />
               </div>
             </div>
@@ -284,7 +284,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({ settings, onSaveSettin
                   value={centerEmail}
                   onChange={(e) => setCenterEmail(e.target.value)}
                   placeholder="contact@giasuthanhdat.vn"
-                  className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:bg-white focus:border-indigo-500 text-sm"
+                  className="w-full pr-4 py-3 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:bg-white focus:border-indigo-500 text-sm" style={{ paddingLeft: 40 }}
                 />
               </div>
             </div>
@@ -299,7 +299,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({ settings, onSaveSettin
                 value={centerAddress}
                 onChange={(e) => setCenterAddress(e.target.value)}
                 placeholder="Hà Nội"
-                className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:bg-white focus:border-indigo-500 text-sm"
+                className="w-full pr-4 py-3 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:bg-white focus:border-indigo-500 text-sm" style={{ paddingLeft: 40 }}
               />
             </div>
           </div>
@@ -309,14 +309,14 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({ settings, onSaveSettin
             <h4 className="font-bold text-xs uppercase text-slate-600 flex items-center gap-1.5">
               <MessageCircle className="w-4 h-4 text-indigo-500" /><span>Zalo & Mạng xã hội</span>
             </h4>
-            <div className="grid grid-cols-2 gap-4">
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
               <div>
                 <label className="block text-xs font-bold uppercase text-slate-600 mb-1.5">Số Zalo</label>
                 <div className="relative">
                   <MessageCircle className="w-4 h-4 absolute left-3.5 top-3.5 text-slate-400" />
                   <input type="text" value={zaloNumber} onChange={(e) => setZaloNumber(e.target.value)}
                     placeholder="0912345678"
-                    className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:bg-white focus:border-indigo-500 text-sm" />
+                    className="w-full pr-4 py-3 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:bg-white focus:border-indigo-500 text-sm" style={{ paddingLeft: 40 }} />
                 </div>
                 <p className="text-[10px] text-slate-400 mt-1">Hiển thị nút Zalo trên trang công khai</p>
               </div>
@@ -326,7 +326,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({ settings, onSaveSettin
                   <Globe className="w-4 h-4 absolute left-3.5 top-3.5 text-slate-400" />
                   <input type="text" value={facebookUrl} onChange={(e) => setFacebookUrl(e.target.value)}
                     placeholder="https://facebook.com/..."
-                    className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:bg-white focus:border-indigo-500 text-sm" />
+                    className="w-full pr-4 py-3 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:bg-white focus:border-indigo-500 text-sm" style={{ paddingLeft: 40 }} />
                 </div>
               </div>
             </div>
@@ -339,8 +339,8 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({ settings, onSaveSettin
 
         {/* Cloudinary Config */}
         <div className="bg-white rounded-lg border border-slate-200 shadow-xs p-6 space-y-5" style={{ gridColumn: 'span 2' }}>
-          <div className="flex items-center gap-2 border-b border-slate-100 pb-4">
-            <div className="p-2 bg-purple-50 text-purple-600 rounded-lg">
+          <div className="flex items-center gap-3 border-b border-slate-100 pb-4">
+            <div className="p-2 bg-purple-50 text-purple-600 rounded-lg shrink-0">
               <Cloud className="w-5 h-5" />
             </div>
             <div>
@@ -349,7 +349,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({ settings, onSaveSettin
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: 16 }}>
             <div>
               <label className="block text-xs font-bold uppercase text-slate-600 mb-1.5">Cloud Name</label>
               <input type="text" value={cloudinaryCloudName} onChange={(e) => setCloudinaryCloudName(e.target.value)}
@@ -394,8 +394,8 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({ settings, onSaveSettin
 
         {/* F42: Bank Info for QR */}
         <div className="bg-white rounded-lg border border-slate-200 shadow-xs p-6 space-y-4">
-          <div className="flex items-center gap-2 border-b border-slate-100 pb-4">
-            <div className="p-2 bg-emerald-50 text-emerald-600 rounded-lg">
+          <div className="flex items-center gap-3 border-b border-slate-100 pb-4">
+            <div className="p-2 bg-emerald-50 text-emerald-600 rounded-lg shrink-0">
               <CreditCard className="w-5 h-5" />
             </div>
             <div>
@@ -403,7 +403,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({ settings, onSaveSettin
               <p className="text-[11px] text-slate-500">QR thanh toán phí kết nối cho gia sư</p>
             </div>
           </div>
-          <div className="grid grid-cols-2 gap-3">
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
             <div>
               <label className="block text-[11px] font-bold uppercase text-slate-600 mb-1">Ngân hàng</label>
               <select value={bankName} onChange={e => setBankName(e.target.value)}
@@ -439,8 +439,8 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({ settings, onSaveSettin
 
         {/* Admin Password */}
         <div className="bg-white rounded-lg border border-slate-200 shadow-xs p-6 space-y-4">
-          <div className="flex items-center gap-2 border-b border-slate-100 pb-4">
-            <div className="p-2 bg-red-50 text-red-600 rounded-lg">
+          <div className="flex items-center gap-3 border-b border-slate-100 pb-4">
+            <div className="p-2 bg-red-50 text-red-600 rounded-lg shrink-0">
               <Shield className="w-5 h-5" />
             </div>
             <div>
@@ -527,8 +527,8 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({ settings, onSaveSettin
 
         {/* Feature 17: Admin Role Configuration */}
         <div className="bg-white rounded-lg border border-slate-200 shadow-xs p-6 space-y-4" style={{ gridColumn: 'span 2' }}>
-          <div className="flex items-center gap-2 border-b border-slate-100 pb-4">
-            <div className="p-2 bg-red-50 text-red-600 rounded-lg">
+          <div className="flex items-center gap-3 border-b border-slate-100 pb-4">
+            <div className="p-2 bg-red-50 text-red-600 rounded-lg shrink-0">
               <Shield className="w-5 h-5" />
             </div>
             <div>
@@ -536,7 +536,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({ settings, onSaveSettin
               <p className="text-[11px] text-slate-500">Chọn vai trò để giới hạn tabs hiển thị trong sidebar</p>
             </div>
           </div>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 12 }}>
             {(Object.entries(ADMIN_ROLE_CONFIG) as [AdminRole, typeof ADMIN_ROLE_CONFIG[AdminRole]][]).map(([role, config]) => (
               <button key={role} onClick={() => setAdminRole(role)}
                 className={`p-4 rounded-lg border-2 cursor-pointer transition-all text-left ${
@@ -571,7 +571,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({ settings, onSaveSettin
 
           {showFeeForm && (
             <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 space-y-3">
-              <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(110px, 1fr))', gap: 12 }}>
                 <div>
                   <label className="text-[10px] font-bold text-slate-600 block mb-1">Môn</label>
                   <select value={feeSubject} onChange={e => setFeeSubject(e.target.value)}

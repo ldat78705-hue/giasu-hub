@@ -82,11 +82,12 @@ export interface StudentItem {
 export interface TransactionItem {
   id?: string;
   receiptId: string;
-  type: 'Thu phí gia sư' | 'Hoàn tiền' | 'Thanh toán lương';
+  type: 'Thu phí gia sư' | 'Hoàn tiền' | 'Thanh toán lương' | 'Vận hành';
   amount: number;
   targetName: string;
   date: string;
   status: 'Thành công' | 'Đang xử lý';
+  note?: string;
   matchId?: string; // Link to ClassMatch for 1-time fee tracking
 }
 
