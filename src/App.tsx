@@ -761,7 +761,7 @@ export default function App() {
       <main className="flex-1 flex flex-col h-full overflow-hidden">
         <Header onAiSearch={handleAiSearch} isSearching={isSearching} hasApiKey={!!apiKey}
           notifications={notifications} onMarkNotifRead={handleMarkNotifRead}
-          onMarkAllNotifsRead={handleMarkAllNotifsRead} onNavigate={setAdminTab} />
+          onMarkAllNotifsRead={handleMarkAllNotifsRead} onNavigate={setAdminTab} activeTab={adminTab} />
 
         {aiSearchSummary && (
           <div className="bg-blue-600 text-white px-8 py-2 text-xs font-medium flex items-center justify-between shrink-0">
@@ -770,7 +770,7 @@ export default function App() {
           </div>
         )}
 
-        <section className="flex-1 p-6 lg:p-8 grid grid-cols-12 gap-6 content-start overflow-y-auto">
+        <section className="flex-1 p-5 lg:p-7 grid grid-cols-12 gap-5 content-start overflow-y-auto admin-scroll">
           {adminTab === 'dashboard' && (
             <>
               <QuickActions tutors={tutors} registrations={registrations} matches={matches}

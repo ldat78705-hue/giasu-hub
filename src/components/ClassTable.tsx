@@ -101,7 +101,7 @@ export const ClassTable: React.FC<ClassTableProps> = ({
             <Search className="w-3.5 h-3.5 absolute left-2.5 top-2 text-slate-400" />
             <input type="text" value={searchTerm} onChange={e => setSearchTerm(e.target.value)}
               placeholder="Tìm mã, môn, khu vực..."
-              className="pl-8 pr-3 py-1.5 bg-slate-50 border border-slate-200 rounded-xl text-xs outline-none focus:bg-white focus:border-blue-500 w-40" />
+              className="pl-8 pr-3 py-1.5 bg-slate-50 border border-slate-200 rounded-xl text-xs outline-none focus:bg-white focus:border-blue-400 w-44" />
           </div>
           <div className="relative">
             <ArrowUpDown className="w-3.5 h-3.5 absolute left-2.5 top-2 text-slate-400" />
@@ -120,7 +120,7 @@ export const ClassTable: React.FC<ClassTableProps> = ({
             const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = `lop-hoc-${new Date().toISOString().slice(0,10)}.csv`; a.click(); URL.revokeObjectURL(url);
           }}
             className="px-3 py-1.5 bg-white border border-slate-200 hover:border-slate-300 rounded-xl text-xs font-bold text-slate-600 cursor-pointer flex items-center gap-1.5">
-            <Download className="w-3.5 h-3.5" /> Export
+            <Download className="w-3.5 h-3.5" /> Xuất CSV
           </button>
 
           <button
@@ -144,14 +144,14 @@ export const ClassTable: React.FC<ClassTableProps> = ({
 
       <div className="flex-1 overflow-x-auto">
         <table className="w-full text-left border-collapse">
-          <thead>
-            <tr className="text-[11px] uppercase tracking-widest text-slate-400 bg-slate-50/80 border-b border-slate-100">
-              <th className="px-6 py-3.5 font-semibold">Mã Lớp</th>
-              <th className="px-6 py-3.5 font-semibold">Môn học</th>
-              <th className="px-6 py-3.5 font-semibold">Địa điểm</th>
-              <th className="px-6 py-3.5 font-semibold">Phí / Buổi</th>
-              <th className="px-6 py-3.5 font-semibold">Trạng thái</th>
-              <th className="px-6 py-3.5 font-semibold text-right">Thao tác</th>
+          <thead className="sticky-header">
+            <tr className="text-[11px] uppercase tracking-wider text-slate-500 bg-slate-50 border-b border-slate-200">
+              <th className="px-6 py-3 font-semibold">Mã lớp</th>
+              <th className="px-6 py-3 font-semibold">Môn học</th>
+              <th className="px-6 py-3 font-semibold">Địa điểm</th>
+              <th className="px-6 py-3 font-semibold">Phí / Buổi</th>
+              <th className="px-6 py-3 font-semibold">Trạng thái</th>
+              <th className="px-6 py-3 font-semibold text-right">Thao tác</th>
             </tr>
           </thead>
           <tbody className="text-sm divide-y divide-slate-100">
@@ -168,23 +168,23 @@ export const ClassTable: React.FC<ClassTableProps> = ({
                   <tr
                     key={cls.id || cls.code}
                     onClick={() => onSelectClassForMatch(cls)}
-                    className={`transition-colors cursor-pointer ${
-                      isSelected ? 'bg-blue-50/80 font-medium' : 'hover:bg-blue-50/40'
+                    className={`transition-all cursor-pointer admin-row ${
+                      isSelected ? 'bg-blue-50 font-medium' : 'hover:bg-slate-50/80'
                     }`}
                   >
-                    <td className="px-6 py-4 font-mono text-xs font-bold text-slate-600">{cls.code}</td>
-                    <td className="px-6 py-4">
-                      <div className="font-semibold text-slate-800 flex items-center gap-1.5">
+                    <td className="px-6 py-3.5 font-mono text-xs font-bold text-slate-600">{cls.code}</td>
+                    <td className="px-6 py-3.5">
+                      <div className="font-semibold text-slate-800 text-[13px] flex items-center gap-1.5">
                         <span>{cls.subject}</span>
                         {isSelected && <span className="w-1.5 h-1.5 bg-blue-600 rounded-full animate-pulse"></span>}
                       </div>
-                      <div className="text-xs text-slate-500 mt-0.5">
+                      <div className="text-[11px] text-slate-500 mt-0.5">
                         {cls.studentInfo}
-                        {cls.teachMode && <span className={`ml-2 px-1.5 py-0.5 rounded text-[9px] font-bold ${cls.teachMode === 'Online' ? 'bg-purple-100 text-purple-700' : cls.teachMode === 'Tại nhà' ? 'bg-green-100 text-green-700' : 'bg-blue-100 text-blue-700'}`}>{cls.teachMode === 'Online' ? '💻 Online' : cls.teachMode === 'Tại nhà' ? '🏠 Trực tiếp' : '🔄 Cả hai'}</span>}
+                        {cls.teachMode && <span className={`ml-2 px-1.5 py-0.5 rounded text-[9px] font-bold ${cls.teachMode === 'Online' ? 'bg-purple-50 text-purple-700' : cls.teachMode === 'Tại nhà' ? 'bg-green-50 text-green-700' : 'bg-blue-50 text-blue-700'}`}>{cls.teachMode === 'Online' ? '💻 Online' : cls.teachMode === 'Tại nhà' ? '🏠 Trực tiếp' : '🔄 Cả hai'}</span>}
                       </div>
                     </td>
-                    <td className="px-6 py-4 text-slate-600 text-xs">{cls.location}</td>
-                    <td className="px-6 py-4 font-bold text-blue-600 text-xs">{formatCurrency(cls.fee)}</td>
+                    <td className="px-6 py-3.5 text-slate-600 text-[12px]">{cls.location}</td>
+                    <td className="px-6 py-3.5 font-bold text-blue-600 text-[13px] stat-number">{formatCurrency(cls.fee)}</td>
                     <td className="px-6 py-4" onClick={(e) => e.stopPropagation()}>
                       <select
                         value={cls.status}
@@ -210,7 +210,7 @@ export const ClassTable: React.FC<ClassTableProps> = ({
                           title="Tìm gia sư ghép nối bằng AI"
                         >
                           <Sparkles className="w-3 h-3 text-amber-500 group-hover:text-white" />
-                          <span>AI Match</span>
+                          <span>Ghép AI</span>
                         </button>
                         {cls.id && (
                           <button

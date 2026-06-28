@@ -105,31 +105,31 @@ export const SideWidgets: React.FC<SideWidgetsProps> = ({
       </div>
 
       {/* Quick Summary */}
-      <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs">
+      <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm">
         <h3 className="font-bold text-xs text-slate-800 mb-3 flex items-center gap-1.5">
           <Star className="w-3.5 h-3.5 text-amber-500" /> Tổng quan gia sư
         </h3>
         <div className="grid grid-cols-3 gap-2 text-center">
           <div className="bg-slate-50 rounded-xl p-2.5">
-            <div className="text-lg font-extrabold text-slate-800">{tutors.length}</div>
-            <div className="text-[9px] text-slate-400 font-medium mt-0.5">Tổng GS</div>
+            <div className="text-lg font-extrabold text-slate-800 stat-number">{tutors.length}</div>
+            <div className="text-[9px] text-slate-400 font-medium mt-0.5">Tổng gia sư</div>
           </div>
           <div className="bg-emerald-50 rounded-xl p-2.5">
-            <div className="text-lg font-extrabold text-emerald-600">{tutors.filter(t => t.status === 'online').length}</div>
+            <div className="text-lg font-extrabold text-emerald-600 stat-number">{tutors.filter(t => t.status === 'online').length}</div>
             <div className="text-[9px] text-emerald-600 font-medium mt-0.5">Sẵn sàng</div>
           </div>
           <div className="bg-amber-50 rounded-xl p-2.5">
             <div className="text-lg font-extrabold text-amber-600">
               {tutors.length > 0 ? (tutors.reduce((s, t) => s + t.rating, 0) / tutors.length).toFixed(1) : '—'}
             </div>
-            <div className="text-[9px] text-amber-600 font-medium mt-0.5">Đánh giá TB</div>
+            <div className="text-[9px] text-amber-600 font-medium mt-0.5">Đánh giá trung bình</div>
           </div>
         </div>
       </div>
 
       {/* Top GS Leaderboard */}
       {topGS.length > 0 && (
-        <div className="bg-white rounded-2xl border border-slate-200 shadow-xs p-4">
+        <div className="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-5">
           <div className="flex items-center gap-1.5 mb-3">
             <Trophy className="w-3.5 h-3.5 text-amber-500" />
             <h3 className="font-bold text-xs text-slate-800">Top gia sư</h3>
