@@ -366,11 +366,151 @@ section select {
   background: #1e293b !important; border-color: #334155 !important; color: #e2e8f0 !important;
 }
 
-/* ── BUTTONS ── */
-section button.bg-indigo-600, section button.bg-blue-600,
-section button.bg-emerald-600, section button.bg-purple-600 {
-  border-radius: 4px !important; font-weight: 600 !important;
-  font-size: 13px !important; box-shadow: 0 1px 3px rgba(0,0,0,0.1) !important;
+/* ── BUTTONS: Comprehensive System ── */
+section button, section a[role="button"] {
+  border-radius: 4px !important;
+  font-family: inherit !important;
+  transition: all 0.15s ease !important;
+  cursor: pointer !important;
+  line-height: 1.4 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+}
+/* Primary buttons */
+section button.bg-indigo-600, section button.bg-blue-600 {
+  font-weight: 700 !important; font-size: 12px !important;
+  box-shadow: 0 1px 3px rgba(79,70,229,0.25) !important;
+  letter-spacing: 0.01em !important;
+}
+section button.bg-indigo-600:hover, section button.bg-blue-600:hover {
+  box-shadow: 0 4px 12px rgba(79,70,229,0.3) !important;
+  transform: translateY(-1px) !important;
+}
+/* Success buttons */
+section button.bg-emerald-600, section button.bg-green-600 {
+  font-weight: 700 !important; font-size: 12px !important;
+  box-shadow: 0 1px 3px rgba(16,185,129,0.25) !important;
+}
+section button.bg-emerald-600:hover, section button.bg-green-600:hover {
+  box-shadow: 0 4px 12px rgba(16,185,129,0.3) !important;
+  transform: translateY(-1px) !important;
+}
+/* Danger buttons */
+section button.bg-red-600 {
+  font-weight: 700 !important; font-size: 12px !important;
+  box-shadow: 0 1px 3px rgba(239,68,68,0.25) !important;
+}
+section button.bg-red-600:hover {
+  box-shadow: 0 4px 12px rgba(239,68,68,0.3) !important;
+  transform: translateY(-1px) !important;
+}
+/* Warning buttons */
+section button.bg-amber-500, section button.bg-amber-600 {
+  font-weight: 700 !important; font-size: 12px !important;
+  box-shadow: 0 1px 3px rgba(245,158,11,0.25) !important;
+}
+section button.bg-amber-500:hover, section button.bg-amber-600:hover {
+  box-shadow: 0 4px 12px rgba(245,158,11,0.3) !important;
+  transform: translateY(-1px) !important;
+}
+/* Purple buttons */
+section button.bg-purple-600 {
+  font-weight: 700 !important; font-size: 12px !important;
+  box-shadow: 0 1px 3px rgba(147,51,234,0.25) !important;
+}
+section button.bg-purple-600:hover {
+  box-shadow: 0 4px 12px rgba(147,51,234,0.3) !important;
+  transform: translateY(-1px) !important;
+}
+/* Ghost / outline buttons */
+section button.bg-white, section button.border-slate-200 {
+  font-weight: 600 !important; font-size: 12px !important;
+}
+section button.bg-white:hover {
+  border-color: #94a3b8 !important;
+  background: #f8fafc !important;
+}
+.dark section button.bg-white {
+  background: #1e293b !important; color: #cbd5e1 !important;
+  border-color: #475569 !important;
+}
+.dark section button.bg-white:hover {
+  background: #334155 !important;
+}
+/* Disabled state */
+section button:disabled, section button.disabled {
+  opacity: 0.5 !important; cursor: not-allowed !important;
+  transform: none !important; box-shadow: none !important;
+}
+/* Icon-only buttons */
+section button.p-1, section button.p-1\.5, section button.p-2 {
+  gap: 0 !important;
+}
+
+/* ── STATUS SELECT inside tables ── */
+section select[style*="border"] {
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  padding: 3px 8px !important;
+  border-radius: 3px !important;
+}
+.dark section select[style*="background: #ecfdf5"],
+.dark section select[style*="background: rgb(236, 253, 245)"] {
+  background: rgba(16,185,129,0.15) !important;
+  color: #6ee7b7 !important;
+  border-color: rgba(16,185,129,0.3) !important;
+}
+.dark section select[style*="background: #fefce8"],
+.dark section select[style*="background: rgb(254, 252, 232)"] {
+  background: rgba(202,138,4,0.15) !important;
+  color: #fcd34d !important;
+  border-color: rgba(202,138,4,0.3) !important;
+}
+.dark section select[style*="background: #f8fafc"],
+.dark section select[style*="background: rgb(248, 250, 252)"] {
+  background: rgba(100,116,139,0.15) !important;
+  color: #94a3b8 !important;
+  border-color: rgba(100,116,139,0.3) !important;
+}
+
+/* ── STATUS BADGES (Tailwind classes) ── */
+.dark section .bg-yellow-100 { background: rgba(234,179,8,0.2) !important; }
+.dark section .text-yellow-800 { color: #fcd34d !important; }
+.dark section .bg-green-100 { background: rgba(34,197,94,0.2) !important; }
+.dark section .text-green-800 { color: #86efac !important; }
+.dark section .bg-red-100 { background: rgba(239,68,68,0.2) !important; }
+.dark section .text-red-800 { color: #fca5a5 !important; }
+.dark section .border-yellow-200 { border-color: rgba(234,179,8,0.3) !important; }
+.dark section .border-green-200 { border-color: rgba(34,197,94,0.3) !important; }
+.dark section .border-red-200 { border-color: rgba(239,68,68,0.3) !important; }
+
+/* ── CARD HOVER LIFT ── */
+section .shadow-xs, section .shadow-sm {
+  transition: box-shadow 0.2s, border-color 0.2s, transform 0.2s !important;
+}
+section .shadow-xs:hover, section .shadow-sm:hover {
+  box-shadow: 0 4px 12px rgba(0,0,0,0.06) !important;
+}
+.dark section .shadow-xs:hover, .dark section .shadow-sm:hover {
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3) !important;
+}
+
+/* ── UPLOAD / DROP ZONE ── */
+section .border-dashed {
+  transition: all 0.2s !important;
+}
+section .border-dashed:hover {
+  border-color: #818cf8 !important;
+  background: rgba(79,70,229,0.03) !important;
+}
+.dark section .border-dashed {
+  border-color: #475569 !important;
+  background: rgba(255,255,255,0.02) !important;
+}
+.dark section .border-dashed:hover {
+  border-color: #818cf8 !important;
+  background: rgba(79,70,229,0.08) !important;
 }
 
 /* ── TABLES ── */
@@ -417,6 +557,50 @@ section h4 { font-size: 14px !important; font-weight: 600 !important; color: #33
 .dark section .bg-indigo-100 { background: rgba(79,70,229,0.2) !important; }
 .dark section .bg-emerald-100 { background: rgba(16,185,129,0.2) !important; }
 .dark section .bg-red-100 { background: rgba(239,68,68,0.2) !important; }
+.dark section .bg-purple-100 { background: rgba(168,85,247,0.2) !important; }
+.dark section .bg-green-50 { background: rgba(34,197,94,0.12) !important; }
+.dark section .bg-teal-50 { background: rgba(20,184,166,0.12) !important; }
+
+/* Dark: Inline-styled expanded row backgrounds */
+.dark section tr[style*="background: #f8fafc"],
+.dark section tr[style*="background: rgb(248, 250, 252)"] {
+  background: #0f172a !important;
+}
+.dark section td[style*="background: #f8fafc"],
+.dark section td[style*="background: rgb(248, 250, 252)"],
+.dark section div[style*="background: #f8fafc"],
+.dark section div[style*="background: rgb(248, 250, 252)"] {
+  background: #0f172a !important;
+}
+.dark section div[style*="background: '#f8fafc'"],
+.dark section div[style*="background: '#fff'"],
+.dark section div[style*="background: '#ffffff'"] {
+  background: #1e293b !important;
+}
+/* Dark: Inline text color overrides */
+.dark section span[style*="color: #475569"],
+.dark section span[style*="color: rgb(71, 85, 105)"],
+.dark section div[style*="color: #475569"] {
+  color: #94a3b8 !important;
+}
+.dark section span[style*="color: #334155"],
+.dark section div[style*="color: #334155"] {
+  color: #cbd5e1 !important;
+}
+.dark section span[style*="color: #1e293b"],
+.dark section div[style*="color: #1e293b"],
+.dark section span[style*="color: #0f172a"],
+.dark section div[style*="color: #0f172a"] {
+  color: #f1f5f9 !important;
+}
+/* Dark: border-t, border-b in dark mode */
+.dark section .border-t { border-top-color: #334155 !important; }
+.dark section .border-b { border-bottom-color: #334155 !important; }
+.dark section .border-slate-100 { border-color: #1e293b !important; }
+.dark section .border-slate-200 { border-color: #334155 !important; }
+.dark section .border-slate-200\/75 { border-color: #334155 !important; }
+.dark section .divide-y > * + * { border-top-color: #1e293b !important; }
+.dark section .divide-slate-100 > * + * { border-color: #1e293b !important; }
 
 /* ── DARK BORDERS ── */
 .dark section .border-slate-200, .dark section .border-slate-100,

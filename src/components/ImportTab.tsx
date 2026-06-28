@@ -1,4 +1,4 @@
-﻿import React, { useState, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import { TutorItem, StudentItem, ClassItem } from '../types';
 import { Upload, FileText, AlertTriangle, CheckCircle2, Users, GraduationCap, BookOpen, Search, Download } from 'lucide-react';
 import { parseCSVImport, findDuplicates } from '../utils';
@@ -97,19 +97,21 @@ export const ImportTab: React.FC<ImportTabProps> = ({ tutors, students, onImport
       </h2>
 
       {/* Duplicate Detection - #27 */}
-      <div className="bg-white rounded-lg border border-slate-200 p-5 shadow-xs">
-        <h3 className="text-sm font-bold text-slate-800 mb-3 flex items-center gap-2">
+      <div className="bg-white rounded-lg border border-slate-200 p-6 shadow-xs">
+        <h3 className="text-sm font-bold text-slate-800 mb-4 flex items-center gap-2">
           <AlertTriangle className="w-4 h-4 text-amber-500" /> Kiểm tra trùng lặp
         </h3>
         <div className="flex gap-2 mb-3">
-          <div className="relative flex-1 max-w-sm">
+          <div className="relative flex-1 max-w-md">
             <Search className="w-4 h-4 absolute left-3 top-2.5 text-slate-400" />
             <input type="text" value={dupSearch} onChange={e => setDupSearch(e.target.value)} placeholder="Nhập số điện thoại hoặc tên để kiểm tra..."
               className="w-full pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm outline-none focus:bg-white focus:border-indigo-500"
               onKeyDown={e => e.key === 'Enter' && handleDuplicateSearch()} />
           </div>
           <button onClick={handleDuplicateSearch}
-            className="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white rounded-lg text-xs font-bold cursor-pointer">Kiểm tra</button>
+            className="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs font-bold cursor-pointer flex items-center gap-2 shadow-sm transition-colors">
+            <Search className="w-3.5 h-3.5" /> Kiểm tra
+          </button>
         </div>
         {dupResults.length > 0 && (
           <div className="space-y-2">
@@ -132,33 +134,43 @@ export const ImportTab: React.FC<ImportTabProps> = ({ tutors, students, onImport
       </div>
 
       {/* Import Excel/CSV - #26 */}
-      <div className="bg-white rounded-lg border border-slate-200 p-5 shadow-xs">
-        <h3 className="text-sm font-bold text-slate-800 mb-3 flex items-center gap-2">
+      <div className="bg-white rounded-lg border border-slate-200 p-6 shadow-xs">
+        <h3 className="text-sm font-bold text-slate-800 mb-4 flex items-center gap-2">
           <FileText className="w-4 h-4 text-indigo-500" /> Nhập dữ liệu từ CSV/Excel
         </h3>
 
-        <div className="flex gap-3 mb-4 flex-wrap">
+        <div className="flex gap-3 mb-5 flex-wrap items-center">
           <div className="flex gap-2">
             <button onClick={() => { setImportType('tutors'); setPreview([]); setDuplicates([]); setImported(false); }}
-              className={`px-4 py-2 rounded-lg text-xs font-bold cursor-pointer flex items-center gap-1.5 border ${importType === 'tutors' ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-white text-slate-600 border-slate-200'}`}>
+              className={`px-4 py-2 rounded-lg text-xs font-bold cursor-pointer flex items-center gap-1.5 border transition-colors ${importType === 'tutors' ? 'bg-indigo-600 text-white border-indigo-600 shadow-sm' : 'bg-white text-slate-600 border-slate-200 hover:border-indigo-300'}`}>
               <GraduationCap className="w-3.5 h-3.5" /> Gia sư
             </button>
             <button onClick={() => { setImportType('students'); setPreview([]); setDuplicates([]); setImported(false); }}
-              className={`px-4 py-2 rounded-lg text-xs font-bold cursor-pointer flex items-center gap-1.5 border ${importType === 'students' ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-white text-slate-600 border-slate-200'}`}>
+              className={`px-4 py-2 rounded-lg text-xs font-bold cursor-pointer flex items-center gap-1.5 border transition-colors ${importType === 'students' ? 'bg-indigo-600 text-white border-indigo-600 shadow-sm' : 'bg-white text-slate-600 border-slate-200 hover:border-indigo-300'}`}>
               <Users className="w-3.5 h-3.5" /> Học sinh
             </button>
           </div>
+          <div className="h-6 w-px bg-slate-200" />
           <button onClick={() => downloadTemplate(importType)}
-            className="px-4 py-2 bg-white border border-slate-200 hover:border-slate-300 rounded-lg text-xs font-bold text-slate-600 cursor-pointer flex items-center gap-1.5">
+            className="px-4 py-2 bg-white border border-slate-200 hover:border-slate-300 rounded-lg text-xs font-bold text-slate-600 cursor-pointer flex items-center gap-1.5 transition-colors">
             <Download className="w-3.5 h-3.5" /> Tải mẫu CSV
           </button>
         </div>
 
-        <div className="border-2 border-dashed border-slate-200 rounded-lg p-8 text-center hover:border-blue-400 transition-colors mb-4">
+        <div className="border-2 border-dashed border-slate-200 rounded-lg p-10 text-center hover:border-indigo-400 transition-all mb-4 group"
+          onDragOver={e => { e.preventDefault(); e.currentTarget.style.borderColor = '#818cf8'; e.currentTarget.style.background = 'rgba(79,70,229,0.04)'; }}
+          onDragLeave={e => { e.currentTarget.style.borderColor = ''; e.currentTarget.style.background = ''; }}
+          onDrop={e => { e.preventDefault(); e.currentTarget.style.borderColor = ''; e.currentTarget.style.background = ''; const file = e.dataTransfer.files[0]; if (file && fileRef.current) { const dt = new DataTransfer(); dt.items.add(file); fileRef.current.files = dt.files; fileRef.current.dispatchEvent(new Event('change', { bubbles: true })); } }}>
           <input ref={fileRef} type="file" accept=".csv,.txt" onChange={handleFile} className="hidden" />
-          <Upload className="w-8 h-8 mx-auto mb-2 text-slate-400" />
-          <button onClick={() => fileRef.current?.click()} className="px-4 py-2 bg-indigo-600 text-white rounded-lg text-xs font-bold cursor-pointer">Chọn file CSV</button>
-          <p className="text-[10px] text-slate-400 mt-2">Hỗ trợ .csv · UTF-8 · Tối đa 500 dòng</p>
+          <div className="w-14 h-14 mx-auto mb-3 bg-indigo-50 rounded-lg flex items-center justify-center group-hover:bg-indigo-100 transition-colors">
+            <Upload className="w-7 h-7 text-indigo-500" />
+          </div>
+          <button onClick={() => fileRef.current?.click()}
+            className="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs font-bold cursor-pointer shadow-sm transition-all">
+            Chọn file CSV
+          </button>
+          <p className="text-xs text-slate-500 mt-3">hoặc kéo thả file vào đây</p>
+          <p className="text-[10px] text-slate-400 mt-1">Hỗ trợ .csv · UTF-8 · Tối đa 500 dòng</p>
         </div>
 
         {/* Preview */}
