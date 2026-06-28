@@ -367,3 +367,72 @@ export async function seedSampleData(): Promise<void> {
     console.error('Error seeding data:', err);
   }
 }
+
+// Force seed additional data (transactions, registrations, matches etc.)
+// Call this from AdvancedToolsTab to add demo data even when tutors already exist
+export async function forceSeedAdditionalData(): Promise<string> {
+  try {
+    let seeded = [];
+    
+    const txSnap = await getDocs(collection(db, 'transactions'));
+    if (txSnap.size < 5) {
+      for (const tx of SAMPLE_TRANSACTIONS) { await addDoc(collection(db, 'transactions'), tx); }
+      seeded.push(`${SAMPLE_TRANSACTIONS.length} giao dịch`);
+    }
+    
+    const regSnap = await getDocs(collection(db, 'registrations'));
+    if (regSnap.size < 3) {
+      for (const r of SAMPLE_REGISTRATIONS) { await addDoc(collection(db, 'registrations'), r); }
+      seeded.push(`${SAMPLE_REGISTRATIONS.length} đăng ký`);
+    }
+    
+    const matchSnap = await getDocs(collection(db, 'matches'));
+    if (matchSnap.size < 1) {
+      for (const m of SAMPLE_MATCHES) { await addDoc(collection(db, 'matches'), m); }
+      seeded.push(`${SAMPLE_MATCHES.length} ghép lớp`);
+    }
+    
+    const studentSnap = await getDocs(collection(db, 'students'));
+    if (studentSnap.size < 1) {
+      for (const s of SAMPLE_STUDENTS) { await addDoc(collection(db, 'students'), s); }
+      seeded.push(`${SAMPLE_STUDENTS.length} học sinh`);
+    }
+    
+    const reviewSnap = await getDocs(collection(db, 'reviews'));
+    if (reviewSnap.size < 1) {
+      for (const rv of SAMPLE_REVIEWS) { await addDoc(collection(db, 'reviews'), rv); }
+      seeded.push(`${SAMPLE_REVIEWS.length} đánh giá`);
+    }
+    
+    const contactSnap = await getDocs(collection(db, 'contacts'));
+    if (contactSnap.size < 1) {
+      for (const ct of SAMPLE_CONTACTS) { await addDoc(collection(db, 'contacts'), ct); }
+      seeded.push(`${SAMPLE_CONTACTS.length} liên hệ`);
+    }
+    
+    // Update tutor documentUrls for existing tutors
+    const tutorSnap = await getDocs(collection(db, 'tutors'));
+    let updatedTutors = 0;
+    for (const docSnap of tutorSnap.docs) {
+      const data = docSnap.data();
+      if (!data.documentUrls || !data.documentUrls.cccdFrontUrl) {
+        const matchingTutor = SAMPLE_TUTORS.find(t => t.code === data.code);
+        if (matchingTutor && matchingTutor.documentUrls) {
+          await setDoc(doc(db, 'tutors', docSnap.id), {
+            documentUrls: matchingTutor.documentUrls,
+            emergencyContacts: matchingTutor.emergencyContacts || [],
+            adminNote: matchingTutor.adminNote || '',
+          }, { merge: true });
+          updatedTutors++;
+        }
+      }
+    }
+    if (updatedTutors > 0) seeded.push(`${updatedTutors} gia sư (cập nhật CCCD)`);
+    
+    if (seeded.length === 0) return 'Dữ liệu đã đầy đủ, không cần thêm.';
+    return `✅ Đã thêm: ${seeded.join(', ')}`;
+  } catch (err) {
+    console.error('Force seed error:', err);
+    return '❌ Lỗi: ' + String(err);
+  }
+}

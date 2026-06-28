@@ -1,10 +1,13 @@
-﻿import React, { useState } from 'react';
-import { Send, Bell, FileText, Shield, Copy, Check, Smartphone } from 'lucide-react';
+import React, { useState } from 'react';
+import { Send, Bell, FileText, Shield, Copy, Check, Smartphone, Database, RefreshCw } from 'lucide-react';
+import { forceSeedAdditionalData } from '../firebase';
 
 // #19 Contract, #25 Role Config, #16 PWA
 export const AdvancedToolsTab: React.FC = () => {
-  const [activeSection, setActiveSection] = useState<'contract' | 'roles' | 'pwa'>('contract');
+  const [activeSection, setActiveSection] = useState<'contract' | 'roles' | 'pwa' | 'data'>('contract');
   const [copiedId, setCopiedId] = useState<string | null>(null);
+  const [seedResult, setSeedResult] = useState<string | null>(null);
+  const [isSeeding, setIsSeeding] = useState(false);
 
   const contractTemplate = `HỢP ĐỒNG GIA SƯ
 Số: HD-{contractNo}
@@ -57,6 +60,7 @@ BÊN A _____________ BÊN B _____________`;
     { id: 'contract' as const, label: 'Hợp đồng', icon: <FileText className="w-4 h-4" /> },
     { id: 'roles' as const, label: 'Phân quyền', icon: <Shield className="w-4 h-4" /> },
     { id: 'pwa' as const, label: 'App & Push', icon: <Smartphone className="w-4 h-4" /> },
+    { id: 'data' as const, label: 'Dữ liệu mẫu', icon: <Database className="w-4 h-4" /> },
   ];
 
   return (
@@ -151,6 +155,55 @@ BÊN A _____________ BÊN B _____________`;
             <Bell className="w-4 h-4 text-emerald-600 shrink-0" />
             <span>Sau khi cài, ứng dụng sẽ hoạt động như app native. Dữ liệu real-time qua Firestore.</span>
           </div>
+        </div>
+      )}
+
+      {activeSection === 'data' && (
+        <div className="bg-white rounded-lg border border-slate-200 shadow-xs p-6 space-y-5">
+          <div className="flex items-center gap-2 border-b border-slate-100 pb-4">
+            <div className="p-2 bg-indigo-50 text-indigo-600 rounded-lg">
+              <Database className="w-5 h-5" />
+            </div>
+            <div>
+              <h3 className="font-bold text-slate-800">Dữ liệu mẫu (Demo)</h3>
+              <p className="text-[11px] text-slate-500">Nạp dữ liệu mẫu đầy đủ để test tất cả tính năng</p>
+            </div>
+          </div>
+
+          <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 text-xs text-amber-800 space-y-2">
+            <div className="font-bold">⚡ Dữ liệu sẽ được nạp:</div>
+            <ul className="list-disc list-inside space-y-1 text-amber-700">
+              <li>11 giao dịch tài chính (3 tháng gần nhất)</li>
+              <li>5 đăng ký phụ huynh (các trạng thái khác nhau)</li>
+              <li>2 ghép lớp đang dạy</li>
+              <li>3 học sinh (đang học, chờ xếp lớp)</li>
+              <li>4 đánh giá gia sư</li>
+              <li>3 tin nhắn liên hệ</li>
+              <li>Cập nhật ảnh CCCD, bằng cấp cho gia sư</li>
+            </ul>
+          </div>
+
+          <button
+            onClick={async () => {
+              if (!window.confirm('Xác nhận nạp dữ liệu mẫu? (Dữ liệu cũ không bị xóa)')) return;
+              setIsSeeding(true);
+              setSeedResult(null);
+              const result = await forceSeedAdditionalData();
+              setSeedResult(result);
+              setIsSeeding(false);
+            }}
+            disabled={isSeeding}
+            className="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs font-bold cursor-pointer flex items-center gap-2 transition-colors disabled:opacity-50"
+          >
+            {isSeeding ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Database className="w-4 h-4" />}
+            <span>{isSeeding ? 'Đang nạp...' : 'Nạp dữ liệu mẫu'}</span>
+          </button>
+
+          {seedResult && (
+            <div className={`p-3 rounded-lg text-xs font-bold ${seedResult.startsWith('✅') ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : seedResult.startsWith('❌') ? 'bg-red-50 text-red-700 border border-red-200' : 'bg-slate-50 text-slate-700 border border-slate-200'}`}>
+              {seedResult}
+            </div>
+          )}
         </div>
       )}
     </div>
