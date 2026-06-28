@@ -766,9 +766,21 @@ section .flex-col { flex-direction: column !important; }
 .dark section .text-indigo-600 { color: #818cf8 !important; }
 .dark section .text-indigo-700 { color: #a5b4fc !important; }
 .dark section .text-emerald-700 { color: #6ee7b7 !important; }
+.dark section .text-emerald-600 { color: #34d399 !important; }
 .dark section .text-amber-700 { color: #fcd34d !important; }
+.dark section .text-amber-600 { color: #fbbf24 !important; }
 .dark section .text-red-600 { color: #fca5a5 !important; }
+.dark section .text-red-500 { color: #f87171 !important; }
 .dark section .text-purple-600 { color: #c4b5fd !important; }
+.dark section .text-purple-700 { color: #a78bfa !important; }
+.dark section .text-cyan-700 { color: #67e8f9 !important; }
+.dark section .text-cyan-600 { color: #22d3ee !important; }
+.dark section .text-cyan-800 { color: #67e8f9 !important; }
+.dark section .text-green-600 { color: #4ade80 !important; }
+.dark section .text-green-700 { color: #86efac !important; }
+.dark section .text-rose-600 { color: #fb7185 !important; }
+.dark section .text-blue-800 { color: #93c5fd !important; }
+.dark section .bg-cyan-100 { background: rgba(34,211,238,0.15) !important; }
 
 /* Dark: Avatar colors stay the same (they are bg-colored) */
 
