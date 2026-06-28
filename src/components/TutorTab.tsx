@@ -219,7 +219,7 @@ export const TutorTab: React.FC<TutorTabProps> = ({ tutors, onAddTutor, onUpdate
                 const checks = [
                   { label: 'CCCD', done: !!(t.documentUrls?.cccdFrontUrl || (t.documentUrls as any)?.cccdUrl) },
                   { label: 'Bằng cấp', done: !!((t.documentUrls?.degreeUrls?.length || 0) > 0 || (t.documentUrls as any)?.degreeUrl) },
-                  { label: 'SĐT', done: !!t.phone },
+                  { label: 'Số điện thoại', done: !!t.phone },
                   { label: 'Xác minh', done: t.verified },
                 ];
                 const done = checks.filter(c => c.done).length;

@@ -67,7 +67,7 @@ export const MatchesTab: React.FC<MatchesTabProps> = ({ matches, classes, tutors
   };
 
   const exportCsv = () => {
-    const header = 'Lớp,Môn,Gia sư,Học sinh,SĐT PH,Phí/buổi,Ngày bắt đầu,Trạng thái,Ghi chú\n';
+    const header = 'Lớp,Môn,Gia sư,Học sinh,SĐT phụ huynh,Phí/buổi,Ngày bắt đầu,Trạng thái,Ghi chú\n';
     const rows = matches.map(m =>
       `${m.classCode},"${m.classSubject}","${m.tutorName}","${m.studentName || ''}","${m.parentPhone || ''}",${m.fee},${fmtDate(m.startDate)},${m.status},"${m.note || ''}"`
     ).join('\n');
@@ -290,7 +290,7 @@ export const MatchesTab: React.FC<MatchesTabProps> = ({ matches, classes, tutors
           <div className="text-2xl font-bold text-blue-600 mt-1">{doneCount}</div>
         </div>
         <div className="bg-white rounded-xl border border-slate-200 p-4 shadow-xs">
-          <div className="text-[10px] font-bold uppercase text-slate-400 tracking-wider">Phí KN đã thu</div>
+          <div className="text-[10px] font-bold uppercase text-slate-400 tracking-wider">Phí kết nối đã thu</div>
           <div className="text-2xl font-bold text-amber-600 mt-1">{fmt(matches.filter(m => m.feePaid && m.feeAmount).reduce((s, m) => s + (m.feeAmount || 0), 0))}đ</div>
           <div className="text-[10px] text-slate-400 mt-0.5">{matches.filter(m => m.feePaid).length}/{matches.filter(m => m.status === 'Đang dạy').length} lớp</div>
         </div>
@@ -342,7 +342,7 @@ export const MatchesTab: React.FC<MatchesTabProps> = ({ matches, classes, tutors
                     className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-blue-500" />
                 </div>
                 <div>
-                  <label className="block text-xs font-bold uppercase text-slate-600 mb-1">Phí KN (%)</label>
+                  <label className="block text-xs font-bold uppercase text-slate-600 mb-1">Phí kết nối (%)</label>
                   <input type="number" value={feePercent} onChange={e => setFeePercent(Number(e.target.value))} min={10} max={100} step={5}
                     className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-blue-500" />
                 </div>

@@ -63,7 +63,7 @@ export const StatusLookup: React.FC<StatusLookupProps> = ({ tutors, registration
           <Search size={14} /> Tra cứu trạng thái
         </div>
         <h1 style={{ fontSize: 'clamp(22px, 4vw, 28px)', fontWeight: 800, color: '#0f172a', marginBottom: 6 }}>Tra cứu & Theo dõi</h1>
-        <p style={{ fontSize: 14, color: '#64748b' }}>Nhập SĐT hoặc mã gia sư (VD: GS001) để xem đơn đăng ký, gia sư, lịch học.</p>
+        <p style={{ fontSize: 14, color: '#64748b' }}>Nhập số điện thoại hoặc mã gia sư (ví dụ: GS001) để xem đơn đăng ký, gia sư, lịch học.</p>
       </div>
 
       <div style={{ maxWidth: 560, margin: '0 auto' }}>

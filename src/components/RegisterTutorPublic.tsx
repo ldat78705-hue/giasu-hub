@@ -277,7 +277,7 @@ export const RegisterTutorPublic: React.FC<RegisterTutorPublicProps> = ({
                   {emergencyContacts.map((c, i) => (
                     <div key={i} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 100px 30px', gap: 6, marginBottom: 6, alignItems: 'center' }}>
                       <input value={c.name} onChange={e => updateEmergency(i, 'name', e.target.value)} placeholder="Họ tên" style={{ ...inp, padding: '8px 10px', fontSize: 13 }} />
-                      <input value={c.phone} onChange={e => updateEmergency(i, 'phone', e.target.value)} placeholder="SĐT" type="tel" style={{ ...inp, padding: '8px 10px', fontSize: 13 }} />
+                      <input value={c.phone} onChange={e => updateEmergency(i, 'phone', e.target.value)} placeholder="Số điện thoại" type="tel" style={{ ...inp, padding: '8px 10px', fontSize: 13 }} />
                       <select value={c.relation} onChange={e => updateEmergency(i, 'relation', e.target.value)}
                         style={{ ...inp, padding: '8px 6px', fontSize: 12 }}>
                         <option value="">Quan hệ</option>

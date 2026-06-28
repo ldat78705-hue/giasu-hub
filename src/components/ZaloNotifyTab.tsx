@@ -212,8 +212,8 @@ export const ZaloNotifyTab: React.FC<ZaloNotifyTabProps> = ({ registrations, mat
               { key: 'grade', label: 'Lớp' },
               { key: 'schedule', label: 'Lịch học' },
               { key: 'amount', label: 'Số tiền' },
-              { key: 'deadline', label: 'Hạn TT' },
-              { key: 'phone', label: 'SĐT TT' },
+              { key: 'deadline', label: 'Hạn thanh toán' },
+              { key: 'phone', label: 'Số điện thoại trung tâm' },
             ].map(v => (
               <div key={v.key}>
                 <label className="text-[10px] font-bold text-slate-500 uppercase">{v.label}</label>

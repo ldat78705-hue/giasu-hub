@@ -33,7 +33,7 @@ export const ReviewsTab: React.FC<ReviewsTabProps> = ({ reviews, tutors, onAddRe
   };
 
   const exportCsv = () => {
-    const header = 'Gia sư,Mã GS,PH đánh giá,SĐT PH,Sao,Nhận xét,Ngày\n';
+    const header = 'Gia sư,Mã gia sư,Phụ huynh đánh giá,SĐT phụ huynh,Sao,Nhận xét,Ngày\n';
     const rows = reviews.map(r => `"${r.tutorName}","${r.tutorCode}","${r.parentName}","${r.parentPhone}",${r.rating},"${r.comment}","${new Date(r.createdAt).toLocaleDateString('vi-VN')}"`).join('\n');
     const blob = new Blob(['\uFEFF' + header + rows], { type: 'text/csv;charset=utf-8' });
     const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `danh-gia-${new Date().toISOString().slice(0,10)}.csv`; a.click();
@@ -108,7 +108,7 @@ export const ReviewsTab: React.FC<ReviewsTabProps> = ({ reviews, tutors, onAddRe
                     className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-blue-500" />
                 </div>
                 <div>
-                  <label className="block text-xs font-bold uppercase text-slate-600 mb-1">SĐT PH</label>
+                  <label className="block text-xs font-bold uppercase text-slate-600 mb-1">Số điện thoại phụ huynh</label>
                   <input value={parentPhone} onChange={e => setParentPhone(e.target.value)} type="tel"
                     className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-blue-500" />
                 </div>

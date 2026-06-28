@@ -19,7 +19,7 @@ export const ChatbotWidget: React.FC<ChatbotWidgetProps> = ({ apiKey, centerName
 
   const systemPrompt = `Bạn là trợ lý tư vấn AI của trung tâm ${centerName}. Trả lời ngắn gọn, thân thiện bằng tiếng Việt.
 Thông tin:
-- SĐT/Zalo: 0822448444
+- Số điện thoại/Zalo: 0822448444
 - Dịch vụ: Tìm gia sư tại nhà, online, luyện thi
 - Các môn: Toán, Lý, Hóa, Anh, Văn, và nhiều môn khác
 - Khu vực: Hà Nội

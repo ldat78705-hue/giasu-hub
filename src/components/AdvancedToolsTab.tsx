@@ -12,7 +12,7 @@ Số: HD-{contractNo}
 I. BÊN CUNG CẤP DỊCH VỤ (Trung tâm):
 Tên: Gia Sư Thành Đạt
 Đại diện: ________________
-SĐT: 0822448444
+Số điện thoại: 0822448444
 
 II. BÊN SỬ DỤNG DỊCH VỤ (Phụ huynh):
 Họ tên: {parentName}

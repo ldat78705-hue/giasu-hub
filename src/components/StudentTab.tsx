@@ -100,7 +100,7 @@ export const StudentTab: React.FC<StudentTabProps> = ({ students, onAddStudent, 
           <div className="relative flex-1 max-w-xs">
             <Search className="w-4 h-4 absolute left-3 top-2.5 text-slate-400" />
             <input type="text" value={searchTerm} onChange={e => setSearchTerm(e.target.value)}
-              placeholder="Tìm học sinh, phụ huynh, SĐT..."
+              placeholder="Tìm học sinh, phụ huynh, số điện thoại..."
               className="w-full pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm outline-none focus:bg-white focus:border-blue-500" />
           </div>
           <div className="relative">
@@ -271,7 +271,7 @@ export const StudentTab: React.FC<StudentTabProps> = ({ students, onAddStudent, 
                 </div>
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-xs font-bold text-slate-600 mb-1">SĐT PHHS *</label>
+                    <label className="block text-xs font-bold text-slate-600 mb-1">Số điện thoại phụ huynh *</label>
                     <input required type="tel" value={parentPhone} onChange={e => setParentPhone(e.target.value)} placeholder="0912345678"
                       className="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl outline-none text-sm" />
                   </div>
@@ -301,7 +301,7 @@ export const StudentTab: React.FC<StudentTabProps> = ({ students, onAddStudent, 
                   <div key={i} className="grid grid-cols-[1fr_1fr_80px_28px] gap-2 items-center">
                     <input value={c.name} onChange={e => updateEmergency(i, 'name', e.target.value)} placeholder="Họ tên"
                       className="px-2.5 py-1.5 bg-white border border-slate-200 rounded-lg text-xs outline-none" />
-                    <input value={c.phone} onChange={e => updateEmergency(i, 'phone', e.target.value)} placeholder="SĐT" type="tel"
+                    <input value={c.phone} onChange={e => updateEmergency(i, 'phone', e.target.value)} placeholder="Số điện thoại" type="tel"
                       className="px-2.5 py-1.5 bg-white border border-slate-200 rounded-lg text-xs outline-none" />
                     <select value={c.relation} onChange={e => updateEmergency(i, 'relation', e.target.value)}
                       className="px-1.5 py-1.5 bg-white border border-slate-200 rounded-lg text-[10px] outline-none">

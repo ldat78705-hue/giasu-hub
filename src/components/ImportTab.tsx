@@ -104,7 +104,7 @@ export const ImportTab: React.FC<ImportTabProps> = ({ tutors, students, onImport
         <div className="flex gap-2 mb-3">
           <div className="relative flex-1 max-w-sm">
             <Search className="w-4 h-4 absolute left-3 top-2.5 text-slate-400" />
-            <input type="text" value={dupSearch} onChange={e => setDupSearch(e.target.value)} placeholder="Nhập SĐT hoặc tên để kiểm tra..."
+            <input type="text" value={dupSearch} onChange={e => setDupSearch(e.target.value)} placeholder="Nhập số điện thoại hoặc tên để kiểm tra..."
               className="w-full pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm outline-none focus:bg-white focus:border-blue-500"
               onKeyDown={e => e.key === 'Enter' && handleDuplicateSearch()} />
           </div>
@@ -180,7 +180,7 @@ export const ImportTab: React.FC<ImportTabProps> = ({ tutors, students, onImport
             </div>
             {duplicates.length > 0 && (
               <div className="bg-amber-50 border border-amber-200 rounded-xl p-3 text-xs text-amber-800">
-                <p className="font-bold">⚠️ {duplicates.length} dòng trùng SĐT đã bỏ qua</p>
+                <p className="font-bold">⚠️ {duplicates.length} dòng trùng số điện thoại đã bỏ qua</p>
               </div>
             )}
             <div className="overflow-x-auto max-h-[300px] overflow-y-auto rounded-xl border border-slate-200">
