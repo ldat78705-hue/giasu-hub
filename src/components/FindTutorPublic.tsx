@@ -122,7 +122,7 @@ export const FindTutorPublic: React.FC<FindTutorPublicProps> = ({ tutors, onBook
           {/* Trust signals — only in empty state */}
           <div style={{ display: 'flex', gap: 16, justifyContent: 'center', marginTop: 32, flexWrap: 'wrap' }}>
             {[
-              { icon: <Shield size={14} />, text: 'GS đã xác minh', color: '#2563eb' },
+              { icon: <Shield size={14} />, text: 'Đã xác minh', color: '#2563eb' },
               { icon: <Clock size={14} />, text: 'Phản hồi 30 phút', color: '#16a34a' },
               { icon: <Award size={14} />, text: 'Học thử miễn phí', color: '#f59e0b' },
             ].map((item, i) => (

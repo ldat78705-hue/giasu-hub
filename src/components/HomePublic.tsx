@@ -82,7 +82,7 @@ export const HomePublic: React.FC<HomePublicProps> = ({
             Tìm gia sư giỏi<br />cho con bạn
           </h1>
           <p style={{ fontSize: 16, color: '#94a3b8', maxWidth: 500, margin: '0 auto 32px', lineHeight: 1.7 }}>
-            Đội ngũ gia sư đã xác minh từ ĐH Quốc Gia, Bách Khoa, Sư Phạm. Cam kết tiến bộ sau 4 buổi.
+            Đội ngũ gia sư đã xác minh từ Đại học Quốc gia, Bách Khoa, Sư Phạm. Cam kết tiến bộ sau 4 buổi.
           </p>
 
           {/* BUG-3: AI Search Bar */}
