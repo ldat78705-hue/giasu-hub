@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { TutorItem } from '../types';
-import { Plus, Star, Trash2, Phone, Search, ShieldCheck, ShieldX, FileText, X, Eye, Download, StickyNote, Save, ArrowUpDown } from 'lucide-react';
+import { Plus, Star, Trash2, Phone, Search, ShieldCheck, ShieldX, FileText, X, Eye, Download, StickyNote, Save, ArrowUpDown, Pencil } from 'lucide-react';
 
 interface TutorTabProps {
   tutors: TutorItem[];
@@ -9,9 +9,10 @@ interface TutorTabProps {
   onDeleteTutor: (id: string) => void;
   onVerifyTutor: (id: string, verified: boolean) => void;
   onUpdateNote?: (id: string, note: string) => void;
+  onUpdateTutor?: (id: string, data: Partial<TutorItem>) => void;
 }
 
-export const TutorTab: React.FC<TutorTabProps> = ({ tutors, onAddTutor, onUpdateStatus, onDeleteTutor, onVerifyTutor, onUpdateNote }) => {
+export const TutorTab: React.FC<TutorTabProps> = ({ tutors, onAddTutor, onUpdateStatus, onDeleteTutor, onVerifyTutor, onUpdateNote, onUpdateTutor }) => {
   const [showModal, setShowModal] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [filter, setFilter] = useState<'all' | 'verified' | 'pending'>('all');
@@ -25,6 +26,43 @@ export const TutorTab: React.FC<TutorTabProps> = ({ tutors, onAddTutor, onUpdate
   const [editingNote, setEditingNote] = useState<string | null>(null);
   const [noteText, setNoteText] = useState('');
   const [sortBy, setSortBy] = useState<'newest' | 'name' | 'rating' | 'verified'>('newest');
+  // Edit tutor state
+  const [editingTutor, setEditingTutor] = useState<TutorItem | null>(null);
+  const [editName, setEditName] = useState('');
+  const [editSubjects, setEditSubjects] = useState('');
+  const [editQualification, setEditQualification] = useState('');
+  const [editExperience, setEditExperience] = useState('');
+  const [editHourlyRate, setEditHourlyRate] = useState(200000);
+  const [editPhone, setEditPhone] = useState('');
+  const [editEmail, setEditEmail] = useState('');
+  const [editArea, setEditArea] = useState('');
+
+  const openEditModal = (t: TutorItem) => {
+    setEditingTutor(t);
+    setEditName(t.name);
+    setEditSubjects(t.subjects.join(', '));
+    setEditQualification(t.qualification);
+    setEditExperience(t.experience);
+    setEditHourlyRate(t.hourlyRate);
+    setEditPhone(t.phone || '');
+    setEditEmail(t.email || '');
+    setEditArea(t.area || '');
+  };
+
+  const handleEditSave = () => {
+    if (!editingTutor?.id || !onUpdateTutor) return;
+    onUpdateTutor(editingTutor.id, {
+      name: editName,
+      subjects: editSubjects.split(',').map(s => s.trim()).filter(Boolean),
+      qualification: editQualification,
+      experience: editExperience,
+      hourlyRate: Number(editHourlyRate) || 200000,
+      phone: editPhone,
+      email: editEmail,
+      area: editArea,
+    });
+    setEditingTutor(null);
+  };
 
   const colors = ['bg-indigo-500', 'bg-purple-500', 'bg-emerald-500', 'bg-amber-500', 'bg-rose-500', 'bg-indigo-500'];
 
@@ -247,6 +285,15 @@ export const TutorTab: React.FC<TutorTabProps> = ({ tutors, onAddTutor, onUpdate
                               <Eye style={{ width: 14, height: 14 }} />
                             </button>
                           )}
+                          {onUpdateTutor && (
+                            <button onClick={(e) => { e.stopPropagation(); openEditModal(t); }}
+                              style={{ padding: 4, border: 'none', background: 'transparent', cursor: 'pointer', color: '#94a3b8' }}
+                              onMouseEnter={e => (e.currentTarget.style.color = '#3b82f6')}
+                              onMouseLeave={e => (e.currentTarget.style.color = '#94a3b8')}
+                              title="Sửa thông tin">
+                              <Pencil style={{ width: 14, height: 14 }} />
+                            </button>
+                          )}
                           <button onClick={(e) => { e.stopPropagation(); t.id && window.confirm(`Xóa gia sư ${t.name}?`) && onDeleteTutor(t.id); }}
                             style={{ padding: 4, border: 'none', background: 'transparent', cursor: 'pointer', color: '#94a3b8' }}
                             onMouseEnter={e => (e.currentTarget.style.color = '#ef4444')}
@@ -464,6 +511,78 @@ export const TutorTab: React.FC<TutorTabProps> = ({ tutors, onAddTutor, onUpdate
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* Edit Tutor Modal */}
+      {editingTutor && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40" onClick={() => setEditingTutor(null)}>
+          <div className="bg-white rounded-lg shadow-xl w-full max-w-lg mx-4 max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 20px', borderBottom: '1px solid #e2e8f0' }}>
+              <h3 style={{ fontSize: 16, fontWeight: 700, margin: 0 }}>✏️ Sửa thông tin gia sư — {editingTutor.code}</h3>
+              <button onClick={() => setEditingTutor(null)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#94a3b8' }}>
+                <X style={{ width: 18, height: 18 }} />
+              </button>
+            </div>
+            <div style={{ padding: 20, display: 'flex', flexDirection: 'column', gap: 14 }}>
+              <div>
+                <label style={{ display: 'block', fontSize: 11, fontWeight: 700, color: '#475569', marginBottom: 4, textTransform: 'uppercase' }}>Họ tên</label>
+                <input value={editName} onChange={e => setEditName(e.target.value)}
+                  className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:bg-white focus:border-indigo-500 text-sm" />
+              </div>
+              <div>
+                <label style={{ display: 'block', fontSize: 11, fontWeight: 700, color: '#475569', marginBottom: 4, textTransform: 'uppercase' }}>Môn dạy (cách nhau bởi dấu phẩy)</label>
+                <input value={editSubjects} onChange={e => setEditSubjects(e.target.value)}
+                  className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:bg-white focus:border-indigo-500 text-sm" />
+              </div>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+                <div>
+                  <label style={{ display: 'block', fontSize: 11, fontWeight: 700, color: '#475569', marginBottom: 4, textTransform: 'uppercase' }}>Bằng cấp</label>
+                  <input value={editQualification} onChange={e => setEditQualification(e.target.value)}
+                    className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:bg-white focus:border-indigo-500 text-sm" />
+                </div>
+                <div>
+                  <label style={{ display: 'block', fontSize: 11, fontWeight: 700, color: '#475569', marginBottom: 4, textTransform: 'uppercase' }}>Kinh nghiệm</label>
+                  <input value={editExperience} onChange={e => setEditExperience(e.target.value)}
+                    className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:bg-white focus:border-indigo-500 text-sm" />
+                </div>
+              </div>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+                <div>
+                  <label style={{ display: 'block', fontSize: 11, fontWeight: 700, color: '#475569', marginBottom: 4, textTransform: 'uppercase' }}>Học phí / buổi (VNĐ)</label>
+                  <input type="number" value={editHourlyRate} onChange={e => setEditHourlyRate(Number(e.target.value))}
+                    className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:bg-white focus:border-indigo-500 text-sm" />
+                </div>
+                <div>
+                  <label style={{ display: 'block', fontSize: 11, fontWeight: 700, color: '#475569', marginBottom: 4, textTransform: 'uppercase' }}>Khu vực dạy</label>
+                  <input value={editArea} onChange={e => setEditArea(e.target.value)}
+                    className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:bg-white focus:border-indigo-500 text-sm" />
+                </div>
+              </div>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+                <div>
+                  <label style={{ display: 'block', fontSize: 11, fontWeight: 700, color: '#475569', marginBottom: 4, textTransform: 'uppercase' }}>Số điện thoại</label>
+                  <input value={editPhone} onChange={e => setEditPhone(e.target.value)}
+                    className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:bg-white focus:border-indigo-500 text-sm" />
+                </div>
+                <div>
+                  <label style={{ display: 'block', fontSize: 11, fontWeight: 700, color: '#475569', marginBottom: 4, textTransform: 'uppercase' }}>Email</label>
+                  <input value={editEmail} onChange={e => setEditEmail(e.target.value)}
+                    className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:bg-white focus:border-indigo-500 text-sm" />
+                </div>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 10, paddingTop: 8, borderTop: '1px solid #e2e8f0' }}>
+                <button onClick={() => setEditingTutor(null)}
+                  style={{ padding: '8px 16px', border: '1px solid #e2e8f0', borderRadius: 4, fontSize: 12, fontWeight: 700, cursor: 'pointer', background: '#fff', color: '#475569' }}>
+                  Hủy
+                </button>
+                <button onClick={handleEditSave}
+                  style={{ padding: '8px 20px', border: 'none', borderRadius: 4, fontSize: 12, fontWeight: 700, cursor: 'pointer', background: '#4f46e5', color: '#fff' }}>
+                  💾 Lưu thay đổi
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       )}

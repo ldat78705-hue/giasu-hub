@@ -24,8 +24,8 @@ const DEFAULT_SETTINGS: Omit<AdminSettings, 'id'> = {
   geminiApiKey: 'AIzaSyBDe-VKVWhxJoL5d0_tVs26l8MF1GSz6QY',
   zaloNumber: '0822448444',
   facebookUrl: '',
-  cloudinaryCloudName: '',
-  cloudinaryPreset: '',
+  cloudinaryCloudName: 'dkpwpfqzi',
+  cloudinaryPreset: 'olmthaydat',
   wards: DEFAULT_HANOI_WARDS,
   updatedAt: Date.now(),
 };
@@ -351,7 +351,7 @@ export async function seedSampleData(): Promise<void> {
       }
     }
 
-    // Update settings with phone/zalo/apikey
+    // Update settings with phone/zalo/apikey/cloudinary
     await setDoc(doc(db, 'settings', 'admin'), {
       centerName: 'Gia Sư Thành Đạt',
       centerPhone: '0822448444',
@@ -359,6 +359,8 @@ export async function seedSampleData(): Promise<void> {
       centerAddress: 'Hà Nội',
       zaloNumber: '0822448444',
       geminiApiKey: 'AIzaSyBDe-VKVWhxJoL5d0_tVs26l8MF1GSz6QY',
+      cloudinaryCloudName: 'dkpwpfqzi',
+      cloudinaryPreset: 'olmthaydat',
       bankName: 'Techcombank',
       bankAccount: '19035678901234',
       bankAccountName: 'NGUYEN VAN A',
@@ -433,8 +435,15 @@ export async function forceSeedAdditionalData(): Promise<string> {
     }
     if (updatedTutors > 0) seeded.push(`${updatedTutors} gia sư (cập nhật CCCD)`);
     
-    if (seeded.length === 0) return 'Dữ liệu đã đầy đủ, không cần thêm.';
-    return `✅ Đã thêm: ${seeded.join(', ')}`;
+    // Always update Cloudinary + settings
+    await setDoc(doc(db, 'settings', 'admin'), {
+      cloudinaryCloudName: 'dkpwpfqzi',
+      cloudinaryPreset: 'olmthaydat',
+      updatedAt: Date.now(),
+    }, { merge: true });
+    
+    if (seeded.length === 0) return 'Dữ liệu đã đầy đủ, không cần thêm. Cloudinary đã được cấu hình.';
+    return `✅ Đã thêm: ${seeded.join(', ')}. Cloudinary đã cấu hình.`;
   } catch (err) {
     console.error('Force seed error:', err);
     return '❌ Lỗi: ' + String(err);

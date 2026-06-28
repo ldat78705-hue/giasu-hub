@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { ClassItem } from '../types';
-import { Plus, Sparkles, Filter, Trash2, CheckCircle2, Download, Search, ArrowUpDown } from 'lucide-react';
+import { Plus, Sparkles, Filter, Trash2, CheckCircle2, Download, Search, ArrowUpDown, Pencil, X } from 'lucide-react';
 
 interface ClassTableProps {
   classes: ClassItem[];
@@ -10,6 +10,7 @@ interface ClassTableProps {
   onUpdateStatus: (id: string, newStatus: ClassItem['status']) => void;
   onDeleteClass: (id: string) => void;
   onOpenAiGenerator: () => void;
+  onUpdateClass?: (id: string, data: Partial<ClassItem>) => void;
 }
 
 export const ClassTable: React.FC<ClassTableProps> = ({
@@ -20,6 +21,7 @@ export const ClassTable: React.FC<ClassTableProps> = ({
   onUpdateStatus,
   onDeleteClass,
   onOpenAiGenerator,
+  onUpdateClass,
 }) => {
   const [showAddModal, setShowAddModal] = useState(false);
   const [statusFilter, setStatusFilter] = useState<string>('ALL');
@@ -34,6 +36,31 @@ export const ClassTable: React.FC<ClassTableProps> = ({
   const [fee, setFee] = useState<number>(300000);
   const [requirements, setRequirements] = useState('');
   const [teachMode, setTeachMode] = useState<ClassItem['teachMode']>('Tại nhà');
+  // Edit class state
+  const [editCls, setEditCls] = useState<ClassItem | null>(null);
+  const [ecSubject, setEcSubject] = useState('');
+  const [ecStudentInfo, setEcStudentInfo] = useState('');
+  const [ecLocation, setEcLocation] = useState('');
+  const [ecFee, setEcFee] = useState(0);
+  const [ecSchedule, setEcSchedule] = useState('');
+  const [ecRequirements, setEcRequirements] = useState('');
+  const [ecTeachMode, setEcTeachMode] = useState<ClassItem['teachMode']>('Tại nhà');
+
+  const openEditClass = (c: ClassItem) => {
+    setEditCls(c);
+    setEcSubject(c.subject);
+    setEcStudentInfo(c.studentInfo);
+    setEcLocation(c.location);
+    setEcFee(c.fee);
+    setEcSchedule(c.schedule || '');
+    setEcRequirements(c.requirements || '');
+    setEcTeachMode(c.teachMode || 'Tại nhà');
+  };
+  const handleEditClassSave = () => {
+    if (!editCls?.id || !onUpdateClass) return;
+    onUpdateClass(editCls.id, { subject: ecSubject, studentInfo: ecStudentInfo, location: ecLocation, fee: ecFee, schedule: ecSchedule, requirements: ecRequirements, teachMode: ecTeachMode });
+    setEditCls(null);
+  };
 
   const filteredClasses = classes.filter((c) => {
     const matchStatus = statusFilter === 'ALL' || c.status === statusFilter;
@@ -212,6 +239,15 @@ export const ClassTable: React.FC<ClassTableProps> = ({
                           <Sparkles className="w-3 h-3 text-indigo-500 group-hover:text-white" />
                           <span>Ghép AI</span>
                         </button>
+                        {cls.id && onUpdateClass && (
+                          <button
+                            onClick={() => openEditClass(cls)}
+                            className="p-1.5 hover:bg-blue-50 text-slate-400 hover:text-blue-600 rounded-lg transition-colors"
+                            title="Sửa lớp"
+                          >
+                            <Pencil className="w-3.5 h-3.5" />
+                          </button>
+                        )}
                         {cls.id && (
                           <button
                             onClick={() => { if (window.confirm(`Xóa lớp ${cls.code} - ${cls.subject}?`)) onDeleteClass(cls.id!); }}
@@ -326,6 +362,67 @@ export const ClassTable: React.FC<ClassTableProps> = ({
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* Edit Class Modal */}
+      {editCls && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40" onClick={() => setEditCls(null)}>
+          <div className="bg-white rounded-lg shadow-xl w-full max-w-lg mx-4 max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 20px', borderBottom: '1px solid #e2e8f0' }}>
+              <h3 style={{ fontSize: 16, fontWeight: 700, margin: 0 }}>✏️ Sửa lớp — {editCls.code}</h3>
+              <button onClick={() => setEditCls(null)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#94a3b8' }}><X style={{ width: 18, height: 18 }} /></button>
+            </div>
+            <div style={{ padding: 20, display: 'flex', flexDirection: 'column', gap: 14 }}>
+              <div>
+                <label style={{ display: 'block', fontSize: 11, fontWeight: 700, color: '#475569', marginBottom: 4, textTransform: 'uppercase' }}>Môn / Tên lớp</label>
+                <input value={ecSubject} onChange={e => setEcSubject(e.target.value)}
+                  className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:bg-white focus:border-indigo-500 text-sm" />
+              </div>
+              <div>
+                <label style={{ display: 'block', fontSize: 11, fontWeight: 700, color: '#475569', marginBottom: 4, textTransform: 'uppercase' }}>Thông tin học sinh</label>
+                <input value={ecStudentInfo} onChange={e => setEcStudentInfo(e.target.value)}
+                  className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:bg-white focus:border-indigo-500 text-sm" />
+              </div>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+                <div>
+                  <label style={{ display: 'block', fontSize: 11, fontWeight: 700, color: '#475569', marginBottom: 4, textTransform: 'uppercase' }}>Khu vực</label>
+                  <input value={ecLocation} onChange={e => setEcLocation(e.target.value)}
+                    className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:bg-white focus:border-indigo-500 text-sm" />
+                </div>
+                <div>
+                  <label style={{ display: 'block', fontSize: 11, fontWeight: 700, color: '#475569', marginBottom: 4, textTransform: 'uppercase' }}>Học phí / buổi (VNĐ)</label>
+                  <input type="number" value={ecFee} onChange={e => setEcFee(Number(e.target.value))}
+                    className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:bg-white focus:border-indigo-500 text-sm" />
+                </div>
+              </div>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+                <div>
+                  <label style={{ display: 'block', fontSize: 11, fontWeight: 700, color: '#475569', marginBottom: 4, textTransform: 'uppercase' }}>Lịch học</label>
+                  <input value={ecSchedule} onChange={e => setEcSchedule(e.target.value)}
+                    className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:bg-white focus:border-indigo-500 text-sm" />
+                </div>
+                <div>
+                  <label style={{ display: 'block', fontSize: 11, fontWeight: 700, color: '#475569', marginBottom: 4, textTransform: 'uppercase' }}>Hình thức</label>
+                  <select value={ecTeachMode} onChange={e => setEcTeachMode(e.target.value as ClassItem['teachMode'])}
+                    className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:border-indigo-500 text-sm">
+                    <option value="Tại nhà">Tại nhà</option>
+                    <option value="Online">Online</option>
+                    <option value="Cả hai">Cả hai</option>
+                  </select>
+                </div>
+              </div>
+              <div>
+                <label style={{ display: 'block', fontSize: 11, fontWeight: 700, color: '#475569', marginBottom: 4, textTransform: 'uppercase' }}>Yêu cầu</label>
+                <textarea value={ecRequirements} onChange={e => setEcRequirements(e.target.value)} rows={2}
+                  className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:bg-white focus:border-indigo-500 text-sm resize-none" />
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 10, paddingTop: 8, borderTop: '1px solid #e2e8f0' }}>
+                <button onClick={() => setEditCls(null)} style={{ padding: '8px 16px', border: '1px solid #e2e8f0', borderRadius: 4, fontSize: 12, fontWeight: 700, cursor: 'pointer', background: '#fff', color: '#475569' }}>Hủy</button>
+                <button onClick={handleEditClassSave} style={{ padding: '8px 20px', border: 'none', borderRadius: 4, fontSize: 12, fontWeight: 700, cursor: 'pointer', background: '#4f46e5', color: '#fff' }}>💾 Lưu thay đổi</button>
+              </div>
+            </div>
           </div>
         </div>
       )}

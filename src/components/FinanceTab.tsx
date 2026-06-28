@@ -1,21 +1,28 @@
 import React, { useState } from 'react';
 import { TransactionItem } from '../types';
-import { Plus, ArrowDownLeft, ArrowUpRight, CheckCircle2, Trash2, DollarSign, Clock, Download, Search, Printer } from 'lucide-react';
+import { Plus, ArrowDownLeft, ArrowUpRight, CheckCircle2, Trash2, DollarSign, Clock, Download, Search, Printer, Pencil, X } from 'lucide-react';
 import { generateReceiptPDF } from '../utils';
 
 interface FinanceTabProps {
   transactions: TransactionItem[];
   onAddTransaction: (tr: TransactionItem) => void;
   onDeleteTransaction?: (id: string) => void;
+  onUpdateTransaction?: (id: string, data: Partial<TransactionItem>) => void;
 }
 
-export const FinanceTab: React.FC<FinanceTabProps> = ({ transactions, onAddTransaction, onDeleteTransaction }) => {
+export const FinanceTab: React.FC<FinanceTabProps> = ({ transactions, onAddTransaction, onDeleteTransaction, onUpdateTransaction }) => {
   const [showModal, setShowModal] = useState(false);
   const [targetName, setTargetName] = useState('');
   const [amount, setAmount] = useState(500000);
   const [type, setType] = useState<TransactionItem['type']>('Thu phí gia sư');
   const [searchTerm, setSearchTerm] = useState('');
   const [typeFilter, setTypeFilter] = useState<string>('all');
+  // Edit transaction state
+  const [editTr, setEditTr] = useState<TransactionItem | null>(null);
+  const [etAmount, setEtAmount] = useState(0);
+  const [etType, setEtType] = useState<TransactionItem['type']>('Thu phí gia sư');
+  const [etTarget, setEtTarget] = useState('');
+  const [etNote, setEtNote] = useState('');
 
   const totalIncome = transactions
     .filter(t => t.type === 'Thu phí gia sư' && t.status === 'Thành công')
@@ -61,8 +68,8 @@ export const FinanceTab: React.FC<FinanceTabProps> = ({ transactions, onAddTrans
 
   return (
     <div className="space-y-6">
-      {/* Finance Metrics - inline grid as backup */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16 }} className="grid grid-cols-1 md:grid-cols-4 gap-4">
+      {/* Finance Metrics */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 16 }}>
         {[
           { label: 'Tổng thu', value: totalIncome, color: '#059669', icon: <ArrowDownLeft className="w-5 h-5" />, desc: 'Phí kết nối gia sư', bg: '#ecfdf5', iconBg: '#d1fae5' },
           { label: 'Hoàn trả', value: totalRefund, color: '#e11d48', icon: <ArrowUpRight className="w-5 h-5" />, desc: 'Hoàn phí & bảo lưu', bg: '#fff1f2', iconBg: '#fecdd3' },
@@ -99,19 +106,24 @@ export const FinanceTab: React.FC<FinanceTabProps> = ({ transactions, onAddTrans
       {/* F39: Monthly Revenue Trend — redesigned chart */}
       {(() => {
         // Build monthly data from transactions
-        const monthlyData: Record<string, { income: number; refund: number; expense: number }> = {};
+        const monthlyData: Record<string, { income: number; refund: number; expense: number; sortKey: number }> = {};
         transactions.forEach(t => {
-          const dateParts = t.date.split(/[/, ]/);
-          const key = dateParts.length >= 2 ? `T${dateParts[1]}/${dateParts[2] || new Date().getFullYear()}` : 'N/A';
-          if (!monthlyData[key]) monthlyData[key] = { income: 0, refund: 0, expense: 0 };
+          const dateParts = t.date.split(/[/,\- ]/);
+          if (dateParts.length < 2) return;
+          const monthNum = dateParts[1].padStart(2, '0');
+          const yearNum = dateParts[2] || String(new Date().getFullYear());
+          const key = `T${monthNum}/${yearNum}`;
+          const sortKey = parseInt(yearNum) * 100 + parseInt(monthNum);
+          if (!monthlyData[key]) monthlyData[key] = { income: 0, refund: 0, expense: 0, sortKey };
           if (t.type === 'Thu phí gia sư') monthlyData[key].income += t.amount;
           else if (t.type === 'Hoàn tiền') monthlyData[key].refund += t.amount;
           else monthlyData[key].expense += t.amount;
         });
         
-        // Ensure at least 4 columns for good visual
-        const rawMonths = Object.entries(monthlyData).slice(-6);
-        const months = rawMonths.length > 0 ? rawMonths : [];
+        // Sort chronologically and take last 6
+        const months = Object.entries(monthlyData)
+          .sort(([, a], [, b]) => a.sortKey - b.sortKey)
+          .slice(-6);
         if (months.length === 0) return null;
         
         const maxVal = Math.max(...months.map(([, d]) => Math.max(d.income, d.refund + d.expense)), 1);
@@ -294,6 +306,12 @@ export const FinanceTab: React.FC<FinanceTabProps> = ({ transactions, onAddTrans
                           className="p-1.5 hover:bg-indigo-50 text-slate-400 hover:text-indigo-600 rounded-lg transition-colors cursor-pointer" title="In phiếu">
                           <Printer className="w-3.5 h-3.5" />
                         </button>
+                        {tr.id && onUpdateTransaction && (
+                          <button onClick={() => { setEditTr(tr); setEtAmount(tr.amount); setEtType(tr.type); setEtTarget(tr.targetName); setEtNote(tr.note || ''); }}
+                            className="p-1.5 hover:bg-blue-50 text-slate-400 hover:text-blue-600 rounded-lg transition-colors cursor-pointer" title="Sửa giao dịch">
+                            <Pencil className="w-3.5 h-3.5" />
+                          </button>
+                        )}
                         {tr.id && onDeleteTransaction && (
                           <button onClick={() => { if (window.confirm(`Xóa giao dịch ${tr.receiptId}?`)) onDeleteTransaction(tr.id!); }}
                             className="p-1.5 hover:bg-red-50 text-slate-400 hover:text-red-600 rounded-lg transition-colors cursor-pointer">
@@ -341,6 +359,52 @@ export const FinanceTab: React.FC<FinanceTabProps> = ({ transactions, onAddTrans
                 <button type="submit" className="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs font-bold cursor-pointer transition-colors shadow-sm">Tạo biên lai</button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* Edit Transaction Modal */}
+      {editTr && (
+        <div className="fixed inset-0 z-50 bg-slate-900/60 flex items-center justify-center p-4" onClick={() => setEditTr(null)}>
+          <div className="bg-white rounded-lg shadow-xl w-full max-w-md" onClick={e => e.stopPropagation()}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 20px', borderBottom: '1px solid #e2e8f0' }}>
+              <h3 style={{ fontSize: 16, fontWeight: 700, margin: 0 }}>✏️ Sửa giao dịch {editTr.receiptId}</h3>
+              <button onClick={() => setEditTr(null)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#94a3b8' }}><X style={{ width: 18, height: 18 }} /></button>
+            </div>
+            <div style={{ padding: 20, display: 'flex', flexDirection: 'column', gap: 14 }}>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+                <div>
+                  <label style={{ display: 'block', fontSize: 11, fontWeight: 700, color: '#475569', marginBottom: 4, textTransform: 'uppercase' }}>Loại</label>
+                  <select value={etType} onChange={e => setEtType(e.target.value as TransactionItem['type'])}
+                    className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:border-indigo-500 text-sm">
+                    <option value="Thu phí gia sư">Thu phí gia sư</option>
+                    <option value="Hoàn tiền">Hoàn tiền</option>
+                    <option value="Thanh toán lương">Thanh toán lương</option>
+                    <option value="Vận hành">Vận hành</option>
+                  </select>
+                </div>
+                <div>
+                  <label style={{ display: 'block', fontSize: 11, fontWeight: 700, color: '#475569', marginBottom: 4, textTransform: 'uppercase' }}>Số tiền (VNĐ)</label>
+                  <input type="number" value={etAmount} onChange={e => setEtAmount(Number(e.target.value))}
+                    className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:bg-white focus:border-indigo-500 text-sm" />
+                </div>
+              </div>
+              <div>
+                <label style={{ display: 'block', fontSize: 11, fontWeight: 700, color: '#475569', marginBottom: 4, textTransform: 'uppercase' }}>Đối tượng</label>
+                <input value={etTarget} onChange={e => setEtTarget(e.target.value)}
+                  className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:bg-white focus:border-indigo-500 text-sm" />
+              </div>
+              <div>
+                <label style={{ display: 'block', fontSize: 11, fontWeight: 700, color: '#475569', marginBottom: 4, textTransform: 'uppercase' }}>Ghi chú</label>
+                <input value={etNote} onChange={e => setEtNote(e.target.value)}
+                  className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:bg-white focus:border-indigo-500 text-sm" />
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 10, paddingTop: 8, borderTop: '1px solid #e2e8f0' }}>
+                <button onClick={() => setEditTr(null)} style={{ padding: '8px 16px', border: '1px solid #e2e8f0', borderRadius: 4, fontSize: 12, fontWeight: 700, cursor: 'pointer', background: '#fff', color: '#475569' }}>Hủy</button>
+                <button onClick={() => { if (editTr?.id && onUpdateTransaction) { onUpdateTransaction(editTr.id, { amount: etAmount, type: etType, targetName: etTarget, note: etNote }); setEditTr(null); } }}
+                  style={{ padding: '8px 20px', border: 'none', borderRadius: 4, fontSize: 12, fontWeight: 700, cursor: 'pointer', background: '#4f46e5', color: '#fff' }}>💾 Lưu</button>
+              </div>
+            </div>
           </div>
         </div>
       )}

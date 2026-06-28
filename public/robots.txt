@@ -1,0 +1,11 @@
+# Gia Su Thanh Dat - Trung tam gia su Hanoi
+User-agent: *
+Allow: /
+Allow: /tim-gia-su
+Allow: /dang-ky-hoc
+Allow: /dang-ky-day
+Allow: /tra-cuu
+Allow: /cong-gia-su
+Disallow: /quan-tri
+
+Sitemap: https://giasu-dusky.vercel.app/sitemap.xml

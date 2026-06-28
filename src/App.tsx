@@ -349,6 +349,10 @@ export default function App() {
     await deleteDoc(doc(db, 'classes', id));
     logActivity('Xóa lớp', id, '', 'class');
   };
+  const handleUpdateClass = async (id: string, data: Partial<ClassItem>) => {
+    await updateDoc(doc(db, 'classes', id), data);
+    logActivity('Cập nhật lớp', id, data.subject || '', 'class');
+  };
 
   const handleAddTutor = async (t: TutorItem) => {
     await addDoc(collection(db, 'tutors'), t);
@@ -366,6 +370,10 @@ export default function App() {
     await updateDoc(doc(db, 'tutors', id), { verified, verifiedAt: verified ? Date.now() : null });
     logActivity(verified ? 'Xác minh GS' : 'Hủy xác minh GS', id, '', 'tutor');
   };
+  const handleUpdateTutor = async (id: string, data: Partial<TutorItem>) => {
+    await updateDoc(doc(db, 'tutors', id), data);
+    logActivity('Cập nhật GS', id, data.name || '', 'tutor');
+  };
 
   const handleAddStudent = async (st: StudentItem) => {
     await addDoc(collection(db, 'students'), st);
@@ -379,6 +387,10 @@ export default function App() {
     await updateDoc(doc(db, 'students', id), { status: st });
     logActivity('Đổi TT học sinh', id, `→ ${st}`, 'student');
   };
+  const handleUpdateStudent = async (id: string, data: Partial<StudentItem>) => {
+    await updateDoc(doc(db, 'students', id), data);
+    logActivity('Cập nhật học sinh', id, data.name || '', 'student');
+  };
 
   const handleAddTransaction = async (tr: TransactionItem) => {
     await addDoc(collection(db, 'transactions'), tr);
@@ -387,6 +399,10 @@ export default function App() {
   const handleDeleteTransaction = async (id: string) => {
     await deleteDoc(doc(db, 'transactions', id));
     logActivity('Xóa giao dịch', id, '', 'finance');
+  };
+  const handleUpdateTransaction = async (id: string, data: Partial<TransactionItem>) => {
+    await updateDoc(doc(db, 'transactions', id), data);
+    logActivity('Cập nhật giao dịch', id, '', 'finance');
   };
 
   const handleUpdateApplicationStatus = async (id: string, st: ClassApplication['status']) => {
@@ -802,14 +818,15 @@ export default function App() {
               <ClassTable classes={classes} onSelectClassForMatch={(cls) => { setSelectedClass(cls); setAdminTab('dashboard'); }}
                 selectedClassCode={selectedClass?.code} onAddClass={handleAddClass}
                 onUpdateStatus={handleUpdateClassStatus} onDeleteClass={handleDeleteClass}
-                onOpenAiGenerator={() => setShowAiGenModal(true)} />
+                onOpenAiGenerator={() => setShowAiGenModal(true)} onUpdateClass={handleUpdateClass} />
             </div>
           )}
 
           {adminTab === 'tutors' && (
             <TutorTab tutors={tutors} onAddTutor={handleAddTutor}
               onUpdateStatus={handleUpdateTutorStatus} onDeleteTutor={handleDeleteTutor}
-              onVerifyTutor={handleVerifyTutor} onUpdateNote={handleUpdateTutorNote} />
+              onVerifyTutor={handleVerifyTutor} onUpdateNote={handleUpdateTutorNote}
+              onUpdateTutor={handleUpdateTutor} />
           )}
 
           {adminTab === 'matches' && (
@@ -824,7 +841,7 @@ export default function App() {
           {adminTab === 'students' && (
             <StudentTab students={students} onAddStudent={handleAddStudent}
               onDeleteStudent={handleDeleteStudent} onUpdateStatus={handleUpdateStudentStatus}
-              onUpdateNote={handleUpdateStudentNote} />
+              onUpdateNote={handleUpdateStudentNote} onUpdateStudent={handleUpdateStudent} />
           )}
 
           {adminTab === 'applications' && (
@@ -844,7 +861,7 @@ export default function App() {
           )}
 
           {adminTab === 'finance' && (
-            <FinanceTab transactions={transactions} onAddTransaction={handleAddTransaction} onDeleteTransaction={handleDeleteTransaction} />
+            <FinanceTab transactions={transactions} onAddTransaction={handleAddTransaction} onDeleteTransaction={handleDeleteTransaction} onUpdateTransaction={handleUpdateTransaction} />
           )}
 
 

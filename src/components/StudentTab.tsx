@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { StudentItem, EmergencyContact } from '../types';
-import { Plus, Phone, Trash2, X, ChevronDown, ChevronUp, Mail, MapPin, User, Users, Download, StickyNote, Save, Search, ArrowUpDown } from 'lucide-react';
+import { Plus, Phone, Trash2, X, ChevronDown, ChevronUp, Mail, MapPin, User, Users, Download, StickyNote, Save, Search, ArrowUpDown, Pencil } from 'lucide-react';
 
 interface StudentTabProps {
   students: StudentItem[];
@@ -8,15 +8,24 @@ interface StudentTabProps {
   onDeleteStudent: (id: string) => void;
   onUpdateStatus: (id: string, status: StudentItem['status']) => void;
   onUpdateNote?: (id: string, note: string) => void;
+  onUpdateStudent?: (id: string, data: Partial<StudentItem>) => void;
 }
 
-export const StudentTab: React.FC<StudentTabProps> = ({ students, onAddStudent, onDeleteStudent, onUpdateStatus, onUpdateNote }) => {
+export const StudentTab: React.FC<StudentTabProps> = ({ students, onAddStudent, onDeleteStudent, onUpdateStatus, onUpdateNote, onUpdateStudent }) => {
   const [showModal, setShowModal] = useState(false);
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [editingNote, setEditingNote] = useState<string | null>(null);
   const [noteText, setNoteText] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState<'newest' | 'name' | 'grade'>('newest');
+  // Edit student state
+  const [editingSt, setEditingSt] = useState<StudentItem | null>(null);
+  const [esName, setEsName] = useState('');
+  const [esGrade, setEsGrade] = useState('');
+  const [esSchool, setEsSchool] = useState('');
+  const [esParentName, setEsParentName] = useState('');
+  const [esParentPhone, setEsParentPhone] = useState('');
+  const [esParentEmail, setEsParentEmail] = useState('');
 
   const filtered = students
     .filter(st => {
@@ -182,6 +191,15 @@ export const StudentTab: React.FC<StudentTabProps> = ({ students, onAddStudent, 
                     </td>
                     <td style={{ padding: '12px 16px', textAlign: 'center' }}>
                       <div style={{ display: 'flex', justifyContent: 'center', gap: 4 }}>
+                        {st.id && onUpdateStudent && (
+                          <button onClick={(e) => { e.stopPropagation(); setEditingSt(st); setEsName(st.name); setEsGrade(st.grade); setEsSchool(st.school || ''); setEsParentName(st.parentName); setEsParentPhone(st.parentPhone); setEsParentEmail(st.parentEmail || ''); }}
+                            style={{ padding: 4, border: 'none', background: 'transparent', cursor: 'pointer', color: '#94a3b8' }}
+                            onMouseEnter={e => (e.currentTarget.style.color = '#3b82f6')}
+                            onMouseLeave={e => (e.currentTarget.style.color = '#94a3b8')}
+                            title="Sửa thông tin">
+                            <Pencil style={{ width: 14, height: 14 }} />
+                          </button>
+                        )}
                         {st.id && (
                           <button onClick={(e) => { e.stopPropagation(); if (window.confirm(`Xóa học sinh ${st.name}?`)) onDeleteStudent(st.id!); }}
                             style={{ padding: 4, border: 'none', background: 'transparent', cursor: 'pointer', color: '#94a3b8' }}
@@ -369,6 +387,53 @@ export const StudentTab: React.FC<StudentTabProps> = ({ students, onAddStudent, 
                 <button type="submit" className="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs font-bold cursor-pointer transition-colors shadow-sm">Lưu học sinh</button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* Edit Student Modal */}
+      {editingSt && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40" onClick={() => setEditingSt(null)}>
+          <div className="bg-white rounded-lg shadow-xl w-full max-w-lg mx-4 max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 20px', borderBottom: '1px solid #e2e8f0' }}>
+              <h3 style={{ fontSize: 16, fontWeight: 700, margin: 0 }}>✏️ Sửa học sinh</h3>
+              <button onClick={() => setEditingSt(null)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#94a3b8' }}><X style={{ width: 18, height: 18 }} /></button>
+            </div>
+            <div style={{ padding: 20, display: 'flex', flexDirection: 'column', gap: 14 }}>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+                <div>
+                  <label style={{ display: 'block', fontSize: 11, fontWeight: 700, color: '#475569', marginBottom: 4, textTransform: 'uppercase' }}>Họ tên</label>
+                  <input value={esName} onChange={e => setEsName(e.target.value)} className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:bg-white focus:border-indigo-500 text-sm" />
+                </div>
+                <div>
+                  <label style={{ display: 'block', fontSize: 11, fontWeight: 700, color: '#475569', marginBottom: 4, textTransform: 'uppercase' }}>Lớp</label>
+                  <input value={esGrade} onChange={e => setEsGrade(e.target.value)} className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:bg-white focus:border-indigo-500 text-sm" />
+                </div>
+              </div>
+              <div>
+                <label style={{ display: 'block', fontSize: 11, fontWeight: 700, color: '#475569', marginBottom: 4, textTransform: 'uppercase' }}>Trường</label>
+                <input value={esSchool} onChange={e => setEsSchool(e.target.value)} className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:bg-white focus:border-indigo-500 text-sm" />
+              </div>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+                <div>
+                  <label style={{ display: 'block', fontSize: 11, fontWeight: 700, color: '#475569', marginBottom: 4, textTransform: 'uppercase' }}>Tên PH</label>
+                  <input value={esParentName} onChange={e => setEsParentName(e.target.value)} className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:bg-white focus:border-indigo-500 text-sm" />
+                </div>
+                <div>
+                  <label style={{ display: 'block', fontSize: 11, fontWeight: 700, color: '#475569', marginBottom: 4, textTransform: 'uppercase' }}>SĐT PH</label>
+                  <input value={esParentPhone} onChange={e => setEsParentPhone(e.target.value)} className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:bg-white focus:border-indigo-500 text-sm" />
+                </div>
+              </div>
+              <div>
+                <label style={{ display: 'block', fontSize: 11, fontWeight: 700, color: '#475569', marginBottom: 4, textTransform: 'uppercase' }}>Email PH</label>
+                <input value={esParentEmail} onChange={e => setEsParentEmail(e.target.value)} className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:bg-white focus:border-indigo-500 text-sm" />
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 10, paddingTop: 8, borderTop: '1px solid #e2e8f0' }}>
+                <button onClick={() => setEditingSt(null)} style={{ padding: '8px 16px', border: '1px solid #e2e8f0', borderRadius: 4, fontSize: 12, fontWeight: 700, cursor: 'pointer', background: '#fff', color: '#475569' }}>Hủy</button>
+                <button onClick={() => { if (editingSt?.id && onUpdateStudent) { onUpdateStudent(editingSt.id, { name: esName, grade: esGrade, school: esSchool, parentName: esParentName, parentPhone: esParentPhone, parentEmail: esParentEmail, phone: esParentPhone }); setEditingSt(null); } }}
+                  style={{ padding: '8px 20px', border: 'none', borderRadius: 4, fontSize: 12, fontWeight: 700, cursor: 'pointer', background: '#4f46e5', color: '#fff' }}>💾 Lưu thay đổi</button>
+              </div>
+            </div>
           </div>
         </div>
       )}

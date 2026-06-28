@@ -146,7 +146,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({ settings, onSaveSettin
         </button>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 24 }} className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 24 }}>
         {/* AI API Key Configuration */}
         <div className="bg-white rounded-lg border border-slate-200 shadow-xs p-6 space-y-5">
           <div className="flex items-center gap-2 border-b border-slate-100 pb-4">
@@ -338,7 +338,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({ settings, onSaveSettin
         </div>
 
         {/* Cloudinary Config */}
-        <div className="bg-white rounded-lg border border-slate-200 shadow-xs p-6 space-y-5 col-span-1 lg:col-span-2">
+        <div className="bg-white rounded-lg border border-slate-200 shadow-xs p-6 space-y-5" style={{ gridColumn: 'span 2' }}>
           <div className="flex items-center gap-2 border-b border-slate-100 pb-4">
             <div className="p-2 bg-purple-50 text-purple-600 rounded-lg">
               <Cloud className="w-5 h-5" />
@@ -457,7 +457,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({ settings, onSaveSettin
         </div>
 
         {/* Ward Management */}
-        <div className="bg-white rounded-lg border border-slate-200 shadow-xs p-6 space-y-5 col-span-1 lg:col-span-2">
+        <div className="bg-white rounded-lg border border-slate-200 shadow-xs p-6 space-y-5" style={{ gridColumn: 'span 2' }}>
           <div className="flex items-center justify-between border-b border-slate-100 pb-4">
             <div className="flex items-center gap-2">
               <div className="p-2 bg-emerald-50 text-emerald-600 rounded-lg">
@@ -526,7 +526,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({ settings, onSaveSettin
         </div>
 
         {/* Feature 17: Admin Role Configuration */}
-        <div className="bg-white rounded-lg border border-slate-200 shadow-xs p-6 space-y-4 col-span-1 lg:col-span-2">
+        <div className="bg-white rounded-lg border border-slate-200 shadow-xs p-6 space-y-4" style={{ gridColumn: 'span 2' }}>
           <div className="flex items-center gap-2 border-b border-slate-100 pb-4">
             <div className="p-2 bg-red-50 text-red-600 rounded-lg">
               <Shield className="w-5 h-5" />
@@ -552,7 +552,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({ settings, onSaveSettin
         </div>
 
         {/* Feature 8: Fee Configuration */}
-        <div className="bg-white rounded-lg border border-slate-200 shadow-xs p-6 space-y-5 col-span-1 lg:col-span-2">
+        <div className="bg-white rounded-lg border border-slate-200 shadow-xs p-6 space-y-5" style={{ gridColumn: 'span 2' }}>
           <div className="flex items-center justify-between border-b border-slate-100 pb-4">
             <div className="flex items-center gap-2">
               <div className="p-2 bg-amber-50 text-amber-600 rounded-lg">
