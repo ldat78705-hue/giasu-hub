@@ -171,7 +171,7 @@ export const CalendarView: React.FC<CalendarViewProps> = ({ matches, attendance,
               <span className="font-bold text-slate-700">{m.classCode}</span>
               <span className="text-slate-500">{m.tutorName}</span>
               <span className="text-slate-400">→</span>
-              <span className="text-slate-500">{m.studentName || 'N/A'}</span>
+              <span className="text-slate-500">{m.studentName || 'Chưa có'}</span>
             </div>
           ))}
         </div>

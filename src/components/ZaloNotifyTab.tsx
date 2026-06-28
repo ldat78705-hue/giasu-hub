@@ -70,7 +70,7 @@ export const ZaloNotifyTab: React.FC<ZaloNotifyTabProps> = ({ registrations, mat
       filled = filled.split('{studentName}').join(selectedReg.studentName || 'học sinh');
       filled = filled.split('{subjects}').join(selectedReg.subjects.join(', '));
       filled = filled.split('{grade}').join(selectedReg.grade);
-      filled = filled.split('{schedule}').join(selectedReg.schedule || 'N/A');
+      filled = filled.split('{schedule}').join(selectedReg.schedule || 'Chưa có');
       // Still fill manual vars for things not in registration
       ['tutorName', 'tutorCode', 'amount', 'deadline', 'phone'].forEach(key => {
         filled = filled.split(`{${key}}`).join(manualVars[key] || `{${key}}`);
@@ -118,12 +118,12 @@ export const ZaloNotifyTab: React.FC<ZaloNotifyTabProps> = ({ registrations, mat
           <div className="space-y-2">
             {recentMatches.slice(0, 5).map(m => {
               const tutor = tutors.find(t => t.code === m.tutorCode);
-              const gsMsgPreview = `Chào ${m.tutorName}! Bạn đã được ghép lớp ${m.classSubject}. Học sinh: ${m.studentName || 'N/A'}. SĐT phụ huynh: ${m.parentPhone || 'N/A'}. Phí/buổi: ${new Intl.NumberFormat('vi-VN').format(m.fee)}đ. Truy cập giasu-dusky.vercel.app/cong-gia-su để xem chi tiết.`;
+              const gsMsgPreview = `Chào ${m.tutorName}! Bạn đã được ghép lớp ${m.classSubject}. Học sinh: ${m.studentName || 'Chưa có'}. SĐT phụ huynh: ${m.parentPhone || 'Chưa có'}. Phí/buổi: ${new Intl.NumberFormat('vi-VN').format(m.fee)}đ. Truy cập giasu-dusky.vercel.app/cong-gia-su để xem chi tiết.`;
               const phMsgPreview = `Chào anh/chị! Trung tâm đã ghép gia sư ${m.tutorName} dạy ${m.classSubject} cho bé ${m.studentName || ''}. Gia sư sẽ liên hệ sớm. Mọi thắc mắc: 0822448444.`;
               return (
                 <div key={m.id} className="bg-white rounded-xl p-3 flex items-center justify-between gap-3">
                   <div className="text-xs text-slate-700">
-                    <span className="font-bold">{m.classSubject}</span> — Gia sư: {m.tutorName} · Học sinh: {m.studentName || 'N/A'}
+                    <span className="font-bold">{m.classSubject}</span> — Gia sư: {m.tutorName} · Học sinh: {m.studentName || 'Chưa có'}
                   </div>
                   <div className="flex gap-1.5 shrink-0">
                     <button onClick={() => { navigator.clipboard.writeText(gsMsgPreview); setCopiedId('gs-' + m.id); setTimeout(() => setCopiedId(null), 2000); }}

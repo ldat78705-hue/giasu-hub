@@ -69,7 +69,7 @@ export const AutoSuggestPanel: React.FC<AutoSuggestPanelProps> = ({ registration
     .slice(0, 5);
 
   const copyInfo = (t: SuggestedTutor) => {
-    const text = `Gia sư đề xuất cho phụ huynh ${registration.parentName}:\n- Gia sư: ${t.tutor.name} (${t.tutor.code})\n- Môn: ${t.tutor.subjects.join(', ')}\n- SĐT: ${t.tutor.phone || 'N/A'}\n- Phù hợp: ${t.score}%\n- Lý do: ${t.reasons.join(', ')}`;
+    const text = `Gia sư đề xuất cho phụ huynh ${registration.parentName}:\n- Gia sư: ${t.tutor.name} (${t.tutor.code})\n- Môn: ${t.tutor.subjects.join(', ')}\n- Số điện thoại: ${t.tutor.phone || 'Chưa có'}\n- Phù hợp: ${t.score}%\n- Lý do: ${t.reasons.join(', ')}`;
     navigator.clipboard.writeText(text).then(() => {
       setCopied(t.tutor.code);
       setTimeout(() => setCopied(null), 2000);
@@ -86,7 +86,7 @@ export const AutoSuggestPanel: React.FC<AutoSuggestPanelProps> = ({ registration
                 <Sparkles className="w-5 h-5 text-purple-600" /> Đề xuất gia sư phù hợp
               </h3>
               <p className="text-xs text-slate-500 mt-1">
-                Phụ huynh: <strong>{registration.parentName}</strong> · Môn: <strong>{registration.subjects.join(', ')}</strong> · Khu vực: <strong>{registration.district || 'N/A'}</strong> · {registration.mode}
+                Phụ huynh: <strong>{registration.parentName}</strong> · Môn: <strong>{registration.subjects.join(', ')}</strong> · Khu vực: <strong>{registration.district || 'Chưa có'}</strong> · {registration.mode}
               </p>
             </div>
             <button onClick={onClose} className="p-1.5 hover:bg-slate-100 rounded-lg cursor-pointer"><X className="w-5 h-5 text-slate-400" /></button>
@@ -113,7 +113,7 @@ export const AutoSuggestPanel: React.FC<AutoSuggestPanelProps> = ({ registration
                       {s.score}% phù hợp
                     </span>
                   </div>
-                  <div className="text-xs text-slate-500 mt-1">{s.tutor.subjects.join(', ')} · {s.tutor.area || 'N/A'}</div>
+                  <div className="text-xs text-slate-500 mt-1">{s.tutor.subjects.join(', ')} · {s.tutor.area || 'Chưa có'}</div>
                   <div className="flex flex-wrap gap-1.5 mt-2">
                     {s.reasons.map((r, j) => (
                       <span key={j} className="px-1.5 py-0.5 bg-white border border-slate-200 rounded text-[9px] text-slate-600">{r}</span>

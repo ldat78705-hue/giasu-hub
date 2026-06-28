@@ -93,13 +93,13 @@ export const ImportTab: React.FC<ImportTabProps> = ({ tutors, students, onImport
   return (
     <div className="col-span-12 space-y-6">
       <h2 className="text-xl font-bold text-slate-800 flex items-center gap-2">
-        <Upload className="w-5 h-5 text-blue-600" /> Import & Kiểm tra trùng
+        <Upload className="w-5 h-5 text-blue-600" /> Nhập dữ liệu & Kiểm tra trùng lặp
       </h2>
 
       {/* Duplicate Detection - #27 */}
       <div className="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs">
         <h3 className="text-sm font-bold text-slate-800 mb-3 flex items-center gap-2">
-          <AlertTriangle className="w-4 h-4 text-amber-500" /> Kiểm tra trùng lặp (#27)
+          <AlertTriangle className="w-4 h-4 text-amber-500" /> Kiểm tra trùng lặp
         </h3>
         <div className="flex gap-2 mb-3">
           <div className="relative flex-1 max-w-sm">
@@ -134,7 +134,7 @@ export const ImportTab: React.FC<ImportTabProps> = ({ tutors, students, onImport
       {/* Import Excel/CSV - #26 */}
       <div className="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs">
         <h3 className="text-sm font-bold text-slate-800 mb-3 flex items-center gap-2">
-          <FileText className="w-4 h-4 text-blue-500" /> Import dữ liệu từ CSV/Excel (#26)
+          <FileText className="w-4 h-4 text-blue-500" /> Nhập dữ liệu từ CSV/Excel
         </h3>
 
         <div className="flex gap-3 mb-4 flex-wrap">
@@ -169,12 +169,12 @@ export const ImportTab: React.FC<ImportTabProps> = ({ tutors, students, onImport
               {!imported && (
                 <button onClick={handleImport}
                   className="px-5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold cursor-pointer flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4" /> Import {preview.length - duplicates.length} dòng mới
+                  <CheckCircle2 className="w-4 h-4" /> Nhập {preview.length - duplicates.length} dòng mới
                 </button>
               )}
               {imported && (
                 <span className="px-4 py-2 bg-emerald-100 text-emerald-700 rounded-xl text-xs font-bold flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4" /> Đã import thành công!
+                  <CheckCircle2 className="w-4 h-4" /> Đã nhập thành công!
                 </span>
               )}
             </div>

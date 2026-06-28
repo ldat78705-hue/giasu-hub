@@ -95,7 +95,7 @@ export const HomePublic: React.FC<HomePublicProps> = ({
             </div>
             <button type="submit" disabled={isSearching}
               style={{ padding: '14px 24px', background: '#2563eb', color: '#fff', border: 'none', fontSize: 14, fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6, whiteSpace: 'nowrap' }}>
-              {isSearching ? '⏳' : <Sparkles size={16} />} Tìm AI
+              {isSearching ? '⏳' : <Sparkles size={16} />} Tìm kiếm
             </button>
           </form>
 

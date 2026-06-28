@@ -67,7 +67,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab, pendi
       label: 'Công cụ',
       items: [
         { id: 'activity', label: 'Lịch sử hoạt động', icon: <Activity className="w-4 h-4" /> },
-        { id: 'import', label: 'Import', icon: <Upload className="w-4 h-4" /> },
+        { id: 'import', label: 'Nhập dữ liệu', icon: <Upload className="w-4 h-4" /> },
         { id: 'blog', label: 'Blog & SEO', icon: <FileText className="w-4 h-4" /> },
         { id: 'advanced', label: 'Nâng cao', icon: <Wrench className="w-4 h-4" /> },
         { id: 'settings', label: 'Cài đặt', icon: <Settings className="w-4 h-4" /> },

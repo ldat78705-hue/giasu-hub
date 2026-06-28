@@ -139,7 +139,7 @@ export const AttendanceTab: React.FC<AttendanceTabProps> = ({ attendance, matche
                   <select required value={selMatch} onChange={e => setSelMatch(e.target.value)}
                     className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-blue-500 text-sm">
                     <option value="">-- Chọn lớp --</option>
-                    {activeMatches.map(m => <option key={m.id} value={m.id}>{m.classCode} · {m.tutorName} → {m.studentName || 'N/A'}</option>)}
+                    {activeMatches.map(m => <option key={m.id} value={m.id}>{m.classCode} · {m.tutorName} → {m.studentName || 'Chưa có'}</option>)}
                   </select>
                 </div>
                 <div className="grid grid-cols-2 gap-3">

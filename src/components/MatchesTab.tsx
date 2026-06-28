@@ -91,7 +91,7 @@ export const MatchesTab: React.FC<MatchesTabProps> = ({ matches, classes, tutors
         <div className="flex gap-2">
           <button onClick={exportCsv}
             className="px-3 py-2 bg-white border border-slate-200 hover:border-slate-300 rounded-xl text-xs font-bold text-slate-600 cursor-pointer flex items-center gap-1.5">
-            <Download className="w-3.5 h-3.5" /> Export CSV
+            <Download className="w-3.5 h-3.5" /> Xuất CSV
           </button>
           <button onClick={() => setShowAdd(true)}
             className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold cursor-pointer flex items-center gap-2 shadow-md shadow-blue-600/20">

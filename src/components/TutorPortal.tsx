@@ -181,7 +181,7 @@ export const TutorPortal: React.FC<TutorPortalProps> = ({ tutors, matches, atten
                 </div>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, fontSize: 13, color: '#64748b' }}>
                   <div>📚 {m.classCode}</div>
-                  <div>👨‍🎓 {m.studentName || 'N/A'}</div>
+                  <div>👨‍🎓 {m.studentName || 'Chưa có'}</div>
                   <div>💰 {fmt(m.fee)}đ/buổi</div>
                   <div>📅 {new Date(m.startDate).toLocaleDateString('vi-VN')}</div>
                   <div>✅ {taught}/{matchAtt.length} buổi đã dạy</div>
