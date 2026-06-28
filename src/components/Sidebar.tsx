@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { ActiveTab, AdminRole, ADMIN_ROLE_CONFIG } from '../types';
-import { LayoutDashboard, BookOpen, Users, GraduationCap, DollarSign, ClipboardList, Settings, ExternalLink, UserPlus, MessageCircle, Calendar, Star, ClipboardCheck, BarChart3, Upload, FileText, Wrench, Award, Activity, Bell, Menu, X } from 'lucide-react';
+import { LayoutDashboard, BookOpen, Users, GraduationCap, DollarSign, ClipboardList, Settings, ExternalLink, UserPlus, MessageCircle, Calendar, Star, ClipboardCheck, BarChart3, Upload, FileText, Wrench, Award, Activity, Bell, Menu, X, Globe } from 'lucide-react';
 
 interface SidebarProps {
   activeTab: ActiveTab;
@@ -14,116 +14,96 @@ interface SidebarProps {
 }
 
 interface NavItem { id: ActiveTab; label: string; icon: React.ReactNode; badge?: number }
-interface NavGroup { label: string; items: NavItem[] }
 
 export const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab, pendingClassesCount, pendingApplicationsCount, unreadContactsCount = 0, pendingRegistrationsCount = 0, activeMatchesCount = 0, adminRole }) => {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const currentRole = adminRole || 'super_admin';
   const allowedTabs = ADMIN_ROLE_CONFIG[currentRole]?.tabs || [];
-  const roleLabel = ADMIN_ROLE_CONFIG[currentRole]?.label || 'Admin';
 
-  const groups: NavGroup[] = [
-    {
-      label: '',
-      items: [
-        { id: 'dashboard', label: 'Bảng điều khiển', icon: <LayoutDashboard className="w-4 h-4" /> },
-        { id: 'calendar', label: 'Lịch dạy', icon: <Calendar className="w-4 h-4" /> },
-      ],
-    },
-    {
-      label: 'Quản lý',
-      items: [
-        { id: 'classes', label: 'Quản lý lớp', icon: <BookOpen className="w-4 h-4" />, badge: pendingClassesCount },
-        { id: 'matches', label: 'Ghép lớp', icon: <ExternalLink className="w-4 h-4" />, badge: activeMatchesCount },
-        { id: 'tutors', label: 'Gia sư', icon: <GraduationCap className="w-4 h-4" /> },
-        { id: 'students', label: 'Học viên', icon: <Users className="w-4 h-4" /> },
-      ],
-    },
-    {
-      label: 'Vận hành',
-      items: [
-        { id: 'registrations', label: 'Đăng ký học', icon: <UserPlus className="w-4 h-4" />, badge: pendingRegistrationsCount },
-        { id: 'applications', label: 'Đơn ứng tuyển', icon: <ClipboardList className="w-4 h-4" />, badge: pendingApplicationsCount },
-        { id: 'attendance', label: 'Điểm danh', icon: <ClipboardCheck className="w-4 h-4" /> },
-        { id: 'contacts', label: 'Liên hệ', icon: <MessageCircle className="w-4 h-4" />, badge: unreadContactsCount },
-        { id: 'zalonotify', label: 'Tin nhắn Zalo', icon: <Bell className="w-4 h-4" /> },
-      ],
-    },
-    {
-      label: 'Báo cáo',
-      items: [
-        { id: 'finance', label: 'Tài chính', icon: <DollarSign className="w-4 h-4" /> },
-        { id: 'performance', label: 'Hiệu suất gia sư', icon: <Award className="w-4 h-4" /> },
-        { id: 'kpi', label: 'Thống kê', icon: <BarChart3 className="w-4 h-4" /> },
-        { id: 'reviews', label: 'Đánh giá', icon: <Star className="w-4 h-4" /> },
-      ],
-    },
-    {
-      label: 'Hệ thống',
-      items: [
-        { id: 'activity', label: 'Hoạt động', icon: <Activity className="w-4 h-4" /> },
-        { id: 'import', label: 'Nhập dữ liệu', icon: <Upload className="w-4 h-4" /> },
-        { id: 'blog', label: 'Blog', icon: <FileText className="w-4 h-4" /> },
-        { id: 'advanced', label: 'Nâng cao', icon: <Wrench className="w-4 h-4" /> },
-        { id: 'settings', label: 'Cài đặt', icon: <Settings className="w-4 h-4" /> },
-      ],
-    },
+  const navItems: NavItem[] = [
+    { id: 'dashboard', label: 'Bảng điều khiển', icon: <LayoutDashboard className="w-[18px] h-[18px]" /> },
+    { id: 'classes', label: 'Quản lý lớp', icon: <BookOpen className="w-[18px] h-[18px]" />, badge: pendingClassesCount },
+    { id: 'matches', label: 'Ghép lớp', icon: <ExternalLink className="w-[18px] h-[18px]" />, badge: activeMatchesCount },
+    { id: 'tutors', label: 'Gia sư', icon: <GraduationCap className="w-[18px] h-[18px]" /> },
+    { id: 'students', label: 'Học viên', icon: <Users className="w-[18px] h-[18px]" /> },
+  ];
+
+  const navItems2: NavItem[] = [
+    { id: 'registrations', label: 'Đăng ký học', icon: <UserPlus className="w-[18px] h-[18px]" />, badge: pendingRegistrationsCount },
+    { id: 'contacts', label: 'Liên hệ', icon: <MessageCircle className="w-[18px] h-[18px]" />, badge: unreadContactsCount },
+    { id: 'zalonotify', label: 'Tin nhắn Zalo', icon: <Bell className="w-[18px] h-[18px]" /> },
+  ];
+
+  const navItems3: NavItem[] = [
+    { id: 'performance', label: 'Hiệu suất gia sư', icon: <Award className="w-[18px] h-[18px]" /> },
+    { id: 'kpi', label: 'Thống kê', icon: <BarChart3 className="w-[18px] h-[18px]" /> },
+    { id: 'reviews', label: 'Đánh giá', icon: <Star className="w-[18px] h-[18px]" /> },
+  ];
+
+  const navItems4: NavItem[] = [
+    { id: 'activity', label: 'Hoạt động', icon: <Activity className="w-[18px] h-[18px]" /> },
+    { id: 'import', label: 'Nhập dữ liệu', icon: <Upload className="w-[18px] h-[18px]" /> },
+    { id: 'advanced', label: 'Nâng cao', icon: <Wrench className="w-[18px] h-[18px]" /> },
+    { id: 'settings', label: 'Cài đặt', icon: <Settings className="w-[18px] h-[18px]" /> },
   ];
 
   const totalBadge = pendingClassesCount + pendingApplicationsCount + unreadContactsCount + pendingRegistrationsCount;
 
+  const renderItem = (item: NavItem) => {
+    if (!allowedTabs.includes(item.id)) return null;
+    const active = activeTab === item.id;
+    return (
+      <button key={item.id}
+        onClick={() => { setActiveTab(item.id); setMobileOpen(false); }}
+        className={`w-full flex items-center gap-3 px-3 py-2.5 text-left cursor-pointer transition-all rounded-xl text-[13px] ${
+          active ? 'bg-blue-600 text-white font-semibold shadow-lg shadow-blue-600/30' : 'text-slate-300 hover:bg-white/[0.07] hover:text-white'
+        }`}>
+        <span className={active ? 'text-white' : 'text-slate-400'}>{item.icon}</span>
+        <span className="flex-1">{item.label}</span>
+        {item.badge !== undefined && item.badge > 0 && (
+          <span className={`text-[10px] font-bold px-1.5 py-0.5 min-w-[20px] text-center rounded-full ${
+            active ? 'bg-white/25 text-white' : 'bg-red-500/90 text-white'
+          }`}>{item.badge}</span>
+        )}
+      </button>
+    );
+  };
+
+  const renderSection = (items: NavItem[]) => {
+    const filtered = items.filter(i => allowedTabs.includes(i.id));
+    if (filtered.length === 0) return null;
+    return <div className="space-y-0.5">{filtered.map(renderItem)}</div>;
+  };
+
   const content = (
     <>
       {/* Brand */}
-      <div className="h-14 px-5 flex items-center justify-between border-b border-white/[0.06]">
-        <div className="flex items-center gap-2.5 min-w-0">
-          <div className="w-7 h-7 rounded-lg bg-indigo-600 flex items-center justify-center text-white text-[11px] font-bold shrink-0">GS</div>
-          <div className="text-[14px] font-semibold text-white tracking-tight truncate">Gia Sư Thành Đạt</div>
+      <div className="px-5 py-5 flex items-center gap-3">
+        <div className="w-9 h-9 rounded-xl bg-blue-600 flex items-center justify-center shadow-lg shadow-blue-600/30">
+          <Globe className="w-5 h-5 text-white" />
         </div>
-        <button onClick={() => setMobileOpen(false)} className="lg:hidden p-1 text-slate-500 hover:text-white cursor-pointer">
-          <X className="w-4 h-4" />
+        <div className="min-w-0">
+          <div className="text-[14px] font-bold text-white leading-tight">Gia Sư Thành Đạt</div>
+        </div>
+        <button onClick={() => setMobileOpen(false)} className="lg:hidden ml-auto p-1 text-slate-400 hover:text-white cursor-pointer">
+          <X className="w-5 h-5" />
         </button>
       </div>
 
       {/* Nav */}
-      <nav className="flex-1 py-3 px-2 overflow-y-auto" style={{ scrollbarWidth: 'none' }}>
-        {groups.map((group, gi) => {
-          const filtered = group.items.filter(i => allowedTabs.includes(i.id));
-          if (filtered.length === 0) return null;
-          return (
-            <div key={gi} className={group.label ? 'mt-6' : ''}>
-              {group.label && (
-                <div className="px-3 mb-1.5 text-[10px] font-semibold uppercase tracking-wider text-slate-600">{group.label}</div>
-              )}
-              {filtered.map(item => {
-                const active = activeTab === item.id;
-                return (
-                  <button key={item.id}
-                    onClick={() => { setActiveTab(item.id); setMobileOpen(false); }}
-                    className={`w-full flex items-center gap-2.5 px-3 py-2 text-left cursor-pointer transition-all rounded-lg ${
-                      active ? 'text-white bg-indigo-600 shadow-sm shadow-indigo-600/25' : 'text-slate-400 hover:text-slate-200 hover:bg-white/[0.06]'
-                    }`}>
-                    <span className={active ? 'text-indigo-200' : 'text-slate-500'}>{item.icon}</span>
-                    <span className="text-[13px] flex-1">{item.label}</span>
-                    {item.badge !== undefined && item.badge > 0 && (
-                      <span className={`text-[10px] font-semibold px-1.5 min-w-[18px] text-center rounded-md ${
-                        active ? 'text-white bg-indigo-500' : 'text-slate-400 bg-white/[0.06]'
-                      }`}>{item.badge}</span>
-                    )}
-                  </button>
-                );
-              })}
-            </div>
-          );
-        })}
+      <nav className="flex-1 px-3 pb-3 overflow-y-auto space-y-4" style={{ scrollbarWidth: 'none' }}>
+        {renderSection(navItems)}
+        <div className="border-t border-white/[0.08] pt-3">{renderSection(navItems2)}</div>
+        <div className="border-t border-white/[0.08] pt-3">{renderSection(navItems3)}</div>
+        <div className="border-t border-white/[0.08] pt-3">{renderSection(navItems4)}</div>
       </nav>
 
       {/* Footer */}
-      <div className="border-t border-white/[0.06] p-3">
+      <div className="px-3 pb-4">
         <button onClick={() => { window.open('/', '_blank'); setMobileOpen(false); }}
-          className="w-full px-3 py-2 text-[12px] font-medium text-slate-500 hover:text-slate-300 cursor-pointer transition-colors flex items-center justify-center gap-1.5 rounded-lg hover:bg-white/[0.06]">
-          <ExternalLink className="w-3.5 h-3.5" /> Trang công khai
+          className="w-full px-3 py-2.5 text-[13px] text-slate-400 hover:text-white cursor-pointer transition-colors flex items-center gap-2 rounded-xl hover:bg-white/[0.07]">
+          <ExternalLink className="w-4 h-4" /> Trang công khai
         </button>
       </div>
     </>
@@ -131,20 +111,17 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab, pendi
 
   return (
     <>
-      {/* Mobile trigger */}
-      <button onClick={() => setMobileOpen(true)} className="lg:hidden fixed top-3 left-3 z-50 p-2 bg-slate-900 text-white rounded-lg cursor-pointer">
+      <button onClick={() => setMobileOpen(true)} className="lg:hidden fixed top-3 left-3 z-50 p-2.5 bg-[#1a1a2e] text-white rounded-xl cursor-pointer shadow-lg">
         <Menu className="w-5 h-5" />
         {totalBadge > 0 && <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white rounded-full text-[8px] flex items-center justify-center font-bold">{totalBadge > 9 ? '9+' : totalBadge}</span>}
       </button>
-      {mobileOpen && <div className="lg:hidden fixed inset-0 z-40 bg-black/50" onClick={() => setMobileOpen(false)} />}
+      {mobileOpen && <div className="lg:hidden fixed inset-0 z-40 bg-black/60 backdrop-blur-sm" onClick={() => setMobileOpen(false)} />}
 
-      {/* Desktop */}
-      <aside className="hidden lg:flex w-60 bg-slate-900 text-slate-300 flex-col h-full shrink-0 border-r border-slate-800/50">
+      <aside className="hidden lg:flex w-[220px] bg-[#1a1a2e] text-slate-300 flex-col h-full shrink-0">
         {content}
       </aside>
 
-      {/* Mobile */}
-      <aside className={`lg:hidden fixed top-0 left-0 z-50 w-64 bg-slate-900 text-slate-300 flex flex-col h-full transition-transform duration-200 shadow-2xl ${mobileOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+      <aside className={`lg:hidden fixed top-0 left-0 z-50 w-[260px] bg-[#1a1a2e] text-slate-300 flex flex-col h-full transition-transform duration-200 shadow-2xl ${mobileOpen ? 'translate-x-0' : '-translate-x-full'}`}>
         {content}
       </aside>
     </>

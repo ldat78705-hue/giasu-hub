@@ -749,7 +749,7 @@ export default function App() {
 
   // ===================== ADMIN VIEW =====================
   return (
-    <div className="w-full h-screen bg-slate-50 flex font-sans overflow-hidden text-slate-800 select-text">
+    <div className="w-full h-screen bg-[#f0f2f5] flex font-sans overflow-hidden text-slate-800 select-text">
       <Sidebar activeTab={adminTab} setActiveTab={(tab) => { setAdminTab(tab); }}
         pendingClassesCount={pendingClassesCount}
         pendingApplicationsCount={pendingApplicationsCount + pendingTutorVerify}
