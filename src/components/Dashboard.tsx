@@ -255,7 +255,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
               { label: 'Gia sư', value: tutors.length, bg: 'bg-purple-50', color: 'text-purple-700', icon: <GraduationCap className="w-3.5 h-3.5" /> },
               { label: 'Sẵn sàng', value: tutors.filter(t => t.status === 'online').length, bg: 'bg-emerald-50', color: 'text-emerald-700', icon: <Users className="w-3.5 h-3.5" /> },
               { label: 'Học viên', value: registrations.length, bg: 'bg-blue-50', color: 'text-blue-700', icon: <UserPlus className="w-3.5 h-3.5" /> },
-              { label: 'Đánh giá TB', value: tutors.length > 0 ? (tutors.reduce((s, t) => s + t.rating, 0) / tutors.length).toFixed(1) : '—', bg: 'bg-amber-50', color: 'text-amber-700', icon: <Star className="w-3.5 h-3.5" /> },
+              { label: 'Đánh giá', value: tutors.length > 0 ? (tutors.reduce((s, t) => s + t.rating, 0) / tutors.length).toFixed(1) : '—', bg: 'bg-amber-50', color: 'text-amber-700', icon: <Star className="w-3.5 h-3.5" /> },
             ].map((item, i) => (
               <div key={i} className={`${item.bg} rounded-xl p-3 text-center`}>
                 <div className={`text-xl font-extrabold ${item.color} stat-number`}>{item.value}</div>
