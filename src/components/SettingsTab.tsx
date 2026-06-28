@@ -146,7 +146,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({ settings, onSaveSettin
         </button>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 24 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: 24 }}>
         {/* AI API Key Configuration */}
         <div className="bg-white rounded-lg border border-slate-200 shadow-xs p-6 space-y-5">
           <div className="flex items-center gap-2 border-b border-slate-100 pb-4">
