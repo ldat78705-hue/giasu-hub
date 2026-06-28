@@ -97,7 +97,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
   const ySteps = [0, Math.ceil(maxC / 4), Math.ceil(maxC / 2), Math.ceil(maxC * 3 / 4), maxC];
 
   // Reusable card shell
-  const card = "bg-white rounded-2xl shadow-sm border border-slate-100";
+  const card = "bg-white rounded-2xl shadow-sm hover:shadow transition-shadow border border-slate-100";
   const cardHeader = "flex items-center justify-between pb-4 mb-4 border-b border-slate-100/80";
   const cardTitle = "text-xs font-bold uppercase tracking-wider text-slate-400";
 
@@ -128,12 +128,12 @@ export const Dashboard: React.FC<DashboardProps> = ({
           { label: 'Cần gia sư', value: String(pendingClasses), sub: `/ ${classes.length} tổng lớp`, icon: <BookOpen className="w-5 h-5" />, iconBg: 'bg-purple-100 text-purple-600', tab: 'classes' as ActiveTab },
         ].map((m, i) => (
           <div key={i} onClick={() => onNavigate(m.tab)}
-            className={`${card} p-5 cursor-pointer hover:shadow-md transition-shadow`}>
-            <div className="flex items-center gap-3 mb-3">
-              <div className={`w-10 h-10 rounded-full ${m.iconBg} flex items-center justify-center`}>{m.icon}</div>
+            className={`${card} p-5 cursor-pointer hover:shadow-md`}>
+            <div className="flex items-center gap-3">
+              <div className={`w-10 h-10 rounded-xl ${m.iconBg} flex items-center justify-center`}>{m.icon}</div>
               <span className="text-[13px] text-slate-500 font-medium">{m.label}</span>
             </div>
-            <div className="text-[26px] font-bold text-slate-900 leading-tight" style={{ fontVariantNumeric: 'tabular-nums' }}>{m.value}</div>
+            <div className="text-2xl font-bold text-slate-900 mt-2 leading-tight" style={{ fontVariantNumeric: 'tabular-nums' }}>{m.value}</div>
             <div className="text-[12px] text-slate-400 mt-1">{m.sub}</div>
             {i === 3 && classes.length > 0 && (
               <div className="mt-3 h-2 bg-slate-100 rounded-full overflow-hidden">
@@ -179,7 +179,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
                       {/* Stacked bars: matched on bottom, regs on top */}
                       <div className="w-full max-w-[40px] flex flex-col justify-end" style={{ height: `${pct}%`, minHeight: total > 0 ? 12 : 0 }}>
                         {d.matched > 0 && (
-                          <div className="w-full bg-indigo-600 rounded-t-sm transition-all hover:bg-indigo-700"
+                          <div className="w-full bg-indigo-600 rounded-t-md transition-all hover:bg-indigo-700"
                             style={{ height: total > 0 ? `${(d.matched / total) * 100}%` : '0%', minHeight: 6 }} />
                         )}
                         {d.regs > 0 && (
@@ -265,36 +265,36 @@ export const Dashboard: React.FC<DashboardProps> = ({
             <div className={cardHeader}>
               <h3 className={cardTitle}>Tuần này</h3>
             </div>
-            <div className="divide-y divide-slate-100">
+            <div className="space-y-0.5">
               {[
                 { label: 'Đơn phụ huynh mới', value: String(weekRegs) },
                 { label: 'Ghép thành công', value: String(weekMatches) },
                 { label: 'Lớp đang dạy', value: String(activeMatches) },
                 { label: 'Doanh thu', value: fmt(totalRevenue) + 'đ' },
               ].map((r, i) => (
-                <div key={i} className="flex justify-between items-center py-3 first:pt-0 last:pb-0">
+                <div key={i} className="flex justify-between items-center py-2.5">
                   <span className="text-sm text-slate-500">{r.label}</span>
                   <span className="text-sm font-bold text-slate-900" style={{ fontVariantNumeric: 'tabular-nums' }}>{r.value}</span>
                 </div>
               ))}
             </div>
             <button onClick={copyReport}
-              className="w-full mt-4 py-2.5 bg-emerald-500 hover:bg-emerald-600 text-white text-[13px] font-semibold rounded-xl cursor-pointer transition-colors flex items-center justify-center gap-2 shadow-sm">
-              <Copy className="w-4 h-4" /> Sao chép báo cáo
+              className="w-full mt-4 py-2 px-4 bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium text-sm rounded-lg border border-slate-200/80 cursor-pointer transition-all flex items-center justify-center gap-2">
+              <Copy className="w-3.5 h-3.5" /> Sao chép báo cáo
             </button>
           </div>
 
           {/* Gia sư nổi bật */}
-          <div className={`${card} p-5`}>
+          <div className={`${card} p-5 min-h-[260px]`}>
             <div className={cardHeader}>
               <h3 className={cardTitle}>Gia sư nổi bật</h3>
             </div>
             {topT.length === 0 ? (
-              <div className="text-center py-8">
-                <div className="w-16 h-16 mx-auto mb-3 bg-slate-50 rounded-2xl flex items-center justify-center">
+              <div className="flex-1 flex flex-col justify-center items-center py-10">
+                <div className="bg-slate-50 p-4 rounded-full mb-3">
                   <Trophy className="w-8 h-8 text-slate-300" />
                 </div>
-                <p className="text-sm text-slate-400">Chưa có dữ liệu</p>
+                <p className="text-sm text-slate-400 font-medium">Chưa có dữ liệu</p>
               </div>
             ) : (
               <div className="divide-y divide-slate-100">
