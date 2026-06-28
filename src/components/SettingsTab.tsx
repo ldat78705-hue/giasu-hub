@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { AdminSettings, FeeConfigItem, AdminRole, ADMIN_ROLE_CONFIG } from '../types';
 import { Settings, Key, Building2, Phone, Mail, MapPin, Save, CheckCircle2, AlertCircle, Eye, EyeOff, Sparkles, RefreshCw, Trash2, Shield, MessageCircle, Globe, Cloud, Plus, X, Search, DollarSign, CreditCard } from 'lucide-react';
 import { DEFAULT_HANOI_WARDS } from '../hanoiWards';
@@ -124,25 +124,29 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({ settings, onSaveSettin
       )}
 
       {/* Page Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h2 className="text-xl font-bold text-slate-800 flex items-center gap-2">
-            <Settings className="w-5 h-5 text-slate-600" />
-            <span>Cài đặt hệ thống</span>
-          </h2>
-          <p className="text-xs text-slate-500 mt-1">Quản lý API key AI, thông tin trung tâm và cấu hình hệ thống</p>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '20px 24px', background: '#0f172a', borderRadius: 4, marginBottom: 4 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+          <div style={{ width: 44, height: 44, borderRadius: 4, background: 'rgba(79,70,229,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <Settings className="w-5 h-5" style={{ color: '#818cf8' }} />
+          </div>
+          <div>
+            <h2 style={{ fontSize: 18, fontWeight: 800, color: '#f1f5f9', margin: 0 }}>Cài đặt hệ thống</h2>
+            <p style={{ fontSize: 12, color: '#64748b', margin: '2px 0 0' }}>API key AI · Thông tin trung tâm · Cấu hình hệ thống</p>
+          </div>
         </div>
         <button
           onClick={handleSaveAll}
           disabled={isSaving}
-          className="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs font-bold transition-colors flex items-center gap-2 cursor-pointer shadow-md shadow-indigo-600/20"
+          style={{ padding: '10px 24px', background: '#4f46e5', color: '#fff', border: 'none', borderRadius: 4, fontSize: 13, fontWeight: 700, cursor: isSaving ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', gap: 8, opacity: isSaving ? 0.7 : 1, transition: 'all 0.15s', boxShadow: '0 4px 14px rgba(79,70,229,0.3)' }}
+          onMouseEnter={e => !isSaving && (e.currentTarget.style.background = '#4338ca')}
+          onMouseLeave={e => (e.currentTarget.style.background = '#4f46e5')}
         >
           <Save className="w-4 h-4" />
-          <span>{isSaving ? 'Đang lưu...' : 'Lưu tất cả'}</span>
+          <span>{isSaving ? 'Đang lưu...' : 'Lưu tất cả cài đặt'}</span>
         </button>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 24 }} className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* AI API Key Configuration */}
         <div className="bg-white rounded-lg border border-slate-200 shadow-xs p-6 space-y-5">
           <div className="flex items-center gap-2 border-b border-slate-100 pb-4">

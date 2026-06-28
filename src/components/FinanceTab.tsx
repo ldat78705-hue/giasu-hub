@@ -1,4 +1,4 @@
-﻿import React, { useState } from 'react';
+import React, { useState } from 'react';
 import { TransactionItem } from '../types';
 import { Plus, ArrowDownLeft, ArrowUpRight, CheckCircle2, Trash2, DollarSign, Clock, Download, Search, Printer } from 'lucide-react';
 import { generateReceiptPDF } from '../utils';
@@ -61,64 +61,137 @@ export const FinanceTab: React.FC<FinanceTabProps> = ({ transactions, onAddTrans
 
   return (
     <div className="space-y-6">
-      {/* Finance Metrics */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="bg-white p-5 rounded-lg border border-slate-200 shadow-xs">
-          <div className="text-slate-500 text-xs font-bold uppercase tracking-wider">Tổng thu</div>
-          <div className="text-2xl font-bold text-emerald-600 mt-1">{formatCurrency(totalIncome)}đ</div>
-          <div className="text-xs text-slate-400 mt-1">40% tháng đầu (có thể điều chỉnh)</div>
-        </div>
-        <div className="bg-white p-5 rounded-lg border border-slate-200 shadow-xs">
-          <div className="text-slate-500 text-xs font-bold uppercase tracking-wider">Hoàn trả</div>
-          <div className="text-2xl font-bold text-rose-600 mt-1">{formatCurrency(totalRefund)}đ</div>
-          <div className="text-xs text-slate-400 mt-1">Hoàn phí & bảo lưu</div>
-        </div>
-        <div className="bg-white p-5 rounded-lg border border-slate-200 shadow-xs">
-          <div className="text-slate-500 text-xs font-bold uppercase tracking-wider">Chi phí</div>
-          <div className="text-2xl font-bold text-amber-600 mt-1">{formatCurrency(totalSalary)}đ</div>
-          <div className="text-xs text-slate-400 mt-1">Vận hành, quảng cáo...</div>
-        </div>
-        <div className="bg-[#0F172A] text-white p-5 rounded-lg shadow-md border border-slate-800">
-          <div className="text-slate-400 text-xs font-bold uppercase tracking-wider">Lợi nhuận ròng</div>
-          <div className={`text-2xl font-bold mt-1 ${netRevenue >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
+      {/* Finance Metrics - inline grid as backup */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16 }} className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        {[
+          { label: 'Tổng thu', value: totalIncome, color: '#059669', icon: <ArrowDownLeft className="w-5 h-5" />, desc: 'Phí kết nối gia sư', bg: '#ecfdf5', iconBg: '#d1fae5' },
+          { label: 'Hoàn trả', value: totalRefund, color: '#e11d48', icon: <ArrowUpRight className="w-5 h-5" />, desc: 'Hoàn phí & bảo lưu', bg: '#fff1f2', iconBg: '#fecdd3' },
+          { label: 'Chi phí', value: totalSalary, color: '#d97706', icon: <DollarSign className="w-5 h-5" />, desc: 'Vận hành, quảng cáo', bg: '#fffbeb', iconBg: '#fef3c7' },
+        ].map((m, i) => (
+          <div key={i} className="bg-white rounded-lg border border-slate-200 shadow-xs" style={{ padding: 20 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 12 }}>
+              <div style={{ width: 40, height: 40, borderRadius: 4, background: m.iconBg, color: m.color, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                {m.icon}
+              </div>
+              <div>
+                <div style={{ fontSize: 11, fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{m.label}</div>
+                <div style={{ fontSize: 22, fontWeight: 800, color: m.color, lineHeight: 1.2 }}>{formatCurrency(m.value)}đ</div>
+              </div>
+            </div>
+            <div style={{ fontSize: 11, color: '#94a3b8' }}>{m.desc}</div>
+          </div>
+        ))}
+        <div style={{ padding: 20, background: '#0f172a', borderRadius: 4, position: 'relative', overflow: 'hidden' }}>
+          <div style={{ position: 'absolute', top: 0, right: 0, width: 120, height: 120, background: 'radial-gradient(circle, rgba(79,70,229,0.3) 0%, transparent 70%)', pointerEvents: 'none' }} />
+          <div style={{ fontSize: 11, fontWeight: 700, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 4 }}>Lợi nhuận ròng</div>
+          <div style={{ fontSize: 26, fontWeight: 800, color: netRevenue >= 0 ? '#34d399' : '#fb7185', lineHeight: 1.2, marginBottom: 12 }}>
             {netRevenue >= 0 ? '+' : ''}{formatCurrency(netRevenue)}đ
           </div>
           <button onClick={() => setShowModal(true)}
-            className="w-full mt-3 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs font-bold transition-colors flex items-center justify-center gap-1.5 cursor-pointer shadow-sm">
-            <Plus className="w-4 h-4" /><span>Lập phiếu thu / chi</span>
+            style={{ width: '100%', padding: '10px 16px', background: '#4f46e5', color: '#fff', border: 'none', borderRadius: 4, fontSize: 12, fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, transition: 'background 0.15s' }}
+            onMouseEnter={e => (e.currentTarget.style.background = '#4338ca')}
+            onMouseLeave={e => (e.currentTarget.style.background = '#4f46e5')}>
+            <Plus className="w-4 h-4" /> Lập phiếu thu / chi
           </button>
         </div>
       </div>
 
-      {/* F39: Monthly Revenue Trend */}
-      {transactions.length > 0 && (() => {
+      {/* F39: Monthly Revenue Trend — redesigned chart */}
+      {(() => {
+        // Build monthly data from transactions
         const monthlyData: Record<string, { income: number; refund: number; expense: number }> = {};
         transactions.forEach(t => {
           const dateParts = t.date.split(/[/, ]/);
-          const key = dateParts.length >= 2 ? `${dateParts[1]}/${dateParts[2] || new Date().getFullYear()}` : 'N/A';
+          const key = dateParts.length >= 2 ? `T${dateParts[1]}/${dateParts[2] || new Date().getFullYear()}` : 'N/A';
           if (!monthlyData[key]) monthlyData[key] = { income: 0, refund: 0, expense: 0 };
           if (t.type === 'Thu phí gia sư') monthlyData[key].income += t.amount;
           else if (t.type === 'Hoàn tiền') monthlyData[key].refund += t.amount;
           else monthlyData[key].expense += t.amount;
         });
-        const months = Object.entries(monthlyData).slice(-4);
-        const maxVal = Math.max(...months.map(([, d]) => d.income), 1);
+        
+        // Ensure at least 4 columns for good visual
+        const rawMonths = Object.entries(monthlyData).slice(-6);
+        const months = rawMonths.length > 0 ? rawMonths : [];
+        if (months.length === 0) return null;
+        
+        const maxVal = Math.max(...months.map(([, d]) => Math.max(d.income, d.refund + d.expense)), 1);
+        const chartH = 180;
+        const gridLines = [0, 0.25, 0.5, 0.75, 1];
+        
         return (
-          <div className="bg-white rounded-lg border border-slate-200 shadow-xs p-5">
-            <h4 className="text-xs font-bold uppercase text-slate-500 tracking-wider mb-4">📊 Doanh thu phí KN theo tháng</h4>
-            <div className="flex items-end gap-3" style={{ height: 120 }}>
-              {months.map(([month, data]) => {
-                const h = Math.max(Math.round(data.income / maxVal * 100), 4);
-                const net = data.income - data.refund - data.expense;
-                return (
-                  <div key={month} className="flex-1 flex flex-col items-center">
-                    <div className="text-[9px] font-bold text-emerald-600 mb-1">{formatCurrency(data.income)}đ</div>
-                    <div className="w-full rounded-t-lg transition-all" style={{ height: h, background: net >= 0 ? 'linear-gradient(135deg, #059669, #10b981)' : 'linear-gradient(135deg, #dc2626, #ef4444)' }} />
-                    <div className="text-[10px] font-bold text-slate-600 mt-2">{month}</div>
-                    {data.refund > 0 && <div className="text-[8px] text-red-500">-{formatCurrency(data.refund)}đ</div>}
-                  </div>
-                );
-              })}
+          <div className="bg-white rounded-lg border border-slate-200 shadow-xs" style={{ padding: '24px 24px 16px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
+              <div>
+                <h4 style={{ fontSize: 14, fontWeight: 700, color: '#1e293b', margin: 0, display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <DollarSign className="w-4 h-4" style={{ color: '#4f46e5' }} /> Doanh thu theo tháng
+                </h4>
+                <p style={{ fontSize: 11, color: '#94a3b8', marginTop: 2 }}>Phí kết nối vs Hoàn trả & Chi phí</p>
+              </div>
+              <div style={{ display: 'flex', gap: 16, fontSize: 11, color: '#64748b' }}>
+                <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+                  <span style={{ width: 10, height: 10, borderRadius: 2, background: 'linear-gradient(135deg, #059669, #10b981)' }} /> Thu
+                </span>
+                <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+                  <span style={{ width: 10, height: 10, borderRadius: 2, background: 'linear-gradient(135deg, #e11d48, #f43f5e)' }} /> Chi/Hoàn
+                </span>
+              </div>
+            </div>
+            
+            {/* Chart area */}
+            <div style={{ position: 'relative', height: chartH, marginBottom: 8 }}>
+              {/* Grid lines */}
+              {gridLines.map((pct, i) => (
+                <div key={i} style={{ position: 'absolute', left: 48, right: 0, bottom: pct * chartH, borderBottom: '1px solid #f1f5f9', zIndex: 0 }}>
+                  <span style={{ position: 'absolute', left: -48, top: -7, fontSize: 9, color: '#cbd5e1', fontWeight: 600, width: 44, textAlign: 'right' }}>
+                    {formatCurrency(Math.round(maxVal * pct / 1000) * 1000)}
+                  </span>
+                </div>
+              ))}
+              
+              {/* Bars */}
+              <div style={{ display: 'flex', alignItems: 'flex-end', gap: months.length <= 2 ? 32 : 12, height: '100%', paddingLeft: 52, paddingRight: 8, position: 'relative', zIndex: 1 }}>
+                {months.map(([month, data]) => {
+                  const incomeH = Math.max(Math.round(data.income / maxVal * chartH), 3);
+                  const expenseH = Math.max(Math.round((data.refund + data.expense) / maxVal * chartH), 0);
+                  const net = data.income - data.refund - data.expense;
+                  return (
+                    <div key={month} style={{ flex: 1, maxWidth: 80, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 0 }}>
+                      {/* Value label */}
+                      <div style={{ fontSize: 10, fontWeight: 700, color: '#059669', marginBottom: 4, whiteSpace: 'nowrap' }}>
+                        {formatCurrency(data.income)}đ
+                      </div>
+                      {/* Bar group */}
+                      <div style={{ display: 'flex', gap: 3, alignItems: 'flex-end', width: '100%', justifyContent: 'center' }}>
+                        {/* Income bar */}
+                        <div style={{ 
+                          width: expenseH > 0 ? '48%' : '70%', 
+                          height: incomeH, 
+                          background: 'linear-gradient(180deg, #059669 0%, #10b981 100%)', 
+                          borderRadius: '3px 3px 0 0',
+                          transition: 'height 0.3s ease',
+                          position: 'relative',
+                        }} />
+                        {/* Expense bar */}
+                        {expenseH > 0 && (
+                          <div style={{ 
+                            width: '48%', 
+                            height: expenseH, 
+                            background: 'linear-gradient(180deg, #e11d48 0%, #f43f5e 100%)', 
+                            borderRadius: '3px 3px 0 0',
+                            transition: 'height 0.3s ease',
+                          }} />
+                        )}
+                      </div>
+                      {/* Month label */}
+                      <div style={{ fontSize: 11, fontWeight: 600, color: '#475569', marginTop: 8 }}>{month}</div>
+                      {/* Net label */}
+                      <div style={{ fontSize: 9, fontWeight: 700, color: net >= 0 ? '#059669' : '#e11d48', marginTop: 2 }}>
+                        {net >= 0 ? '+' : ''}{formatCurrency(net)}đ
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
           </div>
         );
