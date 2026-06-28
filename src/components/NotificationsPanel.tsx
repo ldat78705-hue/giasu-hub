@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { NotificationItem, ActiveTab } from '../types';
 import { Bell, UserCheck, BookOpen, BookOpenCheck, Settings2, Clock, CheckCircle2, X, UserPlus, MessageCircle } from 'lucide-react';
 
@@ -24,7 +24,7 @@ export const NotificationsPanel: React.FC<NotificationsPanelProps> = ({
       case 'application':
         return <UserCheck className="w-4 h-4 text-indigo-600" />;
       case 'booking':
-        return <BookOpen className="w-4 h-4 text-blue-600" />;
+        return <BookOpen className="w-4 h-4 text-indigo-600" />;
       case 'class':
         return <BookOpenCheck className="w-4 h-4 text-emerald-600" />;
       case 'registration':
@@ -40,7 +40,7 @@ export const NotificationsPanel: React.FC<NotificationsPanelProps> = ({
   const getIconBg = (type: NotificationItem['type']) => {
     switch (type) {
       case 'application': return 'bg-indigo-50';
-      case 'booking': return 'bg-blue-50';
+      case 'booking': return 'bg-indigo-50';
       case 'class': return 'bg-emerald-50';
       case 'registration': return 'bg-amber-50';
       case 'contact': return 'bg-cyan-50';
@@ -58,7 +58,7 @@ export const NotificationsPanel: React.FC<NotificationsPanelProps> = ({
   };
 
   return (
-    <div className="absolute right-0 top-full mt-2 w-96 bg-white rounded-2xl shadow-2xl border border-slate-200 z-50 animate-scale-in overflow-hidden"
+    <div className="absolute right-0 top-full mt-2 w-96 bg-white rounded-lg shadow-2xl border border-slate-200 z-50 animate-scale-in overflow-hidden"
       onClick={(e) => e.stopPropagation()}
     >
       {/* Header */}
@@ -76,7 +76,7 @@ export const NotificationsPanel: React.FC<NotificationsPanelProps> = ({
           {unreadCount > 0 && (
             <button
               onClick={onMarkAllRead}
-              className="text-[10px] font-bold text-blue-600 hover:text-blue-800 cursor-pointer flex items-center gap-1"
+              className="text-[10px] font-bold text-indigo-600 hover:text-blue-800 cursor-pointer flex items-center gap-1"
             >
               <CheckCircle2 className="w-3 h-3" />
               <span>Đọc tất cả</span>
@@ -109,11 +109,11 @@ export const NotificationsPanel: React.FC<NotificationsPanelProps> = ({
                 onNavigate(navMap[notif.type] || 'dashboard');
                 onClose();
               }}
-              className={`px-5 py-3.5 border-b border-slate-50 hover:bg-blue-50/40 cursor-pointer transition-colors flex items-start gap-3 ${
-                !notif.isRead ? 'bg-blue-50/20' : ''
+              className={`px-5 py-3.5 border-b border-slate-50 hover:bg-indigo-50/40 cursor-pointer transition-colors flex items-start gap-3 ${
+                !notif.isRead ? 'bg-indigo-50/20' : ''
               }`}
             >
-              <div className={`p-2 rounded-xl shrink-0 ${getIconBg(notif.type)}`}>
+              <div className={`p-2 rounded-lg shrink-0 ${getIconBg(notif.type)}`}>
                 {getIcon(notif.type)}
               </div>
               <div className="flex-1 min-w-0">
@@ -122,7 +122,7 @@ export const NotificationsPanel: React.FC<NotificationsPanelProps> = ({
                     {notif.title}
                   </p>
                   {!notif.isRead && (
-                    <span className="w-2 h-2 bg-blue-500 rounded-full shrink-0 mt-1"></span>
+                    <span className="w-2 h-2 bg-indigo-500 rounded-full shrink-0 mt-1"></span>
                   )}
                 </div>
                 <p className="text-[11px] text-slate-500 mt-0.5 truncate">{notif.message}</p>
@@ -141,7 +141,7 @@ export const NotificationsPanel: React.FC<NotificationsPanelProps> = ({
         <div className="px-5 py-3 border-t border-slate-100 bg-slate-50/60">
           <button
             onClick={() => { onNavigate('activity'); onClose(); }}
-            className="w-full text-center text-xs font-bold text-blue-600 hover:text-blue-800 cursor-pointer"
+            className="w-full text-center text-xs font-bold text-indigo-600 hover:text-blue-800 cursor-pointer"
           >
             Xem lịch sử hoạt động →
           </button>

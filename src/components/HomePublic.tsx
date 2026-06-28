@@ -73,9 +73,9 @@ export const HomePublic: React.FC<HomePublicProps> = ({
     <div>
       {/* ===== HERO ===== */}
       <section style={{ background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%)', borderBottom: '1px solid #1e293b', position: 'relative', overflow: 'hidden' }}>
-        <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, background: 'radial-gradient(circle at 30% 50%, rgba(37,99,235,0.15) 0%, transparent 50%), radial-gradient(circle at 70% 30%, rgba(99,102,241,0.1) 0%, transparent 50%)', pointerEvents: 'none' }} />
+        <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, background: 'radial-gradient(circle at 30% 50%, rgba(79,70,229,0.15) 0%, transparent 50%), radial-gradient(circle at 70% 30%, rgba(99,102,241,0.1) 0%, transparent 50%)', pointerEvents: 'none' }} />
         <div style={{ ...W, paddingTop: 72, paddingBottom: 72, textAlign: 'center', position: 'relative' }}>
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'rgba(37,99,235,0.2)', color: '#60a5fa', padding: '6px 16px', borderRadius: 20, fontSize: 12, fontWeight: 600, marginBottom: 24, border: '1px solid rgba(37,99,235,0.3)' }}>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'rgba(79,70,229,0.2)', color: '#60a5fa', padding: '6px 16px', borderRadius: 4, fontSize: 12, fontWeight: 600, marginBottom: 24, border: '1px solid rgba(79,70,229,0.3)' }}>
             <Sparkles size={14} /> Trung tâm gia sư uy tín #1 Hà Nội
           </div>
           <h1 style={{ fontSize: 'clamp(30px, 5vw, 48px)', fontWeight: 800, color: '#fff', lineHeight: 1.15, marginBottom: 16 }}>
@@ -86,7 +86,7 @@ export const HomePublic: React.FC<HomePublicProps> = ({
           </p>
 
           {/* BUG-3: AI Search Bar */}
-          <form onSubmit={handleAiSearch} style={{ maxWidth: 520, margin: '0 auto 28px', display: 'flex', gap: 0, background: 'rgba(255,255,255,0.1)', borderRadius: 12, border: '1px solid rgba(255,255,255,0.15)', overflow: 'hidden', backdropFilter: 'blur(8px)' }}>
+          <form onSubmit={handleAiSearch} style={{ maxWidth: 520, margin: '0 auto 28px', display: 'flex', gap: 0, background: 'rgba(255,255,255,0.1)', borderRadius: 4, border: '1px solid rgba(255,255,255,0.15)', overflow: 'hidden', backdropFilter: 'blur(8px)' }}>
             <div style={{ flex: 1, display: 'flex', alignItems: 'center', padding: '0 16px' }}>
               <Search size={18} style={{ color: '#64748b', flexShrink: 0 }} />
               <input type="text" value={aiQuery} onChange={e => setAiQuery(e.target.value)}
@@ -94,18 +94,18 @@ export const HomePublic: React.FC<HomePublicProps> = ({
                 style={{ flex: 1, padding: '14px 12px', background: 'transparent', border: 'none', outline: 'none', color: '#fff', fontSize: 14 }} />
             </div>
             <button type="submit" disabled={isSearching}
-              style={{ padding: '14px 24px', background: '#2563eb', color: '#fff', border: 'none', fontSize: 14, fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6, whiteSpace: 'nowrap' }}>
+              style={{ padding: '14px 24px', background: '#4f46e5', color: '#fff', border: 'none', fontSize: 14, fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6, whiteSpace: 'nowrap' }}>
               {isSearching ? '⏳' : <Sparkles size={16} />} Tìm kiếm
             </button>
           </form>
 
           <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
             <button onClick={() => onNavigate('parent-register')}
-              style={{ padding: '14px 32px', background: '#2563eb', color: '#fff', border: 'none', borderRadius: 10, fontSize: 15, fontWeight: 600, cursor: 'pointer', boxShadow: '0 4px 14px rgba(37,99,235,0.4)' }}>
+              style={{ padding: '14px 32px', background: '#4f46e5', color: '#fff', border: 'none', borderRadius: 4, fontSize: 15, fontWeight: 600, cursor: 'pointer', boxShadow: '0 4px 14px rgba(79,70,229,0.4)' }}>
               Đăng ký tìm gia sư — Miễn phí
             </button>
             <button onClick={() => onNavigate('register-tutor')}
-              style={{ padding: '14px 32px', background: 'rgba(255,255,255,0.08)', color: '#e2e8f0', border: '1px solid rgba(255,255,255,0.15)', borderRadius: 10, fontSize: 15, fontWeight: 600, cursor: 'pointer' }}>
+              style={{ padding: '14px 32px', background: 'rgba(255,255,255,0.08)', color: '#e2e8f0', border: '1px solid rgba(255,255,255,0.15)', borderRadius: 4, fontSize: 15, fontWeight: 600, cursor: 'pointer' }}>
               Trở thành gia sư
             </button>
           </div>
@@ -116,7 +116,7 @@ export const HomePublic: React.FC<HomePublicProps> = ({
       <section style={{ background: '#fff', borderBottom: '1px solid #f1f5f9' }}>
         <div style={{ ...W, display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 0, padding: '0 20px' }}>
           {[
-            { ref: cTutors.ref, v: `${cTutors.count}+`, l: 'Gia sư xác minh', icon: <GraduationCap size={20} style={{ color: '#2563eb' }} /> },
+            { ref: cTutors.ref, v: `${cTutors.count}+`, l: 'Gia sư xác minh', icon: <GraduationCap size={20} style={{ color: '#4f46e5' }} /> },
             { ref: cStudents.ref, v: `${cStudents.count}+`, l: 'Học sinh đã học', icon: <Users size={20} style={{ color: '#16a34a' }} /> },
             { ref: cSatisfy.ref, v: `${cSatisfy.count}%`, l: 'Phụ huynh hài lòng', icon: <CheckCircle2 size={20} style={{ color: '#f59e0b' }} /> },
             { ref: cResponse.ref, v: `${cResponse.count}p`, l: 'Phản hồi trung bình', icon: <Clock size={20} style={{ color: '#8b5cf6' }} /> },
@@ -137,13 +137,13 @@ export const HomePublic: React.FC<HomePublicProps> = ({
           <p style={{ fontSize: 14, color: '#64748b', textAlign: 'center', marginBottom: 40, maxWidth: 480, margin: '0 auto 40px' }}>3 bước đơn giản — hoàn toàn miễn phí cho phụ huynh</p>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 24 }}>
             {[
-              { n: '1', icon: <CheckCircle2 size={24} />, color: '#2563eb', bg: '#eff6ff', t: 'Đăng ký nhu cầu', d: 'Điền môn học, lớp, khu vực, lịch học. Chỉ mất 2 phút. Gia sư đều đã xác minh CCCD và bằng cấp.' },
+              { n: '1', icon: <CheckCircle2 size={24} />, color: '#4f46e5', bg: '#eef2ff', t: 'Đăng ký nhu cầu', d: 'Điền môn học, lớp, khu vực, lịch học. Chỉ mất 2 phút. Gia sư đều đã xác minh CCCD và bằng cấp.' },
               { n: '2', icon: <Sparkles size={24} />, color: '#8b5cf6', bg: '#f5f3ff', t: 'AI tìm gia sư phù hợp', d: 'Thuật toán AI phân tích và đề xuất gia sư tốt nhất. Phản hồi trong 30 phút.' },
               { n: '3', icon: <Award size={24} />, color: '#16a34a', bg: '#f0fdf4', t: 'Học thử và quyết định', d: 'Học thử 1-2 buổi miễn phí. Không hài lòng — đổi gia sư ngay, miễn phí hoàn toàn.' },
             ].map((s, i) => (
-              <div key={i} style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 16, padding: 28, textAlign: 'center', position: 'relative' }}>
-                <div style={{ width: 28, height: 28, background: '#2563eb', color: '#fff', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12, fontWeight: 700, margin: '0 auto 16px', boxShadow: '0 2px 8px rgba(37,99,235,0.3)' }}>{s.n}</div>
-                <div style={{ width: 48, height: 48, background: s.bg, color: s.color, borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}>{s.icon}</div>
+              <div key={i} style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 4, padding: 28, textAlign: 'center', position: 'relative' }}>
+                <div style={{ width: 28, height: 28, background: '#4f46e5', color: '#fff', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12, fontWeight: 700, margin: '0 auto 16px', boxShadow: '0 2px 8px rgba(79,70,229,0.3)' }}>{s.n}</div>
+                <div style={{ width: 48, height: 48, background: s.bg, color: s.color, borderRadius: 4, display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}>{s.icon}</div>
                 <div style={{ fontSize: 16, fontWeight: 700, color: '#0f172a', marginBottom: 8 }}>{s.t}</div>
                 <div style={{ fontSize: 13, color: '#64748b', lineHeight: 1.7 }}>{s.d}</div>
               </div>
@@ -158,22 +158,22 @@ export const HomePublic: React.FC<HomePublicProps> = ({
           <div style={{ ...W, paddingTop: 48, paddingBottom: 48 }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24 }}>
               <h2 style={{ fontSize: 20, fontWeight: 700, color: '#0f172a' }}>Gia sư nổi bật</h2>
-              <button onClick={() => onNavigate('find-tutors')} style={{ background: 'none', border: 'none', color: '#2563eb', fontSize: 13, fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 4 }}>
+              <button onClick={() => onNavigate('find-tutors')} style={{ background: 'none', border: 'none', color: '#4f46e5', fontSize: 13, fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 4 }}>
                 Xem tất cả <ChevronRight size={14} />
               </button>
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 16 }}>
               {verified.slice(0, 6).map(t => (
                 <div key={t.id || t.code} onClick={() => onNavigate('find-tutors')}
-                  style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 10, padding: 16, cursor: 'pointer' }}>
+                  style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 4, padding: 16, cursor: 'pointer' }}>
                   <div style={{ display: 'flex', gap: 12, alignItems: 'flex-start' }}>
-                    <div style={{ width: 40, height: 40, borderRadius: 8, background: t.avatarColor || '#3b82f6', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontWeight: 700, fontSize: 14, flexShrink: 0 }}>
+                    <div style={{ width: 40, height: 40, borderRadius: 4, background: t.avatarColor || '#6366f1', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontWeight: 700, fontSize: 14, flexShrink: 0 }}>
                       {t.avatar}
                     </div>
                     <div style={{ flex: 1, minWidth: 0 }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 2 }}>
                         <span style={{ fontWeight: 700, fontSize: 14, color: '#0f172a' }}>{t.name}</span>
-                        <span style={{ background: '#2563eb', color: '#fff', fontSize: 9, fontWeight: 700, padding: '1px 5px', borderRadius: 4 }}>✓</span>
+                        <span style={{ background: '#4f46e5', color: '#fff', fontSize: 9, fontWeight: 700, padding: '1px 5px', borderRadius: 4 }}>✓</span>
                       </div>
                       <div style={{ fontSize: 12, color: '#64748b', marginBottom: 6 }}>
                         <Star size={12} style={{ display: 'inline', verticalAlign: '-2px', color: '#f59e0b', fill: '#f59e0b', marginRight: 2 }} />
@@ -184,7 +184,7 @@ export const HomePublic: React.FC<HomePublicProps> = ({
                           <span key={si} style={{ background: '#f1f5f9', color: '#475569', padding: '2px 8px', borderRadius: 4, fontSize: 11, fontWeight: 500 }}>{s}</span>
                         ))}
                       </div>
-                      <div style={{ fontSize: 13, fontWeight: 700, color: '#2563eb' }}>{fmt(t.hourlyRate)}đ/buổi</div>
+                      <div style={{ fontSize: 13, fontWeight: 700, color: '#4f46e5' }}>{fmt(t.hourlyRate)}đ/buổi</div>
                     </div>
                   </div>
                 </div>
@@ -201,7 +201,7 @@ export const HomePublic: React.FC<HomePublicProps> = ({
           <p style={{ fontSize: 14, color: '#64748b', textAlign: 'center', marginBottom: 40 }}>Đánh giá thật từ phụ huynh đã sử dụng dịch vụ</p>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 20 }}>
             {testimonials.map((t, i) => (
-              <div key={i} style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 16, padding: 24 }}>
+              <div key={i} style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 4, padding: 24 }}>
                 <div style={{ display: 'flex', gap: 2, marginBottom: 12 }}>
                   {[1,2,3,4,5].map(s => <Star key={s} size={14} style={{ color: s <= t.rating ? '#f59e0b' : '#e2e8f0', fill: s <= t.rating ? '#f59e0b' : 'none' }} />)}
                 </div>
@@ -209,7 +209,7 @@ export const HomePublic: React.FC<HomePublicProps> = ({
                   "{t.comment}"
                 </p>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10, borderTop: '1px solid #e2e8f0', paddingTop: 12 }}>
-                  <div style={{ width: 36, height: 36, borderRadius: '50%', background: ['#2563eb', '#16a34a', '#f59e0b'][i % 3], display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontWeight: 700, fontSize: 13 }}>
+                  <div style={{ width: 36, height: 36, borderRadius: '50%', background: ['#4f46e5', '#16a34a', '#f59e0b'][i % 3], display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontWeight: 700, fontSize: 13 }}>
                     {t.parentName.charAt(t.parentName.indexOf(' ') + 1) || t.parentName.charAt(0)}
                   </div>
                   <div>
@@ -233,13 +233,13 @@ export const HomePublic: React.FC<HomePublicProps> = ({
           <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
             {zaloNumber && (
               <a href={`https://zalo.me/${zaloNumber}`} target="_blank" rel="noopener noreferrer"
-                style={{ padding: '14px 32px', background: '#2563eb', color: '#fff', border: 'none', borderRadius: 10, fontSize: 15, fontWeight: 600, textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 8, boxShadow: '0 4px 14px rgba(37,99,235,0.4)' }}>
+                style={{ padding: '14px 32px', background: '#4f46e5', color: '#fff', border: 'none', borderRadius: 4, fontSize: 15, fontWeight: 600, textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 8, boxShadow: '0 4px 14px rgba(79,70,229,0.4)' }}>
                 <MessageCircle size={18} /> Nhắn Zalo: {zaloNumber}
               </a>
             )}
             {zaloNumber && (
               <a href={`tel:${zaloNumber}`}
-                style={{ padding: '14px 32px', background: 'rgba(255,255,255,0.08)', color: '#fff', border: '1px solid rgba(255,255,255,0.2)', borderRadius: 10, fontSize: 15, fontWeight: 600, textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 8 }}>
+                style={{ padding: '14px 32px', background: 'rgba(255,255,255,0.08)', color: '#fff', border: '1px solid rgba(255,255,255,0.2)', borderRadius: 4, fontSize: 15, fontWeight: 600, textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 8 }}>
                 <Phone size={18} /> Gọi ngay: {zaloNumber}
               </a>
             )}

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { ClassMatch, TutorItem, ParentRegistration, TransactionItem, AttendanceRecord } from '../types';
 import { calculateKPIs } from '../utils';
 import { TrendingUp, TrendingDown, Users, Target, BarChart3, Activity, Download, FileText, Share2, Megaphone, MapPin, Filter } from 'lucide-react';
@@ -90,16 +90,16 @@ export const KPIDashboard: React.FC<KPIDashboardProps> = ({ matches, registratio
   ];
 
   return (
-    <div className="col-span-12 space-y-5">
+    <div className="space-y-5">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
         <h2 className="text-xl font-bold text-slate-800 flex items-center gap-2">
-          <BarChart3 className="w-5 h-5 text-blue-600" /> KPI & Thống kê
+          <BarChart3 className="w-5 h-5 text-indigo-600" /> KPI & Thống kê
         </h2>
         <div className="flex gap-2 flex-wrap">
           {views.map(v => (
             <button key={v.id} onClick={() => setActiveView(v.id)}
               className={`px-3 py-1.5 rounded-lg text-[11px] font-bold cursor-pointer border flex items-center gap-1.5 transition-all ${
-                activeView === v.id ? 'bg-blue-600 text-white border-blue-600' : 'bg-white text-slate-600 border-slate-200'
+                activeView === v.id ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-white text-slate-600 border-slate-200'
               }`}>{v.icon}{v.label}</button>
           ))}
         </div>
@@ -109,17 +109,17 @@ export const KPIDashboard: React.FC<KPIDashboardProps> = ({ matches, registratio
       {activeView === 'kpi' && (
         <>
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-            <div className="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs">
-              <div className="flex items-center gap-2 mb-2"><Target className="w-4 h-4 text-blue-500" /><span className="text-[10px] font-bold uppercase text-slate-400">Tỷ lệ ghép</span></div>
-              <div className="text-3xl font-bold text-blue-600">{kpi.matchRate}%</div>
+            <div className="bg-white rounded-lg border border-slate-200 p-5 shadow-xs">
+              <div className="flex items-center gap-2 mb-2"><Target className="w-4 h-4 text-indigo-500" /><span className="text-[10px] font-bold uppercase text-slate-400">Tỷ lệ ghép</span></div>
+              <div className="text-3xl font-bold text-indigo-600">{kpi.matchRate}%</div>
               <p className="text-[10px] text-slate-500 mt-1">Đơn đăng ký → Xếp lớp</p>
             </div>
-            <div className="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs">
+            <div className="bg-white rounded-lg border border-slate-200 p-5 shadow-xs">
               <div className="flex items-center gap-2 mb-2"><Activity className="w-4 h-4 text-emerald-500" /><span className="text-[10px] font-bold uppercase text-slate-400">Gia sư hoạt động</span></div>
               <div className="text-3xl font-bold text-emerald-600">{kpi.activeTutors}/{tutors.length}</div>
               <p className="text-[10px] text-slate-500 mt-1">{kpi.tutorActiveRate}% online & verified</p>
             </div>
-            <div className="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs">
+            <div className="bg-white rounded-lg border border-slate-200 p-5 shadow-xs">
               <div className="flex items-center gap-2 mb-2">
                 {kpi.revenueGrowth >= 0 ? <TrendingUp className="w-4 h-4 text-emerald-500" /> : <TrendingDown className="w-4 h-4 text-red-500" />}
                 <span className="text-[10px] font-bold uppercase text-slate-400">Doanh thu tháng</span>
@@ -129,15 +129,15 @@ export const KPIDashboard: React.FC<KPIDashboardProps> = ({ matches, registratio
                 {kpi.revenueGrowth >= 0 ? '+' : ''}{kpi.revenueGrowth}% so với tháng trước
               </p>
             </div>
-            <div className="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs">
+            <div className="bg-white rounded-lg border border-slate-200 p-5 shadow-xs">
               <div className="flex items-center gap-2 mb-2"><Users className="w-4 h-4 text-purple-500" /><span className="text-[10px] font-bold uppercase text-slate-400">Ghép tháng này</span></div>
               <div className="text-3xl font-bold text-purple-600">{kpi.thisMonthMatches}</div>
               <p className="text-[10px] text-slate-500 mt-1">Tháng trước: {kpi.lastMonthMatches}</p>
             </div>
           </div>
-          <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs">
+          <div className="bg-white rounded-lg border border-slate-200 p-6 shadow-xs">
             <h3 className="font-bold text-sm text-slate-800 mb-4 flex items-center gap-2">
-              <BarChart3 className="w-4 h-4 text-blue-500" /> Doanh thu 6 tháng gần nhất
+              <BarChart3 className="w-4 h-4 text-indigo-500" /> Doanh thu 6 tháng gần nhất
             </h3>
             <div className="flex items-end gap-3 h-40">
               {kpi.monthlyRevenue.map((m, i) => (
@@ -146,7 +146,7 @@ export const KPIDashboard: React.FC<KPIDashboardProps> = ({ matches, registratio
                   <div className="w-full rounded-t-lg transition-all" style={{
                     height: `${Math.max((m.revenue / maxRev) * 100, 4)}%`,
                     background: i === kpi.monthlyRevenue.length - 1
-                      ? 'linear-gradient(180deg, #3b82f6, #1d4ed8)'
+                      ? 'linear-gradient(180deg, #6366f1, #1d4ed8)'
                       : 'linear-gradient(180deg, #e2e8f0, #cbd5e1)',
                     minHeight: 4,
                   }} />
@@ -164,40 +164,40 @@ export const KPIDashboard: React.FC<KPIDashboardProps> = ({ matches, registratio
           <div className="flex justify-between items-center">
             <h3 className="text-sm font-bold text-slate-800">📊 Báo cáo tháng {thisMonth + 1}/{thisYear}</h3>
             <button onClick={exportMonthlyReport}
-              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold cursor-pointer flex items-center gap-2">
+              className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs font-bold cursor-pointer flex items-center gap-2">
               <Download className="w-3.5 h-3.5" /> Xuất CSV
             </button>
           </div>
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
             {[
-              { label: 'Đơn mới', value: thisMonthRegs.length, color: 'text-blue-600', bg: 'bg-blue-50' },
+              { label: 'Đơn mới', value: thisMonthRegs.length, color: 'text-indigo-600', bg: 'bg-indigo-50' },
               { label: 'Đã ghép', value: completedRegs.length, color: 'text-emerald-600', bg: 'bg-emerald-50' },
               { label: 'Hủy', value: cancelledRegs.length, color: 'text-red-600', bg: 'bg-red-50' },
               { label: 'Chuyển đổi', value: `${thisMonthRegs.length > 0 ? Math.round(completedRegs.length / thisMonthRegs.length * 100) : 0}%`, color: 'text-purple-600', bg: 'bg-purple-50' },
             ].map((item, i) => (
-              <div key={i} className={`${item.bg} rounded-2xl p-5 border border-slate-100`}>
+              <div key={i} className={`${item.bg} rounded-lg p-5 border border-slate-100`}>
                 <div className="text-[10px] font-bold uppercase text-slate-400 mb-1">{item.label}</div>
                 <div className={`text-2xl font-bold ${item.color}`}>{item.value}</div>
               </div>
             ))}
           </div>
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-            <div className="bg-white rounded-2xl border border-slate-200 p-5">
+            <div className="bg-white rounded-lg border border-slate-200 p-5">
               <h4 className="text-xs font-bold uppercase text-slate-400 mb-3">💰 Tài chính</h4>
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between"><span className="text-slate-600">Doanh thu</span><span className="font-bold text-emerald-600">{fmt(thisMonthRevenue)}đ</span></div>
                 <div className="flex justify-between"><span className="text-slate-600">Chi lương GS</span><span className="font-bold text-red-600">-{fmt(thisMonthSalary)}đ</span></div>
-                <div className="flex justify-between border-t pt-2"><span className="font-bold text-slate-800">Lãi ròng</span><span className="font-bold text-blue-600">{fmt(thisMonthRevenue - thisMonthSalary)}đ</span></div>
+                <div className="flex justify-between border-t pt-2"><span className="font-bold text-slate-800">Lãi ròng</span><span className="font-bold text-indigo-600">{fmt(thisMonthRevenue - thisMonthSalary)}đ</span></div>
               </div>
             </div>
-            <div className="bg-white rounded-2xl border border-slate-200 p-5">
+            <div className="bg-white rounded-lg border border-slate-200 p-5">
               <h4 className="text-xs font-bold uppercase text-slate-400 mb-3">📚 Top môn đăng ký</h4>
               <div className="space-y-2">
                 {topSubjects.length === 0 && <p className="text-xs text-slate-400">Chưa có dữ liệu</p>}
                 {topSubjects.map(([sub, count], i) => (
                   <div key={sub} className="flex items-center justify-between">
                     <span className="text-xs text-slate-700 flex items-center gap-2">
-                      <span className="w-5 h-5 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center text-[9px] font-bold">{i + 1}</span>
+                      <span className="w-5 h-5 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center text-[9px] font-bold">{i + 1}</span>
                       {sub}
                     </span>
                     <span className="text-xs font-bold text-slate-600">{count} đơn</span>
@@ -205,7 +205,7 @@ export const KPIDashboard: React.FC<KPIDashboardProps> = ({ matches, registratio
                 ))}
               </div>
             </div>
-            <div className="bg-white rounded-2xl border border-slate-200 p-5">
+            <div className="bg-white rounded-lg border border-slate-200 p-5">
               <h4 className="text-xs font-bold uppercase text-slate-400 mb-3">🏆 Top gia sư</h4>
               <div className="space-y-2">
                 {topTutors.map((t, i) => (
@@ -232,7 +232,7 @@ export const KPIDashboard: React.FC<KPIDashboardProps> = ({ matches, registratio
               const converted = sourceConverted[src] || 0;
               const rate = count > 0 ? Math.round(converted / count * 100) : 0;
               return (
-                <div key={src} className="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs">
+                <div key={src} className="bg-white rounded-lg border border-slate-200 p-5 shadow-xs">
                   <div className="flex items-center gap-2 mb-3">
                     <div className="w-3 h-3 rounded-full" style={{ background: sourceColors[src] || '#94a3b8' }} />
                     <span className="text-sm font-bold text-slate-800">{src}</span>
@@ -252,7 +252,7 @@ export const KPIDashboard: React.FC<KPIDashboardProps> = ({ matches, registratio
               );
             })}
             {sourceEntries.length === 0 && (
-              <div className="col-span-3 bg-slate-50 rounded-2xl p-8 text-center">
+              <div className="col-span-3 bg-slate-50 rounded-lg p-8 text-center">
                 <Megaphone className="w-8 h-8 text-slate-300 mx-auto mb-2" />
                 <p className="text-sm text-slate-500">Chưa có dữ liệu nguồn. Phụ huynh mới đăng ký sẽ chọn nguồn biết đến.</p>
               </div>
@@ -266,25 +266,25 @@ export const KPIDashboard: React.FC<KPIDashboardProps> = ({ matches, registratio
         <div className="space-y-4">
           <h3 className="text-sm font-bold text-slate-800">🏆 Chương trình giới thiệu</h3>
           <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
-            <div className="bg-emerald-50 rounded-2xl p-5 border border-emerald-100">
+            <div className="bg-emerald-50 rounded-lg p-5 border border-emerald-100">
               <div className="text-[10px] font-bold uppercase text-emerald-400 mb-1">Tổng giới thiệu</div>
               <div className="text-3xl font-bold text-emerald-600">{referralRegs.length}</div>
             </div>
-            <div className="bg-blue-50 rounded-2xl p-5 border border-blue-100">
+            <div className="bg-indigo-50 rounded-lg p-5 border border-indigo-100">
               <div className="text-[10px] font-bold uppercase text-blue-400 mb-1">Mã giới thiệu duy nhất</div>
-              <div className="text-3xl font-bold text-blue-600">{Object.keys(referralCodes).length}</div>
+              <div className="text-3xl font-bold text-indigo-600">{Object.keys(referralCodes).length}</div>
             </div>
-            <div className="bg-purple-50 rounded-2xl p-5 border border-purple-100">
+            <div className="bg-purple-50 rounded-lg p-5 border border-purple-100">
               <div className="text-[10px] font-bold uppercase text-purple-400 mb-1">Ghép thành công</div>
               <div className="text-3xl font-bold text-purple-600">{referralRegs.filter(r => r.status === 'Đã xếp lớp').length}</div>
             </div>
           </div>
           {Object.keys(referralCodes).length > 0 ? (
-            <div className="bg-white rounded-2xl border border-slate-200 p-5">
+            <div className="bg-white rounded-lg border border-slate-200 p-5">
               <h4 className="text-xs font-bold uppercase text-slate-400 mb-3">Bảng xếp hạng người giới thiệu</h4>
               <div className="space-y-2">
                 {(Object.entries(referralCodes) as [string, number][]).sort((a, b) => b[1] - a[1]).map(([code, count], i) => (
-                  <div key={code} className="flex items-center justify-between bg-slate-50 rounded-xl p-3">
+                  <div key={code} className="flex items-center justify-between bg-slate-50 rounded-lg p-3">
                     <span className="text-xs font-bold text-slate-700 flex items-center gap-2">
                       <span className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold ${i === 0 ? 'bg-amber-100 text-amber-700' : 'bg-slate-200 text-slate-600'}`}>{i + 1}</span>
                       Mã: {code}
@@ -295,7 +295,7 @@ export const KPIDashboard: React.FC<KPIDashboardProps> = ({ matches, registratio
               </div>
             </div>
           ) : (
-            <div className="bg-slate-50 rounded-2xl p-8 text-center">
+            <div className="bg-slate-50 rounded-lg p-8 text-center">
               <Share2 className="w-8 h-8 text-slate-300 mx-auto mb-2" />
               <p className="text-sm text-slate-500">Chưa có phụ huynh nào sử dụng mã giới thiệu. Mã giới thiệu sẽ hiện khi phụ huynh nhập trong form đăng ký.</p>
             </div>
@@ -324,14 +324,14 @@ export const KPIDashboard: React.FC<KPIDashboardProps> = ({ matches, registratio
             <h3 className="text-sm font-bold text-slate-800">🗺️ Phân bổ theo khu vực</h3>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
               {/* GS by area */}
-              <div className="bg-white rounded-2xl border border-slate-200 p-5">
+              <div className="bg-white rounded-lg border border-slate-200 p-5">
                 <h4 className="text-xs font-bold uppercase text-slate-400 mb-3">Gia sư theo khu vực</h4>
                 <div className="space-y-2">
                   {tutorEntries.slice(0, 10).map(([area, count]) => (
                     <div key={area} className="flex items-center gap-3">
                       <span className="text-xs text-slate-600 w-28 truncate font-medium">{area}</span>
                       <div className="flex-1 bg-slate-100 rounded-full h-5 overflow-hidden">
-                        <div className="h-full bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full flex items-center justify-end pr-2 transition-all"
+                        <div className="h-full bg-gradient-to-r from-indigo-500 to-indigo-500 rounded-full flex items-center justify-end pr-2 transition-all"
                           style={{ width: `${Math.max((count / maxTutor) * 100, 8)}%` }}>
                           <span className="text-[9px] font-bold text-white">{count}</span>
                         </div>
@@ -342,7 +342,7 @@ export const KPIDashboard: React.FC<KPIDashboardProps> = ({ matches, registratio
                 </div>
               </div>
               {/* PH demand by district */}
-              <div className="bg-white rounded-2xl border border-slate-200 p-5">
+              <div className="bg-white rounded-lg border border-slate-200 p-5">
                 <h4 className="text-xs font-bold uppercase text-slate-400 mb-3">Nhu cầu phụ huynh theo quận</h4>
                 <div className="space-y-2">
                   {regEntries.slice(0, 10).map(([dist, count]) => (
@@ -361,18 +361,18 @@ export const KPIDashboard: React.FC<KPIDashboardProps> = ({ matches, registratio
               </div>
             </div>
             {/* Gap analysis */}
-            <div className="bg-white rounded-2xl border border-slate-200 p-5">
+            <div className="bg-white rounded-lg border border-slate-200 p-5">
               <h4 className="text-xs font-bold uppercase text-slate-400 mb-3">⚠️ Phân tích thiếu hụt GS</h4>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                 {regEntries.slice(0, 8).map(([dist, demand]) => {
                   const supply = tutorAreas[dist] || 0;
                   const gap = demand - supply;
                   return (
-                    <div key={dist} className={`p-3 rounded-xl border ${gap > 0 ? 'bg-red-50 border-red-200' : 'bg-emerald-50 border-emerald-200'}`}>
+                    <div key={dist} className={`p-3 rounded-lg border ${gap > 0 ? 'bg-red-50 border-red-200' : 'bg-emerald-50 border-emerald-200'}`}>
                       <div className="text-xs font-bold text-slate-700">{dist}</div>
                       <div className="flex justify-between mt-1 text-[10px]">
                         <span className="text-emerald-600">GS: {supply}</span>
-                        <span className="text-blue-600">PH: {demand}</span>
+                        <span className="text-indigo-600">PH: {demand}</span>
                       </div>
                       {gap > 0 && <div className="text-[9px] font-bold text-red-600 mt-0.5">Thiếu {gap} GS!</div>}
                     </div>
@@ -392,14 +392,14 @@ export const KPIDashboard: React.FC<KPIDashboardProps> = ({ matches, registratio
         const cancelled = registrations.filter(r => r.status === 'Hủy').length;
 
         const funnelSteps = [
-          { label: 'Đơn đăng ký', count: totalRegs, color: '#3b82f6', icon: '📋' },
+          { label: 'Đơn đăng ký', count: totalRegs, color: '#6366f1', icon: '📋' },
           { label: 'Đã liên hệ', count: contacted, color: '#f59e0b', icon: '📞' },
           { label: 'Đã ghép lớp', count: matched, color: '#22c55e', icon: '✅' },
           { label: 'Đã thu phí KN', count: feePaid, color: '#8b5cf6', icon: '💰' },
         ];
 
         return (
-          <div className="bg-white rounded-2xl border border-slate-200 shadow-xs p-6">
+          <div className="bg-white rounded-lg border border-slate-200 shadow-xs p-6">
             <h3 className="text-sm font-bold text-slate-800 flex items-center gap-2 mb-6">
               <Filter className="w-4 h-4 text-purple-600" /> Phễu chuyển đổi
             </h3>
@@ -428,21 +428,21 @@ export const KPIDashboard: React.FC<KPIDashboardProps> = ({ matches, registratio
               })}
             </div>
             <div className="mt-6 grid grid-cols-2 gap-4">
-              <div className="bg-emerald-50 rounded-xl p-4 text-center">
+              <div className="bg-emerald-50 rounded-lg p-4 text-center">
                 <div className="text-2xl font-bold text-emerald-600">{totalRegs > 0 ? Math.round(matched / totalRegs * 100) : 0}%</div>
                 <div className="text-[10px] font-bold text-emerald-700 mt-1">Tỷ lệ ghép thành công</div>
               </div>
-              <div className="bg-red-50 rounded-xl p-4 text-center">
+              <div className="bg-red-50 rounded-lg p-4 text-center">
                 <div className="text-2xl font-bold text-red-600">{totalRegs > 0 ? Math.round(cancelled / totalRegs * 100) : 0}%</div>
                 <div className="text-[10px] font-bold text-red-700 mt-1">Tỷ lệ hủy</div>
               </div>
-              <div className="bg-purple-50 rounded-xl p-4 text-center">
+              <div className="bg-purple-50 rounded-lg p-4 text-center">
                 <div className="text-2xl font-bold text-purple-600">{matched > 0 ? Math.round(feePaid / matched * 100) : 0}%</div>
                 <div className="text-[10px] font-bold text-purple-700 mt-1">Tỷ lệ thu phí</div>
               </div>
-              <div className="bg-blue-50 rounded-xl p-4 text-center">
-                <div className="text-2xl font-bold text-blue-600">{fmt(matches.filter(m => m.feePaid && m.feeAmount).reduce((s, m) => s + (m.feeAmount || 0), 0))}đ</div>
-                <div className="text-[10px] font-bold text-blue-700 mt-1">Doanh thu KN đã thu</div>
+              <div className="bg-indigo-50 rounded-lg p-4 text-center">
+                <div className="text-2xl font-bold text-indigo-600">{fmt(matches.filter(m => m.feePaid && m.feeAmount).reduce((s, m) => s + (m.feeAmount || 0), 0))}đ</div>
+                <div className="text-[10px] font-bold text-indigo-700 mt-1">Doanh thu KN đã thu</div>
               </div>
             </div>
           </div>

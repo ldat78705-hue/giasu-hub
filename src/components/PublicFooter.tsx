@@ -15,7 +15,7 @@ export const PublicFooter: React.FC<PublicFooterProps> = ({ onNavigate, zaloNumb
           {/* Brand */}
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
-              <div style={{ width: 28, height: 28, background: '#2563eb', borderRadius: 6, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontWeight: 700, fontSize: 10 }}>TĐ</div>
+              <div style={{ width: 28, height: 28, background: '#4f46e5', borderRadius: 4, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontWeight: 700, fontSize: 10 }}>TĐ</div>
               <span style={{ fontWeight: 700, fontSize: 14, color: '#fff' }}>Gia Sư Thành Đạt</span>
             </div>
             <p style={{ fontSize: 12, lineHeight: 1.6 }}>

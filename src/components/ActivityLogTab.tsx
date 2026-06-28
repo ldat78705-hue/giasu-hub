@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { Activity, Clock, Filter, Download, ChevronDown } from 'lucide-react';
 
 export interface ActivityEntry {
@@ -15,7 +15,7 @@ interface ActivityLogTabProps {
 }
 
 const CATEGORY_LABELS: Record<string, { label: string; color: string }> = {
-  class: { label: 'Lớp', color: 'bg-blue-100 text-blue-700' },
+  class: { label: 'Lớp', color: 'bg-indigo-100 text-indigo-700' },
   tutor: { label: 'Gia sư', color: 'bg-purple-100 text-purple-700' },
   student: { label: 'Học sinh', color: 'bg-emerald-100 text-emerald-700' },
   finance: { label: 'Tài chính', color: 'bg-amber-100 text-amber-700' },
@@ -53,7 +53,7 @@ export const ActivityLogTab: React.FC<ActivityLogTabProps> = ({ activities }) =>
   };
 
   return (
-    <div className="col-span-12 space-y-5">
+    <div className="space-y-5">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
         <div>
           <h2 className="text-xl font-bold text-slate-800 flex items-center gap-2">
@@ -61,7 +61,7 @@ export const ActivityLogTab: React.FC<ActivityLogTabProps> = ({ activities }) =>
           </h2>
           <p className="text-xs text-slate-500 mt-0.5">{activities.length} hoạt động · Audit trail toàn bộ hệ thống</p>
         </div>
-        <button onClick={exportCSV} className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold cursor-pointer flex items-center gap-2 shadow-md shadow-emerald-600/20">
+        <button onClick={exportCSV} className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-bold cursor-pointer flex items-center gap-2 shadow-md shadow-emerald-600/20">
           <Download className="w-3.5 h-3.5" /> Xuất CSV
         </button>
       </div>
@@ -75,7 +75,7 @@ export const ActivityLogTab: React.FC<ActivityLogTabProps> = ({ activities }) =>
       </div>
 
       {/* Timeline */}
-      <div className="bg-white rounded-2xl border border-slate-200 shadow-xs divide-y divide-slate-100">
+      <div className="bg-white rounded-lg border border-slate-200 shadow-xs divide-y divide-slate-100">
         {filtered.length === 0 ? (
           <div className="p-8 text-center text-slate-400 text-sm">Chưa có hoạt động nào</div>
         ) : filtered.map((a, i) => (

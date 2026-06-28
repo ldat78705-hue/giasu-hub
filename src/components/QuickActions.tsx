@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { ActiveTab, TutorItem, ParentRegistration, ClassMatch, AttendanceRecord, TutorReview, TransactionItem } from '../types';
 import { AlertTriangle, UserCheck, Clock, ArrowRight, ShieldAlert, Zap, Award, TrendingDown, XCircle, Calendar, DollarSign, Bell } from 'lucide-react';
 
@@ -79,11 +79,11 @@ export const QuickActions: React.FC<QuickActionsProps> = ({ tutors, registration
 
   if (actions.length === 0) return null;
 
-  const urgentColors: Record<string, string> = { blue: 'border-blue-300 bg-blue-50', amber: 'border-amber-300 bg-amber-50', orange: 'border-orange-300 bg-orange-50', red: 'border-red-300 bg-red-50', purple: 'border-purple-300 bg-purple-50' };
-  const iconColors: Record<string, string> = { blue: 'text-blue-600', amber: 'text-amber-600', orange: 'text-orange-600', red: 'text-red-600', purple: 'text-purple-600' };
+  const urgentColors: Record<string, string> = { blue: 'border-indigo-300 bg-indigo-50', amber: 'border-amber-300 bg-amber-50', orange: 'border-orange-300 bg-orange-50', red: 'border-red-300 bg-red-50', purple: 'border-purple-300 bg-purple-50' };
+  const iconColors: Record<string, string> = { blue: 'text-indigo-600', amber: 'text-amber-600', orange: 'text-orange-600', red: 'text-red-600', purple: 'text-purple-600' };
 
   return (
-    <div className="col-span-12">
+    <div className="w-full">
       <div className="flex items-center gap-2 mb-2">
         <Zap className="w-3.5 h-3.5 text-amber-500" />
         <h3 className="text-[10px] font-bold uppercase tracking-wider text-slate-500">Cần xử lý ({actions.length})</h3>
@@ -91,7 +91,7 @@ export const QuickActions: React.FC<QuickActionsProps> = ({ tutors, registration
       <div className="flex flex-wrap gap-2">
         {actions.slice(0, 8).map((action, i) => (
           <button key={i} onClick={() => onNavigate(action.tab)}
-            className={`flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl border text-left cursor-pointer transition-all hover:shadow-sm ${action.urgent ? urgentColors[action.color] : urgentColors[action.color]}`}>
+            className={`flex items-center gap-2.5 px-3.5 py-2.5 rounded-lg border text-left cursor-pointer transition-all hover:shadow-sm ${action.urgent ? urgentColors[action.color] : urgentColors[action.color]}`}>
             <div className={`${iconColors[action.color]} shrink-0`}>{action.icon}</div>
             <div className="min-w-0">
               <div className="text-xs font-bold text-slate-800 truncate">{action.label}</div>

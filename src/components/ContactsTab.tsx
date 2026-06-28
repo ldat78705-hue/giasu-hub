@@ -49,7 +49,7 @@ export const ContactsTab: React.FC<ContactsTabProps> = ({ contacts, onMarkRead, 
   };
 
   return (
-    <div className="col-span-12 bg-white rounded-2xl border border-slate-200 shadow-xs p-6 space-y-5">
+    <div className="bg-white rounded-lg border border-slate-200 shadow-xs p-6 space-y-5">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b border-slate-100 pb-4">
         <div>
           <h2 className="text-xl font-bold text-slate-800">Liên hệ & Tư vấn</h2>
@@ -59,7 +59,7 @@ export const ContactsTab: React.FC<ContactsTabProps> = ({ contacts, onMarkRead, 
           </p>
         </div>
         <button onClick={exportCsv}
-          className="px-3 py-2 bg-white border border-slate-200 hover:border-slate-300 rounded-xl text-xs font-bold text-slate-600 cursor-pointer flex items-center gap-1.5">
+          className="px-3 py-2 bg-white border border-slate-200 hover:border-slate-300 rounded-lg text-xs font-bold text-slate-600 cursor-pointer flex items-center gap-1.5">
           <Download className="w-3.5 h-3.5" /> Export
         </button>
       </div>
@@ -71,7 +71,7 @@ export const ContactsTab: React.FC<ContactsTabProps> = ({ contacts, onMarkRead, 
             <Search className="w-4 h-4 absolute left-3 top-2.5 text-slate-400" />
             <input type="text" value={searchTerm} onChange={e => setSearchTerm(e.target.value)}
               placeholder="Tìm theo tên, số điện thoại, nội dung..."
-              className="w-full pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm outline-none focus:bg-white focus:border-blue-500" />
+              className="w-full pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm outline-none focus:bg-white focus:border-indigo-500" />
           </div>
           <div className="flex gap-2">
             {[
@@ -80,8 +80,8 @@ export const ContactsTab: React.FC<ContactsTabProps> = ({ contacts, onMarkRead, 
               { val: 'read' as const, label: 'Đã đọc' },
             ].map(f => (
               <button key={f.val} onClick={() => setFilterRead(f.val)}
-                className={`px-3 py-2 rounded-xl text-xs font-semibold border cursor-pointer transition-all ${
-                  filterRead === f.val ? 'bg-blue-600 text-white border-blue-600' : 'bg-white text-slate-600 border-slate-200 hover:border-blue-300'
+                className={`px-3 py-2 rounded-lg text-xs font-semibold border cursor-pointer transition-all ${
+                  filterRead === f.val ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-white text-slate-600 border-slate-200 hover:border-indigo-300'
                 }`}>{f.label}</button>
             ))}
           </div>
@@ -95,45 +95,68 @@ export const ContactsTab: React.FC<ContactsTabProps> = ({ contacts, onMarkRead, 
           <p className="text-xs mt-1">{contacts.length === 0 ? 'Tin nhắn từ khách hàng sẽ hiển thị tại đây' : 'Thử thay đổi bộ lọc'}</p>
         </div>
       ) : (
-        <div className="space-y-3">
-          {filtered.map(msg => (
-            <div key={msg.id}
-              className={`p-4 rounded-xl border transition-all ${
-                msg.isRead ? 'border-slate-200 bg-white' : 'border-blue-200 bg-blue-50/30'
-              }`}>
-              <div className="flex items-start justify-between gap-3">
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className="font-bold text-sm text-slate-800">{msg.name}</span>
-                    {!msg.isRead && <span className="w-2 h-2 bg-blue-500 rounded-full shrink-0"></span>}
-                  </div>
-                  <a href={`tel:${msg.phone}`} className="text-xs text-blue-600 font-semibold flex items-center gap-1 mb-2">
-                    <Phone className="w-3 h-3" /> {msg.phone}
-                  </a>
-                  <p className="text-sm text-slate-600 leading-relaxed">{msg.message}</p>
-                  <div className="flex items-center gap-1 mt-2 text-[10px] text-slate-400">
-                    <Clock className="w-3 h-3" /> {formatTime(msg.createdAt)}
-                  </div>
-                </div>
-                <div className="flex items-center gap-1 shrink-0">
-                  {!msg.isRead ? (
-                    <button onClick={() => msg.id && onMarkRead(msg.id)}
-                      className="p-1.5 hover:bg-green-50 text-slate-400 hover:text-green-600 rounded-lg cursor-pointer transition-colors" title="Đánh dấu đã đọc">
-                      <CheckCircle2 className="w-4 h-4" />
-                    </button>
-                  ) : (
-                    <span className="p-1.5 text-green-500" title="Đã đọc">
-                      <CheckCircle2 className="w-4 h-4" />
-                    </span>
-                  )}
-                  <button onClick={() => msg.id && window.confirm(`Xóa tin nhắn của ${msg.name}?`) && onDelete(msg.id)}
-                    className="p-1.5 hover:bg-red-50 text-slate-400 hover:text-red-600 rounded-lg cursor-pointer transition-colors" title="Xóa">
-                    <Trash2 className="w-4 h-4" />
-                  </button>
-                </div>
-              </div>
-            </div>
-          ))}
+        <div style={{ border: '1px solid #e2e8f0', borderRadius: 4, overflow: 'hidden' }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
+            <thead>
+              <tr style={{ background: '#f8fafc', borderBottom: '1px solid #e2e8f0' }}>
+                <th style={{ padding: '10px 16px', textAlign: 'left', fontSize: 11, fontWeight: 600, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Người gửi</th>
+                <th style={{ padding: '10px 16px', textAlign: 'left', fontSize: 11, fontWeight: 600, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Nội dung</th>
+                <th style={{ padding: '10px 16px', textAlign: 'left', fontSize: 11, fontWeight: 600, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.05em', width: 130 }}>Thời gian</th>
+                <th style={{ padding: '10px 16px', textAlign: 'center', fontSize: 11, fontWeight: 600, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.05em', width: 90 }}>Thao tác</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filtered.map(msg => (
+                <tr key={msg.id}
+                  style={{
+                    borderBottom: '1px solid #f1f5f9',
+                    background: msg.isRead ? 'transparent' : 'rgba(79,70,229,0.03)',
+                    transition: 'background 0.1s',
+                  }}
+                  onMouseEnter={e => (e.currentTarget.style.background = msg.isRead ? '#f8fafc' : 'rgba(79,70,229,0.06)')}
+                  onMouseLeave={e => (e.currentTarget.style.background = msg.isRead ? 'transparent' : 'rgba(79,70,229,0.03)')}
+                >
+                  <td style={{ padding: '12px 16px', verticalAlign: 'top' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                      <span style={{ fontWeight: msg.isRead ? 500 : 700, color: '#1e293b', fontSize: 13 }}>{msg.name}</span>
+                      {!msg.isRead && <span style={{ width: 7, height: 7, background: '#4f46e5', borderRadius: '50%', flexShrink: 0 }} />}
+                    </div>
+                    <a href={`tel:${msg.phone}`} style={{ fontSize: 12, color: '#4f46e5', fontWeight: 600, display: 'flex', alignItems: 'center', gap: 3, marginTop: 2, textDecoration: 'none' }}>
+                      <Phone style={{ width: 11, height: 11 }} /> {msg.phone}
+                    </a>
+                  </td>
+                  <td style={{ padding: '12px 16px', color: '#475569', lineHeight: 1.6, maxWidth: 400 }}>
+                    {msg.message || <span style={{ color: '#94a3b8', fontStyle: 'italic' }}>Không có nội dung</span>}
+                  </td>
+                  <td style={{ padding: '12px 16px', fontSize: 11, color: '#94a3b8', whiteSpace: 'nowrap' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 3 }}>
+                      <Clock style={{ width: 11, height: 11 }} /> {formatTime(msg.createdAt)}
+                    </div>
+                  </td>
+                  <td style={{ padding: '12px 16px', textAlign: 'center' }}>
+                    <div style={{ display: 'flex', justifyContent: 'center', gap: 4 }}>
+                      {!msg.isRead ? (
+                        <button onClick={() => msg.id && onMarkRead(msg.id)} title="Đánh dấu đã đọc"
+                          style={{ padding: 4, border: 'none', background: 'transparent', cursor: 'pointer', color: '#94a3b8' }}
+                          onMouseEnter={e => (e.currentTarget.style.color = '#16a34a')}
+                          onMouseLeave={e => (e.currentTarget.style.color = '#94a3b8')}>
+                          <CheckCircle2 style={{ width: 15, height: 15 }} />
+                        </button>
+                      ) : (
+                        <span style={{ padding: 4, color: '#16a34a' }}><CheckCircle2 style={{ width: 15, height: 15 }} /></span>
+                      )}
+                      <button onClick={() => msg.id && window.confirm(`Xóa tin nhắn của ${msg.name}?`) && onDelete(msg.id)} title="Xóa"
+                        style={{ padding: 4, border: 'none', background: 'transparent', cursor: 'pointer', color: '#94a3b8' }}
+                        onMouseEnter={e => (e.currentTarget.style.color = '#ef4444')}
+                        onMouseLeave={e => (e.currentTarget.style.color = '#94a3b8')}>
+                        <Trash2 style={{ width: 15, height: 15 }} />
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       )}
     </div>

@@ -268,3 +268,465 @@ input, textarea, select {
   z-index: 10;
   background: #f8fafc;
 }
+
+/* ============================================
+   ADMIN GLOBAL UI SYSTEM v2
+   Light + Dark mode support
+   ============================================ */
+
+section > div { font-family: 'Inter', -apple-system, sans-serif; }
+
+/* ── GLOBAL: Squarer corners ── */
+section .rounded-lg { border-radius: 4px !important; }
+section .rounded-md { border-radius: 3px !important; }
+section .rounded { border-radius: 3px !important; }
+section .rounded-xl { border-radius: 4px !important; }
+section .rounded-2xl { border-radius: 4px !important; }
+.rounded-lg { border-radius: 4px !important; }
+.rounded-xl { border-radius: 4px !important; }
+.rounded-2xl { border-radius: 4px !important; }
+section .rounded-full { border-radius: 999px !important; } /* keep pills round */
+.rounded-full { border-radius: 999px !important; } /* keep pills round */
+
+/* ── DARK SECTION BACKGROUND ── */
+.dark section { background: #0f172a !important; }
+.dark section * { border-color: #334155; }
+
+/* ── CARDS ── */
+section .bg-white {
+  border-radius: 4px !important;
+  border: 1px solid #e2e8f0 !important;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.04) !important;
+}
+.dark section .bg-white {
+  background: #1e293b !important;
+  border-color: #334155 !important;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.3) !important;
+  color: #e2e8f0 !important;
+}
+
+/* ── INPUTS ── */
+section input[type="text"],
+section input[type="password"],
+section input[type="email"],
+section input[type="number"],
+section input[type="tel"],
+section input[type="url"],
+section input[type="search"],
+section input[type="date"],
+section textarea {
+  font-size: 13px !important;
+  padding: 9px 14px !important;
+  border-radius: 4px !important;
+  border: 1px solid #e2e8f0 !important;
+  background: #f8fafc !important;
+  outline: none !important;
+  transition: all 0.15s !important;
+  color: #334155 !important;
+  font-family: inherit !important;
+  line-height: 1.5 !important;
+}
+section input:focus,
+section textarea:focus {
+  background: #fff !important;
+  border-color: #818cf8 !important;
+  box-shadow: 0 0 0 3px rgba(129,140,248,0.1) !important;
+}
+section input.pl-8, section input.pl-9 { padding-left: 36px !important; }
+
+.dark section input[type="text"],
+.dark section input[type="password"],
+.dark section input[type="email"],
+.dark section input[type="number"],
+.dark section input[type="tel"],
+.dark section input[type="url"],
+.dark section input[type="search"],
+.dark section input[type="date"],
+.dark section textarea {
+  background: #0f172a !important;
+  border-color: #334155 !important;
+  color: #e2e8f0 !important;
+}
+.dark section input:focus,
+.dark section textarea:focus {
+  background: #1e293b !important;
+  border-color: #818cf8 !important;
+}
+.dark section input::placeholder,
+.dark section textarea::placeholder { color: #64748b !important; }
+
+/* ── SELECT ── */
+section select {
+  font-size: 13px !important; padding: 8px 12px !important;
+  border-radius: 4px !important; border: 1px solid #e2e8f0 !important;
+  background: #fff !important; color: #334155 !important;
+  cursor: pointer !important; outline: none !important; font-family: inherit !important;
+}
+.dark section select {
+  background: #1e293b !important; border-color: #334155 !important; color: #e2e8f0 !important;
+}
+
+/* ── BUTTONS ── */
+section button.bg-indigo-600, section button.bg-blue-600,
+section button.bg-emerald-600, section button.bg-purple-600 {
+  border-radius: 4px !important; font-weight: 600 !important;
+  font-size: 13px !important; box-shadow: 0 1px 3px rgba(0,0,0,0.1) !important;
+}
+
+/* ── TABLES ── */
+section table { width: 100% !important; border-collapse: collapse !important; font-size: 13px !important; }
+section table thead tr { background: #f8fafc !important; border-bottom: 1px solid #e2e8f0 !important; }
+section table thead th {
+  padding: 10px 16px !important; font-size: 11px !important; font-weight: 600 !important;
+  text-transform: uppercase !important; letter-spacing: 0.05em !important;
+  color: #94a3b8 !important; text-align: left !important; white-space: nowrap !important;
+}
+section table tbody td { padding: 12px 16px !important; border-bottom: 1px solid #f1f5f9 !important; vertical-align: middle !important; }
+section table tbody tr:hover { background: #f8fafc !important; }
+
+.dark section table thead tr { background: #0f172a !important; border-bottom-color: #334155 !important; }
+.dark section table thead th { color: #64748b !important; }
+.dark section table tbody td { border-bottom-color: #1e293b !important; color: #cbd5e1 !important; }
+.dark section table tbody tr:hover { background: #1e293b !important; }
+
+/* ── HEADINGS ── */
+section h2 { font-size: 18px !important; font-weight: 700 !important; color: #1e293b !important; }
+section h3 { font-size: 15px !important; font-weight: 700 !important; color: #334155 !important; }
+section h4 { font-size: 14px !important; font-weight: 600 !important; color: #334155 !important; }
+.dark section h2 { color: #f1f5f9 !important; }
+.dark section h3 { color: #e2e8f0 !important; }
+.dark section h4 { color: #cbd5e1 !important; }
+
+/* ── DARK TEXT OVERRIDES ── */
+.dark section .text-slate-800, .dark section .text-slate-900,
+.dark section .text-gray-800, .dark section .text-gray-900 { color: #f1f5f9 !important; }
+.dark section .text-slate-700, .dark section .text-gray-700 { color: #e2e8f0 !important; }
+.dark section .text-slate-600, .dark section .text-gray-600 { color: #cbd5e1 !important; }
+.dark section .text-slate-500, .dark section .text-gray-500 { color: #94a3b8 !important; }
+
+/* ── DARK BACKGROUNDS ── */
+.dark section .bg-slate-50, .dark section .bg-gray-50,
+.dark section .bg-slate-100 { background: #0f172a !important; }
+.dark section .bg-indigo-50 { background: rgba(79,70,229,0.15) !important; }
+.dark section .bg-emerald-50 { background: rgba(16,185,129,0.15) !important; }
+.dark section .bg-amber-50 { background: rgba(245,158,11,0.15) !important; }
+.dark section .bg-rose-50, .dark section .bg-red-50 { background: rgba(244,63,94,0.15) !important; }
+.dark section .bg-purple-50 { background: rgba(168,85,247,0.15) !important; }
+.dark section .bg-blue-50 { background: rgba(59,130,246,0.15) !important; }
+.dark section .bg-amber-100 { background: rgba(245,158,11,0.2) !important; }
+.dark section .bg-indigo-100 { background: rgba(79,70,229,0.2) !important; }
+.dark section .bg-emerald-100 { background: rgba(16,185,129,0.2) !important; }
+.dark section .bg-red-100 { background: rgba(239,68,68,0.2) !important; }
+
+/* ── DARK BORDERS ── */
+.dark section .border-slate-200, .dark section .border-slate-100,
+.dark section .border-gray-200 { border-color: #334155 !important; }
+.dark section .divide-y > * + * { border-top-color: #334155 !important; }
+.dark section .border-b { border-bottom-color: #334155 !important; }
+
+/* ── DARK HEADER ── */
+.dark header { background: #1e293b !important; border-bottom-color: #334155 !important; }
+.dark header h1 { color: #f1f5f9 !important; }
+.dark header input {
+  background: #0f172a !important; border-color: #334155 !important; color: #e2e8f0 !important;
+}
+
+/* ── GRID FORCE ── */
+section .grid.grid-cols-1 { display: grid !important; grid-template-columns: 1fr !important; }
+section .grid.grid-cols-2 { display: grid !important; grid-template-columns: repeat(2,1fr) !important; }
+section .grid.grid-cols-3 { display: grid !important; grid-template-columns: repeat(3,1fr) !important; }
+section .grid.grid-cols-4 { display: grid !important; grid-template-columns: repeat(4,1fr) !important; }
+section .gap-3 { gap: 12px !important; }
+section .gap-4 { gap: 16px !important; }
+section .gap-5 { gap: 20px !important; }
+section .gap-6 { gap: 24px !important; }
+section .space-y-4 > * + * { margin-top: 16px !important; }
+section .space-y-5 > * + * { margin-top: 20px !important; }
+section .space-y-6 > * + * { margin-top: 24px !important; }
+section .p-4 { padding: 16px !important; }
+section .p-5 { padding: 20px !important; }
+section .p-6 { padding: 24px !important; }
+
+@media (min-width: 640px) {
+  section .sm\:grid-cols-2 { grid-template-columns: repeat(2,1fr) !important; }
+  section .sm\:grid-cols-3 { grid-template-columns: repeat(3,1fr) !important; }
+  section .sm\:grid-cols-4 { grid-template-columns: repeat(4,1fr) !important; }
+  section .sm\:grid-cols-5 { grid-template-columns: repeat(5,1fr) !important; }
+}
+@media (min-width: 768px) {
+  section .md\:grid-cols-2 { grid-template-columns: repeat(2,1fr) !important; }
+  section .md\:grid-cols-3 { grid-template-columns: repeat(3,1fr) !important; }
+  section .md\:grid-cols-4 { grid-template-columns: repeat(4,1fr) !important; }
+  section .md\:grid-cols-5 { grid-template-columns: repeat(5,1fr) !important; }
+}
+@media (min-width: 1024px) {
+  section .lg\:grid-cols-2 { grid-template-columns: repeat(2,1fr) !important; }
+  section .lg\:grid-cols-3 { grid-template-columns: repeat(3,1fr) !important; }
+  section .lg\:grid-cols-4 { grid-template-columns: repeat(4,1fr) !important; }
+}
+@media (min-width: 1280px) {
+  section .xl\:grid-cols-3 { grid-template-columns: repeat(3,1fr) !important; }
+  section .xl\:grid-cols-4 { grid-template-columns: repeat(4,1fr) !important; }
+}
+
+/* ── COL-SPAN OVERRIDES ── */
+section .col-span-1 { grid-column: span 1 / span 1 !important; }
+section .col-span-2 { grid-column: span 2 / span 2 !important; }
+@media (min-width: 1024px) {
+  section .lg\:col-span-2 { grid-column: span 2 / span 2 !important; }
+  section .lg\:col-span-3 { grid-column: span 3 / span 3 !important; }
+  section .lg\:col-span-4 { grid-column: span 4 / span 4 !important; }
+  section .lg\:col-span-5 { grid-column: span 5 / span 5 !important; }
+  section .lg\:col-span-7 { grid-column: span 7 / span 7 !important; }
+}
+/* ── GRID 12-COL for Blog/Stats ── */
+section .grid-cols-12 { grid-template-columns: repeat(12,1fr) !important; }
+@media (min-width: 1024px) {
+  section .lg\:grid-cols-12 { grid-template-columns: repeat(12,1fr) !important; }
+}
+/* ── FLEX OVERRIDES ── */
+section .flex-col { flex-direction: column !important; }
+@media (min-width: 640px) {
+  section .sm\:flex-row { flex-direction: row !important; }
+}
+/* ── RESPONSIVE VISIBILITY ── */
+.hidden { display: none !important; }
+@media (min-width: 1024px) {
+  .lg\:flex { display: flex !important; }
+  .lg\:hidden { display: none !important; }
+  .lg\:block { display: block !important; }
+}
+
+/* ============================================
+   DARK MODE: COMPREHENSIVE COVERAGE
+   ============================================ */
+
+/* Dark: Fix color of ALL text in section */
+.dark section { color: #e2e8f0 !important; }
+.dark section p { color: #cbd5e1; }
+.dark section label { color: #cbd5e1 !important; }
+
+/* Dark: Modals */
+.dark .fixed.inset-0 { background: rgba(0,0,0,0.7) !important; }
+.dark section .bg-white.rounded-lg,
+.dark .bg-white.rounded-lg {
+  background: #1e293b !important;
+  border-color: #334155 !important;
+  color: #e2e8f0 !important;
+}
+
+/* Dark: Status badges */
+.dark section .bg-emerald-50 { background: rgba(16,185,129,0.15) !important; }
+.dark section .bg-amber-50\/30 { background: rgba(245,158,11,0.1) !important; }
+.dark section .bg-indigo-50\/50 { background: rgba(79,70,229,0.1) !important; }
+.dark section .bg-amber-50\/50 { background: rgba(245,158,11,0.1) !important; }
+
+/* Dark: Filter buttons */
+.dark section button.bg-white {
+  background: #1e293b !important;
+  border-color: #334155 !important;
+  color: #cbd5e1 !important;
+}
+
+/* Dark: Checkboxes */
+.dark section input[type="checkbox"] {
+  accent-color: #4f46e5;
+}
+
+/* Dark: Progress bars */
+.dark section .bg-indigo-100,
+.dark section .bg-slate-200 {
+  background: #334155 !important;
+}
+
+/* Dark: Mono/code text */
+.dark section .font-mono { color: #94a3b8 !important; }
+
+/* Dark: Onboarding box */
+.dark section .bg-indigo-50.rounded-lg {
+  background: rgba(79,70,229,0.12) !important;
+  border-color: rgba(79,70,229,0.25) !important;
+}
+
+/* Dark: Hover states */
+.dark section .hover\:bg-slate-50:hover { background: #1e293b !important; }
+.dark section .hover\:bg-red-50:hover { background: rgba(239,68,68,0.15) !important; }
+
+/* Dark: Text colors for colored text */
+.dark section .text-indigo-600 { color: #818cf8 !important; }
+.dark section .text-indigo-700 { color: #a5b4fc !important; }
+.dark section .text-emerald-700 { color: #6ee7b7 !important; }
+.dark section .text-amber-700 { color: #fcd34d !important; }
+.dark section .text-red-600 { color: #fca5a5 !important; }
+.dark section .text-purple-600 { color: #c4b5fd !important; }
+
+/* Dark: Avatar colors stay the same (they are bg-colored) */
+
+/* Dark: Scrollbar */
+.dark section::-webkit-scrollbar-thumb { background: #475569 !important; }
+.dark section::-webkit-scrollbar-track { background: #0f172a !important; }
+
+/* Dark: Empty state */
+.dark section .text-center .text-slate-300 { color: #475569 !important; }
+
+/* ============================================
+   TUTOR CARD UPGRADES
+   ============================================ */
+
+/* Tutor cards: cleaner look */
+section .grid > div[class*="border"] {
+  transition: box-shadow 0.15s, border-color 0.15s !important;
+}
+section .grid > div[class*="border"]:hover {
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06) !important;
+}
+.dark section .grid > div[class*="border"]:hover {
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3) !important;
+}
+
+/* Verified badge */
+section .verified-badge {
+  background: #4f46e5 !important;
+  color: #fff !important;
+  font-size: 9px !important;
+  padding: 1px 5px !important;
+  border-radius: 3px !important;
+  font-weight: 700 !important;
+}
+
+/* Subject tags */
+section span[class*="bg-indigo-50"][class*="text-indigo"] {
+  border-radius: 3px !important;
+}
+
+/* ============================================
+   PUBLIC PAGE PREMIUM STYLING
+   ============================================ */
+
+/* Smooth transitions for public buttons */
+div > section button,
+div > section a[style] {
+  transition: transform 0.15s, box-shadow 0.15s, opacity 0.15s !important;
+}
+div > section button:hover,
+div > section a[style]:hover {
+  transform: translateY(-1px);
+}
+
+/* Public hero search - no border-radius override needed (already 4px) */
+
+/* Public navbar height */
+nav[style] { backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+
+/* ============================================
+   MODAL STYLING
+   ============================================ */
+.dark .fixed .bg-white {
+  background: #1e293b !important;
+  color: #e2e8f0 !important;
+}
+.dark .fixed .bg-white h3 { color: #f1f5f9 !important; }
+.dark .fixed .bg-white label { color: #cbd5e1 !important; }
+.dark .fixed .bg-white input,
+.dark .fixed .bg-white textarea,
+.dark .fixed .bg-white select {
+  background: #0f172a !important;
+  border-color: #334155 !important;
+  color: #e2e8f0 !important;
+}
+.dark .fixed .bg-white .bg-slate-50,
+.dark .fixed .bg-white .bg-indigo-50\/50,
+.dark .fixed .bg-white .bg-amber-50\/50 {
+  background: rgba(255,255,255,0.04) !important;
+}
+
+/* ============================================
+   DARK MODE: TABLES (inline-styled)
+   ============================================ */
+.dark section table {
+  color: #e2e8f0 !important;
+}
+.dark section thead tr {
+  background: #1e293b !important;
+  border-bottom-color: #334155 !important;
+}
+.dark section thead th {
+  color: #64748b !important;
+  background: #1e293b !important;
+}
+.dark section tbody tr {
+  border-bottom-color: #1e293b !important;
+}
+.dark section tbody tr:hover {
+  background: #1e293b !important;
+}
+.dark section tbody td {
+  color: #cbd5e1 !important;
+}
+.dark section tbody td div {
+  color: #cbd5e1 !important;
+}
+.dark section tbody td span {
+  color: #94a3b8 !important;
+}
+.dark section tbody td a {
+  color: #818cf8 !important;
+}
+/* Keep status badge colors in dark */
+.dark section select[style] {
+  color: inherit;
+}
+/* Expanded rows */
+.dark section td[colspan] {
+  background: #0f172a !important;
+  border-bottom-color: #334155 !important;
+}
+.dark section td[colspan] span {
+  color: #94a3b8 !important;
+}
+.dark section td[colspan] div {
+  color: #cbd5e1 !important;
+}
+
+/* ── DARK: Sidebar aside ── */
+.dark aside { background: #1a1f2e !important; border-color: #334155 !important; }
+
+/* ── DARK: All hardcoded white bg containers ── */
+.dark section div[style*="background: #fff"],
+.dark section div[style*="background: rgb(255, 255, 255)"] {
+  background: #1e293b !important;
+}
+.dark section div[style*="background: #f8fafc"],
+.dark section div[style*="background: rgb(248, 250, 252)"] {
+  background: #0f172a !important;
+}
+.dark section div[style*="background: #f1f5f9"] {
+  background: #1e293b !important;
+}
+
+/* ── DARK: border overrides for inline styles ── */
+.dark section div[style*="border: 1px solid #e2e8f0"],
+.dark section div[style*="border-color: #e2e8f0"] {
+  border-color: #334155 !important;
+}
+.dark section div[style*="border-bottom: 1px solid #f1f5f9"] {
+  border-bottom-color: #1e293b !important;
+}
+
+/* ── DARK: text color overrides for inline styles ── */
+.dark section div[style*="color: #1e293b"],
+.dark section span[style*="color: #1e293b"],
+.dark section div[style*="color: #0f172a"],
+.dark section span[style*="color: #0f172a"] {
+  color: #f1f5f9 !important;
+}
+.dark section div[style*="color: #475569"],
+.dark section span[style*="color: #475569"],
+.dark section div[style*="color: #334155"],
+.dark section span[style*="color: #334155"] {
+  color: #cbd5e1 !important;
+}
+.dark section div[style*="color: #64748b"],
+.dark section span[style*="color: #64748b"] {
+  color: #94a3b8 !important;
+}

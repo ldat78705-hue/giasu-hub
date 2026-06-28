@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { MessageCircle, Send, Copy, Check, Phone, Bell, Users, Clock, Edit3 } from 'lucide-react';
 import { ParentRegistration, ClassMatch, TutorItem } from '../types';
 
@@ -89,7 +89,7 @@ export const ZaloNotifyTab: React.FC<ZaloNotifyTabProps> = ({ registrations, mat
   const zaloPhone = selectedReg?.phone || '0822448444';
 
   return (
-    <div className="col-span-12 space-y-5">
+    <div className="space-y-5">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
         <div>
           <h2 className="text-xl font-bold text-slate-800 flex items-center gap-2">
@@ -99,7 +99,7 @@ export const ZaloNotifyTab: React.FC<ZaloNotifyTabProps> = ({ registrations, mat
         </div>
         <div className="flex gap-2">
           <button onClick={() => { setUseManual(false); setSelectedReg(null); }}
-            className={`px-3 py-1.5 rounded-lg text-[11px] font-bold cursor-pointer border transition-all ${!useManual ? 'bg-blue-600 text-white border-blue-600' : 'bg-white text-slate-600 border-slate-200'}`}>
+            className={`px-3 py-1.5 rounded-lg text-[11px] font-bold cursor-pointer border transition-all ${!useManual ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-white text-slate-600 border-slate-200'}`}>
             <Users className="w-3 h-3 inline mr-1" /> Chọn PH
           </button>
           <button onClick={() => { setUseManual(true); setSelectedReg(null); }}
@@ -111,7 +111,7 @@ export const ZaloNotifyTab: React.FC<ZaloNotifyTabProps> = ({ registrations, mat
 
       {/* F46: Pending notifications for recent matches */}
       {recentMatches.length > 0 && (
-        <div className="bg-emerald-50 border border-emerald-200 rounded-2xl p-4">
+        <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-4">
           <h3 className="text-xs font-bold uppercase text-emerald-600 mb-2 flex items-center gap-1">
             <Send className="w-3 h-3" /> Ghép lớp gần đây — cần gửi tin ({recentMatches.length})
           </h3>
@@ -121,7 +121,7 @@ export const ZaloNotifyTab: React.FC<ZaloNotifyTabProps> = ({ registrations, mat
               const gsMsgPreview = `Chào ${m.tutorName}! Bạn đã được ghép lớp ${m.classSubject}. Học sinh: ${m.studentName || 'Chưa có'}. SĐT phụ huynh: ${m.parentPhone || 'Chưa có'}. Phí/buổi: ${new Intl.NumberFormat('vi-VN').format(m.fee)}đ. Truy cập giasu-dusky.vercel.app/cong-gia-su để xem chi tiết.`;
               const phMsgPreview = `Chào anh/chị! Trung tâm đã ghép gia sư ${m.tutorName} dạy ${m.classSubject} cho bé ${m.studentName || ''}. Gia sư sẽ liên hệ sớm. Mọi thắc mắc: 0822448444.`;
               return (
-                <div key={m.id} className="bg-white rounded-xl p-3 flex items-center justify-between gap-3">
+                <div key={m.id} className="bg-white rounded-lg p-3 flex items-center justify-between gap-3">
                   <div className="text-xs text-slate-700">
                     <span className="font-bold">{m.classSubject}</span> — Gia sư: {m.tutorName} · Học sinh: {m.studentName || 'Chưa có'}
                   </div>
@@ -131,7 +131,7 @@ export const ZaloNotifyTab: React.FC<ZaloNotifyTabProps> = ({ registrations, mat
                       {copiedId === 'gs-' + m.id ? '✓' : '📋'} Tin gia sư
                     </button>
                     <button onClick={() => { navigator.clipboard.writeText(phMsgPreview); setCopiedId('ph-' + m.id); setTimeout(() => setCopiedId(null), 2000); }}
-                      className={`px-2 py-1 rounded-lg text-[10px] font-bold cursor-pointer ${copiedId === 'ph-' + m.id ? 'bg-blue-100 text-blue-700' : 'bg-blue-600 text-white hover:bg-blue-700'}`}>
+                      className={`px-2 py-1 rounded-lg text-[10px] font-bold cursor-pointer ${copiedId === 'ph-' + m.id ? 'bg-indigo-100 text-indigo-700' : 'bg-indigo-600 text-white hover:bg-indigo-700'}`}>
                       {copiedId === 'ph-' + m.id ? '✓' : '📋'} Tin phụ huynh
                     </button>
                     {tutor?.phone && (
@@ -150,7 +150,7 @@ export const ZaloNotifyTab: React.FC<ZaloNotifyTabProps> = ({ registrations, mat
 
       {/* F51: Review reminders for matches > 30 days */}
       {needReviewReminder.length > 0 && (
-        <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4">
+        <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
           <h3 className="text-xs font-bold uppercase text-amber-600 mb-2 flex items-center gap-1">
             ⭐ Lớp &gt;30 ngày — nhắc phụ huynh đánh giá ({needReviewReminder.length})
           </h3>
@@ -160,7 +160,7 @@ export const ZaloNotifyTab: React.FC<ZaloNotifyTabProps> = ({ registrations, mat
               const msg = `Chào anh/chị! Bé ${m.studentName || ''} đã học với gia sư ${m.tutorName} được ${days} ngày. Anh/chị vui lòng đánh giá tại: giasu-dusky.vercel.app/tra-cuu (nhập số điện thoại). Ý kiến giúp chúng tôi phục vụ tốt hơn!`;
               return (
                 <button key={m.id} onClick={() => { navigator.clipboard.writeText(msg); setCopiedId('rv-' + m.id); setTimeout(() => setCopiedId(null), 2000); }}
-                  className={`px-3 py-2 rounded-xl text-[11px] font-bold cursor-pointer border transition-all ${copiedId === 'rv-' + m.id ? 'bg-amber-100 border-amber-400 text-amber-700' : 'bg-white border-amber-200 text-amber-700 hover:bg-amber-50'}`}>
+                  className={`px-3 py-2 rounded-lg text-[11px] font-bold cursor-pointer border transition-all ${copiedId === 'rv-' + m.id ? 'bg-amber-100 border-amber-400 text-amber-700' : 'bg-white border-amber-200 text-amber-700 hover:bg-amber-50'}`}>
                   {copiedId === 'rv-' + m.id ? '✓ Đã copy' : `${m.classSubject} — ${m.studentName || m.tutorName} (${days}d)`}
                 </button>
               );
@@ -171,15 +171,15 @@ export const ZaloNotifyTab: React.FC<ZaloNotifyTabProps> = ({ registrations, mat
 
       {/* Mode 1: Quick pick PH */}
       {!useManual && newRegs.length > 0 && (
-        <div className="bg-blue-50 border border-blue-200 rounded-2xl p-4">
-          <h3 className="text-xs font-bold uppercase text-blue-600 mb-2 flex items-center gap-1">
+        <div className="bg-indigo-50 border border-indigo-200 rounded-lg p-4">
+          <h3 className="text-xs font-bold uppercase text-indigo-600 mb-2 flex items-center gap-1">
             <Users className="w-3 h-3" /> Phụ huynh mới cần liên hệ ({newRegs.length})
           </h3>
           <div className="flex gap-2 flex-wrap">
             {newRegs.slice(0, 10).map(r => (
               <button key={r.id} onClick={() => setSelectedReg(r)}
                 className={`px-3 py-1.5 rounded-lg text-xs font-bold cursor-pointer border transition-all ${
-                  selectedReg?.id === r.id ? 'bg-blue-600 text-white border-blue-600' : 'bg-white text-slate-700 border-slate-200 hover:border-blue-300'
+                  selectedReg?.id === r.id ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-white text-slate-700 border-slate-200 hover:border-indigo-300'
                 }`}>
                 {r.parentName} · {r.phone}
               </button>
@@ -189,7 +189,7 @@ export const ZaloNotifyTab: React.FC<ZaloNotifyTabProps> = ({ registrations, mat
       )}
 
       {!useManual && selectedReg && (
-        <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-3 text-xs text-emerald-800 flex items-center gap-2">
+        <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-3 text-xs text-emerald-800 flex items-center gap-2">
           <Check className="w-4 h-4 text-emerald-600 shrink-0" />
           <span>Đang soạn cho: <strong>{selectedReg.parentName}</strong> ({selectedReg.phone}) · {selectedReg.subjects.join(', ')} · {selectedReg.district}</span>
           <button onClick={() => setSelectedReg(null)} className="ml-auto text-emerald-600 font-bold cursor-pointer hover:underline">Bỏ chọn</button>
@@ -198,7 +198,7 @@ export const ZaloNotifyTab: React.FC<ZaloNotifyTabProps> = ({ registrations, mat
 
       {/* Mode 2: Manual variables */}
       {useManual && (
-        <div className="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs">
+        <div className="bg-white rounded-lg border border-slate-200 p-5 shadow-xs">
           <h3 className="text-xs font-bold uppercase text-slate-400 mb-3 flex items-center gap-1">
             <Edit3 className="w-3 h-3" /> Điền biến (tự động thay thế trong tin nhắn)
           </h3>
@@ -218,7 +218,7 @@ export const ZaloNotifyTab: React.FC<ZaloNotifyTabProps> = ({ registrations, mat
               <div key={v.key}>
                 <label className="text-[10px] font-bold text-slate-500 uppercase">{v.label}</label>
                 <input value={manualVars[v.key] || ''} onChange={e => setManualVars(p => ({ ...p, [v.key]: e.target.value }))}
-                  className="w-full px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-xs outline-none focus:border-blue-500 mt-0.5" />
+                  className="w-full px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-xs outline-none focus:border-indigo-500 mt-0.5" />
               </div>
             ))}
           </div>
@@ -227,14 +227,14 @@ export const ZaloNotifyTab: React.FC<ZaloNotifyTabProps> = ({ registrations, mat
 
       {/* Extra vars when using PH picker mode */}
       {!useManual && selectedReg && (
-        <div className="bg-white rounded-2xl border border-slate-200 p-4 shadow-xs">
+        <div className="bg-white rounded-lg border border-slate-200 p-4 shadow-xs">
           <h3 className="text-[10px] font-bold uppercase text-slate-400 mb-2">Biến bổ sung (GS, học phí...)</h3>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             {[{ key: 'tutorName', label: 'Tên GS' }, { key: 'tutorCode', label: 'Mã GS' }, { key: 'amount', label: 'Số tiền' }, { key: 'deadline', label: 'Hạn TT' }].map(v => (
               <div key={v.key}>
                 <label className="text-[10px] font-bold text-slate-500 uppercase">{v.label}</label>
                 <input value={manualVars[v.key] || ''} onChange={e => setManualVars(p => ({ ...p, [v.key]: e.target.value }))}
-                  className="w-full px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-xs outline-none focus:border-blue-500 mt-0.5" />
+                  className="w-full px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-xs outline-none focus:border-indigo-500 mt-0.5" />
               </div>
             ))}
           </div>
@@ -246,7 +246,7 @@ export const ZaloNotifyTab: React.FC<ZaloNotifyTabProps> = ({ registrations, mat
         {templates.map(tmpl => {
           const filled = fillTemplate(tmpl.template);
           return (
-            <div key={tmpl.id} className="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs hover:border-green-200 transition-colors">
+            <div key={tmpl.id} className="bg-white rounded-lg border border-slate-200 p-5 shadow-xs hover:border-green-200 transition-colors">
               <div className="flex items-start justify-between gap-3">
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-1">
@@ -256,7 +256,7 @@ export const ZaloNotifyTab: React.FC<ZaloNotifyTabProps> = ({ registrations, mat
                   <div className="text-[10px] text-slate-400 mb-2 flex items-center gap-1">
                     <Clock className="w-2.5 h-2.5" /> {tmpl.trigger}
                   </div>
-                  <p className="text-xs text-slate-600 leading-relaxed bg-slate-50 p-3 rounded-xl border border-slate-100">{filled}</p>
+                  <p className="text-xs text-slate-600 leading-relaxed bg-slate-50 p-3 rounded-lg border border-slate-100">{filled}</p>
                 </div>
               </div>
               <div className="flex gap-2 mt-3 justify-end">
@@ -267,7 +267,7 @@ export const ZaloNotifyTab: React.FC<ZaloNotifyTabProps> = ({ registrations, mat
                   {copiedId === tmpl.id ? <><Check className="w-3 h-3" /> Đã copy</> : <><Copy className="w-3 h-3" /> Copy</>}
                 </button>
                 <a href={`https://zalo.me/${zaloPhone}`} target="_blank" rel="noopener noreferrer"
-                  className="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-[11px] font-bold flex items-center gap-1">
+                  className="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-[11px] font-bold flex items-center gap-1">
                   <Send className="w-3 h-3" /> Gửi Zalo
                 </a>
               </div>

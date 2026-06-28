@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { AttendanceRecord, ClassMatch } from '../types';
 import { ClipboardCheck, Plus, Search, Download, Calendar, CheckCircle2, XCircle, Clock } from 'lucide-react';
 
@@ -56,15 +56,15 @@ export const AttendanceTab: React.FC<AttendanceTabProps> = ({ attendance, matche
   };
 
   return (
-    <div className="col-span-12 space-y-5">
+    <div className="space-y-5">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
         <div>
-          <h2 className="text-xl font-bold text-slate-800 flex items-center gap-2"><ClipboardCheck className="w-5 h-5 text-emerald-600" /> Điểm danh buổi học</h2>
+          <h2 className="text-xl font-bold text-slate-800 flex items-center gap-2"><ClipboardCheck className="w-5 h-5 text-indigo-600" /> Điểm danh buổi học</h2>
           <p className="text-xs text-slate-500 mt-0.5">{attendance.length} buổi · Đã dạy: <span className="font-bold text-emerald-600">{totalTaught}</span> · Vắng: <span className="font-bold text-red-500">{totalMissed}</span></p>
         </div>
         <div className="flex gap-2">
-          <button onClick={exportCsv} className="px-3 py-2 bg-white border border-slate-200 hover:border-slate-300 rounded-xl text-xs font-bold text-slate-600 cursor-pointer flex items-center gap-1.5"><Download className="w-3.5 h-3.5" /> Export</button>
-          <button onClick={() => setShowAdd(true)} className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold cursor-pointer flex items-center gap-2 shadow-md shadow-emerald-600/20"><Plus className="w-4 h-4" /> Điểm danh</button>
+          <button onClick={exportCsv} className="px-3 py-2 bg-white border border-slate-200 hover:border-slate-300 rounded-lg text-xs font-bold text-slate-600 cursor-pointer flex items-center gap-1.5 transition-colors"><Download className="w-3.5 h-3.5" /> Export</button>
+          <button onClick={() => setShowAdd(true)} className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs font-bold cursor-pointer flex items-center gap-2 shadow-sm transition-colors"><Plus className="w-4 h-4" /> Điểm danh</button>
         </div>
       </div>
 
@@ -73,24 +73,24 @@ export const AttendanceTab: React.FC<AttendanceTabProps> = ({ attendance, matche
         <div className="relative flex-1 max-w-xs">
           <Search className="w-4 h-4 absolute left-3 top-2.5 text-slate-400" />
           <input type="text" value={searchTerm} onChange={e => setSearchTerm(e.target.value)} placeholder="Tìm GS, HS, mã lớp..."
-            className="w-full pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm outline-none focus:bg-white focus:border-blue-500" />
+            className="w-full pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm outline-none focus:bg-white focus:border-indigo-500 transition-colors" />
         </div>
         <div className="relative">
           <Calendar className="w-4 h-4 absolute left-3 top-2.5 text-slate-400" />
           <input type="date" value={dateFilter} onChange={e => setDateFilter(e.target.value)}
-            className="pl-9 pr-3 py-2 bg-white border border-slate-200 rounded-xl text-xs font-semibold text-slate-600 outline-none cursor-pointer" />
+            className="pl-9 pr-3 py-2 bg-white border border-slate-200 rounded-lg text-xs font-semibold text-slate-600 outline-none cursor-pointer focus:border-indigo-500 transition-colors" />
         </div>
-        {dateFilter && <button onClick={() => setDateFilter('')} className="px-3 py-2 bg-slate-200 text-slate-600 rounded-xl text-xs font-bold cursor-pointer">Xóa lọc</button>}
+        {dateFilter && <button onClick={() => setDateFilter('')} className="px-3 py-2 bg-slate-200 hover:bg-slate-300 text-slate-600 rounded-lg text-xs font-bold cursor-pointer transition-colors">Xóa lọc</button>}
       </div>
 
       {/* Table */}
       {filtered.length === 0 ? (
-        <div className="bg-white rounded-2xl border border-slate-200 p-10 text-center text-slate-400">
+        <div className="bg-white rounded-lg border border-slate-200 p-10 text-center text-slate-400 shadow-sm">
           <ClipboardCheck className="w-10 h-10 mx-auto mb-3 text-slate-300" />
           <p className="font-semibold text-sm">{attendance.length === 0 ? 'Chưa có bản ghi điểm danh' : 'Không tìm thấy'}</p>
         </div>
       ) : (
-        <div className="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-x-auto">
+        <div className="bg-white rounded-lg border border-slate-200/75 shadow-sm overflow-x-auto">
           <table className="w-full text-left">
             <thead>
               <tr className="text-[11px] uppercase tracking-widest text-slate-400 bg-slate-50 border-b border-slate-100">
@@ -128,30 +128,30 @@ export const AttendanceTab: React.FC<AttendanceTabProps> = ({ attendance, matche
       {/* Add Modal */}
       {showAdd && (
         <div className="fixed inset-0 z-50 modal-backdrop flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-200 animate-scale-in">
-            <h3 className="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2"><ClipboardCheck className="w-5 h-5 text-emerald-600" /> Điểm danh buổi học</h3>
+          <div className="bg-white rounded-lg max-w-md w-full p-6 shadow-2xl border border-slate-200/75 animate-scale-in">
+            <h3 className="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2"><ClipboardCheck className="w-5 h-5 text-indigo-600" /> Điểm danh buổi học</h3>
             {activeMatches.length === 0 ? (
               <p className="text-sm text-slate-500 py-6 text-center">Chưa có lớp nào đang dạy. Hãy ghép lớp trước.</p>
             ) : (
               <form onSubmit={handleCreate} className="space-y-3 text-sm">
                 <div>
-                  <label className="block text-xs font-bold uppercase text-slate-600 mb-1">Lớp đang dạy *</label>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1.5">Lớp đang dạy *</label>
                   <select required value={selMatch} onChange={e => setSelMatch(e.target.value)}
-                    className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-blue-500 text-sm">
+                    className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:border-indigo-500 text-sm transition-colors">
                     <option value="">-- Chọn lớp --</option>
                     {activeMatches.map(m => <option key={m.id} value={m.id}>{m.classCode} · {m.tutorName} → {m.studentName || 'Chưa có'}</option>)}
                   </select>
                 </div>
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-xs font-bold uppercase text-slate-600 mb-1">Ngày *</label>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1.5">Ngày *</label>
                     <input required type="date" value={date} onChange={e => setDate(e.target.value)}
-                      className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-blue-500" />
+                      className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:border-indigo-500 transition-colors" />
                   </div>
                   <div>
-                    <label className="block text-xs font-bold uppercase text-slate-600 mb-1">Trạng thái *</label>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1.5">Trạng thái *</label>
                     <select value={status} onChange={e => setStatus(e.target.value as any)}
-                      className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-blue-500 text-sm">
+                      className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:border-indigo-500 text-sm transition-colors">
                       <option value="Đã dạy">✅ Đã dạy</option>
                       <option value="Nghỉ GS">📵 Nghỉ GS</option>
                       <option value="Nghỉ HS">🏠 Nghỉ HS</option>
@@ -160,20 +160,20 @@ export const AttendanceTab: React.FC<AttendanceTabProps> = ({ attendance, matche
                   </div>
                 </div>
                 <div>
-                  <label className="block text-xs font-bold uppercase text-slate-600 mb-1">Ghi chú</label>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1.5">Ghi chú</label>
                   <input value={note} onChange={e => setNote(e.target.value)} placeholder="Ví dụ: Học sinh vắng do ốm"
-                    className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-blue-500" />
+                    className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:border-indigo-500 transition-colors" />
                 </div>
                 <div>
-                  <label className="block text-xs font-bold uppercase text-purple-600 mb-1">📝 Nhận xét của gia sư (phụ huynh sẽ thấy khi tra cứu)</label>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-purple-600 mb-1.5">📝 Nhận xét của gia sư (phụ huynh sẽ thấy khi tra cứu)</label>
                   <textarea value={tutorFeedback} onChange={e => setTutorFeedback(e.target.value)}
                     placeholder="Ví dụ: Bé tiếp thu tốt, cần ôn thêm phần phân số..."
                     rows={2}
-                    className="w-full px-3 py-2.5 bg-purple-50 border border-purple-200 rounded-xl outline-none focus:border-purple-500 text-sm" />
+                    className="w-full px-3 py-2.5 bg-purple-50 border border-purple-200 rounded-lg outline-none focus:border-purple-500 text-sm transition-colors" />
                 </div>
                 <div className="flex justify-end gap-3 pt-2">
-                  <button type="button" onClick={() => setShowAdd(false)} className="px-4 py-2 border border-slate-200 rounded-xl text-xs font-bold text-slate-600 cursor-pointer">Hủy</button>
-                  <button type="submit" className="px-5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold cursor-pointer">Lưu</button>
+                  <button type="button" onClick={() => setShowAdd(false)} className="px-4 py-2 border border-slate-200 rounded-lg text-xs font-bold text-slate-600 hover:bg-slate-100 cursor-pointer transition-colors">Hủy</button>
+                  <button type="submit" className="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs font-bold cursor-pointer shadow-sm transition-colors">Lưu</button>
                 </div>
               </form>
             )}

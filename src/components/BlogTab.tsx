@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { FileText, Plus, Eye, Edit3, Trash2, Search, Globe, Sparkles, ShieldCheck, Zap, CheckCircle } from 'lucide-react';
 
 interface BlogPost {
@@ -73,7 +73,7 @@ export const BlogTab: React.FC<BlogTabProps> = ({ onRunAiSeo }) => {
   };
 
   return (
-    <div className="col-span-12 space-y-5">
+    <div className="space-y-5">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
         <div>
           <h2 className="text-xl font-bold text-slate-800 flex items-center gap-2"><Globe className="w-5 h-5 text-green-600" /> Blog & SEO</h2>
@@ -81,15 +81,15 @@ export const BlogTab: React.FC<BlogTabProps> = ({ onRunAiSeo }) => {
         </div>
         <div className="flex gap-2">
           <button onClick={() => setActiveView('posts')}
-            className={`px-4 py-2 rounded-xl text-xs font-bold cursor-pointer border transition-all ${activeView === 'posts' ? 'bg-green-600 text-white border-green-600' : 'bg-white text-slate-600 border-slate-200'}`}>
+            className={`px-4 py-2 rounded-lg text-xs font-bold cursor-pointer border transition-all ${activeView === 'posts' ? 'bg-green-600 text-white border-green-600' : 'bg-white text-slate-600 border-slate-200'}`}>
             <FileText className="w-3.5 h-3.5 inline mr-1" /> Bài viết
           </button>
           <button onClick={() => setActiveView('seo')}
-            className={`px-4 py-2 rounded-xl text-xs font-bold cursor-pointer border transition-all ${activeView === 'seo' ? 'bg-blue-600 text-white border-blue-600' : 'bg-white text-slate-600 border-slate-200'}`}>
+            className={`px-4 py-2 rounded-lg text-xs font-bold cursor-pointer border transition-all ${activeView === 'seo' ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-white text-slate-600 border-slate-200'}`}>
             <Sparkles className="w-3.5 h-3.5 inline mr-1" /> SEO AI
           </button>
           {activeView === 'posts' && (
-            <button onClick={() => setShowEditor(true)} className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-xl text-xs font-bold cursor-pointer flex items-center gap-2 shadow-md shadow-green-600/20"><Plus className="w-4 h-4" /> Bài mới</button>
+            <button onClick={() => setShowEditor(true)} className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg text-xs font-bold cursor-pointer flex items-center gap-2 shadow-md shadow-green-600/20"><Plus className="w-4 h-4" /> Bài mới</button>
           )}
         </div>
       </div>
@@ -100,12 +100,12 @@ export const BlogTab: React.FC<BlogTabProps> = ({ onRunAiSeo }) => {
           <div className="relative max-w-sm">
             <Search className="w-4 h-4 absolute left-3 top-2.5 text-slate-400" />
             <input type="text" value={searchTerm} onChange={e => setSearchTerm(e.target.value)} placeholder="Tìm bài viết..."
-              className="w-full pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm outline-none focus:bg-white focus:border-blue-500" />
+              className="w-full pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm outline-none focus:bg-white focus:border-indigo-500" />
           </div>
 
           <div className="space-y-3">
             {filtered.map(post => (
-              <div key={post.id} className="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs hover:border-green-200 transition-colors">
+              <div key={post.id} className="bg-white rounded-lg border border-slate-200 p-5 shadow-xs hover:border-green-200 transition-colors">
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-1">
@@ -113,14 +113,14 @@ export const BlogTab: React.FC<BlogTabProps> = ({ onRunAiSeo }) => {
                       <span className={`px-2 py-0.5 rounded text-[9px] font-bold ${post.status === 'published' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'}`}>
                         {post.status === 'published' ? '✅ Xuất bản' : '📝 Nháp'}
                       </span>
-                      <span className="px-2 py-0.5 bg-blue-50 text-blue-600 rounded text-[9px] font-bold">{post.category}</span>
+                      <span className="px-2 py-0.5 bg-indigo-50 text-indigo-600 rounded text-[9px] font-bold">{post.category}</span>
                     </div>
                     <p className="text-xs text-slate-500 mb-1">{post.excerpt}</p>
                     <p className="text-[10px] text-slate-400">/{post.slug} · {new Date(post.createdAt).toLocaleDateString('vi-VN')}</p>
                   </div>
                   <div className="flex gap-1 shrink-0">
                     <button onClick={() => togglePublish(post.id)} className="p-2 hover:bg-emerald-50 text-slate-400 hover:text-emerald-600 rounded-lg cursor-pointer" title={post.status === 'published' ? 'Ẩn' : 'Xuất bản'}><Eye className="w-3.5 h-3.5" /></button>
-                    <button onClick={() => openEdit(post)} className="p-2 hover:bg-blue-50 text-slate-400 hover:text-blue-600 rounded-lg cursor-pointer"><Edit3 className="w-3.5 h-3.5" /></button>
+                    <button onClick={() => openEdit(post)} className="p-2 hover:bg-indigo-50 text-slate-400 hover:text-indigo-600 rounded-lg cursor-pointer"><Edit3 className="w-3.5 h-3.5" /></button>
                     <button onClick={() => window.confirm('Xóa bài viết?') && setPosts(posts.filter(p => p.id !== post.id))} className="p-2 hover:bg-red-50 text-slate-400 hover:text-red-600 rounded-lg cursor-pointer"><Trash2 className="w-3.5 h-3.5" /></button>
                   </div>
                 </div>
@@ -133,7 +133,7 @@ export const BlogTab: React.FC<BlogTabProps> = ({ onRunAiSeo }) => {
       {/* ===== SEO AI VIEW ===== */}
       {activeView === 'seo' && (
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-          <div className="lg:col-span-5 bg-white rounded-2xl border border-slate-200 shadow-xs p-6 space-y-6">
+          <div className="lg:col-span-5 bg-white rounded-lg border border-slate-200 shadow-xs p-6 space-y-6">
             <div className="border-b border-slate-100 pb-4">
               <h3 className="text-lg font-bold text-slate-800 flex items-center gap-2">
                 <Sparkles className="w-5 h-5 text-amber-500" /> AI Tối ưu SEO
@@ -145,15 +145,15 @@ export const BlogTab: React.FC<BlogTabProps> = ({ onRunAiSeo }) => {
                 <label className="block text-xs font-bold uppercase text-slate-600 mb-1">Chủ đề trang / Chiến dịch SEO</label>
                 <input type="text" required placeholder="Ví dụ: Luyện thi IELTS cấp tốc tại Quận 7" value={seoTopic}
                   onChange={e => setSeoTopic(e.target.value)}
-                  className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:bg-white focus:border-blue-500 text-sm" />
+                  className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:bg-white focus:border-indigo-500 text-sm" />
               </div>
               <button type="submit" disabled={seoLoading || !onRunAiSeo}
-                className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50">
+                className="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs font-bold shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50">
                 <Sparkles className={`w-4 h-4 ${seoLoading ? 'animate-spin' : ''}`} />
                 {seoLoading ? 'Gemini AI đang phân tích...' : onRunAiSeo ? 'Kích hoạt AI' : 'Chưa cấu hình API Key'}
               </button>
             </form>
-            <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-3 text-xs">
+            <div className="bg-slate-50 p-4 rounded-lg border border-slate-200 space-y-3 text-xs">
               <div className="font-bold text-slate-700 flex items-center gap-1.5">
                 <ShieldCheck className="w-4 h-4 text-emerald-600" /> Sitemap.xml & Structured Data
               </div>
@@ -161,13 +161,13 @@ export const BlogTab: React.FC<BlogTabProps> = ({ onRunAiSeo }) => {
             </div>
           </div>
 
-          <div className="lg:col-span-7 bg-white rounded-2xl border border-slate-200 shadow-xs p-6 space-y-6">
+          <div className="lg:col-span-7 bg-white rounded-lg border border-slate-200 shadow-xs p-6 space-y-6">
             <h3 className="font-bold text-slate-800 text-base flex items-center gap-2">
-              <Globe className="w-5 h-5 text-blue-600" /> Google SERP Preview
+              <Globe className="w-5 h-5 text-indigo-600" /> Google SERP Preview
             </h3>
             {seoResult && (
               <>
-                <div className="p-6 rounded-2xl border border-slate-200 bg-slate-50/50 space-y-2 max-w-xl">
+                <div className="p-6 rounded-lg border border-slate-200 bg-slate-50/50 space-y-2 max-w-xl">
                   <div className="flex items-center gap-2 text-xs text-slate-600">
                     <span className="w-6 h-6 bg-slate-200 rounded-full flex items-center justify-center text-[10px] font-bold">G</span>
                     <span className="truncate">giasu-thanhdat.vercel.app › tim-gia-su-ha-noi</span>
@@ -180,7 +180,7 @@ export const BlogTab: React.FC<BlogTabProps> = ({ onRunAiSeo }) => {
                     <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Top Keywords</h4>
                     <div className="flex flex-wrap gap-2">
                       {seoResult.topKeywords.map((kw, i) => (
-                        <span key={i} className="px-3 py-1 bg-blue-50 text-blue-700 rounded-lg text-xs font-semibold border border-blue-100 flex items-center gap-1">
+                        <span key={i} className="px-3 py-1 bg-indigo-50 text-indigo-700 rounded-lg text-xs font-semibold border border-indigo-100 flex items-center gap-1">
                           <Zap className="w-3 h-3 text-amber-500" /> {kw}
                         </span>
                       ))}
@@ -206,19 +206,19 @@ export const BlogTab: React.FC<BlogTabProps> = ({ onRunAiSeo }) => {
       {/* Editor Modal */}
       {showEditor && (
         <div className="fixed inset-0 z-50 modal-backdrop flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl max-w-2xl w-full p-6 shadow-2xl border border-slate-200 animate-scale-in max-h-[90vh] overflow-y-auto">
+          <div className="bg-white rounded-lg max-w-2xl w-full p-6 shadow-2xl border border-slate-200 animate-scale-in max-h-[90vh] overflow-y-auto">
             <h3 className="text-lg font-bold text-slate-800 mb-4">{editPost ? 'Sửa bài viết' : 'Bài viết mới'}</h3>
             <div className="space-y-3 text-sm">
               <div>
                 <label className="block text-xs font-bold uppercase text-slate-600 mb-1">Tiêu đề *</label>
                 <input value={title} onChange={e => setTitle(e.target.value)} placeholder="Ví dụ: Cách chọn gia sư Toán giỏi..."
-                  className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-blue-500" />
+                  className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:border-indigo-500" />
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label className="block text-xs font-bold uppercase text-slate-600 mb-1">Danh mục</label>
                   <select value={category} onChange={e => setCategory(e.target.value)}
-                    className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-blue-500">
+                    className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:border-indigo-500">
                     <option>Tư vấn</option><option>Giáo dục</option><option>Chia sẻ</option><option>Tin tức</option>
                   </select>
                 </div>
@@ -226,16 +226,16 @@ export const BlogTab: React.FC<BlogTabProps> = ({ onRunAiSeo }) => {
               <div>
                 <label className="block text-xs font-bold uppercase text-slate-600 mb-1">Tóm tắt (SEO)</label>
                 <input value={excerpt} onChange={e => setExcerpt(e.target.value)} placeholder="Mô tả ngắn cho Google..."
-                  className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-blue-500" />
+                  className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:border-indigo-500" />
               </div>
               <div>
                 <label className="block text-xs font-bold uppercase text-slate-600 mb-1">Nội dung</label>
                 <textarea rows={10} value={content} onChange={e => setContent(e.target.value)} placeholder="Viết nội dung bài viết..."
-                  className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-blue-500 resize-none" />
+                  className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:border-indigo-500 resize-none" />
               </div>
               <div className="flex justify-end gap-3 pt-2">
-                <button onClick={closeEditor} className="px-4 py-2 border border-slate-200 rounded-xl text-xs font-bold text-slate-600 cursor-pointer">Hủy</button>
-                <button onClick={handleSave} className="px-5 py-2 bg-green-600 hover:bg-green-700 text-white rounded-xl text-xs font-bold cursor-pointer">Lưu bài viết</button>
+                <button onClick={closeEditor} className="px-4 py-2 border border-slate-200 rounded-lg text-xs font-bold text-slate-600 cursor-pointer">Hủy</button>
+                <button onClick={handleSave} className="px-5 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg text-xs font-bold cursor-pointer">Lưu bài viết</button>
               </div>
             </div>
           </div>

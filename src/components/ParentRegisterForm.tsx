@@ -16,7 +16,7 @@ const MODES = [
   { value: 'Cả hai' as const, icon: '🔄', label: 'Cả hai' },
 ];
 
-const inp: React.CSSProperties = { width: '100%', padding: '10px 14px', border: '1px solid #e2e8f0', borderRadius: 8, fontSize: 14, outline: 'none', background: '#f8fafc' };
+const inp: React.CSSProperties = { width: '100%', padding: '10px 14px', border: '1px solid #e2e8f0', borderRadius: 4, fontSize: 14, outline: 'none', background: '#f8fafc' };
 const lbl: React.CSSProperties = { display: 'block', fontSize: 12, fontWeight: 600, color: '#475569', marginBottom: 4 };
 
 export const ParentRegisterForm: React.FC<ParentRegisterFormProps> = ({ onSubmit, zaloNumber, wards }) => {
@@ -55,13 +55,13 @@ export const ParentRegisterForm: React.FC<ParentRegisterFormProps> = ({ onSubmit
   if (success) {
     return (
       <div style={{ paddingBottom: 80 }}>
-        <div style={{ background: '#fff', border: '1px solid #d1fae5', borderRadius: 12, padding: '40px 24px', textAlign: 'center' }}>
+        <div style={{ background: '#fff', border: '1px solid #d1fae5', borderRadius: 4, padding: '40px 24px', textAlign: 'center' }}>
           <CheckCircle2 size={48} color="#22c55e" style={{ margin: '0 auto 12px', display: 'block' }} />
           <h2 style={{ fontSize: 20, fontWeight: 700, color: '#0f172a', marginBottom: 8 }}>Đăng ký thành công!</h2>
           <p style={{ fontSize: 14, color: '#64748b', marginBottom: 20 }}>Trung tâm sẽ liên hệ trong <b>30 phút</b> để tư vấn và sắp xếp gia sư phù hợp.</p>
           {zaloNumber && (
             <a href={`https://zalo.me/${zaloNumber}`} target="_blank" rel="noopener noreferrer"
-              style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '10px 20px', background: '#2563eb', color: '#fff', borderRadius: 8, fontSize: 14, fontWeight: 600, textDecoration: 'none' }}>
+              style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '10px 20px', background: '#4f46e5', color: '#fff', borderRadius: 4, fontSize: 14, fontWeight: 600, textDecoration: 'none' }}>
               <Phone size={16} /> Liên hệ Zalo ngay
             </a>
           )}
@@ -74,14 +74,14 @@ export const ParentRegisterForm: React.FC<ParentRegisterFormProps> = ({ onSubmit
     <div style={{ paddingBottom: 80 }}>
       {/* Header */}
       <div style={{ textAlign: 'center', marginBottom: 24 }}>
-        <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: '#f0fdf4', color: '#16a34a', padding: '4px 14px', borderRadius: 20, fontSize: 12, fontWeight: 600, marginBottom: 12 }}>
+        <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: '#f0fdf4', color: '#16a34a', padding: '4px 14px', borderRadius: 4, fontSize: 12, fontWeight: 600, marginBottom: 12 }}>
           <BookOpen size={14} /> Dành cho phụ huynh
         </div>
         <h1 style={{ fontSize: 'clamp(22px, 4vw, 28px)', fontWeight: 800, color: '#0f172a', marginBottom: 6 }}>Đăng ký tìm gia sư</h1>
         <p style={{ fontSize: 14, color: '#64748b' }}>Miễn phí · Tư vấn trong 30 phút · Học thử 1-2 buổi</p>
       </div>
 
-      <form onSubmit={handleSubmit} style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 12, padding: 24 }}>
+      <form onSubmit={handleSubmit} style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 4, padding: 24 }}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
           {/* PH info */}
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
@@ -105,7 +105,7 @@ export const ParentRegisterForm: React.FC<ParentRegisterFormProps> = ({ onSubmit
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
               {SUBJECTS.map(sub => (
                 <button key={sub} type="button" onClick={() => toggleSubject(sub)}
-                  style={{ padding: '5px 12px', borderRadius: 16, fontSize: 12, fontWeight: 500, cursor: 'pointer', border: '1px solid', background: selectedSubjects.includes(sub) ? '#2563eb' : '#fff', color: selectedSubjects.includes(sub) ? '#fff' : '#475569', borderColor: selectedSubjects.includes(sub) ? '#2563eb' : '#e2e8f0' }}>
+                  style={{ padding: '5px 12px', borderRadius: 4, fontSize: 12, fontWeight: 500, cursor: 'pointer', border: '1px solid', background: selectedSubjects.includes(sub) ? '#4f46e5' : '#fff', color: selectedSubjects.includes(sub) ? '#fff' : '#475569', borderColor: selectedSubjects.includes(sub) ? '#4f46e5' : '#e2e8f0' }}>
                   {sub}
                 </button>
               ))}
@@ -118,7 +118,7 @@ export const ParentRegisterForm: React.FC<ParentRegisterFormProps> = ({ onSubmit
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 8 }}>
               {MODES.map(m => (
                 <button key={m.value} type="button" onClick={() => setMode(m.value)}
-                  style={{ padding: '10px 8px', borderRadius: 8, border: '1px solid', cursor: 'pointer', textAlign: 'center', fontSize: 12, fontWeight: 600, background: mode === m.value ? '#eff6ff' : '#fff', borderColor: mode === m.value ? '#2563eb' : '#e2e8f0', color: mode === m.value ? '#2563eb' : '#475569' }}>
+                  style={{ padding: '10px 8px', borderRadius: 4, border: '1px solid', cursor: 'pointer', textAlign: 'center', fontSize: 12, fontWeight: 600, background: mode === m.value ? '#eef2ff' : '#fff', borderColor: mode === m.value ? '#4f46e5' : '#e2e8f0', color: mode === m.value ? '#4f46e5' : '#475569' }}>
                   <div style={{ fontSize: 18, marginBottom: 2 }}>{m.icon}</div>
                   {m.label}
                 </button>
@@ -131,17 +131,17 @@ export const ParentRegisterForm: React.FC<ParentRegisterFormProps> = ({ onSubmit
             <div>
               <label style={lbl}>Khu vực (chọn xã/phường)</label>
               <input value={wardSearch} onChange={e => setWardSearch(e.target.value)} placeholder="Tìm xã/phường..." style={{ ...inp, marginBottom: 6 }} />
-              <div style={{ maxHeight: 120, overflowY: 'auto', border: '1px solid #e2e8f0', borderRadius: 8, padding: 6 }}>
+              <div style={{ maxHeight: 120, overflowY: 'auto', border: '1px solid #e2e8f0', borderRadius: 4, padding: 6 }}>
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
                   {filteredWards.slice(0, 30).map(w => (
                     <button key={w} type="button" onClick={() => setDistrict(w)}
-                      style={{ padding: '3px 10px', borderRadius: 12, fontSize: 11, fontWeight: 500, cursor: 'pointer', border: '1px solid', background: district === w ? '#2563eb' : '#fff', color: district === w ? '#fff' : '#475569', borderColor: district === w ? '#2563eb' : '#e2e8f0' }}>
+                      style={{ padding: '3px 10px', borderRadius: 4, fontSize: 11, fontWeight: 500, cursor: 'pointer', border: '1px solid', background: district === w ? '#4f46e5' : '#fff', color: district === w ? '#fff' : '#475569', borderColor: district === w ? '#4f46e5' : '#e2e8f0' }}>
                       {w}
                     </button>
                   ))}
                 </div>
               </div>
-              {district && <div style={{ fontSize: 11, color: '#2563eb', fontWeight: 600, marginTop: 4 }}>Đã chọn: {district}</div>}
+              {district && <div style={{ fontSize: 11, color: '#4f46e5', fontWeight: 600, marginTop: 4 }}>Đã chọn: {district}</div>}
             </div>
           )}
 
@@ -172,13 +172,13 @@ export const ParentRegisterForm: React.FC<ParentRegisterFormProps> = ({ onSubmit
         </div>
 
         <button type="submit" disabled={isSubmitting}
-          style={{ marginTop: 20, width: '100%', padding: '14px 0', background: '#2563eb', color: '#fff', border: 'none', borderRadius: 8, fontSize: 15, fontWeight: 600, cursor: isSubmitting ? 'wait' : 'pointer', opacity: isSubmitting ? 0.7 : 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
+          style={{ marginTop: 20, width: '100%', padding: '14px 0', background: '#4f46e5', color: '#fff', border: 'none', borderRadius: 4, fontSize: 15, fontWeight: 600, cursor: isSubmitting ? 'wait' : 'pointer', opacity: isSubmitting ? 0.7 : 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
           <Send size={16} /> {isSubmitting ? 'Đang gửi...' : 'Đăng ký tìm gia sư'}
         </button>
 
         {zaloNumber && (
           <div style={{ textAlign: 'center', marginTop: 16, fontSize: 13, color: '#64748b' }}>
-            Hoặc liên hệ trực tiếp: <a href={`tel:${zaloNumber}`} style={{ fontWeight: 700, color: '#2563eb', textDecoration: 'none' }}>{zaloNumber}</a>
+            Hoặc liên hệ trực tiếp: <a href={`tel:${zaloNumber}`} style={{ fontWeight: 700, color: '#4f46e5', textDecoration: 'none' }}>{zaloNumber}</a>
           </div>
         )}
       </form>

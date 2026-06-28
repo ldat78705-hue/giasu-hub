@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { ClassApplication, TutorBooking } from '../types';
 import { ClipboardList, CheckCircle2, XCircle, Clock, UserCheck, BookOpen, Phone, MessageSquare, Filter, ChevronDown, Search } from 'lucide-react';
 
@@ -55,7 +55,7 @@ export const ApplicationsTab: React.FC<ApplicationsTabProps> = ({
   };
 
   return (
-    <div className="col-span-12 space-y-6 animate-fade-in">
+    <div className="space-y-6 animate-fade-in">
       {/* Header */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
@@ -72,7 +72,7 @@ export const ApplicationsTab: React.FC<ApplicationsTabProps> = ({
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="pl-8 pr-8 py-2 bg-white border border-slate-200 rounded-xl text-xs font-semibold text-slate-700 cursor-pointer appearance-none outline-none focus:border-blue-500"
+            className="pl-8 pr-8 py-2 bg-white border border-slate-200 rounded-lg text-xs font-semibold text-slate-700 cursor-pointer appearance-none outline-none focus:border-indigo-500 transition-colors"
           >
             <option value="all">Tất cả trạng thái</option>
             <option value="Chờ duyệt">Chờ duyệt</option>
@@ -89,18 +89,18 @@ export const ApplicationsTab: React.FC<ApplicationsTabProps> = ({
             <Search className="w-3.5 h-3.5 absolute left-2.5 top-2.5 text-slate-400" />
             <input type="text" value={searchTerm} onChange={e => setSearchTerm(e.target.value)}
               placeholder="Tìm GS, PH, môn..."
-              className="pl-8 pr-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs outline-none focus:bg-white focus:border-blue-500 w-40" />
+              className="pl-8 pr-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs outline-none focus:bg-white focus:border-indigo-500 w-40 transition-colors" />
           </div>
         </div>
       </div>
 
       {/* Sub-tab Toggle */}
-      <div className="flex items-center gap-2 bg-slate-100 p-1 rounded-xl w-fit">
+      <div className="flex items-center gap-2 bg-slate-100 p-1 rounded-lg w-fit">
         <button
           onClick={() => { setActiveSubTab('applications'); setStatusFilter('all'); }}
           className={`px-5 py-2 rounded-lg text-xs font-bold transition-all flex items-center gap-2 cursor-pointer ${
             activeSubTab === 'applications'
-              ? 'bg-white text-blue-700 shadow-sm border border-slate-200'
+              ? 'bg-white text-indigo-700 shadow-sm border border-slate-200'
               : 'text-slate-500 hover:text-slate-700'
           }`}
         >
@@ -116,14 +116,14 @@ export const ApplicationsTab: React.FC<ApplicationsTabProps> = ({
           onClick={() => { setActiveSubTab('bookings'); setStatusFilter('all'); }}
           className={`px-5 py-2 rounded-lg text-xs font-bold transition-all flex items-center gap-2 cursor-pointer ${
             activeSubTab === 'bookings'
-              ? 'bg-white text-blue-700 shadow-sm border border-slate-200'
+              ? 'bg-white text-indigo-700 shadow-sm border border-slate-200'
               : 'text-slate-500 hover:text-slate-700'
           }`}
         >
           <BookOpen className="w-3.5 h-3.5" />
           <span>PH thuê GS</span>
           {pendingBookings > 0 && (
-            <span className="px-1.5 py-0.5 bg-blue-500 text-white rounded-full text-[10px] font-bold min-w-[18px] text-center">
+            <span className="px-1.5 py-0.5 bg-indigo-500 text-white rounded-full text-[10px] font-bold min-w-[18px] text-center">
               {pendingBookings}
             </span>
           )}
@@ -132,7 +132,7 @@ export const ApplicationsTab: React.FC<ApplicationsTabProps> = ({
 
       {/* Applications Tab */}
       {activeSubTab === 'applications' && (
-        <div className="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
+        <div className="bg-white rounded-lg border border-slate-200/75 shadow-sm overflow-hidden">
           {filteredApps.length === 0 ? (
             <div className="p-12 text-center text-slate-400">
               <ClipboardList className="w-10 h-10 mx-auto mb-3 text-slate-300" />
@@ -166,12 +166,12 @@ export const ApplicationsTab: React.FC<ApplicationsTabProps> = ({
                       </td>
                       <td className="px-6 py-4">
                         <div className="text-xs">
-                          <span className="font-mono font-bold text-blue-600">{app.classCode}</span>
+                          <span className="font-mono font-bold text-indigo-600">{app.classCode}</span>
                           <p className="text-slate-500 mt-0.5">{app.classSubject}</p>
                         </div>
                       </td>
                       <td className="px-6 py-4">
-                        <a href={`tel:${app.tutorPhone}`} className="text-xs text-blue-600 font-mono font-semibold hover:underline flex items-center gap-1">
+                        <a href={`tel:${app.tutorPhone}`} className="text-xs text-indigo-600 font-mono font-semibold hover:underline flex items-center gap-1">
                           <Phone className="w-3 h-3" />
                           {app.tutorPhone}
                         </a>
@@ -224,7 +224,7 @@ export const ApplicationsTab: React.FC<ApplicationsTabProps> = ({
 
       {/* Bookings Tab */}
       {activeSubTab === 'bookings' && (
-        <div className="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
+        <div className="bg-white rounded-lg border border-slate-200/75 shadow-sm overflow-hidden">
           {filteredBookings.length === 0 ? (
             <div className="p-12 text-center text-slate-400">
               <BookOpen className="w-10 h-10 mx-auto mb-3 text-slate-300" />
@@ -250,7 +250,7 @@ export const ApplicationsTab: React.FC<ApplicationsTabProps> = ({
                     <tr key={bk.id} className="border-b border-slate-100 hover:bg-slate-50/50 transition-colors">
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-2.5">
-                          <div className="w-8 h-8 bg-blue-100 text-blue-700 rounded-lg flex items-center justify-center text-xs font-bold">
+                          <div className="w-8 h-8 bg-indigo-100 text-indigo-700 rounded-lg flex items-center justify-center text-xs font-bold">
                             {bk.parentName.slice(0, 2).toUpperCase()}
                           </div>
                           <span className="font-semibold text-slate-800 text-sm">{bk.parentName}</span>
@@ -258,12 +258,12 @@ export const ApplicationsTab: React.FC<ApplicationsTabProps> = ({
                       </td>
                       <td className="px-6 py-4">
                         <div className="text-xs">
-                          <span className="font-mono font-bold text-purple-600">{bk.tutorCode}</span>
+                          <span className="font-mono font-bold text-indigo-600">{bk.tutorCode}</span>
                           <p className="text-slate-500 mt-0.5">{bk.tutorName}</p>
                         </div>
                       </td>
                       <td className="px-6 py-4">
-                        <a href={`tel:${bk.parentPhone}`} className="text-xs text-blue-600 font-mono font-semibold hover:underline flex items-center gap-1">
+                        <a href={`tel:${bk.parentPhone}`} className="text-xs text-indigo-600 font-mono font-semibold hover:underline flex items-center gap-1">
                           <Phone className="w-3 h-3" />
                           {bk.parentPhone}
                         </a>
@@ -316,26 +316,26 @@ export const ApplicationsTab: React.FC<ApplicationsTabProps> = ({
 
       {/* Summary Cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-white rounded-xl border border-slate-200 p-4 shadow-xs">
+        <div className="bg-white rounded-lg border border-slate-200/75 p-4 shadow-sm">
           <div className="text-[10px] font-bold uppercase text-slate-400 tracking-wider">Đơn ứng tuyển</div>
           <div className="text-2xl font-bold text-slate-800 mt-1">{applications.length}</div>
           <div className="text-[10px] text-amber-600 font-semibold mt-0.5">{pendingApps} chờ duyệt</div>
         </div>
-        <div className="bg-white rounded-xl border border-slate-200 p-4 shadow-xs">
+        <div className="bg-white rounded-lg border border-slate-200/75 p-4 shadow-sm">
           <div className="text-[10px] font-bold uppercase text-slate-400 tracking-wider">Yêu cầu thuê GS</div>
           <div className="text-2xl font-bold text-slate-800 mt-1">{bookings.length}</div>
-          <div className="text-[10px] text-blue-600 font-semibold mt-0.5">{pendingBookings} chờ xử lý</div>
+          <div className="text-[10px] text-indigo-600 font-semibold mt-0.5">{pendingBookings} chờ xử lý</div>
         </div>
-        <div className="bg-white rounded-xl border border-slate-200 p-4 shadow-xs">
+        <div className="bg-white rounded-lg border border-slate-200/75 p-4 shadow-sm">
           <div className="text-[10px] font-bold uppercase text-slate-400 tracking-wider">Đã duyệt</div>
           <div className="text-2xl font-bold text-emerald-600 mt-1">
             {applications.filter(a => a.status === 'Đã chấp nhận').length + bookings.filter(b => b.status === 'Đã xếp lớp').length}
           </div>
           <div className="text-[10px] text-slate-500 font-semibold mt-0.5">Tổng đã hoàn thành</div>
         </div>
-        <div className="bg-white rounded-xl border border-slate-200 p-4 shadow-xs">
+        <div className="bg-white rounded-lg border border-slate-200/75 p-4 shadow-sm">
           <div className="text-[10px] font-bold uppercase text-slate-400 tracking-wider">Tỉ lệ duyệt</div>
-          <div className="text-2xl font-bold text-blue-600 mt-1">
+          <div className="text-2xl font-bold text-indigo-600 mt-1">
             {applications.length + bookings.length > 0
               ? Math.round(
                   ((applications.filter(a => a.status === 'Đã chấp nhận').length + bookings.filter(b => b.status === 'Đã xếp lớp').length) /

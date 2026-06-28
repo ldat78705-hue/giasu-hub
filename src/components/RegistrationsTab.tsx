@@ -466,7 +466,7 @@ export const RegistrationsTab: React.FC<RegistrationsTabProps> = ({ registration
       {trialModal && (
         <div style={{ position: 'fixed', inset: 0, zIndex: 60, background: 'rgba(0,0,0,.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 16 }}
           onClick={() => setTrialModal(null)}>
-          <div style={{ background: '#fff', borderRadius: 16, maxWidth: 400, width: '100%', padding: 24 }} onClick={e => e.stopPropagation()}>
+          <div style={{ background: '#fff', borderRadius: 4, maxWidth: 400, width: '100%', padding: 24 }} onClick={e => e.stopPropagation()}>
             <h3 className="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
               <Calendar className="w-5 h-5 text-indigo-600" /> Đặt lịch học thử
             </h3>
@@ -509,7 +509,7 @@ export const RegistrationsTab: React.FC<RegistrationsTabProps> = ({ registration
       {tagModal && (
         <div style={{ position: 'fixed', inset: 0, zIndex: 60, background: 'rgba(0,0,0,.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 16 }}
           onClick={() => setTagModal(null)}>
-          <div style={{ background: '#fff', borderRadius: 16, maxWidth: 400, width: '100%', padding: 24 }} onClick={e => e.stopPropagation()}>
+          <div style={{ background: '#fff', borderRadius: 4, maxWidth: 400, width: '100%', padding: 24 }} onClick={e => e.stopPropagation()}>
             <h3 className="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
               <Tag className="w-5 h-5 text-amber-600" /> Gắn nhãn đơn đăng ký
             </h3>
@@ -538,7 +538,7 @@ export const RegistrationsTab: React.FC<RegistrationsTabProps> = ({ registration
       {logModal && (
         <div style={{ position: 'fixed', inset: 0, zIndex: 60, background: 'rgba(0,0,0,.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 16 }}
           onClick={() => setLogModal(null)}>
-          <div style={{ background: '#fff', borderRadius: 16, maxWidth: 400, width: '100%', padding: 24 }} onClick={e => e.stopPropagation()}>
+          <div style={{ background: '#fff', borderRadius: 4, maxWidth: 400, width: '100%', padding: 24 }} onClick={e => e.stopPropagation()}>
             <h3 className="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
               <PhoneCall className="w-5 h-5 text-blue-600" /> Ghi nhận liên hệ
             </h3>

@@ -51,14 +51,14 @@ export const FloatingActions: React.FC<FloatingActionsProps> = ({
             {/* Tư vấn */}
             <button onClick={() => { setShowContact(true); setExpanded(false); }}
               style={{ ...btnBase, padding: '10px 18px', background: '#fff', color: '#334155' }}>
-              <HelpCircle size={18} color="#2563eb" /> Yêu cầu tư vấn
+              <HelpCircle size={18} color="#4f46e5" /> Yêu cầu tư vấn
             </button>
 
             {/* Zalo */}
             {zaloNumber && (
               <a href={`https://zalo.me/${zaloNumber}`} target="_blank" rel="noopener noreferrer"
                 style={{ ...btnBase, padding: '10px 18px', background: '#fff', color: '#334155', textDecoration: 'none' }}>
-                <MessageCircle size={18} color="#2563eb" /> Zalo: {zaloNumber}
+                <MessageCircle size={18} color="#4f46e5" /> Zalo: {zaloNumber}
               </a>
             )}
 
@@ -76,7 +76,7 @@ export const FloatingActions: React.FC<FloatingActionsProps> = ({
         <button onClick={() => setExpanded(!expanded)}
           style={{
             ...btnBase, width: 52, height: 52, padding: 0, justifyContent: 'center',
-            background: expanded ? '#64748b' : '#2563eb', color: '#fff',
+            background: expanded ? '#64748b' : '#4f46e5', color: '#fff',
             borderRadius: '50%',
           }}>
           {expanded ? <X size={22} /> : <MessageCircle size={22} />}
@@ -89,7 +89,7 @@ export const FloatingActions: React.FC<FloatingActionsProps> = ({
       }}>
         {zaloNumber && (
           <a href={`https://zalo.me/${zaloNumber}`} target="_blank" rel="noopener noreferrer"
-            style={{ ...btnBase, width: 44, height: 44, padding: 0, justifyContent: 'center', borderRadius: '50%', background: '#2563eb', color: '#fff', textDecoration: 'none' }}>
+            style={{ ...btnBase, width: 44, height: 44, padding: 0, justifyContent: 'center', borderRadius: '50%', background: '#4f46e5', color: '#fff', textDecoration: 'none' }}>
             <MessageCircle size={20} />
           </a>
         )}
@@ -105,7 +105,7 @@ export const FloatingActions: React.FC<FloatingActionsProps> = ({
       {showContact && (
         <div style={{ position: 'fixed', inset: 0, zIndex: 60, background: 'rgba(0,0,0,.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 16 }}
           onClick={(e) => { if (e.target === e.currentTarget) setShowContact(false); }}>
-          <div style={{ background: '#fff', borderRadius: 12, maxWidth: 420, width: '100%', padding: 24, position: 'relative' }}>
+          <div style={{ background: '#fff', borderRadius: 4, maxWidth: 420, width: '100%', padding: 24, position: 'relative' }}>
             <button onClick={() => setShowContact(false)} style={{ position: 'absolute', top: 12, right: 12, background: 'none', border: 'none', cursor: 'pointer', color: '#94a3b8' }}>
               <X size={20} />
             </button>
@@ -120,13 +120,13 @@ export const FloatingActions: React.FC<FloatingActionsProps> = ({
             ) : (
               <form onSubmit={handleContact} style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
                 <input required value={cName} onChange={e => setCName(e.target.value)} placeholder="Họ tên *"
-                  style={{ padding: '10px 14px', border: '1px solid #e2e8f0', borderRadius: 8, fontSize: 14, outline: 'none' }} />
+                  style={{ padding: '10px 14px', border: '1px solid #e2e8f0', borderRadius: 4, fontSize: 14, outline: 'none' }} />
                 <input required value={cPhone} onChange={e => setCPhone(e.target.value)} placeholder="Số điện thoại *" type="tel"
-                  style={{ padding: '10px 14px', border: '1px solid #e2e8f0', borderRadius: 8, fontSize: 14, outline: 'none' }} />
+                  style={{ padding: '10px 14px', border: '1px solid #e2e8f0', borderRadius: 4, fontSize: 14, outline: 'none' }} />
                 <textarea value={cMsg} onChange={e => setCMsg(e.target.value)} placeholder="Nội dung cần tư vấn..." rows={3}
-                  style={{ padding: '10px 14px', border: '1px solid #e2e8f0', borderRadius: 8, fontSize: 14, outline: 'none', resize: 'none' }} />
+                  style={{ padding: '10px 14px', border: '1px solid #e2e8f0', borderRadius: 4, fontSize: 14, outline: 'none', resize: 'none' }} />
                 <button type="submit" disabled={cSending}
-                  style={{ padding: '12px 0', background: '#2563eb', color: '#fff', border: 'none', borderRadius: 8, fontSize: 14, fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
+                  style={{ padding: '12px 0', background: '#4f46e5', color: '#fff', border: 'none', borderRadius: 4, fontSize: 14, fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
                   <Send size={16} /> {cSending ? 'Đang gửi...' : 'Gửi yêu cầu'}
                 </button>
               </form>

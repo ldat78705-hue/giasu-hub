@@ -37,24 +37,24 @@ export const TutorPortal: React.FC<TutorPortalProps> = ({ tutors, matches, atten
     return (
       <div style={{ maxWidth: 420, margin: '40px auto', padding: 20 }}>
         <div style={{ textAlign: 'center', marginBottom: 32 }}>
-          <div style={{ width: 56, height: 56, background: 'linear-gradient(135deg, #2563eb, #7c3aed)', borderRadius: 16, display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}>
+          <div style={{ width: 56, height: 56, background: 'linear-gradient(135deg, #4f46e5, #7c3aed)', borderRadius: 4, display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}>
             <GraduationCap size={28} color="#fff" />
           </div>
           <h1 style={{ fontSize: 24, fontWeight: 800, color: '#0f172a', marginBottom: 4 }}>Cổng Gia Sư</h1>
           <p style={{ fontSize: 14, color: '#64748b' }}>Đăng nhập bằng mã gia sư và số điện thoại</p>
         </div>
-        <form onSubmit={handleLogin} style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 16, padding: 24, display: 'flex', flexDirection: 'column', gap: 16 }}>
+        <form onSubmit={handleLogin} style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 4, padding: 24, display: 'flex', flexDirection: 'column', gap: 16 }}>
           <div>
             <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: '#475569', marginBottom: 6 }}>Mã gia sư</label>
             <input type="text" value={gsCode} onChange={e => setGsCode(e.target.value)} placeholder="Ví dụ: GS001" required
-              style={{ width: '100%', padding: '12px 14px', border: '1px solid #e2e8f0', borderRadius: 10, fontSize: 15, outline: 'none', background: '#f8fafc' }} />
+              style={{ width: '100%', padding: '12px 14px', border: '1px solid #e2e8f0', borderRadius: 4, fontSize: 15, outline: 'none', background: '#f8fafc' }} />
           </div>
           <div>
             <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: '#475569', marginBottom: 6 }}>Số điện thoại</label>
             <input type="tel" value={gsPhone} onChange={e => setGsPhone(e.target.value)} placeholder="0912345678" required
-              style={{ width: '100%', padding: '12px 14px', border: '1px solid #e2e8f0', borderRadius: 10, fontSize: 15, outline: 'none', background: '#f8fafc' }} />
+              style={{ width: '100%', padding: '12px 14px', border: '1px solid #e2e8f0', borderRadius: 4, fontSize: 15, outline: 'none', background: '#f8fafc' }} />
           </div>
-          <button type="submit" style={{ padding: '14px', background: '#2563eb', color: '#fff', border: 'none', borderRadius: 10, fontSize: 15, fontWeight: 600, cursor: 'pointer' }}>
+          <button type="submit" style={{ padding: '14px', background: '#4f46e5', color: '#fff', border: 'none', borderRadius: 4, fontSize: 15, fontWeight: 600, cursor: 'pointer' }}>
             Đăng nhập
           </button>
         </form>
@@ -112,7 +112,7 @@ export const TutorPortal: React.FC<TutorPortalProps> = ({ tutors, matches, atten
       {/* Header */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
-          <div style={{ width: 48, height: 48, borderRadius: 12, background: tutor.avatarColor || '#3b82f6', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontWeight: 700, fontSize: 16 }}>
+          <div style={{ width: 48, height: 48, borderRadius: 4, background: tutor.avatarColor || '#6366f1', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontWeight: 700, fontSize: 16 }}>
             {tutor.avatar}
           </div>
           <div>
@@ -128,7 +128,7 @@ export const TutorPortal: React.FC<TutorPortalProps> = ({ tutors, matches, atten
           </div>
         </div>
         <button onClick={() => { setLoggedIn(false); setTutor(null); onLogout(); }}
-          style={{ display: 'flex', alignItems: 'center', gap: 4, padding: '8px 14px', background: '#f1f5f9', border: '1px solid #e2e8f0', borderRadius: 8, fontSize: 12, fontWeight: 600, color: '#64748b', cursor: 'pointer' }}>
+          style={{ display: 'flex', alignItems: 'center', gap: 4, padding: '8px 14px', background: '#f1f5f9', border: '1px solid #e2e8f0', borderRadius: 4, fontSize: 12, fontWeight: 600, color: '#64748b', cursor: 'pointer' }}>
           <LogOut size={14} /> Đăng xuất
         </button>
       </div>
@@ -136,12 +136,12 @@ export const TutorPortal: React.FC<TutorPortalProps> = ({ tutors, matches, atten
       {/* Quick Stats */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 12, marginBottom: 24 }}>
         {[
-          { label: 'Lớp đang dạy', value: activeMatches.length, color: '#2563eb' },
+          { label: 'Lớp đang dạy', value: activeMatches.length, color: '#4f46e5' },
           { label: 'Buổi tháng này', value: monthAttendance.length, color: '#16a34a' },
           { label: 'Thu nhập (ước)', value: fmt(estimatedIncome) + 'đ', color: '#f59e0b' },
           { label: 'Đánh giá TB', value: avgRating, color: '#8b5cf6' },
         ].map((s, i) => (
-          <div key={i} style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 12, padding: 14, textAlign: 'center' }}>
+          <div key={i} style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 4, padding: 14, textAlign: 'center' }}>
             <div style={{ fontSize: 20, fontWeight: 800, color: s.color }}>{s.value}</div>
             <div style={{ fontSize: 10, color: '#64748b', fontWeight: 500, marginTop: 2 }}>{s.label}</div>
           </div>
@@ -152,10 +152,10 @@ export const TutorPortal: React.FC<TutorPortalProps> = ({ tutors, matches, atten
       <div style={{ display: 'flex', gap: 4, marginBottom: 20, overflowX: 'auto', paddingBottom: 4 }}>
         {tabs.map(tab => (
           <button key={tab.id} onClick={() => setActiveTab(tab.id)}
-            style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '8px 16px', borderRadius: 10, fontSize: 13, fontWeight: 600, cursor: 'pointer', whiteSpace: 'nowrap', border: '1px solid', transition: 'all .15s',
-              background: activeTab === tab.id ? '#2563eb' : '#fff',
+            style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '8px 16px', borderRadius: 4, fontSize: 13, fontWeight: 600, cursor: 'pointer', whiteSpace: 'nowrap', border: '1px solid', transition: 'all .15s',
+              background: activeTab === tab.id ? '#4f46e5' : '#fff',
               color: activeTab === tab.id ? '#fff' : '#64748b',
-              borderColor: activeTab === tab.id ? '#2563eb' : '#e2e8f0',
+              borderColor: activeTab === tab.id ? '#4f46e5' : '#e2e8f0',
             }}>
             {tab.icon} {tab.label}
           </button>
@@ -166,7 +166,7 @@ export const TutorPortal: React.FC<TutorPortalProps> = ({ tutors, matches, atten
       {activeTab === 'classes' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
           {activeMatches.length === 0 ? (
-            <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 12, padding: 32, textAlign: 'center', color: '#94a3b8' }}>
+            <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 4, padding: 32, textAlign: 'center', color: '#94a3b8' }}>
               <BookOpen size={32} style={{ margin: '0 auto 8px', display: 'block' }} />
               <p style={{ fontWeight: 600 }}>Chưa có lớp nào đang dạy</p>
             </div>
@@ -174,10 +174,10 @@ export const TutorPortal: React.FC<TutorPortalProps> = ({ tutors, matches, atten
             const matchAtt = myAttendance.filter(a => a.matchId === m.id);
             const taught = matchAtt.filter(a => a.status === 'Đã dạy').length;
             return (
-              <div key={m.id} style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 12, padding: 20 }}>
+              <div key={m.id} style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 4, padding: 20 }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
                   <span style={{ fontWeight: 700, fontSize: 15, color: '#0f172a' }}>{m.classSubject}</span>
-                  <span style={{ fontSize: 10, fontWeight: 700, padding: '3px 10px', borderRadius: 6, background: '#dcfce7', color: '#16a34a' }}>Đang dạy</span>
+                  <span style={{ fontSize: 10, fontWeight: 700, padding: '3px 10px', borderRadius: 4, background: '#dcfce7', color: '#16a34a' }}>Đang dạy</span>
                 </div>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, fontSize: 13, color: '#64748b' }}>
                   <div>📚 {m.classCode}</div>
@@ -188,11 +188,11 @@ export const TutorPortal: React.FC<TutorPortalProps> = ({ tutors, matches, atten
                 </div>
                 {/* F45: Fee status for GS */}
                 {m.feePaid ? (
-                  <div style={{ marginTop: 8, padding: '6px 12px', background: '#dcfce7', borderRadius: 8, fontSize: 11, fontWeight: 700, color: '#16a34a', display: 'inline-block' }}>
+                  <div style={{ marginTop: 8, padding: '6px 12px', background: '#dcfce7', borderRadius: 4, fontSize: 11, fontWeight: 700, color: '#16a34a', display: 'inline-block' }}>
                     ✅ Đã nộp phí kết nối {m.feeAmount ? `(${fmt(m.feeAmount)}đ)` : ''}
                   </div>
                 ) : (
-                  <div style={{ marginTop: 8, padding: '6px 12px', background: '#fef3c7', borderRadius: 8, fontSize: 11, fontWeight: 700, color: '#d97706', display: 'inline-block' }}>
+                  <div style={{ marginTop: 8, padding: '6px 12px', background: '#fef3c7', borderRadius: 4, fontSize: 11, fontWeight: 700, color: '#d97706', display: 'inline-block' }}>
                     ⚠️ Chưa nộp phí kết nối — {fmt(Math.round(m.fee * (m.sessionsPerMonth || 8) * (m.feePercent || 40) / 100))}đ
                   </div>
                 )}
@@ -203,7 +203,7 @@ export const TutorPortal: React.FC<TutorPortalProps> = ({ tutors, matches, atten
                     if (!window.confirm(`Xác nhận trả lớp ${m.classSubject}?\nLý do: ${reason}`)) return;
                     await onReturnClass(m.id!, tutor.code, reason);
                     alert('Đã gửi yêu cầu trả lớp. Admin sẽ xem xét.');
-                  }} style={{ marginTop: 10, padding: '8px 14px', background: '#fef2f2', border: '1px solid #fecaca', borderRadius: 8, fontSize: 12, fontWeight: 600, color: '#dc2626', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 4, width: 'fit-content' }}>
+                  }} style={{ marginTop: 10, padding: '8px 14px', background: '#fef2f2', border: '1px solid #fecaca', borderRadius: 4, fontSize: 12, fontWeight: 600, color: '#dc2626', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 4, width: 'fit-content' }}>
                     <RotateCcw size={12} /> Trả lớp
                   </button>
                 )}
@@ -215,16 +215,16 @@ export const TutorPortal: React.FC<TutorPortalProps> = ({ tutors, matches, atten
 
       {activeTab === 'schedule' && (
         <>
-        <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 12, overflow: 'hidden' }}>
+        <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 4, overflow: 'hidden' }}>
           {weekDates.map((wd, i) => {
             const dateStr = wd.toISOString().slice(0, 10);
             const dayAtt = myAttendance.filter(a => a.date === dateStr);
             const isToday = wd.toDateString() === today.toDateString();
             return (
-              <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 16, padding: '14px 20px', borderBottom: '1px solid #f1f5f9', background: isToday ? '#eff6ff' : 'transparent' }}>
+              <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 16, padding: '14px 20px', borderBottom: '1px solid #f1f5f9', background: isToday ? '#eef2ff' : 'transparent' }}>
                 <div style={{ width: 48, textAlign: 'center' }}>
                   <div style={{ fontSize: 10, fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase' }}>{weekDays[i]}</div>
-                  <div style={{ fontSize: 18, fontWeight: 700, color: isToday ? '#2563eb' : '#334155' }}>{wd.getDate()}</div>
+                  <div style={{ fontSize: 18, fontWeight: 700, color: isToday ? '#4f46e5' : '#334155' }}>{wd.getDate()}</div>
                 </div>
                 <div style={{ flex: 1 }}>
                   {dayAtt.length === 0 ? (
@@ -244,7 +244,7 @@ export const TutorPortal: React.FC<TutorPortalProps> = ({ tutors, matches, atten
 
         {/* F27: Absence report */}
         {onReportAbsence && activeMatches.length > 0 && (
-          <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 12, padding: 16, marginTop: 12 }}>
+          <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 4, padding: 16, marginTop: 12 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 10 }}>
               <PhoneOff size={14} color="#dc2626" />
               <span style={{ fontSize: 13, fontWeight: 700, color: '#334155' }}>Báo nghỉ hôm nay</span>
@@ -263,7 +263,7 @@ export const TutorPortal: React.FC<TutorPortalProps> = ({ tutors, matches, atten
                     });
                     alert('Báo nghỉ thành công! Admin sẽ được thông báo.');
                   }}
-                  style={{ padding: '8px 14px', background: '#fef2f2', border: '1px solid #fecaca', borderRadius: 8, fontSize: 12, fontWeight: 600, color: '#dc2626', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 4 }}>
+                  style={{ padding: '8px 14px', background: '#fef2f2', border: '1px solid #fecaca', borderRadius: 4, fontSize: 12, fontWeight: 600, color: '#dc2626', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 4 }}>
                   <XCircle size={12} /> Nghỉ {m.classSubject}
                 </button>
               ))}
@@ -275,7 +275,7 @@ export const TutorPortal: React.FC<TutorPortalProps> = ({ tutors, matches, atten
 
       {activeTab === 'income' && (
         <div>
-          <div style={{ background: 'linear-gradient(135deg, #059669, #0d9488)', borderRadius: 16, padding: 28, color: '#fff', marginBottom: 16, textAlign: 'center' }}>
+          <div style={{ background: 'linear-gradient(135deg, #059669, #0d9488)', borderRadius: 4, padding: 28, color: '#fff', marginBottom: 16, textAlign: 'center' }}>
             <div style={{ fontSize: 12, fontWeight: 600, opacity: 0.8, marginBottom: 4 }}>Thu nhập ước tính tháng {now.getMonth() + 1}</div>
             <div style={{ fontSize: 32, fontWeight: 800 }}>{fmt(estimatedIncome)}đ</div>
             <div style={{ fontSize: 12, opacity: 0.7, marginTop: 4 }}>{monthAttendance.length} buổi × phí/buổi (100% về gia sư)</div>
@@ -300,7 +300,7 @@ export const TutorPortal: React.FC<TutorPortalProps> = ({ tutors, matches, atten
             const absRate = myAttendance.length > 0 ? Math.round(totalAbsent / myAttendance.length * 100) : 0;
             return (
               <>
-                <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 12, padding: 16, marginBottom: 12 }}>
+                <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 4, padding: 16, marginBottom: 12 }}>
                   <h4 style={{ fontSize: 12, fontWeight: 700, color: '#64748b', marginBottom: 12, textTransform: 'uppercase', letterSpacing: 1 }}>📊 Thu nhập 3 tháng gần nhất</h4>
                   <div style={{ display: 'flex', alignItems: 'flex-end', gap: 12, height: 80 }}>
                     {months.map((m, i) => {
@@ -316,12 +316,12 @@ export const TutorPortal: React.FC<TutorPortalProps> = ({ tutors, matches, atten
                   </div>
                 </div>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, marginBottom: 12 }}>
-                  <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 12, padding: 12, textAlign: 'center' }}>
+                  <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 4, padding: 12, textAlign: 'center' }}>
                     <div style={{ fontSize: 18, fontWeight: 800, color: absRate > 15 ? '#dc2626' : '#16a34a' }}>{absRate}%</div>
                     <div style={{ fontSize: 10, color: '#64748b' }}>Tỷ lệ vắng</div>
                   </div>
-                  <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 12, padding: 12, textAlign: 'center' }}>
-                    <div style={{ fontSize: 18, fontWeight: 800, color: '#2563eb' }}>{myAttendance.filter(a => a.status === 'Đã dạy').length}</div>
+                  <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 4, padding: 12, textAlign: 'center' }}>
+                    <div style={{ fontSize: 18, fontWeight: 800, color: '#4f46e5' }}>{myAttendance.filter(a => a.status === 'Đã dạy').length}</div>
                     <div style={{ fontSize: 10, color: '#64748b' }}>Tổng buổi đã dạy</div>
                   </div>
                 </div>
@@ -329,7 +329,7 @@ export const TutorPortal: React.FC<TutorPortalProps> = ({ tutors, matches, atten
             );
           })()}
 
-          <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 12, padding: 16 }}>
+          <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 4, padding: 16 }}>
             <h4 style={{ fontSize: 13, fontWeight: 700, color: '#334155', marginBottom: 12 }}>Chi tiết theo lớp</h4>
             {activeMatches.map(m => {
               const taught = myAttendance.filter(a => a.matchId === m.id && a.date.startsWith(thisMonth) && a.status === 'Đã dạy').length;
@@ -347,12 +347,12 @@ export const TutorPortal: React.FC<TutorPortalProps> = ({ tutors, matches, atten
       {activeTab === 'reviews' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
           {myReviews.length === 0 ? (
-            <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 12, padding: 32, textAlign: 'center', color: '#94a3b8' }}>
+            <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 4, padding: 32, textAlign: 'center', color: '#94a3b8' }}>
               <Star size={32} style={{ margin: '0 auto 8px', display: 'block' }} />
               <p style={{ fontWeight: 600 }}>Chưa có đánh giá nào</p>
             </div>
           ) : myReviews.map(r => (
-            <div key={r.id} style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 12, padding: 16 }}>
+            <div key={r.id} style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 4, padding: 16 }}>
               <div style={{ display: 'flex', gap: 2, marginBottom: 8 }}>
                 {[1,2,3,4,5].map(s => <Star key={s} size={14} style={{ color: s <= r.rating ? '#f59e0b' : '#e2e8f0', fill: s <= r.rating ? '#f59e0b' : 'none' }} />)}
               </div>
@@ -366,12 +366,12 @@ export const TutorPortal: React.FC<TutorPortalProps> = ({ tutors, matches, atten
       {activeTab === 'openClasses' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
           {openClasses.length === 0 ? (
-            <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 12, padding: 32, textAlign: 'center', color: '#94a3b8' }}>
+            <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 4, padding: 32, textAlign: 'center', color: '#94a3b8' }}>
               <AlertCircle size={32} style={{ margin: '0 auto 8px', display: 'block' }} />
               <p style={{ fontWeight: 600 }}>Không có lớp phù hợp với môn bạn dạy</p>
             </div>
           ) : openClasses.map(cls => (
-            <div key={cls.id || cls.code} style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 12, padding: 16 }}>
+            <div key={cls.id || cls.code} style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 4, padding: 16 }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
                 <span style={{ fontWeight: 700, fontSize: 14, color: '#0f172a' }}>{cls.subject}</span>
                 <span style={{ fontSize: 10, fontWeight: 700, padding: '2px 8px', borderRadius: 4, background: cls.status === 'KHẨN CẤP' ? '#fef2f2' : '#fffbeb', color: cls.status === 'KHẨN CẤP' ? '#dc2626' : '#d97706' }}>{cls.status}</span>
@@ -379,7 +379,7 @@ export const TutorPortal: React.FC<TutorPortalProps> = ({ tutors, matches, atten
               {cls.studentInfo && <div style={{ fontSize: 12, color: '#64748b', marginBottom: 6 }}>{cls.studentInfo}</div>}
               <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12, color: '#64748b', borderTop: '1px solid #f1f5f9', paddingTop: 8 }}>
                 <span>📍 {cls.location}</span>
-                <span style={{ fontWeight: 700, color: '#2563eb' }}>{fmt(cls.fee)}đ/buổi</span>
+                <span style={{ fontWeight: 700, color: '#4f46e5' }}>{fmt(cls.fee)}đ/buổi</span>
               </div>
               {cls.schedule && <div style={{ fontSize: 11, color: '#94a3b8', marginTop: 4 }}>🕐 {cls.schedule}</div>}
             </div>

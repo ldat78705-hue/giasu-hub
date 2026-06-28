@@ -1,6 +1,11 @@
 import React, { useState } from 'react';
 import { ActiveTab, AdminRole, ADMIN_ROLE_CONFIG } from '../types';
-import { LayoutDashboard, BookOpen, Users, GraduationCap, DollarSign, ClipboardList, Settings, ExternalLink, UserPlus, MessageCircle, Calendar, Star, ClipboardCheck, BarChart3, Upload, FileText, Wrench, Award, Activity, Bell, Menu, X, Globe } from 'lucide-react';
+import {
+  LayoutDashboard, BookOpen, Users, GraduationCap, DollarSign,
+  Settings, ExternalLink, UserPlus, MessageCircle, Star,
+  BarChart3, Upload, Wrench, Award, Activity, Bell, Menu, X,
+  TrendingUp, FileText, Sun, Moon
+} from 'lucide-react';
 
 interface SidebarProps {
   activeTab: ActiveTab;
@@ -11,118 +16,175 @@ interface SidebarProps {
   pendingRegistrationsCount?: number;
   activeMatchesCount?: number;
   adminRole?: AdminRole;
+  isDark?: boolean;
+  onToggleTheme?: () => void;
 }
 
 interface NavItem { id: ActiveTab; label: string; icon: React.ReactNode; badge?: number }
 
-export const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab, pendingClassesCount, pendingApplicationsCount, unreadContactsCount = 0, pendingRegistrationsCount = 0, activeMatchesCount = 0, adminRole }) => {
+export const Sidebar: React.FC<SidebarProps> = ({
+  activeTab, setActiveTab, pendingClassesCount, pendingApplicationsCount,
+  unreadContactsCount = 0, pendingRegistrationsCount = 0, activeMatchesCount = 0,
+  adminRole, isDark = false, onToggleTheme,
+}) => {
   const [mobileOpen, setMobileOpen] = useState(false);
-
   const currentRole = adminRole || 'super_admin';
   const allowedTabs = ADMIN_ROLE_CONFIG[currentRole]?.tabs || [];
 
-  const navItems: NavItem[] = [
-    { id: 'dashboard', label: 'Bảng điều khiển', icon: <LayoutDashboard className="w-[18px] h-[18px]" /> },
-    { id: 'classes', label: 'Quản lý lớp', icon: <BookOpen className="w-[18px] h-[18px]" />, badge: pendingClassesCount },
-    { id: 'matches', label: 'Ghép lớp', icon: <ExternalLink className="w-[18px] h-[18px]" />, badge: activeMatchesCount },
-    { id: 'tutors', label: 'Gia sư', icon: <GraduationCap className="w-[18px] h-[18px]" /> },
-    { id: 'students', label: 'Học viên', icon: <Users className="w-[18px] h-[18px]" /> },
+  const allItems: NavItem[] = [
+    { id: 'dashboard', label: 'Bảng điều khiển', icon: <LayoutDashboard /> },
+    { id: 'classes', label: 'Quản lý lớp', icon: <BookOpen />, badge: pendingClassesCount },
+    { id: 'matches', label: 'Ghép lớp', icon: <TrendingUp />, badge: activeMatchesCount },
+    { id: 'tutors', label: 'Gia sư', icon: <GraduationCap /> },
+    { id: 'students', label: 'Học viên', icon: <Users /> },
+    { id: 'registrations', label: 'Đăng ký học', icon: <UserPlus />, badge: pendingRegistrationsCount },
+    { id: 'contacts', label: 'Liên hệ', icon: <MessageCircle />, badge: unreadContactsCount },
+    { id: 'zalonotify', label: 'Tin nhắn Zalo', icon: <Bell /> },
+    { id: 'performance', label: 'Hiệu suất gia sư', icon: <Award /> },
+    { id: 'kpi', label: 'Thống kê', icon: <BarChart3 /> },
+    { id: 'reviews', label: 'Đánh giá', icon: <Star /> },
+    { id: 'finance', label: 'Tài chính', icon: <DollarSign /> },
+    { id: 'activity', label: 'Hoạt động', icon: <Activity /> },
+    { id: 'import', label: 'Nhập dữ liệu', icon: <Upload /> },
+    { id: 'blog', label: 'Blog & SEO', icon: <FileText /> },
+    { id: 'advanced', label: 'Nâng cao', icon: <Wrench /> },
+    { id: 'settings', label: 'Cài đặt', icon: <Settings /> },
   ];
 
-  const navItems2: NavItem[] = [
-    { id: 'registrations', label: 'Đăng ký học', icon: <UserPlus className="w-[18px] h-[18px]" />, badge: pendingRegistrationsCount },
-    { id: 'contacts', label: 'Liên hệ', icon: <MessageCircle className="w-[18px] h-[18px]" />, badge: unreadContactsCount },
-    { id: 'zalonotify', label: 'Tin nhắn Zalo', icon: <Bell className="w-[18px] h-[18px]" /> },
-  ];
+  const visibleItems = allItems.filter(i => allowedTabs.includes(i.id));
 
-  const navItems3: NavItem[] = [
-    { id: 'performance', label: 'Hiệu suất gia sư', icon: <Award className="w-[18px] h-[18px]" /> },
-    { id: 'kpi', label: 'Thống kê', icon: <BarChart3 className="w-[18px] h-[18px]" /> },
-    { id: 'reviews', label: 'Đánh giá', icon: <Star className="w-[18px] h-[18px]" /> },
-  ];
-
-  const navItems4: NavItem[] = [
-    { id: 'activity', label: 'Hoạt động', icon: <Activity className="w-[18px] h-[18px]" /> },
-    { id: 'import', label: 'Nhập dữ liệu', icon: <Upload className="w-[18px] h-[18px]" /> },
-    { id: 'advanced', label: 'Nâng cao', icon: <Wrench className="w-[18px] h-[18px]" /> },
-    { id: 'settings', label: 'Cài đặt', icon: <Settings className="w-[18px] h-[18px]" /> },
-  ];
-
-  const totalBadge = pendingClassesCount + pendingApplicationsCount + unreadContactsCount + pendingRegistrationsCount;
+  // Theme colors
+  const bg = isDark ? '#1a1f2e' : '#ffffff';
+  const borderC = isDark ? 'rgba(255,255,255,0.08)' : '#e2e8f0';
+  const textColor = isDark ? '#e2e8f0' : '#334155';
+  const mutedColor = isDark ? '#64748b' : '#94a3b8';
+  const hoverBg = isDark ? 'rgba(255,255,255,0.06)' : '#f1f5f9';
 
   const renderItem = (item: NavItem) => {
-    if (!allowedTabs.includes(item.id)) return null;
-    const active = activeTab === item.id;
+    const isActive = activeTab === item.id;
     return (
-      <button key={item.id}
+      <button
+        key={item.id}
         onClick={() => { setActiveTab(item.id); setMobileOpen(false); }}
-        className={`w-full flex items-center gap-3 px-3 py-2.5 text-left cursor-pointer transition-all rounded-xl text-[13px] ${
-          active ? 'bg-blue-600 text-white font-semibold shadow-lg shadow-blue-600/30' : 'text-slate-300 hover:bg-white/[0.07] hover:text-white'
-        }`}>
-        <span className={active ? 'text-white' : 'text-slate-400'}>{item.icon}</span>
-        <span className="flex-1">{item.label}</span>
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: 12,
+          width: '100%',
+          padding: '10px 16px',
+          margin: '0 12px',
+          maxWidth: 'calc(100% - 24px)',
+          borderRadius: 4,
+          border: 'none',
+          cursor: 'pointer',
+          fontSize: 14,
+          fontWeight: isActive ? 600 : 500,
+          textAlign: 'left',
+          transition: 'all 0.15s',
+          background: isActive ? '#4f46e5' : 'transparent',
+          color: isActive ? '#fff' : textColor,
+        }}
+        onMouseEnter={e => { if (!isActive) e.currentTarget.style.background = hoverBg; }}
+        onMouseLeave={e => { if (!isActive) e.currentTarget.style.background = 'transparent'; }}
+      >
+        <span style={{ width: 20, height: 20, flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', color: isActive ? '#fff' : mutedColor }}>
+          {React.cloneElement(item.icon as React.ReactElement, { style: { width: 20, height: 20 } })}
+        </span>
+        <span style={{ flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+          {item.label}
+        </span>
         {item.badge !== undefined && item.badge > 0 && (
-          <span className={`text-[10px] font-bold px-1.5 py-0.5 min-w-[20px] text-center rounded-full ${
-            active ? 'bg-white/25 text-white' : 'bg-red-500/90 text-white'
-          }`}>{item.badge}</span>
+          <span style={{
+            fontSize: 10, fontWeight: 700,
+            padding: '1px 6px', minWidth: 20, textAlign: 'center',
+            borderRadius: 999, flexShrink: 0,
+            background: isActive ? 'rgba(255,255,255,0.3)' : '#fee2e2',
+            color: isActive ? '#fff' : '#dc2626',
+          }}>
+            {item.badge}
+          </span>
         )}
       </button>
     );
   };
 
-  const renderSection = (items: NavItem[]) => {
-    const filtered = items.filter(i => allowedTabs.includes(i.id));
-    if (filtered.length === 0) return null;
-    return <div className="space-y-0.5">{filtered.map(renderItem)}</div>;
-  };
-
-  const content = (
-    <>
-      {/* Brand */}
-      <div className="px-5 py-5 flex items-center gap-3">
-        <div className="w-9 h-9 rounded-xl bg-blue-600 flex items-center justify-center shadow-lg shadow-blue-600/30">
-          <Globe className="w-5 h-5 text-white" />
+  const sidebarContent = (
+    <div style={{ display: 'flex', flexDirection: 'column', height: '100%', background: bg }}>
+      {/* Logo */}
+      <div style={{ padding: '20px 20px', borderBottom: `1px solid ${borderC}`, display: 'flex', alignItems: 'center', gap: 12, position: 'relative' }}>
+        <div style={{
+          width: 40, height: 40, borderRadius: 4,
+          background: '#4f46e5', color: '#fff',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          fontSize: 14, fontWeight: 700, flexShrink: 0,
+        }}>
+          GS
         </div>
-        <div className="min-w-0">
-          <div className="text-[14px] font-bold text-white leading-tight">Gia Sư Thành Đạt</div>
+        <div>
+          <div style={{ fontSize: 15, fontWeight: 700, color: isDark ? '#fff' : '#1e293b', lineHeight: 1.3 }}>Gia Sư Thành Đạt</div>
+          <div style={{ fontSize: 11, color: mutedColor, fontWeight: 500 }}>Quản trị hệ thống</div>
         </div>
-        <button onClick={() => setMobileOpen(false)} className="lg:hidden ml-auto p-1 text-slate-400 hover:text-white cursor-pointer">
-          <X className="w-5 h-5" />
+        <button
+          onClick={() => setMobileOpen(false)}
+          style={{ display: 'none', position: 'absolute', top: 18, right: 16, background: 'none', border: 'none', color: mutedColor, cursor: 'pointer' }}
+          className="lg:hidden"
+        >
+          <X style={{ width: 20, height: 20 }} />
         </button>
       </div>
 
       {/* Nav */}
-      <nav className="flex-1 px-3 pb-3 overflow-y-auto space-y-4" style={{ scrollbarWidth: 'none' }}>
-        {renderSection(navItems)}
-        <div className="border-t border-white/[0.08] pt-3">{renderSection(navItems2)}</div>
-        <div className="border-t border-white/[0.08] pt-3">{renderSection(navItems3)}</div>
-        <div className="border-t border-white/[0.08] pt-3">{renderSection(navItems4)}</div>
+      <nav style={{ flex: 1, paddingTop: 12, paddingBottom: 12, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: 2 }}>
+        {visibleItems.map(renderItem)}
       </nav>
 
       {/* Footer */}
-      <div className="px-3 pb-4">
-        <button onClick={() => { window.open('/', '_blank'); setMobileOpen(false); }}
-          className="w-full px-3 py-2.5 text-[13px] text-slate-400 hover:text-white cursor-pointer transition-colors flex items-center gap-2 rounded-xl hover:bg-white/[0.07]">
-          <ExternalLink className="w-4 h-4" /> Trang công khai
+      <div style={{ padding: '12px', borderTop: `1px solid ${borderC}`, display: 'flex', flexDirection: 'column', gap: 4 }}>
+        {onToggleTheme && (
+          <button
+            onClick={onToggleTheme}
+            style={{
+              display: 'flex', alignItems: 'center', gap: 12,
+              width: '100%', padding: '10px 16px',
+              borderRadius: 4, border: 'none', cursor: 'pointer',
+              fontSize: 13, fontWeight: 500, textAlign: 'left',
+              background: 'transparent', color: textColor,
+            }}
+            onMouseEnter={e => (e.currentTarget.style.background = hoverBg)}
+            onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
+          >
+            {isDark ? <Sun style={{ width: 18, height: 18, color: '#fbbf24' }} /> : <Moon style={{ width: 18, height: 18, color: '#94a3b8' }} />}
+            <span>{isDark ? 'Chế độ sáng' : 'Chế độ tối'}</span>
+          </button>
+        )}
+        <button
+          onClick={() => { window.open('/', '_blank'); setMobileOpen(false); }}
+          style={{
+            display: 'flex', alignItems: 'center', gap: 12,
+            width: '100%', padding: '10px 16px',
+            borderRadius: 4, border: 'none', cursor: 'pointer',
+            fontSize: 13, fontWeight: 500, textAlign: 'left',
+            background: 'transparent', color: mutedColor,
+          }}
+          onMouseEnter={e => (e.currentTarget.style.background = hoverBg)}
+          onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
+        >
+          <ExternalLink style={{ width: 18, height: 18 }} />
+          <span>Xem trang công khai</span>
         </button>
       </div>
-    </>
+    </div>
   );
 
   return (
     <>
-      <button onClick={() => setMobileOpen(true)} className="lg:hidden fixed top-3 left-3 z-50 p-2.5 bg-[#1a1a2e] text-white rounded-xl cursor-pointer shadow-lg">
-        <Menu className="w-5 h-5" />
-        {totalBadge > 0 && <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white rounded-full text-[8px] flex items-center justify-center font-bold">{totalBadge > 9 ? '9+' : totalBadge}</span>}
-      </button>
-      {mobileOpen && <div className="lg:hidden fixed inset-0 z-40 bg-black/60 backdrop-blur-sm" onClick={() => setMobileOpen(false)} />}
-
-      <aside className="hidden lg:flex w-[220px] bg-[#1a1a2e] text-slate-300 flex-col h-full shrink-0">
-        {content}
-      </aside>
-
-      <aside className={`lg:hidden fixed top-0 left-0 z-50 w-[260px] bg-[#1a1a2e] text-slate-300 flex flex-col h-full transition-transform duration-200 shadow-2xl ${mobileOpen ? 'translate-x-0' : '-translate-x-full'}`}>
-        {content}
+      {/* Desktop sidebar */}
+      <aside style={{
+        width: 260, flexShrink: 0, height: '100%',
+        borderRight: `1px solid ${borderC}`,
+        display: 'flex', flexDirection: 'column',
+      }}>
+        {sidebarContent}
       </aside>
     </>
   );

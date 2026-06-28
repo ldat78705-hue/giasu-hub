@@ -69,7 +69,7 @@ Hướng dẫn phụ huynh đăng ký tại giasu-dusky.vercel.app/dang-ky-hoc h
   }
 
   return (
-    <div style={{ position: 'fixed', bottom: 24, left: 20, zIndex: 55, width: 380, maxWidth: 'calc(100vw - 40px)', background: '#fff', borderRadius: 16, boxShadow: '0 8px 40px rgba(0,0,0,.15)', border: '1px solid #e2e8f0', display: 'flex', flexDirection: 'column', maxHeight: 480 }}>
+    <div style={{ position: 'fixed', bottom: 24, left: 20, zIndex: 55, width: 380, maxWidth: 'calc(100vw - 40px)', background: '#fff', borderRadius: 4, boxShadow: '0 8px 40px rgba(0,0,0,.15)', border: '1px solid #e2e8f0', display: 'flex', flexDirection: 'column', maxHeight: 480 }}>
       {/* Header */}
       <div style={{ padding: '12px 16px', background: 'linear-gradient(135deg, #8b5cf6, #6366f1)', borderRadius: '16px 16px 0 0', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
@@ -84,7 +84,7 @@ Hướng dẫn phụ huynh đăng ký tại giasu-dusky.vercel.app/dang-ky-hoc h
         {messages.map((m, i) => (
           <div key={i} style={{ display: 'flex', justifyContent: m.role === 'user' ? 'flex-end' : 'flex-start' }}>
             <div style={{
-              maxWidth: '80%', padding: '8px 12px', borderRadius: 12, fontSize: 13, lineHeight: 1.5,
+              maxWidth: '80%', padding: '8px 12px', borderRadius: 4, fontSize: 13, lineHeight: 1.5,
               background: m.role === 'user' ? '#6366f1' : '#f1f5f9',
               color: m.role === 'user' ? '#fff' : '#334155',
               borderBottomRightRadius: m.role === 'user' ? 2 : 12,
@@ -94,7 +94,7 @@ Hướng dẫn phụ huynh đăng ký tại giasu-dusky.vercel.app/dang-ky-hoc h
         ))}
         {loading && (
           <div style={{ display: 'flex', justifyContent: 'flex-start' }}>
-            <div style={{ padding: '8px 16px', background: '#f1f5f9', borderRadius: 12, fontSize: 13, color: '#94a3b8' }}>Đang trả lời...</div>
+            <div style={{ padding: '8px 16px', background: '#f1f5f9', borderRadius: 4, fontSize: 13, color: '#94a3b8' }}>Đang trả lời...</div>
           </div>
         )}
       </div>
@@ -104,9 +104,9 @@ Hướng dẫn phụ huynh đăng ký tại giasu-dusky.vercel.app/dang-ky-hoc h
         <input value={input} onChange={e => setInput(e.target.value)}
           onKeyDown={e => e.key === 'Enter' && sendMessage()}
           placeholder="Hỏi về gia sư, học phí, khu vực..."
-          style={{ flex: 1, padding: '8px 12px', border: '1px solid #e2e8f0', borderRadius: 10, fontSize: 13, outline: 'none' }} />
+          style={{ flex: 1, padding: '8px 12px', border: '1px solid #e2e8f0', borderRadius: 4, fontSize: 13, outline: 'none' }} />
         <button onClick={sendMessage} disabled={loading || !input.trim()}
-          style={{ padding: '8px 12px', background: '#6366f1', color: '#fff', border: 'none', borderRadius: 10, cursor: 'pointer', display: 'flex', alignItems: 'center', opacity: loading || !input.trim() ? .5 : 1 }}>
+          style={{ padding: '8px 12px', background: '#6366f1', color: '#fff', border: 'none', borderRadius: 4, cursor: 'pointer', display: 'flex', alignItems: 'center', opacity: loading || !input.trim() ? .5 : 1 }}>
           <Send size={16} />
         </button>
       </div>

@@ -48,18 +48,18 @@ export const PublicNavbar: React.FC<PublicNavbarProps> = ({ activeTab, onNavigat
         <div style={{ maxWidth: 1024, margin: '0 auto', padding: '0 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: 56 }}>
           {/* Logo */}
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer' }} onClick={() => onNavigate('home')}>
-            <div style={{ width: 32, height: 32, background: '#2563eb', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontWeight: 700, fontSize: 12 }}>TĐ</div>
+            <div style={{ width: 32, height: 32, background: '#4f46e5', borderRadius: 4, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontWeight: 700, fontSize: 12 }}>TĐ</div>
             <span style={{ fontWeight: 700, fontSize: 15, color: '#0f172a' }}>Gia Sư Thành Đạt</span>
           </div>
 
           {/* Desktop nav */}
-          <nav style={{ display: 'flex', alignItems: 'center', gap: 4 }} className="lg:flex hidden">
+          <nav style={{ alignItems: 'center', gap: 4 }} className="lg:flex hidden">
             {links.map(l => (
               <button key={l.id} onClick={() => onNavigate(l.id)}
                 style={{
-                  padding: '6px 14px', borderRadius: 6, fontSize: 14, fontWeight: 500, cursor: 'pointer',
-                  background: activeTab === l.id ? '#eff6ff' : 'transparent',
-                  color: activeTab === l.id ? '#2563eb' : '#475569',
+                  padding: '6px 14px', borderRadius: 4, fontSize: 14, fontWeight: 500, cursor: 'pointer',
+                  background: activeTab === l.id ? '#eef2ff' : 'transparent',
+                  color: activeTab === l.id ? '#4f46e5' : '#475569',
                   border: 'none', transition: 'all .15s',
                 }}>
                 {l.label}
@@ -68,14 +68,14 @@ export const PublicNavbar: React.FC<PublicNavbarProps> = ({ activeTab, onNavigat
           </nav>
 
           {/* Desktop right */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }} className="lg:flex hidden">
+          <div style={{ alignItems: 'center', gap: 8 }} className="lg:flex hidden">
             {zaloNumber && (
               <span style={{ fontSize: 13, fontWeight: 600, color: '#475569', display: 'flex', alignItems: 'center', gap: 4 }}>
-                <Phone size={14} color="#2563eb" />{zaloNumber}
+                <Phone size={14} color="#4f46e5" />{zaloNumber}
               </span>
             )}
             <button onClick={() => onNavigate('parent-register')}
-              style={{ padding: '7px 16px', background: '#2563eb', color: '#fff', border: 'none', borderRadius: 6, fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>
+              style={{ padding: '7px 16px', background: '#4f46e5', color: '#fff', border: 'none', borderRadius: 4, fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>
               Đăng ký học
             </button>
           </div>
@@ -94,16 +94,16 @@ export const PublicNavbar: React.FC<PublicNavbarProps> = ({ activeTab, onNavigat
             {links.map(l => (
               <button key={l.id} onClick={() => { onNavigate(l.id); setMobileOpen(false); }}
                 style={{
-                  display: 'block', width: '100%', textAlign: 'left', padding: '10px 12px', borderRadius: 8,
+                  display: 'block', width: '100%', textAlign: 'left', padding: '10px 12px', borderRadius: 4,
                   fontSize: 14, fontWeight: 500, cursor: 'pointer', border: 'none', marginBottom: 2,
-                  background: activeTab === l.id ? '#eff6ff' : 'transparent',
-                  color: activeTab === l.id ? '#2563eb' : '#475569',
+                  background: activeTab === l.id ? '#eef2ff' : 'transparent',
+                  color: activeTab === l.id ? '#4f46e5' : '#475569',
                 }}>
                 {l.label}
               </button>
             ))}
             <button onClick={() => { onNavigate('parent-register'); setMobileOpen(false); }}
-              style={{ display: 'block', width: '100%', padding: '10px 0', background: '#2563eb', color: '#fff', border: 'none', borderRadius: 8, fontSize: 14, fontWeight: 600, cursor: 'pointer', marginTop: 8, textAlign: 'center' }}>
+              style={{ display: 'block', width: '100%', padding: '10px 0', background: '#4f46e5', color: '#fff', border: 'none', borderRadius: 4, fontSize: 14, fontWeight: 600, cursor: 'pointer', marginTop: 8, textAlign: 'center' }}>
               Đăng ký tìm gia sư
             </button>
           </div>
@@ -118,7 +118,7 @@ export const PublicNavbar: React.FC<PublicNavbarProps> = ({ activeTab, onNavigat
               style={{
                 display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2, flex: 1, padding: '4px 0',
                 background: 'none', border: 'none', cursor: 'pointer',
-                color: activeTab === item.id ? '#2563eb' : '#94a3b8',
+                color: activeTab === item.id ? '#4f46e5' : '#94a3b8',
               }}>
               {item.icon}
               <span style={{ fontSize: 10, fontWeight: 500 }}>{item.label}</span>

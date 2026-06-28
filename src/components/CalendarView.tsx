@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { ClassMatch, AttendanceRecord, ParentRegistration } from '../types';
 import { Calendar, ChevronLeft, ChevronRight, CheckCircle2, XCircle, Clock } from 'lucide-react';
 
@@ -64,25 +64,25 @@ export const CalendarView: React.FC<CalendarViewProps> = ({ matches, attendance,
   };
 
   return (
-    <div className="col-span-12 space-y-5">
+    <div className="space-y-5">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
         <div>
           <h2 className="text-xl font-bold text-slate-800 flex items-center gap-2">
-            <Calendar className="w-5 h-5 text-blue-600" /> Lịch dạy
+            <Calendar className="w-5 h-5 text-indigo-600" /> Lịch dạy
           </h2>
           <p className="text-xs text-slate-500 mt-0.5">{activeMatches.length} lớp đang dạy · {attendance.length} buổi đã ghi nhận</p>
         </div>
         <div className="flex gap-2 items-center">
           <button onClick={() => setViewMode(viewMode === 'month' ? 'week' : 'month')}
-            className="px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs font-bold text-slate-600 cursor-pointer">
+            className="px-3 py-2 bg-white border border-slate-200 rounded-lg text-xs font-bold text-slate-600 cursor-pointer">
             {viewMode === 'month' ? 'Xem tuần' : 'Xem tháng'}
           </button>
         </div>
       </div>
 
       {/* Month Navigation */}
-      <div className="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
-        <div className="flex items-center justify-between px-6 py-4 bg-gradient-to-r from-blue-600 to-indigo-600">
+      <div className="bg-white rounded-lg border border-slate-200 shadow-xs overflow-hidden">
+        <div className="flex items-center justify-between px-6 py-4 bg-gradient-to-r from-indigo-600 to-indigo-600">
           <button onClick={() => goMonth(-1)} className="p-1 text-white/80 hover:text-white cursor-pointer"><ChevronLeft className="w-5 h-5" /></button>
           <h3 className="text-base font-bold text-white capitalize">{monthName}</h3>
           <button onClick={() => goMonth(1)} className="p-1 text-white/80 hover:text-white cursor-pointer"><ChevronRight className="w-5 h-5" /></button>
@@ -105,8 +105,8 @@ export const CalendarView: React.FC<CalendarViewProps> = ({ matches, attendance,
                 const taught = dayAttendance.filter(a => a.status === 'Đã dạy').length;
                 const missed = dayAttendance.filter(a => a.status !== 'Đã dạy').length;
                 return (
-                  <div key={i} className={`min-h-[80px] border-r border-b border-slate-100 p-1.5 ${isToday(day) ? 'bg-blue-50' : 'hover:bg-slate-50'}`}>
-                    <div className={`text-xs font-bold mb-1 ${isToday(day) ? 'text-blue-600' : 'text-slate-600'}`}>{day}</div>
+                  <div key={i} className={`min-h-[80px] border-r border-b border-slate-100 p-1.5 ${isToday(day) ? 'bg-indigo-50' : 'hover:bg-slate-50'}`}>
+                    <div className={`text-xs font-bold mb-1 ${isToday(day) ? 'text-indigo-600' : 'text-slate-600'}`}>{day}</div>
                     {taught > 0 && <div className="text-[9px] px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-700 font-bold mb-0.5 flex items-center gap-0.5"><CheckCircle2 className="w-2.5 h-2.5" />{taught} buổi</div>}
                     {missed > 0 && <div className="text-[9px] px-1.5 py-0.5 rounded bg-red-100 text-red-700 font-bold mb-0.5 flex items-center gap-0.5"><XCircle className="w-2.5 h-2.5" />{missed} vắng</div>}
                     {getDateTrials(`${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`).map((t, ti) => (
@@ -125,8 +125,8 @@ export const CalendarView: React.FC<CalendarViewProps> = ({ matches, attendance,
               const dayAtt = attendance.filter(a => a.date === dateStr);
               const isT = wd.toDateString() === today.toDateString();
               return (
-                <div key={i} className={`px-6 py-4 flex items-start gap-4 ${isT ? 'bg-blue-50' : ''}`}>
-                  <div className={`w-14 text-center shrink-0 ${isT ? 'text-blue-600' : 'text-slate-500'}`}>
+                <div key={i} className={`px-6 py-4 flex items-start gap-4 ${isT ? 'bg-indigo-50' : ''}`}>
+                  <div className={`w-14 text-center shrink-0 ${isT ? 'text-indigo-600' : 'text-slate-500'}`}>
                     <div className="text-[10px] font-bold uppercase">{weekDays[i]}</div>
                     <div className="text-xl font-bold">{wd.getDate()}</div>
                   </div>
@@ -162,7 +162,7 @@ export const CalendarView: React.FC<CalendarViewProps> = ({ matches, attendance,
       </div>
 
       {/* Legend + Active Classes */}
-      <div className="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs">
+      <div className="bg-white rounded-lg border border-slate-200 p-5 shadow-xs">
         <h3 className="text-xs font-bold uppercase text-slate-400 mb-3">Lớp đang dạy ({activeMatches.length})</h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
           {activeMatches.map(m => (

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { Send, Bell, FileText, Shield, Copy, Check, Smartphone } from 'lucide-react';
 
 // #19 Contract, #25 Role Config, #16 PWA
@@ -60,7 +60,7 @@ BÊN A _____________ BÊN B _____________`;
   ];
 
   return (
-    <div className="col-span-12 space-y-5">
+    <div className="space-y-5">
       <h2 className="text-xl font-bold text-slate-800 flex items-center gap-2">
         <Bell className="w-5 h-5 text-purple-600" /> Công cụ nâng cao
       </h2>
@@ -69,7 +69,7 @@ BÊN A _____________ BÊN B _____________`;
       <div className="flex gap-2 flex-wrap">
         {sections.map(s => (
           <button key={s.id} onClick={() => setActiveSection(s.id)}
-            className={`px-4 py-2 rounded-xl text-xs font-bold cursor-pointer flex items-center gap-1.5 border transition-all ${
+            className={`px-4 py-2 rounded-lg text-xs font-bold cursor-pointer flex items-center gap-1.5 border transition-all ${
               activeSection === s.id ? 'bg-purple-600 text-white border-purple-600' : 'bg-white text-slate-600 border-slate-200 hover:border-purple-300'
             }`}>{s.icon}{s.label}</button>
         ))}
@@ -77,19 +77,19 @@ BÊN A _____________ BÊN B _____________`;
 
       {/* #19 Contract Template */}
       {activeSection === 'contract' && (
-        <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs">
+        <div className="bg-white rounded-lg border border-slate-200 p-6 shadow-xs">
           <div className="flex justify-between items-center mb-4">
             <h3 className="text-sm font-bold text-slate-800 flex items-center gap-2"><FileText className="w-4 h-4 text-indigo-500" /> Mẫu hợp đồng gia sư</h3>
             <div className="flex gap-2">
               <button onClick={() => copy('contract', contractTemplate)}
-                className={`px-3 py-2 rounded-xl text-xs font-bold cursor-pointer flex items-center gap-1 ${
-                  copiedId === 'contract' ? 'bg-emerald-100 text-emerald-700' : 'bg-blue-600 text-white'
+                className={`px-3 py-2 rounded-lg text-xs font-bold cursor-pointer flex items-center gap-1 ${
+                  copiedId === 'contract' ? 'bg-emerald-100 text-emerald-700' : 'bg-indigo-600 text-white'
                 }`}>{copiedId === 'contract' ? <><Check className="w-3 h-3" /> Đã copy</> : <><Copy className="w-3 h-3" /> Copy</>}</button>
               <button onClick={() => { const w = window.open('', '_blank'); if(w){w.document.write(`<pre style="font-family:sans-serif;white-space:pre-wrap;padding:40px;max-width:700px;margin:auto">${contractTemplate}</pre>`);w.document.close();w.print();} }}
-                className="px-3 py-2 bg-purple-600 text-white rounded-xl text-xs font-bold cursor-pointer flex items-center gap-1"><Send className="w-3 h-3" /> In hợp đồng</button>
+                className="px-3 py-2 bg-purple-600 text-white rounded-lg text-xs font-bold cursor-pointer flex items-center gap-1"><Send className="w-3 h-3" /> In hợp đồng</button>
             </div>
           </div>
-          <pre className="text-xs text-slate-700 leading-relaxed bg-slate-50 p-6 rounded-xl border border-slate-100 whitespace-pre-wrap font-sans">{contractTemplate}</pre>
+          <pre className="text-xs text-slate-700 leading-relaxed bg-slate-50 p-6 rounded-lg border border-slate-100 whitespace-pre-wrap font-sans">{contractTemplate}</pre>
           <p className="text-[10px] text-slate-400 mt-3">💡 Thay thế các biến {'{...}'} bằng thông tin thực tế trước khi in.</p>
         </div>
       )}
@@ -100,9 +100,9 @@ BÊN A _____________ BÊN B _____________`;
           <p className="text-xs text-slate-500">Cấu hình vai trò cho nhân viên trung tâm. Mở rộng khi có thêm nhân viên.</p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {roles.map(role => (
-              <div key={role.id} className="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs">
+              <div key={role.id} className="bg-white rounded-lg border border-slate-200 p-5 shadow-xs">
                 <div className="flex items-center gap-2 mb-2">
-                  <Shield className={`w-4 h-4 ${role.id === 'admin' ? 'text-red-500' : role.id === 'staff' ? 'text-blue-500' : role.id === 'accountant' ? 'text-emerald-500' : 'text-slate-400'}`} />
+                  <Shield className={`w-4 h-4 ${role.id === 'admin' ? 'text-red-500' : role.id === 'staff' ? 'text-indigo-500' : role.id === 'accountant' ? 'text-emerald-500' : 'text-slate-400'}`} />
                   <span className="text-sm font-bold text-slate-800">{role.name}</span>
                 </div>
                 <p className="text-xs text-slate-500 mb-3">{role.desc}</p>
@@ -114,8 +114,8 @@ BÊN A _____________ BÊN B _____________`;
               </div>
             ))}
           </div>
-          <div className="bg-blue-50 border border-blue-200 rounded-xl p-3 text-xs text-blue-800 flex items-center gap-2">
-            <Shield className="w-4 h-4 text-blue-600 shrink-0" />
+          <div className="bg-indigo-50 border border-indigo-200 rounded-lg p-3 text-xs text-blue-800 flex items-center gap-2">
+            <Shield className="w-4 h-4 text-indigo-600 shrink-0" />
             <span>Hệ thống phân quyền sẵn sàng tích hợp. Khi thêm nhân viên, mỗi người sẽ đăng nhập với vai trò riêng.</span>
           </div>
         </div>
@@ -124,10 +124,10 @@ BÊN A _____________ BÊN B _____________`;
       {/* #16 PWA & Push */}
       {activeSection === 'pwa' && (
         <div className="space-y-4">
-          <div className="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs">
-            <h3 className="text-sm font-bold text-slate-800 mb-3 flex items-center gap-2"><Smartphone className="w-4 h-4 text-blue-500" /> Cài App trên điện thoại</h3>
+          <div className="bg-white rounded-lg border border-slate-200 p-5 shadow-xs">
+            <h3 className="text-sm font-bold text-slate-800 mb-3 flex items-center gap-2"><Smartphone className="w-4 h-4 text-indigo-500" /> Cài App trên điện thoại</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="bg-slate-50 rounded-xl p-4">
+              <div className="bg-slate-50 rounded-lg p-4">
                 <h4 className="text-xs font-bold text-slate-700 mb-2">📱 iPhone / iPad</h4>
                 <ol className="text-xs text-slate-600 space-y-1 list-decimal pl-4">
                   <li>Mở Safari → giasu-dusky.vercel.app</li>
@@ -136,7 +136,7 @@ BÊN A _____________ BÊN B _____________`;
                   <li>Nhấn <strong>Thêm</strong></li>
                 </ol>
               </div>
-              <div className="bg-slate-50 rounded-xl p-4">
+              <div className="bg-slate-50 rounded-lg p-4">
                 <h4 className="text-xs font-bold text-slate-700 mb-2">🤖 Android</h4>
                 <ol className="text-xs text-slate-600 space-y-1 list-decimal pl-4">
                   <li>Mở Chrome → giasu-dusky.vercel.app</li>
@@ -147,7 +147,7 @@ BÊN A _____________ BÊN B _____________`;
               </div>
             </div>
           </div>
-          <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-3 text-xs text-emerald-800 flex items-center gap-2">
+          <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-3 text-xs text-emerald-800 flex items-center gap-2">
             <Bell className="w-4 h-4 text-emerald-600 shrink-0" />
             <span>Sau khi cài, ứng dụng sẽ hoạt động như app native. Dữ liệu real-time qua Firestore.</span>
           </div>

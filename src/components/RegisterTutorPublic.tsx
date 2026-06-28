@@ -26,7 +26,7 @@ const TEACH_MODES = [
   { value: 'Online', icon: '💻', label: 'Trực tuyến (online)' },
   { value: 'Cả hai', icon: '🔄', label: 'Cả hai hình thức' },
 ];
-const COLORS = ['bg-blue-500', 'bg-purple-500', 'bg-emerald-500', 'bg-amber-500', 'bg-rose-500', 'bg-indigo-500'];
+const COLORS = ['bg-indigo-500', 'bg-purple-500', 'bg-emerald-500', 'bg-amber-500', 'bg-rose-500', 'bg-indigo-500'];
 
 async function uploadToCloudinary(file: File, cloudName: string, preset: string): Promise<string> {
   const fd = new FormData();
@@ -38,7 +38,7 @@ async function uploadToCloudinary(file: File, cloudName: string, preset: string)
   return (await res.json()).secure_url;
 }
 
-const inp: React.CSSProperties = { width: '100%', padding: '10px 14px', border: '1px solid #e2e8f0', borderRadius: 8, fontSize: 14, outline: 'none', background: '#f8fafc' };
+const inp: React.CSSProperties = { width: '100%', padding: '10px 14px', border: '1px solid #e2e8f0', borderRadius: 4, fontSize: 14, outline: 'none', background: '#f8fafc' };
 const lbl: React.CSSProperties = { display: 'block', fontSize: 12, fontWeight: 600, color: '#475569', marginBottom: 4 };
 
 export const RegisterTutorPublic: React.FC<RegisterTutorPublicProps> = ({
@@ -180,13 +180,13 @@ export const RegisterTutorPublic: React.FC<RegisterTutorPublicProps> = ({
   if (regSuccess) {
     return (
       <div style={{ paddingBottom: 80 }}>
-        <div style={{ maxWidth: 480, margin: '0 auto', background: '#fff', border: '1px solid #d1fae5', borderRadius: 12, padding: '40px 24px', textAlign: 'center' }}>
+        <div style={{ maxWidth: 480, margin: '0 auto', background: '#fff', border: '1px solid #d1fae5', borderRadius: 4, padding: '40px 24px', textAlign: 'center' }}>
           <div style={{ width: 56, height: 56, background: '#fef3c7', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}>
             <ShieldCheck size={28} color="#d97706" />
           </div>
           <h2 style={{ fontSize: 20, fontWeight: 700, color: '#0f172a', marginBottom: 8 }}>Đăng ký thành công!</h2>
           <p style={{ fontSize: 14, color: '#64748b', marginBottom: 20 }}>Hồ sơ đang được <b>xem xét và xác minh</b>.</p>
-          <div style={{ background: '#fffbeb', border: '1px solid #fde68a', borderRadius: 8, padding: 16, textAlign: 'left' }}>
+          <div style={{ background: '#fffbeb', border: '1px solid #fde68a', borderRadius: 4, padding: 16, textAlign: 'left' }}>
             {[
               { icon: <AlertCircle size={14} />, text: 'Thời gian xác minh: trong vòng 24 giờ' },
               { icon: <UserCheck size={14} />, text: 'Hồ sơ hiển thị công khai sau khi xác minh' },
@@ -206,7 +206,7 @@ export const RegisterTutorPublic: React.FC<RegisterTutorPublicProps> = ({
     <div style={{ paddingBottom: 80 }}>
       {/* Header */}
       <div style={{ textAlign: 'center', marginBottom: 24 }}>
-        <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: '#eff6ff', color: '#2563eb', padding: '4px 14px', borderRadius: 20, fontSize: 12, fontWeight: 600, marginBottom: 12 }}>
+        <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: '#eef2ff', color: '#4f46e5', padding: '4px 14px', borderRadius: 4, fontSize: 12, fontWeight: 600, marginBottom: 12 }}>
           <GraduationCap size={14} /> Cổng đăng ký dành cho gia sư
         </div>
         <h1 style={{ fontSize: 'clamp(22px, 4vw, 28px)', fontWeight: 800, color: '#0f172a', marginBottom: 6 }}>Trở thành gia sư</h1>
@@ -218,9 +218,9 @@ export const RegisterTutorPublic: React.FC<RegisterTutorPublicProps> = ({
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, marginBottom: 24 }}>
           {[{ n: 1, l: 'Thông tin' }, { n: 2, l: 'Chuyên môn' }, { n: 3, l: 'Hồ sơ' }].map((s, i) => (
             <React.Fragment key={s.n}>
-              {i > 0 && <div style={{ width: 24, height: 2, borderRadius: 2, background: step >= s.n ? '#2563eb' : '#e2e8f0' }} />}
+              {i > 0 && <div style={{ width: 24, height: 2, borderRadius: 2, background: step >= s.n ? '#4f46e5' : '#e2e8f0' }} />}
               <button onClick={() => { if (s.n <= step || (s.n === 2 && isStep1Valid) || (s.n === 3 && isStep1Valid && isStep2Valid)) setStep(s.n); }}
-                style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '6px 14px', borderRadius: 20, fontSize: 12, fontWeight: 600, cursor: 'pointer', border: 'none', background: step === s.n ? '#2563eb' : step > s.n ? '#dbeafe' : '#f1f5f9', color: step === s.n ? '#fff' : step > s.n ? '#2563eb' : '#94a3b8' }}>
+                style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '6px 14px', borderRadius: 4, fontSize: 12, fontWeight: 600, cursor: 'pointer', border: 'none', background: step === s.n ? '#4f46e5' : step > s.n ? '#dbeafe' : '#f1f5f9', color: step === s.n ? '#fff' : step > s.n ? '#4f46e5' : '#94a3b8' }}>
                 <span style={{ width: 20, height: 20, borderRadius: '50%', background: 'rgba(255,255,255,.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 10, fontWeight: 800 }}>
                   {step > s.n ? '✓' : s.n}
                 </span>
@@ -233,9 +233,9 @@ export const RegisterTutorPublic: React.FC<RegisterTutorPublicProps> = ({
         <form onSubmit={handleRegister}>
           {/* ===== STEP 1: Thông tin cá nhân ===== */}
           {step === 1 && (
-            <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 12, padding: 24 }}>
+            <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 4, padding: 24 }}>
               <h3 style={{ fontSize: 15, fontWeight: 700, color: '#0f172a', marginBottom: 16, display: 'flex', alignItems: 'center', gap: 6 }}>
-                <User size={16} color="#2563eb" /> Thông tin cá nhân
+                <User size={16} color="#4f46e5" /> Thông tin cá nhân
               </h3>
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
@@ -247,7 +247,7 @@ export const RegisterTutorPublic: React.FC<RegisterTutorPublicProps> = ({
                     <div style={{ display: 'flex', gap: 6 }}>
                       {(['Nam', 'Nữ'] as const).map(g => (
                         <button key={g} type="button" onClick={() => setRegGender(g)}
-                          style={{ flex: 1, padding: '8px 0', borderRadius: 6, fontSize: 13, fontWeight: 600, cursor: 'pointer', border: '1px solid', background: regGender === g ? '#2563eb' : '#fff', color: regGender === g ? '#fff' : '#475569', borderColor: regGender === g ? '#2563eb' : '#e2e8f0' }}>
+                          style={{ flex: 1, padding: '8px 0', borderRadius: 4, fontSize: 13, fontWeight: 600, cursor: 'pointer', border: '1px solid', background: regGender === g ? '#4f46e5' : '#fff', color: regGender === g ? '#fff' : '#475569', borderColor: regGender === g ? '#4f46e5' : '#e2e8f0' }}>
                           {g}
                         </button>
                       ))}
@@ -270,7 +270,7 @@ export const RegisterTutorPublic: React.FC<RegisterTutorPublicProps> = ({
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
                     <label style={{ ...lbl, marginBottom: 0 }}>Số điện thoại người thân (liên hệ khi cần)</label>
                     <button type="button" onClick={addEmergency}
-                      style={{ display: 'flex', alignItems: 'center', gap: 4, padding: '4px 10px', background: '#eff6ff', color: '#2563eb', border: 'none', borderRadius: 6, fontSize: 11, fontWeight: 600, cursor: 'pointer' }}>
+                      style={{ display: 'flex', alignItems: 'center', gap: 4, padding: '4px 10px', background: '#eef2ff', color: '#4f46e5', border: 'none', borderRadius: 4, fontSize: 11, fontWeight: 600, cursor: 'pointer' }}>
                       <Plus size={12} /> Thêm
                     </button>
                   </div>
@@ -290,7 +290,7 @@ export const RegisterTutorPublic: React.FC<RegisterTutorPublicProps> = ({
               </div>
 
               <button type="button" onClick={() => { if (isStep1Valid) setStep(2); }}
-                style={{ marginTop: 20, width: '100%', padding: '12px 0', background: isStep1Valid ? '#2563eb' : '#94a3b8', color: '#fff', border: 'none', borderRadius: 8, fontSize: 14, fontWeight: 600, cursor: isStep1Valid ? 'pointer' : 'not-allowed' }}>
+                style={{ marginTop: 20, width: '100%', padding: '12px 0', background: isStep1Valid ? '#4f46e5' : '#94a3b8', color: '#fff', border: 'none', borderRadius: 4, fontSize: 14, fontWeight: 600, cursor: isStep1Valid ? 'pointer' : 'not-allowed' }}>
                 Tiếp theo: Chuyên môn →
               </button>
             </div>
@@ -298,7 +298,7 @@ export const RegisterTutorPublic: React.FC<RegisterTutorPublicProps> = ({
 
           {/* ===== STEP 2: Chuyên môn ===== */}
           {step === 2 && (
-            <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 12, padding: 24 }}>
+            <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 4, padding: 24 }}>
               <h3 style={{ fontSize: 15, fontWeight: 700, color: '#0f172a', marginBottom: 16 }}>📚 Chuyên môn & Khu vực</h3>
 
               {/* Hình thức dạy */}
@@ -307,7 +307,7 @@ export const RegisterTutorPublic: React.FC<RegisterTutorPublicProps> = ({
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 8 }}>
                   {TEACH_MODES.map(m => (
                     <button key={m.value} type="button" onClick={() => setTeachMode(m.value)}
-                      style={{ padding: '10px 8px', borderRadius: 8, border: '1px solid', cursor: 'pointer', textAlign: 'center', fontSize: 12, fontWeight: 600, background: teachMode === m.value ? '#eff6ff' : '#fff', borderColor: teachMode === m.value ? '#2563eb' : '#e2e8f0', color: teachMode === m.value ? '#2563eb' : '#475569' }}>
+                      style={{ padding: '10px 8px', borderRadius: 4, border: '1px solid', cursor: 'pointer', textAlign: 'center', fontSize: 12, fontWeight: 600, background: teachMode === m.value ? '#eef2ff' : '#fff', borderColor: teachMode === m.value ? '#4f46e5' : '#e2e8f0', color: teachMode === m.value ? '#4f46e5' : '#475569' }}>
                       <div style={{ fontSize: 18, marginBottom: 2 }}>{m.icon}</div>
                       {m.label}
                     </button>
@@ -321,7 +321,7 @@ export const RegisterTutorPublic: React.FC<RegisterTutorPublicProps> = ({
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
                   {SUBJECTS.map(sub => (
                     <button key={sub} type="button" onClick={() => toggle(selectedSubjects, setSelectedSubjects, sub)}
-                      style={{ padding: '5px 12px', borderRadius: 16, fontSize: 12, fontWeight: 500, cursor: 'pointer', border: '1px solid', background: selectedSubjects.includes(sub) ? '#2563eb' : '#fff', color: selectedSubjects.includes(sub) ? '#fff' : '#475569', borderColor: selectedSubjects.includes(sub) ? '#2563eb' : '#e2e8f0' }}>
+                      style={{ padding: '5px 12px', borderRadius: 4, fontSize: 12, fontWeight: 500, cursor: 'pointer', border: '1px solid', background: selectedSubjects.includes(sub) ? '#4f46e5' : '#fff', color: selectedSubjects.includes(sub) ? '#fff' : '#475569', borderColor: selectedSubjects.includes(sub) ? '#4f46e5' : '#e2e8f0' }}>
                       {sub}
                     </button>
                   ))}
@@ -334,7 +334,7 @@ export const RegisterTutorPublic: React.FC<RegisterTutorPublicProps> = ({
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
                   {GRADE_LEVELS.map(g => (
                     <button key={g} type="button" onClick={() => toggle(selectedGrades, setSelectedGrades, g)}
-                      style={{ padding: '5px 12px', borderRadius: 16, fontSize: 12, fontWeight: 500, cursor: 'pointer', border: '1px solid', background: selectedGrades.includes(g) ? '#7c3aed' : '#fff', color: selectedGrades.includes(g) ? '#fff' : '#475569', borderColor: selectedGrades.includes(g) ? '#7c3aed' : '#e2e8f0' }}>
+                      style={{ padding: '5px 12px', borderRadius: 4, fontSize: 12, fontWeight: 500, cursor: 'pointer', border: '1px solid', background: selectedGrades.includes(g) ? '#7c3aed' : '#fff', color: selectedGrades.includes(g) ? '#fff' : '#475569', borderColor: selectedGrades.includes(g) ? '#7c3aed' : '#e2e8f0' }}>
                       {g}
                     </button>
                   ))}
@@ -347,7 +347,7 @@ export const RegisterTutorPublic: React.FC<RegisterTutorPublicProps> = ({
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
                   {SCHEDULES.map(s => (
                     <button key={s} type="button" onClick={() => toggle(selectedSchedules, setSelectedSchedules, s)}
-                      style={{ padding: '5px 12px', borderRadius: 16, fontSize: 12, fontWeight: 500, cursor: 'pointer', border: '1px solid', background: selectedSchedules.includes(s) ? '#059669' : '#fff', color: selectedSchedules.includes(s) ? '#fff' : '#475569', borderColor: selectedSchedules.includes(s) ? '#059669' : '#e2e8f0' }}>
+                      style={{ padding: '5px 12px', borderRadius: 4, fontSize: 12, fontWeight: 500, cursor: 'pointer', border: '1px solid', background: selectedSchedules.includes(s) ? '#059669' : '#fff', color: selectedSchedules.includes(s) ? '#fff' : '#475569', borderColor: selectedSchedules.includes(s) ? '#059669' : '#e2e8f0' }}>
                       {s}
                     </button>
                   ))}
@@ -359,18 +359,18 @@ export const RegisterTutorPublic: React.FC<RegisterTutorPublicProps> = ({
                 <div style={{ marginBottom: 16 }}>
                   <label style={lbl}>Khu vực có thể dạy * (chọn xã/phường)</label>
                   <input value={wardSearch} onChange={e => setWardSearch(e.target.value)} placeholder="Tìm xã/phường..." style={{ ...inp, marginBottom: 8 }} />
-                  <div style={{ maxHeight: 160, overflowY: 'auto', border: '1px solid #e2e8f0', borderRadius: 8, padding: 8 }}>
+                  <div style={{ maxHeight: 160, overflowY: 'auto', border: '1px solid #e2e8f0', borderRadius: 4, padding: 8 }}>
                     <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
                       {filteredWards.slice(0, 50).map(w => (
                         <button key={w} type="button" onClick={() => toggle(selectedAreas, setSelectedAreas, w)}
-                          style={{ padding: '4px 10px', borderRadius: 12, fontSize: 11, fontWeight: 500, cursor: 'pointer', border: '1px solid', background: selectedAreas.includes(w) ? '#2563eb' : '#fff', color: selectedAreas.includes(w) ? '#fff' : '#475569', borderColor: selectedAreas.includes(w) ? '#2563eb' : '#e2e8f0' }}>
+                          style={{ padding: '4px 10px', borderRadius: 4, fontSize: 11, fontWeight: 500, cursor: 'pointer', border: '1px solid', background: selectedAreas.includes(w) ? '#4f46e5' : '#fff', color: selectedAreas.includes(w) ? '#fff' : '#475569', borderColor: selectedAreas.includes(w) ? '#4f46e5' : '#e2e8f0' }}>
                           {w}
                         </button>
                       ))}
                     </div>
                   </div>
                   {selectedAreas.length > 0 && (
-                    <div style={{ fontSize: 11, color: '#2563eb', marginTop: 6, fontWeight: 600 }}>Đã chọn: {selectedAreas.join(', ')}</div>
+                    <div style={{ fontSize: 11, color: '#4f46e5', marginTop: 6, fontWeight: 600 }}>Đã chọn: {selectedAreas.join(', ')}</div>
                   )}
                 </div>
               )}
@@ -388,9 +388,9 @@ export const RegisterTutorPublic: React.FC<RegisterTutorPublicProps> = ({
               </div>
 
               <div style={{ display: 'flex', gap: 8, marginTop: 20 }}>
-                <button type="button" onClick={() => setStep(1)} style={{ flex: 1, padding: '12px 0', background: '#f1f5f9', color: '#475569', border: 'none', borderRadius: 8, fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>← Quay lại</button>
+                <button type="button" onClick={() => setStep(1)} style={{ flex: 1, padding: '12px 0', background: '#f1f5f9', color: '#475569', border: 'none', borderRadius: 4, fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>← Quay lại</button>
                 <button type="button" onClick={() => { if (isStep2Valid) setStep(3); }}
-                  style={{ flex: 2, padding: '12px 0', background: isStep2Valid ? '#2563eb' : '#94a3b8', color: '#fff', border: 'none', borderRadius: 8, fontSize: 14, fontWeight: 600, cursor: isStep2Valid ? 'pointer' : 'not-allowed' }}>
+                  style={{ flex: 2, padding: '12px 0', background: isStep2Valid ? '#4f46e5' : '#94a3b8', color: '#fff', border: 'none', borderRadius: 4, fontSize: 14, fontWeight: 600, cursor: isStep2Valid ? 'pointer' : 'not-allowed' }}>
                   Tiếp theo: Hồ sơ →
                 </button>
               </div>
@@ -399,7 +399,7 @@ export const RegisterTutorPublic: React.FC<RegisterTutorPublicProps> = ({
 
           {/* ===== STEP 3: Hồ sơ đính kèm ===== */}
           {step === 3 && (
-            <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 12, padding: 24 }}>
+            <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 4, padding: 24 }}>
               <h3 style={{ fontSize: 15, fontWeight: 700, color: '#0f172a', marginBottom: 4 }}>📎 Hồ sơ đính kèm</h3>
               <p style={{ fontSize: 12, color: '#64748b', marginBottom: 20 }}>Tải ảnh CCCD 2 mặt và bằng cấp để xác minh nhanh hơn.</p>
 
@@ -412,14 +412,14 @@ export const RegisterTutorPublic: React.FC<RegisterTutorPublicProps> = ({
                     <input ref={cccdFrontRef} type="file" accept="image/*" hidden onChange={e => handleFileSelect(e.target.files?.[0] || null, setCccdFront, setCccdFrontPreview)} />
                     {cccdFrontPreview ? (
                       <div style={{ position: 'relative' }}>
-                        <img src={cccdFrontPreview} alt="CCCD trước" style={{ width: '100%', height: 120, objectFit: 'cover', borderRadius: 8, border: '1px solid #e2e8f0' }} />
+                        <img src={cccdFrontPreview} alt="CCCD trước" style={{ width: '100%', height: 120, objectFit: 'cover', borderRadius: 4, border: '1px solid #e2e8f0' }} />
                         <button type="button" onClick={() => { setCccdFront(null); setCccdFrontPreview(''); }}
                           style={{ position: 'absolute', top: 4, right: 4, width: 22, height: 22, background: '#ef4444', color: '#fff', border: 'none', borderRadius: '50%', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><X size={12} /></button>
                         <div style={{ fontSize: 10, color: '#64748b', textAlign: 'center', marginTop: 4 }}>Mặt trước</div>
                       </div>
                     ) : (
                       <button type="button" onClick={() => cccdFrontRef.current?.click()}
-                        style={{ width: '100%', height: 120, border: '2px dashed #cbd5e1', borderRadius: 8, background: '#f8fafc', cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 4, color: '#94a3b8' }}>
+                        style={{ width: '100%', height: 120, border: '2px dashed #cbd5e1', borderRadius: 4, background: '#f8fafc', cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 4, color: '#94a3b8' }}>
                         <Upload size={20} /><span style={{ fontSize: 11, fontWeight: 600 }}>Mặt trước</span>
                       </button>
                     )}
@@ -429,14 +429,14 @@ export const RegisterTutorPublic: React.FC<RegisterTutorPublicProps> = ({
                     <input ref={cccdBackRef} type="file" accept="image/*" hidden onChange={e => handleFileSelect(e.target.files?.[0] || null, setCccdBack, setCccdBackPreview)} />
                     {cccdBackPreview ? (
                       <div style={{ position: 'relative' }}>
-                        <img src={cccdBackPreview} alt="CCCD sau" style={{ width: '100%', height: 120, objectFit: 'cover', borderRadius: 8, border: '1px solid #e2e8f0' }} />
+                        <img src={cccdBackPreview} alt="CCCD sau" style={{ width: '100%', height: 120, objectFit: 'cover', borderRadius: 4, border: '1px solid #e2e8f0' }} />
                         <button type="button" onClick={() => { setCccdBack(null); setCccdBackPreview(''); }}
                           style={{ position: 'absolute', top: 4, right: 4, width: 22, height: 22, background: '#ef4444', color: '#fff', border: 'none', borderRadius: '50%', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><X size={12} /></button>
                         <div style={{ fontSize: 10, color: '#64748b', textAlign: 'center', marginTop: 4 }}>Mặt sau</div>
                       </div>
                     ) : (
                       <button type="button" onClick={() => cccdBackRef.current?.click()}
-                        style={{ width: '100%', height: 120, border: '2px dashed #cbd5e1', borderRadius: 8, background: '#f8fafc', cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 4, color: '#94a3b8' }}>
+                        style={{ width: '100%', height: 120, border: '2px dashed #cbd5e1', borderRadius: 4, background: '#f8fafc', cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 4, color: '#94a3b8' }}>
                         <Upload size={20} /><span style={{ fontSize: 11, fontWeight: 600 }}>Mặt sau</span>
                       </button>
                     )}
@@ -450,7 +450,7 @@ export const RegisterTutorPublic: React.FC<RegisterTutorPublicProps> = ({
                   <label style={{ ...lbl, marginBottom: 0 }}>Bằng cấp / Chứng chỉ</label>
                   <input ref={degreeRef} type="file" accept="image/*" hidden onChange={e => { addDegreeFile(e.target.files?.[0] || null); e.target.value = ''; }} />
                   <button type="button" onClick={() => degreeRef.current?.click()}
-                    style={{ display: 'flex', alignItems: 'center', gap: 4, padding: '4px 10px', background: '#eff6ff', color: '#2563eb', border: 'none', borderRadius: 6, fontSize: 11, fontWeight: 600, cursor: 'pointer' }}>
+                    style={{ display: 'flex', alignItems: 'center', gap: 4, padding: '4px 10px', background: '#eef2ff', color: '#4f46e5', border: 'none', borderRadius: 4, fontSize: 11, fontWeight: 600, cursor: 'pointer' }}>
                     <Plus size={12} /> Thêm ảnh
                   </button>
                 </div>
@@ -458,7 +458,7 @@ export const RegisterTutorPublic: React.FC<RegisterTutorPublicProps> = ({
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(100px, 1fr))', gap: 8 }}>
                     {degreeFiles.map((d, i) => (
                       <div key={i} style={{ position: 'relative' }}>
-                        <img src={d.preview} alt={`Bằng cấp ${i + 1}`} style={{ width: '100%', height: 80, objectFit: 'cover', borderRadius: 6, border: '1px solid #e2e8f0' }} />
+                        <img src={d.preview} alt={`Bằng cấp ${i + 1}`} style={{ width: '100%', height: 80, objectFit: 'cover', borderRadius: 4, border: '1px solid #e2e8f0' }} />
                         <button type="button" onClick={() => setDegreeFiles(prev => prev.filter((_, idx) => idx !== i))}
                           style={{ position: 'absolute', top: 2, right: 2, width: 18, height: 18, background: '#ef4444', color: '#fff', border: 'none', borderRadius: '50%', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><X size={10} /></button>
                       </div>
@@ -473,7 +473,7 @@ export const RegisterTutorPublic: React.FC<RegisterTutorPublicProps> = ({
                   <label style={{ ...lbl, marginBottom: 0 }}>Tài liệu khác (nếu có)</label>
                   <input ref={otherRef} type="file" accept="image/*" hidden onChange={e => { addOtherFile(e.target.files?.[0] || null); e.target.value = ''; }} />
                   <button type="button" onClick={() => otherRef.current?.click()}
-                    style={{ display: 'flex', alignItems: 'center', gap: 4, padding: '4px 10px', background: '#f1f5f9', color: '#475569', border: 'none', borderRadius: 6, fontSize: 11, fontWeight: 600, cursor: 'pointer' }}>
+                    style={{ display: 'flex', alignItems: 'center', gap: 4, padding: '4px 10px', background: '#f1f5f9', color: '#475569', border: 'none', borderRadius: 4, fontSize: 11, fontWeight: 600, cursor: 'pointer' }}>
                     <Plus size={12} /> Thêm file
                   </button>
                 </div>
@@ -481,7 +481,7 @@ export const RegisterTutorPublic: React.FC<RegisterTutorPublicProps> = ({
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(100px, 1fr))', gap: 8 }}>
                     {otherFiles.map((f, i) => (
                       <div key={i} style={{ position: 'relative' }}>
-                        <img src={f.preview} alt={`File ${i + 1}`} style={{ width: '100%', height: 80, objectFit: 'cover', borderRadius: 6, border: '1px solid #e2e8f0' }} />
+                        <img src={f.preview} alt={`File ${i + 1}`} style={{ width: '100%', height: 80, objectFit: 'cover', borderRadius: 4, border: '1px solid #e2e8f0' }} />
                         <button type="button" onClick={() => setOtherFiles(prev => prev.filter((_, idx) => idx !== i))}
                           style={{ position: 'absolute', top: 2, right: 2, width: 18, height: 18, background: '#ef4444', color: '#fff', border: 'none', borderRadius: '50%', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><X size={10} /></button>
                       </div>
@@ -491,15 +491,15 @@ export const RegisterTutorPublic: React.FC<RegisterTutorPublicProps> = ({
               </div>
 
               {!hasCloudinary && (
-                <div style={{ background: '#fef3c7', border: '1px solid #fde68a', borderRadius: 8, padding: 12, fontSize: 12, color: '#92400e', marginBottom: 16 }}>
+                <div style={{ background: '#fef3c7', border: '1px solid #fde68a', borderRadius: 4, padding: 12, fontSize: 12, color: '#92400e', marginBottom: 16 }}>
                   ⚠️ Chưa cấu hình Cloudinary. Ảnh sẽ không được lưu trữ. Liên hệ admin.
                 </div>
               )}
 
               <div style={{ display: 'flex', gap: 8, marginTop: 20 }}>
-                <button type="button" onClick={() => setStep(2)} style={{ flex: 1, padding: '12px 0', background: '#f1f5f9', color: '#475569', border: 'none', borderRadius: 8, fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>← Quay lại</button>
+                <button type="button" onClick={() => setStep(2)} style={{ flex: 1, padding: '12px 0', background: '#f1f5f9', color: '#475569', border: 'none', borderRadius: 4, fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>← Quay lại</button>
                 <button type="submit" disabled={isSubmitting}
-                  style={{ flex: 2, padding: '12px 0', background: '#2563eb', color: '#fff', border: 'none', borderRadius: 8, fontSize: 14, fontWeight: 600, cursor: isSubmitting ? 'wait' : 'pointer', opacity: isSubmitting ? 0.7 : 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
+                  style={{ flex: 2, padding: '12px 0', background: '#4f46e5', color: '#fff', border: 'none', borderRadius: 4, fontSize: 14, fontWeight: 600, cursor: isSubmitting ? 'wait' : 'pointer', opacity: isSubmitting ? 0.7 : 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
                   <Send size={16} /> {isSubmitting ? uploadProgress || 'Đang gửi...' : 'Gửi đăng ký'}
                 </button>
               </div>

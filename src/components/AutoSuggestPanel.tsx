@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { ParentRegistration, TutorItem, ClassMatch, ActiveTab } from '../types';
 import { Sparkles, UserCheck, MapPin, BookOpen, Phone, ArrowRight, CheckCircle2, Clock, Star, X } from 'lucide-react';
 
@@ -78,7 +78,7 @@ export const AutoSuggestPanel: React.FC<AutoSuggestPanelProps> = ({ registration
 
   return (
     <div className="fixed inset-0 z-50 modal-backdrop flex items-center justify-center p-4 animate-fade-in">
-      <div className="bg-white rounded-2xl max-w-2xl w-full shadow-2xl border border-slate-200 animate-scale-in max-h-[90vh] overflow-y-auto">
+      <div className="bg-white rounded-lg max-w-2xl w-full shadow-2xl border border-slate-200 animate-scale-in max-h-[90vh] overflow-y-auto">
         <div className="p-6 border-b border-slate-100">
           <div className="flex items-start justify-between">
             <div>
@@ -97,7 +97,7 @@ export const AutoSuggestPanel: React.FC<AutoSuggestPanelProps> = ({ registration
           {suggestions.length === 0 ? (
             <div className="text-center py-8 text-slate-400 text-sm">Chưa tìm được gia sư phù hợp. Thử tìm thủ công tại tab Gia sư.</div>
           ) : suggestions.map((s, i) => (
-            <div key={s.tutor.id} className={`p-4 rounded-xl border-2 transition-all ${i === 0 ? 'border-purple-300 bg-purple-50/50' : 'border-slate-200 hover:border-purple-200'}`}>
+            <div key={s.tutor.id} className={`p-4 rounded-lg border-2 transition-all ${i === 0 ? 'border-purple-300 bg-purple-50/50' : 'border-slate-200 hover:border-purple-200'}`}>
               <div className="flex items-start gap-3">
                 <div className="relative">
                   <div className="w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold text-white" style={{ backgroundColor: s.tutor.avatarColor }}>
@@ -130,12 +130,12 @@ export const AutoSuggestPanel: React.FC<AutoSuggestPanelProps> = ({ registration
                       onClose();
                     }}
                       disabled={matching !== null}
-                      className="px-3 py-2 rounded-xl text-[11px] font-bold cursor-pointer flex items-center gap-1 bg-emerald-600 text-white hover:bg-emerald-700 disabled:opacity-50">
+                      className="px-3 py-2 rounded-lg text-[11px] font-bold cursor-pointer flex items-center gap-1 bg-emerald-600 text-white hover:bg-emerald-700 disabled:opacity-50">
                       {matching === s.tutor.code ? '⏳ Đang ghép...' : <><ArrowRight className="w-3 h-3" /> Ghép ngay</>}
                     </button>
                   )}
                   <button onClick={() => copyInfo(s)}
-                    className={`px-3 py-2 rounded-xl text-[11px] font-bold cursor-pointer flex items-center gap-1 ${
+                    className={`px-3 py-2 rounded-lg text-[11px] font-bold cursor-pointer flex items-center gap-1 ${
                       copied === s.tutor.code ? 'bg-emerald-100 text-emerald-700' : 'bg-purple-600 text-white hover:bg-purple-700'
                     }`}>
                     {copied === s.tutor.code ? <><CheckCircle2 className="w-3 h-3" /> Đã copy</> : <><Phone className="w-3 h-3" /> Copy</>}

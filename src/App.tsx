@@ -158,6 +158,18 @@ export default function App() {
   const apiKey = settings.geminiApiKey || '';
   const zaloNumber = settings.zaloNumber || '';
 
+  // Dark mode
+  const [isDarkMode, setIsDarkMode] = useState<boolean>(() => {
+    try { return localStorage.getItem('admin-theme') === 'dark'; } catch { return false; }
+  });
+  const toggleTheme = () => {
+    setIsDarkMode(prev => {
+      const next = !prev;
+      try { localStorage.setItem('admin-theme', next ? 'dark' : 'light'); } catch {}
+      return next;
+    });
+  };
+
   // Admin login gate
   const [adminAuthenticated, setAdminAuthenticated] = useState(false);
   const [adminPwInput, setAdminPwInput] = useState('');
@@ -724,18 +736,18 @@ export default function App() {
     };
     return (
       <div style={{ minHeight: '100vh', background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: "'Inter', sans-serif", padding: 20 }}>
-        <div style={{ maxWidth: 400, width: '100%', background: '#fff', borderRadius: 20, padding: 40, boxShadow: '0 20px 60px rgba(0,0,0,.3)' }}>
+        <div style={{ maxWidth: 400, width: '100%', background: '#fff', borderRadius: 4, padding: 40, boxShadow: '0 20px 60px rgba(0,0,0,.3)' }}>
           <div style={{ textAlign: 'center', marginBottom: 32 }}>
-            <div style={{ width: 56, height: 56, background: 'linear-gradient(135deg, #2563eb, #7c3aed)', borderRadius: 16, display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px', color: '#fff', fontWeight: 800, fontSize: 18 }}>TĐ</div>
+            <div style={{ width: 56, height: 56, background: 'linear-gradient(135deg, #2563eb, #7c3aed)', borderRadius: 4, display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px', color: '#fff', fontWeight: 800, fontSize: 18 }}>TĐ</div>
             <h1 style={{ fontSize: 22, fontWeight: 800, color: '#0f172a', marginBottom: 4 }}>Quản trị hệ thống</h1>
             <p style={{ fontSize: 13, color: '#64748b' }}>Nhập mật khẩu để truy cập bảng điều khiển</p>
           </div>
           <form onSubmit={handleAdminLogin}>
             <input type="password" value={adminPwInput} onChange={e => { setAdminPwInput(e.target.value); setAdminPwError(false); }}
               placeholder="Mật khẩu quản trị" autoFocus
-              style={{ width: '100%', padding: '14px 16px', border: `2px solid ${adminPwError ? '#ef4444' : '#e2e8f0'}`, borderRadius: 12, fontSize: 15, outline: 'none', background: '#f8fafc', marginBottom: 8 }} />
+              style={{ width: '100%', padding: '14px 16px', border: `2px solid ${adminPwError ? '#ef4444' : '#e2e8f0'}`, borderRadius: 4, fontSize: 15, outline: 'none', background: '#f8fafc', marginBottom: 8 }} />
             {adminPwError && <div style={{ fontSize: 12, color: '#ef4444', fontWeight: 600, marginBottom: 8 }}>❌ Mật khẩu không đúng</div>}
-            <button type="submit" style={{ width: '100%', padding: '14px', background: '#2563eb', color: '#fff', border: 'none', borderRadius: 12, fontSize: 15, fontWeight: 700, cursor: 'pointer', marginTop: 8 }}>
+            <button type="submit" style={{ width: '100%', padding: '14px', background: '#2563eb', color: '#fff', border: 'none', borderRadius: 4, fontSize: 15, fontWeight: 700, cursor: 'pointer', marginTop: 8 }}>
               Đăng nhập
             </button>
           </form>
@@ -749,29 +761,30 @@ export default function App() {
 
   // ===================== ADMIN VIEW =====================
   return (
-    <div className="w-full h-screen bg-[#f0f2f5] flex font-sans overflow-hidden text-slate-800 select-text">
+    <div className={isDarkMode ? 'dark' : ''} style={{ width: '100%', height: '100vh', display: 'flex', fontFamily: "'Inter', -apple-system, sans-serif", overflow: 'hidden', background: isDarkMode ? '#0f172a' : '#f1f5f9', color: isDarkMode ? '#e2e8f0' : '#1e293b' }}>
       <Sidebar activeTab={adminTab} setActiveTab={(tab) => { setAdminTab(tab); }}
         pendingClassesCount={pendingClassesCount}
         pendingApplicationsCount={pendingApplicationsCount + pendingTutorVerify}
         unreadContactsCount={unreadContactsCount}
         pendingRegistrationsCount={pendingRegistrations}
         activeMatchesCount={matches.filter(m => m.status === 'Đang dạy').length}
-        adminRole={settings.adminRole} />
+        adminRole={settings.adminRole}
+        isDark={isDarkMode} onToggleTheme={toggleTheme} />
 
 
-      <main className="flex-1 flex flex-col h-full overflow-hidden">
+      <main style={{ flex: 1, display: 'flex', flexDirection: 'column', height: '100%', overflow: 'hidden' }}>
         <Header onAiSearch={handleAiSearch} isSearching={isSearching} hasApiKey={!!apiKey}
           notifications={notifications} onMarkNotifRead={handleMarkNotifRead}
           onMarkAllNotifsRead={handleMarkAllNotifsRead} onNavigate={setAdminTab} activeTab={adminTab} />
 
         {aiSearchSummary && (
-          <div className="bg-blue-600 text-white px-8 py-2 text-xs font-medium flex items-center justify-between shrink-0">
+          <div style={{ background: '#2563eb', color: '#fff', padding: '8px 32px', fontSize: 12, fontWeight: 500, display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexShrink: 0 }}>
             <span>{aiSearchSummary}</span>
-            <button onClick={() => setAiSearchSummary('')} className="underline font-bold hover:opacity-80 cursor-pointer">Đóng</button>
+            <button onClick={() => setAiSearchSummary('')} style={{ background: 'none', border: 'none', color: '#fff', cursor: 'pointer', fontWeight: 700, textDecoration: 'underline' }}>Đóng</button>
           </div>
         )}
 
-        <section className="flex-1 p-6 lg:p-8 grid grid-cols-12 gap-6 content-start overflow-y-auto" style={{ scrollbarWidth: 'thin' }}>
+        <section style={{ flex: 1, padding: 24, overflowY: 'auto', scrollbarWidth: 'thin' as any }}>
           {adminTab === 'dashboard' && (
             <Dashboard
               classes={classes} tutors={tutors} matches={matches}
@@ -918,7 +931,7 @@ export default function App() {
       {/* AI Generator Modal */}
       {showAiGenModal && (
         <div className="fixed inset-0 z-50 modal-backdrop flex items-center justify-center p-4 animate-fade-in">
-          <div className="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 animate-scale-in">
+          <div className="bg-white rounded-lg max-w-lg w-full p-6 shadow-2xl border border-slate-200 animate-scale-in">
             <h3 className="text-lg font-bold text-slate-800 mb-2 flex items-center gap-2">
               <span className="p-1.5 bg-purple-100 text-purple-700 rounded-lg">✨</span>
               <span>AI Soạn thảo lớp học</span>
@@ -927,19 +940,19 @@ export default function App() {
               Gõ ghi chú nhanh (VD: "chị Hương tìm gia sư toán 11 ở Cầu Giấy tuần 3 buổi"), AI sẽ tự động chuẩn hóa.
             </p>
             {!apiKey && (
-              <div className="bg-amber-50 text-amber-800 text-xs font-semibold p-3 rounded-xl border border-amber-200 mb-4">
+              <div className="bg-amber-50 text-amber-800 text-xs font-semibold p-3 rounded-lg border border-amber-200 mb-4">
                 ⚠️ Cần cấu hình Gemini API Key trong Cài đặt trước khi sử dụng AI.
               </div>
             )}
             <form onSubmit={handleGenerateClassFromNotes} className="space-y-4 text-sm">
               <textarea rows={4} required value={rawNotes} onChange={(e) => setRawNotes(e.target.value)}
                 placeholder="Nhập ghi chú nhanh..."
-                className="w-full p-3.5 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:bg-white focus:border-purple-500 text-sm" />
+                className="w-full p-3.5 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:bg-white focus:border-purple-500 text-sm" />
               <div className="flex justify-end gap-3 pt-2">
                 <button type="button" onClick={() => setShowAiGenModal(false)}
-                  className="px-4 py-2 border border-slate-200 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-100 cursor-pointer">Hủy</button>
+                  className="px-4 py-2 border border-slate-200 rounded-lg text-xs font-bold text-slate-600 hover:bg-slate-100 cursor-pointer">Hủy</button>
                 <button type="submit" disabled={genLoading || !apiKey}
-                  className="px-5 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-xl text-xs font-bold shadow-md shadow-purple-600/20 flex items-center gap-2 cursor-pointer disabled:opacity-50">
+                  className="px-5 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg text-xs font-bold shadow-md shadow-purple-600/20 flex items-center gap-2 cursor-pointer disabled:opacity-50">
                   {genLoading ? 'AI đang phân tích...' : '✨ Phân tích & Đăng lớp'}
                 </button>
               </div>

@@ -71,7 +71,7 @@ export const StudentTab: React.FC<StudentTabProps> = ({ students, onAddStudent, 
   };
 
   return (
-    <div className="col-span-12 bg-white rounded-2xl border border-slate-200 shadow-xs p-6 space-y-6">
+    <div className="bg-white rounded-lg border border-slate-200/75 shadow-sm p-6 space-y-6">
       <div className="flex justify-between items-center border-b border-slate-100 pb-4">
         <div>
           <h2 className="text-xl font-bold text-slate-800">Quản lý Học sinh</h2>
@@ -84,12 +84,12 @@ export const StudentTab: React.FC<StudentTabProps> = ({ students, onAddStudent, 
             const blob = new Blob(['\uFEFF' + header + rows], { type: 'text/csv;charset=utf-8' });
             const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = `hoc-sinh-${new Date().toISOString().slice(0,10)}.csv`; a.click(); URL.revokeObjectURL(url);
           }}
-            className="px-3 py-2 bg-white border border-slate-200 hover:border-slate-300 rounded-xl text-xs font-bold text-slate-600 cursor-pointer flex items-center gap-1.5">
+            className="px-3 py-2 bg-white border border-slate-200 hover:border-slate-300 rounded-lg text-xs font-bold text-slate-600 cursor-pointer flex items-center gap-1.5">
             <Download className="w-3.5 h-3.5" /> Export
           </button>
           <button onClick={() => setShowModal(true)}
-            className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold transition-colors flex items-center gap-2 shadow-md shadow-emerald-600/20 cursor-pointer">
-            <Plus className="w-4 h-4" /><span>Th\u00eam h\u1ecdc sinh</span>
+            className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs font-bold transition-colors flex items-center gap-2 shadow-sm shadow-indigo-600/20 cursor-pointer">
+            <Plus className="w-4 h-4" /><span>Thêm học sinh</span>
           </button>
         </div>
       </div>
@@ -101,12 +101,12 @@ export const StudentTab: React.FC<StudentTabProps> = ({ students, onAddStudent, 
             <Search className="w-4 h-4 absolute left-3 top-2.5 text-slate-400" />
             <input type="text" value={searchTerm} onChange={e => setSearchTerm(e.target.value)}
               placeholder="Tìm học sinh, phụ huynh, số điện thoại..."
-              className="w-full pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm outline-none focus:bg-white focus:border-blue-500" />
+              className="w-full pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm outline-none focus:bg-white focus:border-indigo-500 transition-colors" />
           </div>
           <div className="relative">
             <ArrowUpDown className="w-3.5 h-3.5 absolute left-2.5 top-2.5 text-slate-400" />
             <select value={sortBy} onChange={e => setSortBy(e.target.value as any)}
-              className="pl-8 pr-3 py-2 bg-white border border-slate-200 rounded-xl text-xs font-semibold text-slate-600 outline-none cursor-pointer">
+              className="pl-8 pr-3 py-2 bg-white border border-slate-200 rounded-lg text-xs font-semibold text-slate-600 outline-none cursor-pointer">
               <option value="newest">Mới nhất</option>
               <option value="name">Tên A-Z</option>
               <option value="grade">Lớp</option>
@@ -122,118 +122,160 @@ export const StudentTab: React.FC<StudentTabProps> = ({ students, onAddStudent, 
           {students.length === 0 && <p className="text-xs mt-1">Nhấn "Thêm học sinh" để bắt đầu quản lý</p>}
         </div>
       ) : (
-        <div className="space-y-3">
-          {filtered.map((st) => (
-            <div key={st.id || st.phone} className="border border-slate-200 rounded-xl overflow-hidden">
-              {/* Main row */}
-              <div className="flex items-center px-5 py-3.5 hover:bg-slate-50/80 transition-colors cursor-pointer"
-                onClick={() => setExpandedId(expandedId === st.id ? null : st.id || null)}>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className="font-bold text-sm text-slate-800">{st.name}</span>
-                    <span className="text-xs bg-slate-100 px-2 py-0.5 rounded font-medium text-slate-600">{st.grade}</span>
-                  </div>
-                  <div className="flex items-center gap-3 text-xs text-slate-500">
-                    <span className="flex items-center gap-1"><User className="w-3 h-3" /> {st.parentRelation || 'PHHS'}: {st.parentName || '—'}</span>
-                    <span className="flex items-center gap-1"><Phone className="w-3 h-3" /> {st.parentPhone || st.phone}</span>
-                  </div>
-                </div>
-                <select value={st.status} onChange={(e) => { e.stopPropagation(); st.id && onUpdateStatus(st.id, e.target.value as any); }}
-                  className={`px-2.5 py-1 rounded-lg text-[10px] font-bold cursor-pointer border outline-none mr-3 ${
-                    st.status === 'Đang học' ? 'bg-green-100 text-green-700 border-green-300' :
-                    st.status === 'Chờ xếp lớp' ? 'bg-blue-100 text-blue-700 border-blue-300' :
-                    'bg-slate-100 text-slate-600 border-slate-300'
-                  }`}>
-                  <option value="Đang học">Đang học</option>
-                  <option value="Chờ xếp lớp">Chờ xếp lớp</option>
-                  <option value="Bảo lưu">Bảo lưu</option>
-                </select>
-                <div className="flex items-center gap-2">
-                  {st.id && (
-                    <button onClick={(e) => { e.stopPropagation(); if (window.confirm(`Xóa học sinh ${st.name}?`)) onDeleteStudent(st.id!); }}
-                      className="p-1.5 hover:bg-red-50 text-slate-400 hover:text-red-600 rounded-lg transition-colors cursor-pointer">
-                      <Trash2 className="w-4 h-4" />
-                    </button>
-                  )}
-                  {expandedId === st.id ? <ChevronUp className="w-4 h-4 text-slate-400" /> : <ChevronDown className="w-4 h-4 text-slate-400" />}
-                </div>
-              </div>
-
-              {/* Expanded detail */}
-              {expandedId === st.id && (
-                <div className="px-5 py-4 bg-slate-50 border-t border-slate-200 text-xs space-y-3">
-                  <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-                    {st.dob && <div><span className="text-slate-400 block">Ngày sinh</span><span className="font-semibold text-slate-700">{st.dob}</span></div>}
-                    {st.school && <div><span className="text-slate-400 block">Trường</span><span className="font-semibold text-slate-700">{st.school}</span></div>}
-                    {st.parentEmail && <div><span className="text-slate-400 block">Email PHHS</span><a href={`mailto:${st.parentEmail}`} className="font-semibold text-blue-600">{st.parentEmail}</a></div>}
-                    {st.parentAddress && <div><span className="text-slate-400 block">Địa chỉ</span><span className="font-semibold text-slate-700">{st.parentAddress}</span></div>}
-                  </div>
-                  {st.emergencyContacts && st.emergencyContacts.length > 0 && (
-                    <div>
-                      <span className="text-slate-400 block mb-1">Liên hệ khẩn cấp</span>
-                      <div className="flex flex-wrap gap-2">
-                        {st.emergencyContacts.map((c, i) => (
-                          <span key={i} className="inline-flex items-center gap-1 bg-white border border-slate-200 rounded-lg px-2 py-1">
-                            <Phone className="w-3 h-3 text-blue-600" />
-                            <span className="font-semibold text-slate-700">{c.name}</span>
-                            <span className="text-slate-400">({c.relation})</span>
-                            <a href={`tel:${c.phone}`} className="text-blue-600 font-mono">{c.phone}</a>
-                          </span>
-                        ))}
+        <div className="border border-slate-200 overflow-hidden" style={{ borderRadius: 4 }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
+            <thead>
+              <tr style={{ background: '#f8fafc', borderBottom: '1px solid #e2e8f0' }}>
+                <th style={{ padding: '10px 16px', textAlign: 'left', fontSize: 11, fontWeight: 600, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Học sinh</th>
+                <th style={{ padding: '10px 16px', textAlign: 'left', fontSize: 11, fontWeight: 600, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Lớp</th>
+                <th style={{ padding: '10px 16px', textAlign: 'left', fontSize: 11, fontWeight: 600, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Phụ huynh</th>
+                <th style={{ padding: '10px 16px', textAlign: 'left', fontSize: 11, fontWeight: 600, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Liên hệ</th>
+                <th style={{ padding: '10px 16px', textAlign: 'center', fontSize: 11, fontWeight: 600, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Trạng thái</th>
+                <th style={{ padding: '10px 16px', textAlign: 'center', fontSize: 11, fontWeight: 600, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.05em', width: 90 }}>Thao tác</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filtered.map((st) => (
+                <React.Fragment key={st.id || st.phone}>
+                  <tr
+                    onClick={() => setExpandedId(expandedId === st.id ? null : st.id || null)}
+                    style={{ borderBottom: '1px solid #f1f5f9', cursor: 'pointer', transition: 'background 0.1s' }}
+                    onMouseEnter={e => (e.currentTarget.style.background = '#f8fafc')}
+                    onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
+                  >
+                    <td style={{ padding: '12px 16px' }}>
+                      <div style={{ fontWeight: 600, color: '#1e293b' }}>{st.name}</div>
+                      {st.school && <div style={{ fontSize: 11, color: '#94a3b8', marginTop: 2 }}>{st.school}</div>}
+                    </td>
+                    <td style={{ padding: '12px 16px' }}>
+                      <span style={{ fontSize: 12, fontWeight: 600, color: '#475569', background: '#f1f5f9', padding: '2px 8px', borderRadius: 3 }}>{st.grade}</span>
+                    </td>
+                    <td style={{ padding: '12px 16px', color: '#475569' }}>
+                      <div style={{ fontSize: 13 }}>{st.parentRelation || 'PHHS'}: {st.parentName || '—'}</div>
+                    </td>
+                    <td style={{ padding: '12px 16px' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 12, color: '#475569' }}>
+                        <Phone style={{ width: 12, height: 12, color: '#94a3b8' }} />
+                        {st.parentPhone || st.phone}
                       </div>
-                    </div>
-                  )}
-                  {st.note && <div><span className="text-slate-400 block">Ghi chú</span><span className="text-slate-700">{st.note}</span></div>}
-                  
-                  {/* Admin Note */}
-                  <div className="pt-2 border-t border-slate-200">
-                    <span className="text-slate-400 block mb-1 flex items-center gap-1"><StickyNote className="w-3 h-3" /> Ghi chú admin (nội bộ)</span>
-                    {editingNote === st.id ? (
-                      <div className="flex gap-1">
-                        <input type="text" value={noteText} onChange={e => setNoteText(e.target.value)}
-                          placeholder="Ví dụ: Phụ huynh ký tính, cần gia sư kiên nhẫn..." autoFocus
-                          className="flex-1 px-2 py-1 text-xs border border-blue-300 rounded-md bg-blue-50 outline-none" />
-                        <button onClick={() => { if (st.id && onUpdateNote) { onUpdateNote(st.id, noteText); } setEditingNote(null); }}
-                          className="px-2 py-1 bg-blue-600 text-white rounded-md cursor-pointer text-xs flex items-center gap-1"><Save className="w-3 h-3" /> Lưu</button>
-                        <button onClick={() => setEditingNote(null)}
-                          className="px-2 py-1 bg-slate-200 text-slate-600 rounded-md cursor-pointer"><X className="w-3 h-3" /></button>
+                      {st.parentEmail && (
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 11, color: '#94a3b8', marginTop: 2 }}>
+                          <Mail style={{ width: 11, height: 11 }} />
+                          {st.parentEmail}
+                        </div>
+                      )}
+                    </td>
+                    <td style={{ padding: '12px 16px', textAlign: 'center' }}>
+                      <select value={st.status} onChange={(e) => { e.stopPropagation(); st.id && onUpdateStatus(st.id, e.target.value as any); }}
+                        onClick={(e) => e.stopPropagation()}
+                        style={{
+                          fontSize: 11, fontWeight: 700, padding: '3px 8px', borderRadius: 3, cursor: 'pointer', border: '1px solid',
+                          background: st.status === 'Đang học' ? '#ecfdf5' : st.status === 'Chờ xếp lớp' ? '#eef2ff' : '#f8fafc',
+                          color: st.status === 'Đang học' ? '#059669' : st.status === 'Chờ xếp lớp' ? '#4f46e5' : '#64748b',
+                          borderColor: st.status === 'Đang học' ? '#a7f3d0' : st.status === 'Chờ xếp lớp' ? '#c7d2fe' : '#e2e8f0',
+                          outline: 'none',
+                        }}>
+                        <option value="Đang học">Đang học</option>
+                        <option value="Chờ xếp lớp">Chờ xếp lớp</option>
+                        <option value="Bảo lưu">Bảo lưu</option>
+                      </select>
+                    </td>
+                    <td style={{ padding: '12px 16px', textAlign: 'center' }}>
+                      <div style={{ display: 'flex', justifyContent: 'center', gap: 4 }}>
+                        {st.id && (
+                          <button onClick={(e) => { e.stopPropagation(); if (window.confirm(`Xóa học sinh ${st.name}?`)) onDeleteStudent(st.id!); }}
+                            style={{ padding: 4, border: 'none', background: 'transparent', cursor: 'pointer', color: '#94a3b8' }}
+                            onMouseEnter={e => (e.currentTarget.style.color = '#ef4444')}
+                            onMouseLeave={e => (e.currentTarget.style.color = '#94a3b8')}
+                          >
+                            <Trash2 style={{ width: 14, height: 14 }} />
+                          </button>
+                        )}
+                        {expandedId === st.id ? <ChevronUp style={{ width: 14, height: 14, color: '#94a3b8' }} /> : <ChevronDown style={{ width: 14, height: 14, color: '#94a3b8' }} />}
                       </div>
-                    ) : (
-                      <button onClick={() => { setEditingNote(st.id || null); setNoteText(st.adminNote || ''); }}
-                        className="text-xs text-slate-400 hover:text-blue-600 cursor-pointer transition-colors">
-                        {st.adminNote ? <span className="text-slate-600 italic">"{st.adminNote}"</span> : '+ Thêm ghi chú'}
-                      </button>
-                    )}
-                  </div>
-                </div>
-              )}
-            </div>
-          ))}
+                    </td>
+                  </tr>
+                  {/* Expanded detail row */}
+                  {expandedId === st.id && (
+                    <tr>
+                      <td colSpan={6} style={{ padding: '16px 20px', background: '#f8fafc', borderBottom: '1px solid #e2e8f0' }}>
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 12, fontSize: 12, marginBottom: st.adminNote || editingNote === st.id ? 12 : 0 }}>
+                          {st.dob && <div><span style={{ display: 'block', fontSize: 10, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 2 }}>Ngày sinh</span><span style={{ fontWeight: 600, color: '#334155' }}>{st.dob}</span></div>}
+                          {st.school && <div><span style={{ display: 'block', fontSize: 10, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 2 }}>Trường</span><span style={{ fontWeight: 600, color: '#334155' }}>{st.school}</span></div>}
+                          {st.parentAddress && <div><span style={{ display: 'block', fontSize: 10, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 2 }}>Địa chỉ</span><span style={{ fontWeight: 600, color: '#334155' }}>{st.parentAddress}</span></div>}
+                          {st.note && <div><span style={{ display: 'block', fontSize: 10, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 2 }}>Ghi chú</span><span style={{ color: '#334155' }}>{st.note}</span></div>}
+                        </div>
+                        {st.emergencyContacts && st.emergencyContacts.length > 0 && (
+                          <div style={{ marginBottom: 12 }}>
+                            <span style={{ fontSize: 10, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Liên hệ khẩn cấp</span>
+                            <div style={{ display: 'flex', gap: 8, marginTop: 4, flexWrap: 'wrap' }}>
+                              {st.emergencyContacts.map((c, i) => (
+                                <span key={i} style={{ display: 'inline-flex', alignItems: 'center', gap: 4, background: '#fff', border: '1px solid #e2e8f0', borderRadius: 3, padding: '4px 8px', fontSize: 12 }}>
+                                  <Phone style={{ width: 11, height: 11, color: '#4f46e5' }} />
+                                  <span style={{ fontWeight: 600, color: '#334155' }}>{c.name}</span>
+                                  <span style={{ color: '#94a3b8' }}>({c.relation})</span>
+                                  <a href={`tel:${c.phone}`} style={{ color: '#4f46e5', fontFamily: 'monospace' }}>{c.phone}</a>
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                        {/* Admin note */}
+                        <div style={{ borderTop: '1px solid #e2e8f0', paddingTop: 10 }}>
+                          <span style={{ fontSize: 10, color: '#94a3b8', display: 'flex', alignItems: 'center', gap: 4, marginBottom: 4 }}><StickyNote style={{ width: 11, height: 11 }} /> GHI CHÚ ADMIN (NỘI BỘ)</span>
+                          {editingNote === st.id ? (
+                            <div style={{ display: 'flex', gap: 4 }}>
+                              <input type="text" value={noteText} onChange={e => setNoteText(e.target.value)}
+                                placeholder="Ví dụ: Phụ huynh kỹ tính..." autoFocus
+                                style={{ flex: 1, padding: '4px 8px', fontSize: 12, border: '1px solid #818cf8', borderRadius: 3, background: '#eef2ff', outline: 'none' }} />
+                              <button onClick={() => { if (st.id && onUpdateNote) { onUpdateNote(st.id, noteText); } setEditingNote(null); }}
+                                style={{ padding: '4px 10px', background: '#4f46e5', color: '#fff', border: 'none', borderRadius: 3, fontSize: 11, fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 3 }}>
+                                <Save style={{ width: 11, height: 11 }} /> Lưu
+                              </button>
+                              <button onClick={() => setEditingNote(null)}
+                                style={{ padding: '4px 8px', background: '#e2e8f0', border: 'none', borderRadius: 3, cursor: 'pointer' }}>
+                                <X style={{ width: 11, height: 11, color: '#64748b' }} />
+                              </button>
+                            </div>
+                          ) : (
+                            <button onClick={() => { setEditingNote(st.id || null); setNoteText(st.adminNote || ''); }}
+                              style={{ fontSize: 12, color: '#94a3b8', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>
+                              {st.adminNote ? <span style={{ color: '#475569', fontStyle: 'italic' }}>"{st.adminNote}"</span> : '+ Thêm ghi chú'}
+                            </button>
+                          )}
+                        </div>
+                      </td>
+                    </tr>
+                  )}
+                </React.Fragment>
+              ))}
+            </tbody>
+          </table>
         </div>
       )}
 
       {/* Add Modal */}
       {showModal && (
         <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 animate-scale-in max-h-[90vh] overflow-y-auto">
+          <div className="bg-white rounded-lg max-w-lg w-full p-6 shadow-2xl border border-slate-200/75 animate-scale-in max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-bold text-slate-800">Thêm Học sinh mới</h3>
               <button onClick={() => { setShowModal(false); resetForm(); }} className="p-1 hover:bg-slate-100 rounded-lg cursor-pointer"><X className="w-5 h-5 text-slate-400" /></button>
             </div>
             <form onSubmit={handleCreate} className="space-y-4 text-sm">
               {/* Học sinh info */}
-              <div className="bg-slate-50 rounded-xl p-4 space-y-3">
-                <h4 className="text-xs font-bold uppercase text-slate-500 flex items-center gap-1"><User className="w-3.5 h-3.5" /> Thông tin học sinh</h4>
+              <div className="bg-slate-50 rounded-lg p-4 space-y-3">
+                <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500 flex items-center gap-1"><User className="w-3.5 h-3.5" /> Thông tin học sinh</h4>
                 <div className="grid grid-cols-2 gap-3">
                   <div>
                     <label className="block text-xs font-bold text-slate-600 mb-1">Tên học sinh *</label>
                     <input required value={name} onChange={e => setName(e.target.value)} placeholder="Nguyễn Văn B"
-                      className="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl outline-none focus:border-blue-500 text-sm" />
+                      className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg outline-none focus:border-indigo-500 text-sm transition-colors" />
                   </div>
                   <div>
                     <label className="block text-xs font-bold text-slate-600 mb-1">Lớp</label>
                     <select value={grade} onChange={e => setGrade(e.target.value)}
-                      className="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl outline-none text-sm">
+                      className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg outline-none text-sm focus:border-indigo-500 transition-colors">
                       {['Tiểu học', 'Lớp 6', 'Lớp 7', 'Lớp 8', 'Lớp 9', 'Lớp 10', 'Lớp 11', 'Lớp 12', 'Đại học', 'Khác'].map(g => <option key={g}>{g}</option>)}
                     </select>
                   </div>
@@ -242,54 +284,54 @@ export const StudentTab: React.FC<StudentTabProps> = ({ students, onAddStudent, 
                   <div>
                     <label className="block text-xs font-bold text-slate-600 mb-1">Ngày sinh</label>
                     <input type="date" value={dob} onChange={e => setDob(e.target.value)}
-                      className="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl outline-none text-sm" />
+                      className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg outline-none text-sm focus:border-indigo-500 transition-colors" />
                   </div>
                   <div>
                     <label className="block text-xs font-bold text-slate-600 mb-1">Trường</label>
                     <input value={school} onChange={e => setSchool(e.target.value)} placeholder="Ví dụ: THPT Chu Văn An"
-                      className="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl outline-none text-sm" />
+                      className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg outline-none text-sm focus:border-indigo-500 transition-colors" />
                   </div>
                 </div>
               </div>
 
               {/* PHHS info */}
-              <div className="bg-blue-50/50 rounded-xl p-4 space-y-3">
-                <h4 className="text-xs font-bold uppercase text-blue-600 flex items-center gap-1"><Users className="w-3.5 h-3.5" /> Thông tin Phụ huynh</h4>
+              <div className="bg-indigo-50/50 rounded-lg p-4 space-y-3">
+                <h4 className="text-xs font-bold uppercase tracking-wider text-indigo-600 flex items-center gap-1"><Users className="w-3.5 h-3.5" /> Thông tin Phụ huynh</h4>
                 <div className="grid grid-cols-3 gap-3">
                   <div>
                     <label className="block text-xs font-bold text-slate-600 mb-1">Quan hệ</label>
                     <select value={parentRelation} onChange={e => setParentRelation(e.target.value)}
-                      className="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl outline-none text-sm">
+                      className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg outline-none text-sm focus:border-indigo-500 transition-colors">
                       {['Bố', 'Mẹ', 'Ông', 'Bà', 'Anh/Chị', 'Khác'].map(r => <option key={r}>{r}</option>)}
                     </select>
                   </div>
                   <div className="col-span-2">
                     <label className="block text-xs font-bold text-slate-600 mb-1">Họ tên PHHS</label>
                     <input value={parentName} onChange={e => setParentName(e.target.value)} placeholder="Anh/Chị ..."
-                      className="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl outline-none text-sm" />
+                      className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg outline-none text-sm focus:border-indigo-500 transition-colors" />
                   </div>
                 </div>
                 <div className="grid grid-cols-2 gap-3">
                   <div>
                     <label className="block text-xs font-bold text-slate-600 mb-1">Số điện thoại phụ huynh *</label>
                     <input required type="tel" value={parentPhone} onChange={e => setParentPhone(e.target.value)} placeholder="0912345678"
-                      className="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl outline-none text-sm" />
+                      className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg outline-none text-sm focus:border-indigo-500 transition-colors" />
                   </div>
                   <div>
                     <label className="block text-xs font-bold text-slate-600 mb-1">Email</label>
                     <input type="email" value={parentEmail} onChange={e => setParentEmail(e.target.value)} placeholder="email@gmail.com"
-                      className="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl outline-none text-sm" />
+                      className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg outline-none text-sm focus:border-indigo-500 transition-colors" />
                   </div>
                 </div>
                 <div>
                   <label className="block text-xs font-bold text-slate-600 mb-1">Địa chỉ</label>
                   <input value={parentAddress} onChange={e => setParentAddress(e.target.value)} placeholder="Số nhà, phường/xã, quận/huyện"
-                    className="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl outline-none text-sm" />
+                    className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg outline-none text-sm focus:border-indigo-500 transition-colors" />
                 </div>
               </div>
 
               {/* Emergency contacts */}
-              <div className="bg-amber-50/50 rounded-xl p-4 space-y-2">
+              <div className="bg-amber-50/50 rounded-lg p-4 space-y-2">
                 <div className="flex items-center justify-between">
                   <h4 className="text-xs font-bold uppercase text-amber-700 flex items-center gap-1"><Phone className="w-3.5 h-3.5" /> Liên hệ khẩn cấp</h4>
                   <button type="button" onClick={addEmergency}
@@ -318,13 +360,13 @@ export const StudentTab: React.FC<StudentTabProps> = ({ students, onAddStudent, 
               <div>
                 <label className="block text-xs font-bold text-slate-600 mb-1">Ghi chú</label>
                 <textarea rows={2} value={note} onChange={e => setNote(e.target.value)} placeholder="Ghi chú thêm về học sinh..."
-                  className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl outline-none text-sm resize-none" />
+                  className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg outline-none text-sm resize-none focus:border-indigo-500 transition-colors" />
               </div>
 
               <div className="flex justify-end gap-3 pt-2">
                 <button type="button" onClick={() => { setShowModal(false); resetForm(); }}
-                  className="px-4 py-2 border border-slate-200 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-100 cursor-pointer">Hủy</button>
-                <button type="submit" className="px-5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold cursor-pointer">Lưu học sinh</button>
+                  className="px-4 py-2 border border-slate-200 rounded-lg text-xs font-bold text-slate-600 hover:bg-slate-100 cursor-pointer transition-colors">Hủy</button>
+                <button type="submit" className="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs font-bold cursor-pointer transition-colors shadow-sm">Lưu học sinh</button>
               </div>
             </form>
           </div>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { AdminSettings, FeeConfigItem, AdminRole, ADMIN_ROLE_CONFIG } from '../types';
 import { Settings, Key, Building2, Phone, Mail, MapPin, Save, CheckCircle2, AlertCircle, Eye, EyeOff, Sparkles, RefreshCw, Trash2, Shield, MessageCircle, Globe, Cloud, Plus, X, Search, DollarSign, CreditCard } from 'lucide-react';
 import { DEFAULT_HANOI_WARDS } from '../hanoiWards';
@@ -114,10 +114,10 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({ settings, onSaveSettin
   const maskedKey = apiKey ? apiKey.slice(0, 8) + '•'.repeat(Math.max(0, apiKey.length - 12)) + apiKey.slice(-4) : '';
 
   return (
-    <div className="col-span-12 space-y-6 animate-fade-in">
+    <div className="space-y-6 animate-fade-in">
       {/* Save Success Toast */}
       {saveSuccess && (
-        <div className="fixed top-6 right-6 z-50 bg-emerald-600 text-white px-6 py-3 rounded-xl shadow-lg flex items-center gap-2 text-sm font-semibold animate-fade-in">
+        <div className="fixed top-6 right-6 z-50 bg-emerald-600 text-white px-6 py-3 rounded-lg shadow-lg flex items-center gap-2 text-sm font-semibold animate-fade-in">
           <CheckCircle2 className="w-5 h-5" />
           <span>Đã lưu cài đặt thành công!</span>
         </div>
@@ -135,7 +135,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({ settings, onSaveSettin
         <button
           onClick={handleSaveAll}
           disabled={isSaving}
-          className="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold transition-colors flex items-center gap-2 cursor-pointer shadow-md shadow-blue-600/20"
+          className="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs font-bold transition-colors flex items-center gap-2 cursor-pointer shadow-md shadow-indigo-600/20"
         >
           <Save className="w-4 h-4" />
           <span>{isSaving ? 'Đang lưu...' : 'Lưu tất cả'}</span>
@@ -144,9 +144,9 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({ settings, onSaveSettin
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* AI API Key Configuration */}
-        <div className="bg-white rounded-2xl border border-slate-200 shadow-xs p-6 space-y-5">
+        <div className="bg-white rounded-lg border border-slate-200 shadow-xs p-6 space-y-5">
           <div className="flex items-center gap-2 border-b border-slate-100 pb-4">
-            <div className="p-2 bg-amber-50 text-amber-600 rounded-xl">
+            <div className="p-2 bg-amber-50 text-amber-600 rounded-lg">
               <Key className="w-5 h-5" />
             </div>
             <div>
@@ -163,7 +163,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({ settings, onSaveSettin
                 value={apiKey}
                 onChange={(e) => { setApiKey(e.target.value); setTestResult(null); }}
                 placeholder="AIzaSy... (lấy tại aistudio.google.com/apikey)"
-                className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:bg-white focus:border-blue-500 text-sm font-mono pr-24"
+                className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:bg-white focus:border-indigo-500 text-sm font-mono pr-24"
               />
               <div className="absolute right-2 top-1.5 flex items-center gap-1">
                 <button
@@ -178,7 +178,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({ settings, onSaveSettin
                   type="button"
                   onClick={handleTestKey}
                   disabled={isTesting || !apiKey.trim()}
-                  className="px-2.5 py-1 bg-slate-100 hover:bg-blue-600 hover:text-white text-slate-600 text-[10px] font-bold rounded-lg transition-colors cursor-pointer flex items-center gap-1"
+                  className="px-2.5 py-1 bg-slate-100 hover:bg-indigo-600 hover:text-white text-slate-600 text-[10px] font-bold rounded-lg transition-colors cursor-pointer flex items-center gap-1"
                 >
                   {isTesting ? <RefreshCw className="w-3 h-3 animate-spin" /> : <Sparkles className="w-3 h-3" />}
                   <span>{isTesting ? '...' : 'Test'}</span>
@@ -201,12 +201,12 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({ settings, onSaveSettin
             )}
           </div>
 
-          <div className="bg-blue-50 p-4 rounded-xl text-xs text-blue-800 space-y-1.5 border border-blue-100">
+          <div className="bg-indigo-50 p-4 rounded-lg text-xs text-blue-800 space-y-1.5 border border-indigo-100">
             <div className="font-bold flex items-center gap-1.5">
-              <Shield className="w-4 h-4 text-blue-600" />
+              <Shield className="w-4 h-4 text-indigo-600" />
               <span>Hướng dẫn lấy API Key</span>
             </div>
-            <ol className="list-decimal list-inside space-y-0.5 text-blue-700">
+            <ol className="list-decimal list-inside space-y-0.5 text-indigo-700">
               <li>Truy cập <b>aistudio.google.com/apikey</b></li>
               <li>Nhấn <b>"Create API Key"</b></li>
               <li>Copy key và dán vào ô trên</li>
@@ -232,9 +232,9 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({ settings, onSaveSettin
         </div>
 
         {/* Center Information */}
-        <div className="bg-white rounded-2xl border border-slate-200 shadow-xs p-6 space-y-5">
+        <div className="bg-white rounded-lg border border-slate-200 shadow-xs p-6 space-y-5">
           <div className="flex items-center gap-2 border-b border-slate-100 pb-4">
-            <div className="p-2 bg-blue-50 text-blue-600 rounded-xl">
+            <div className="p-2 bg-indigo-50 text-indigo-600 rounded-lg">
               <Building2 className="w-5 h-5" />
             </div>
             <div>
@@ -252,7 +252,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({ settings, onSaveSettin
                 value={centerName}
                 onChange={(e) => setCenterName(e.target.value)}
                 placeholder="Gia Sư Thành Đạt"
-                className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:bg-white focus:border-blue-500 text-sm"
+                className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:bg-white focus:border-indigo-500 text-sm"
               />
             </div>
           </div>
@@ -267,7 +267,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({ settings, onSaveSettin
                   value={centerPhone}
                   onChange={(e) => setCenterPhone(e.target.value)}
                   placeholder="1900.xxxx"
-                  className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:bg-white focus:border-blue-500 text-sm"
+                  className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:bg-white focus:border-indigo-500 text-sm"
                 />
               </div>
             </div>
@@ -280,7 +280,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({ settings, onSaveSettin
                   value={centerEmail}
                   onChange={(e) => setCenterEmail(e.target.value)}
                   placeholder="contact@giasuthanhdat.vn"
-                  className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:bg-white focus:border-blue-500 text-sm"
+                  className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:bg-white focus:border-indigo-500 text-sm"
                 />
               </div>
             </div>
@@ -295,7 +295,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({ settings, onSaveSettin
                 value={centerAddress}
                 onChange={(e) => setCenterAddress(e.target.value)}
                 placeholder="Hà Nội"
-                className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:bg-white focus:border-blue-500 text-sm"
+                className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:bg-white focus:border-indigo-500 text-sm"
               />
             </div>
           </div>
@@ -303,7 +303,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({ settings, onSaveSettin
           {/* Zalo & Social */}
           <div className="space-y-4 pt-4 border-t border-slate-100">
             <h4 className="font-bold text-xs uppercase text-slate-600 flex items-center gap-1.5">
-              <MessageCircle className="w-4 h-4 text-blue-500" /><span>Zalo & Mạng xã hội</span>
+              <MessageCircle className="w-4 h-4 text-indigo-500" /><span>Zalo & Mạng xã hội</span>
             </h4>
             <div className="grid grid-cols-2 gap-4">
               <div>
@@ -312,7 +312,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({ settings, onSaveSettin
                   <MessageCircle className="w-4 h-4 absolute left-3.5 top-3.5 text-slate-400" />
                   <input type="text" value={zaloNumber} onChange={(e) => setZaloNumber(e.target.value)}
                     placeholder="0912345678"
-                    className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:bg-white focus:border-blue-500 text-sm" />
+                    className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:bg-white focus:border-indigo-500 text-sm" />
                 </div>
                 <p className="text-[10px] text-slate-400 mt-1">Hiển thị nút Zalo trên trang công khai</p>
               </div>
@@ -322,7 +322,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({ settings, onSaveSettin
                   <Globe className="w-4 h-4 absolute left-3.5 top-3.5 text-slate-400" />
                   <input type="text" value={facebookUrl} onChange={(e) => setFacebookUrl(e.target.value)}
                     placeholder="https://facebook.com/..."
-                    className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:bg-white focus:border-blue-500 text-sm" />
+                    className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:bg-white focus:border-indigo-500 text-sm" />
                 </div>
               </div>
             </div>
@@ -334,9 +334,9 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({ settings, onSaveSettin
         </div>
 
         {/* Cloudinary Config */}
-        <div className="bg-white rounded-2xl border border-slate-200 shadow-xs p-6 space-y-5 col-span-1 lg:col-span-2">
+        <div className="bg-white rounded-lg border border-slate-200 shadow-xs p-6 space-y-5 col-span-1 lg:col-span-2">
           <div className="flex items-center gap-2 border-b border-slate-100 pb-4">
-            <div className="p-2 bg-purple-50 text-purple-600 rounded-xl">
+            <div className="p-2 bg-purple-50 text-purple-600 rounded-lg">
               <Cloud className="w-5 h-5" />
             </div>
             <div>
@@ -350,17 +350,17 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({ settings, onSaveSettin
               <label className="block text-xs font-bold uppercase text-slate-600 mb-1.5">Cloud Name</label>
               <input type="text" value={cloudinaryCloudName} onChange={(e) => setCloudinaryCloudName(e.target.value)}
                 placeholder="Ví dụ: dkpvfqz1"
-                className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:bg-white focus:border-blue-500 text-sm font-mono" />
+                className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:bg-white focus:border-indigo-500 text-sm font-mono" />
             </div>
             <div>
               <label className="block text-xs font-bold uppercase text-slate-600 mb-1.5">Upload Preset (Unsigned)</label>
               <input type="text" value={cloudinaryPreset} onChange={(e) => setCloudinaryPreset(e.target.value)}
                 placeholder="Ví dụ: o1stheydat"
-                className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:bg-white focus:border-blue-500 text-sm font-mono" />
+                className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:bg-white focus:border-indigo-500 text-sm font-mono" />
             </div>
           </div>
 
-          <div className="bg-purple-50 p-4 rounded-xl text-xs text-purple-800 space-y-1.5 border border-purple-100">
+          <div className="bg-purple-50 p-4 rounded-lg text-xs text-purple-800 space-y-1.5 border border-purple-100">
             <div className="font-bold flex items-center gap-1.5">
               <Cloud className="w-4 h-4 text-purple-600" />
               <span>Hướng dẫn lấy thông tin Cloudinary</span>
@@ -389,9 +389,9 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({ settings, onSaveSettin
         </div>
 
         {/* F42: Bank Info for QR */}
-        <div className="bg-white rounded-2xl border border-slate-200 shadow-xs p-6 space-y-4">
+        <div className="bg-white rounded-lg border border-slate-200 shadow-xs p-6 space-y-4">
           <div className="flex items-center gap-2 border-b border-slate-100 pb-4">
-            <div className="p-2 bg-emerald-50 text-emerald-600 rounded-xl">
+            <div className="p-2 bg-emerald-50 text-emerald-600 rounded-lg">
               <CreditCard className="w-5 h-5" />
             </div>
             <div>
@@ -403,7 +403,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({ settings, onSaveSettin
             <div>
               <label className="block text-[11px] font-bold uppercase text-slate-600 mb-1">Ngân hàng</label>
               <select value={bankName} onChange={e => setBankName(e.target.value)}
-                className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-blue-500 text-sm">
+                className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:border-indigo-500 text-sm">
                 <option value="">-- Chọn --</option>
                 {['Techcombank', 'Vietcombank', 'BIDV', 'VietinBank', 'MB Bank', 'ACB', 'Sacombank', 'TPBank', 'VPBank', 'Agribank'].map(b => (
                   <option key={b} value={b}>{b}</option>
@@ -413,30 +413,30 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({ settings, onSaveSettin
             <div>
               <label className="block text-[11px] font-bold uppercase text-slate-600 mb-1">Mã BIN</label>
               <input type="text" value={bankBin} onChange={e => setBankBin(e.target.value)} placeholder="Ví dụ: 970407"
-                className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-blue-500 text-sm" />
+                className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:border-indigo-500 text-sm" />
             </div>
           </div>
           <div>
             <label className="block text-[11px] font-bold uppercase text-slate-600 mb-1">Số tài khoản</label>
             <input type="text" value={bankAccount} onChange={e => setBankAccount(e.target.value)} placeholder="0123456789"
-              className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-blue-500 text-sm" />
+              className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:border-indigo-500 text-sm" />
           </div>
           <div>
             <label className="block text-[11px] font-bold uppercase text-slate-600 mb-1">Chủ tài khoản</label>
             <input type="text" value={bankAccountName} onChange={e => setBankAccountName(e.target.value)} placeholder="NGUYEN VAN A"
-              className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-blue-500 text-sm" />
+              className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:border-indigo-500 text-sm" />
           </div>
           {bankAccount && bankBin && (
-            <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-3 text-xs text-emerald-700">
+            <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-3 text-xs text-emerald-700">
               ✅ Đã cấu hình — QR sẽ hiện khi thu phí kết nối
             </div>
           )}
         </div>
 
         {/* Admin Password */}
-        <div className="bg-white rounded-2xl border border-slate-200 shadow-xs p-6 space-y-4">
+        <div className="bg-white rounded-lg border border-slate-200 shadow-xs p-6 space-y-4">
           <div className="flex items-center gap-2 border-b border-slate-100 pb-4">
-            <div className="p-2 bg-red-50 text-red-600 rounded-xl">
+            <div className="p-2 bg-red-50 text-red-600 rounded-lg">
               <Shield className="w-5 h-5" />
             </div>
             <div>
@@ -447,16 +447,16 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({ settings, onSaveSettin
           <div>
             <label className="block text-[11px] font-bold uppercase text-slate-600 mb-1">Mật khẩu hiện tại</label>
             <input type="text" value={adminPassword} onChange={e => setAdminPassword(e.target.value)} placeholder="admin123"
-              className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-blue-500 text-sm" />
+              className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:border-indigo-500 text-sm" />
             <p className="text-[10px] text-slate-400 mt-1">Mặc định: admin123 — Hãy đổi sang mật khẩu mạnh hơn</p>
           </div>
         </div>
 
         {/* Ward Management */}
-        <div className="bg-white rounded-2xl border border-slate-200 shadow-xs p-6 space-y-5 col-span-1 lg:col-span-2">
+        <div className="bg-white rounded-lg border border-slate-200 shadow-xs p-6 space-y-5 col-span-1 lg:col-span-2">
           <div className="flex items-center justify-between border-b border-slate-100 pb-4">
             <div className="flex items-center gap-2">
-              <div className="p-2 bg-emerald-50 text-emerald-600 rounded-xl">
+              <div className="p-2 bg-emerald-50 text-emerald-600 rounded-lg">
                 <MapPin className="w-5 h-5" />
               </div>
               <div>
@@ -482,7 +482,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({ settings, onSaveSettin
                     setNewWard('');
                   }
                 }}
-                className="w-full pl-9 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:bg-white focus:border-emerald-500 text-sm" />
+                className="w-full pl-9 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:bg-white focus:border-emerald-500 text-sm" />
             </div>
             <button type="button" onClick={() => {
               if (newWard.trim() && !wards.includes(newWard.trim())) {
@@ -490,7 +490,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({ settings, onSaveSettin
                 setNewWard('');
               }
             }}
-              className="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl cursor-pointer flex items-center gap-1">
+              className="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-lg cursor-pointer flex items-center gap-1">
               <Plus className="w-3.5 h-3.5" /><span>Thêm</span>
             </button>
           </div>
@@ -500,7 +500,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({ settings, onSaveSettin
             <Search className="w-4 h-4 absolute left-3 top-2.5 text-slate-400" />
             <input type="text" value={wardSearchTerm} onChange={e => setWardSearchTerm(e.target.value)}
               placeholder="🔍 Tìm xã/phường..."
-              className="w-full pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:bg-white focus:border-blue-500 text-sm" />
+              className="w-full pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:bg-white focus:border-indigo-500 text-sm" />
           </div>
 
           {/* Ward list */}
@@ -522,9 +522,9 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({ settings, onSaveSettin
         </div>
 
         {/* Feature 17: Admin Role Configuration */}
-        <div className="bg-white rounded-2xl border border-slate-200 shadow-xs p-6 space-y-4 col-span-1 lg:col-span-2">
+        <div className="bg-white rounded-lg border border-slate-200 shadow-xs p-6 space-y-4 col-span-1 lg:col-span-2">
           <div className="flex items-center gap-2 border-b border-slate-100 pb-4">
-            <div className="p-2 bg-red-50 text-red-600 rounded-xl">
+            <div className="p-2 bg-red-50 text-red-600 rounded-lg">
               <Shield className="w-5 h-5" />
             </div>
             <div>
@@ -535,8 +535,8 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({ settings, onSaveSettin
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             {(Object.entries(ADMIN_ROLE_CONFIG) as [AdminRole, typeof ADMIN_ROLE_CONFIG[AdminRole]][]).map(([role, config]) => (
               <button key={role} onClick={() => setAdminRole(role)}
-                className={`p-4 rounded-xl border-2 cursor-pointer transition-all text-left ${
-                  adminRole === role ? 'border-blue-500 bg-blue-50 ring-2 ring-blue-200' : 'border-slate-200 hover:border-slate-300'
+                className={`p-4 rounded-lg border-2 cursor-pointer transition-all text-left ${
+                  adminRole === role ? 'border-indigo-500 bg-indigo-50 ring-2 ring-indigo-200' : 'border-slate-200 hover:border-slate-300'
                 }`}>
                 <div className="w-3 h-3 rounded-full mb-2" style={{ background: config.color }} />
                 <div className="text-sm font-bold text-slate-800">{config.label}</div>
@@ -548,10 +548,10 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({ settings, onSaveSettin
         </div>
 
         {/* Feature 8: Fee Configuration */}
-        <div className="bg-white rounded-2xl border border-slate-200 shadow-xs p-6 space-y-5 col-span-1 lg:col-span-2">
+        <div className="bg-white rounded-lg border border-slate-200 shadow-xs p-6 space-y-5 col-span-1 lg:col-span-2">
           <div className="flex items-center justify-between border-b border-slate-100 pb-4">
             <div className="flex items-center gap-2">
-              <div className="p-2 bg-amber-50 text-amber-600 rounded-xl">
+              <div className="p-2 bg-amber-50 text-amber-600 rounded-lg">
                 <DollarSign className="w-5 h-5" />
               </div>
               <div>
@@ -566,7 +566,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({ settings, onSaveSettin
           </div>
 
           {showFeeForm && (
-            <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 space-y-3">
+            <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 space-y-3">
               <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
                 <div>
                   <label className="text-[10px] font-bold text-slate-600 block mb-1">Môn</label>
@@ -627,7 +627,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({ settings, onSaveSettin
                       <td className="px-3 py-2 text-slate-600">{f.grade}</td>
                       <td className="px-3 py-2 text-slate-600">{f.area}</td>
                       <td className="px-3 py-2 text-right font-bold text-emerald-700">{new Intl.NumberFormat('vi-VN').format(f.feeOffline)}đ</td>
-                      <td className="px-3 py-2 text-right font-bold text-blue-700">{new Intl.NumberFormat('vi-VN').format(f.feeOnline)}đ</td>
+                      <td className="px-3 py-2 text-right font-bold text-indigo-700">{new Intl.NumberFormat('vi-VN').format(f.feeOnline)}đ</td>
                       <td className="px-3 py-2 text-center">
                         <button onClick={() => setFeeConfig(prev => prev.filter(x => x.id !== f.id))}
                           className="p-1 hover:bg-red-50 text-slate-400 hover:text-red-600 rounded cursor-pointer">
