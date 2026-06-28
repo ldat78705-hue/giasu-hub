@@ -161,15 +161,15 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({ settings, onSaveSettin
 
           <div>
             <label className="block text-xs font-bold uppercase text-slate-600 mb-1.5">Gemini API Key</label>
-            <div className="relative">
+            <div style={{ position: 'relative' }}>
               <input
                 type={showApiKey ? 'text' : 'password'}
                 value={apiKey}
                 onChange={(e) => { setApiKey(e.target.value); setTestResult(null); }}
                 placeholder="AIzaSy... (lấy tại aistudio.google.com/apikey)"
-                className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:bg-white focus:border-indigo-500 text-sm font-mono" style={{ paddingRight: 96 }}
+                className="w-full bg-slate-50 border border-slate-200 rounded-lg outline-none focus:bg-white focus:border-indigo-500 text-sm font-mono" style={{ padding: '12px 96px 12px 16px' }}
               />
-              <div className="absolute right-2 top-1.5 flex items-center gap-1">
+              <div style={{ position: 'absolute', right: 8, top: 6, display: 'flex', alignItems: 'center', gap: 4 }}>
                 <button
                   type="button"
                   onClick={() => setShowApiKey(!showApiKey)}
@@ -249,58 +249,42 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({ settings, onSaveSettin
 
           <div>
             <label className="block text-xs font-bold uppercase text-slate-600 mb-1.5">Tên trung tâm</label>
-            <div className="relative">
-              <Building2 className="w-4 h-4 absolute left-3.5 top-3.5 text-slate-400" />
-              <input
-                type="text"
-                value={centerName}
-                onChange={(e) => setCenterName(e.target.value)}
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '0 12px', background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 4 }} className="focus-within:border-indigo-500 focus-within:bg-white transition-colors">
+              <Building2 style={{ width: 16, height: 16, color: '#94a3b8', flexShrink: 0 }} />
+              <input type="text" value={centerName} onChange={(e) => setCenterName(e.target.value)}
                 placeholder="Gia Sư Thành Đạt"
-                className="w-full pr-4 py-3 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:bg-white focus:border-indigo-500 text-sm" style={{ paddingLeft: 40 }}
-              />
+                style={{ border: 'none', background: 'transparent', outline: 'none', padding: '12px 0', fontSize: 14, width: '100%' }} />
             </div>
           </div>
 
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
             <div>
               <label className="block text-xs font-bold uppercase text-slate-600 mb-1.5">Số điện thoại / Hotline</label>
-              <div className="relative">
-                <Phone className="w-4 h-4 absolute left-3.5 top-3.5 text-slate-400" />
-                <input
-                  type="text"
-                  value={centerPhone}
-                  onChange={(e) => setCenterPhone(e.target.value)}
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '0 12px', background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 4 }} className="focus-within:border-indigo-500 focus-within:bg-white transition-colors">
+                <Phone style={{ width: 16, height: 16, color: '#94a3b8', flexShrink: 0 }} />
+                <input type="text" value={centerPhone} onChange={(e) => setCenterPhone(e.target.value)}
                   placeholder="1900.xxxx"
-                  className="w-full pr-4 py-3 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:bg-white focus:border-indigo-500 text-sm" style={{ paddingLeft: 40 }}
-                />
+                  style={{ border: 'none', background: 'transparent', outline: 'none', padding: '12px 0', fontSize: 14, width: '100%' }} />
               </div>
             </div>
             <div>
               <label className="block text-xs font-bold uppercase text-slate-600 mb-1.5">Email liên hệ</label>
-              <div className="relative">
-                <Mail className="w-4 h-4 absolute left-3.5 top-3.5 text-slate-400" />
-                <input
-                  type="email"
-                  value={centerEmail}
-                  onChange={(e) => setCenterEmail(e.target.value)}
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '0 12px', background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 4 }} className="focus-within:border-indigo-500 focus-within:bg-white transition-colors">
+                <Mail style={{ width: 16, height: 16, color: '#94a3b8', flexShrink: 0 }} />
+                <input type="email" value={centerEmail} onChange={(e) => setCenterEmail(e.target.value)}
                   placeholder="contact@giasuthanhdat.vn"
-                  className="w-full pr-4 py-3 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:bg-white focus:border-indigo-500 text-sm" style={{ paddingLeft: 40 }}
-                />
+                  style={{ border: 'none', background: 'transparent', outline: 'none', padding: '12px 0', fontSize: 14, width: '100%' }} />
               </div>
             </div>
           </div>
 
           <div>
             <label className="block text-xs font-bold uppercase text-slate-600 mb-1.5">Địa chỉ văn phòng</label>
-            <div className="relative">
-              <MapPin className="w-4 h-4 absolute left-3.5 top-3.5 text-slate-400" />
-              <input
-                type="text"
-                value={centerAddress}
-                onChange={(e) => setCenterAddress(e.target.value)}
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '0 12px', background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 4 }} className="focus-within:border-indigo-500 focus-within:bg-white transition-colors">
+              <MapPin style={{ width: 16, height: 16, color: '#94a3b8', flexShrink: 0 }} />
+              <input type="text" value={centerAddress} onChange={(e) => setCenterAddress(e.target.value)}
                 placeholder="Hà Nội"
-                className="w-full pr-4 py-3 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:bg-white focus:border-indigo-500 text-sm" style={{ paddingLeft: 40 }}
-              />
+                style={{ border: 'none', background: 'transparent', outline: 'none', padding: '12px 0', fontSize: 14, width: '100%' }} />
             </div>
           </div>
 
@@ -312,21 +296,21 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({ settings, onSaveSettin
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
               <div>
                 <label className="block text-xs font-bold uppercase text-slate-600 mb-1.5">Số Zalo</label>
-                <div className="relative">
-                  <MessageCircle className="w-4 h-4 absolute left-3.5 top-3.5 text-slate-400" />
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '0 12px', background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 4 }} className="focus-within:border-indigo-500 focus-within:bg-white transition-colors">
+                  <MessageCircle style={{ width: 16, height: 16, color: '#94a3b8', flexShrink: 0 }} />
                   <input type="text" value={zaloNumber} onChange={(e) => setZaloNumber(e.target.value)}
                     placeholder="0912345678"
-                    className="w-full pr-4 py-3 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:bg-white focus:border-indigo-500 text-sm" style={{ paddingLeft: 40 }} />
+                    style={{ border: 'none', background: 'transparent', outline: 'none', padding: '12px 0', fontSize: 14, width: '100%' }} />
                 </div>
                 <p className="text-[10px] text-slate-400 mt-1">Hiển thị nút Zalo trên trang công khai</p>
               </div>
               <div>
                 <label className="block text-xs font-bold uppercase text-slate-600 mb-1.5">Facebook URL</label>
-                <div className="relative">
-                  <Globe className="w-4 h-4 absolute left-3.5 top-3.5 text-slate-400" />
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '0 12px', background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 4 }} className="focus-within:border-indigo-500 focus-within:bg-white transition-colors">
+                  <Globe style={{ width: 16, height: 16, color: '#94a3b8', flexShrink: 0 }} />
                   <input type="text" value={facebookUrl} onChange={(e) => setFacebookUrl(e.target.value)}
                     placeholder="https://facebook.com/..."
-                    className="w-full pr-4 py-3 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:bg-white focus:border-indigo-500 text-sm" style={{ paddingLeft: 40 }} />
+                    style={{ border: 'none', background: 'transparent', outline: 'none', padding: '12px 0', fontSize: 14, width: '100%' }} />
                 </div>
               </div>
             </div>
@@ -459,8 +443,8 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({ settings, onSaveSettin
         {/* Ward Management */}
         <div className="bg-white rounded-lg border border-slate-200 shadow-xs p-6 space-y-5" style={{ gridColumn: 'span 2' }}>
           <div className="flex items-center justify-between border-b border-slate-100 pb-4">
-            <div className="flex items-center gap-2">
-              <div className="p-2 bg-emerald-50 text-emerald-600 rounded-lg">
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-emerald-50 text-emerald-600 rounded-lg shrink-0">
                 <MapPin className="w-5 h-5" />
               </div>
               <div>
@@ -476,8 +460,8 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({ settings, onSaveSettin
 
           {/* Add new ward */}
           <div className="flex gap-2">
-            <div className="relative flex-1">
-              <Plus className="w-4 h-4 absolute left-3 top-3 text-slate-400" />
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '0 12px', background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 4, flex: 1 }} className="focus-within:border-emerald-500 focus-within:bg-white transition-colors">
+              <Plus style={{ width: 16, height: 16, color: '#94a3b8', flexShrink: 0 }} />
               <input type="text" value={newWard} onChange={e => setNewWard(e.target.value)}
                 placeholder="Nhập tên xã/phường mới..."
                 onKeyDown={e => {
@@ -486,7 +470,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({ settings, onSaveSettin
                     setNewWard('');
                   }
                 }}
-                className="w-full pl-9 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:bg-white focus:border-emerald-500 text-sm" />
+                style={{ border: 'none', background: 'transparent', outline: 'none', padding: '10px 0', fontSize: 14, width: '100%' }} />
             </div>
             <button type="button" onClick={() => {
               if (newWard.trim() && !wards.includes(newWard.trim())) {
@@ -500,11 +484,11 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({ settings, onSaveSettin
           </div>
 
           {/* Search wards */}
-          <div className="relative">
-            <Search className="w-4 h-4 absolute left-3 top-2.5 text-slate-400" />
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '0 12px', background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 4 }} className="focus-within:border-indigo-500 focus-within:bg-white transition-colors">
+            <Search style={{ width: 16, height: 16, color: '#94a3b8', flexShrink: 0 }} />
             <input type="text" value={wardSearchTerm} onChange={e => setWardSearchTerm(e.target.value)}
               placeholder="🔍 Tìm xã/phường..."
-              className="w-full pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:bg-white focus:border-indigo-500 text-sm" />
+              style={{ border: 'none', background: 'transparent', outline: 'none', padding: '8px 0', fontSize: 14, width: '100%' }} />
           </div>
 
           {/* Ward list */}

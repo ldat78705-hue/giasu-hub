@@ -228,11 +228,11 @@ export const FinanceTab: React.FC<FinanceTabProps> = ({ transactions, onAddTrans
         {/* Search + Filter */}
         {transactions.length > 0 && (
           <div className="flex flex-col sm:flex-row gap-3 px-6 py-3 border-b border-slate-100">
-            <div className="relative flex-1 max-w-xs">
-              <Search className="w-4 h-4 absolute left-3 top-2.5 text-slate-400" />
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '0 12px', background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 4, flex: 1, maxWidth: 320 }} className="focus-within:border-indigo-500 focus-within:bg-white transition-colors">
+              <Search style={{ width: 16, height: 16, color: '#94a3b8', flexShrink: 0 }} />
               <input type="text" value={searchTerm} onChange={e => setSearchTerm(e.target.value)}
                 placeholder="Tìm mã phiếu, đối tượng..."
-                className="w-full pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm outline-none focus:bg-white focus:border-indigo-500 transition-colors" />
+                style={{ border: 'none', background: 'transparent', outline: 'none', padding: '8px 0', fontSize: 14, width: '100%' }} />
             </div>
             <div className="flex gap-2 flex-wrap">
               {[

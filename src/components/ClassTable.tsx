@@ -110,12 +110,12 @@ export const ClassTable: React.FC<ClassTableProps> = ({
         </div>
 
         <div className="flex items-center gap-2.5">
-          <div className="relative">
-            <Filter className="w-3.5 h-3.5 absolute left-2.5 top-2.5 text-slate-400" />
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '0 8px 0 10px', background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 4 }}>
+            <Filter style={{ width: 14, height: 14, color: '#94a3b8', flexShrink: 0 }} />
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
-              className="pl-8 pr-3 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-xs font-semibold text-slate-700 outline-none focus:border-indigo-500 cursor-pointer"
+              style={{ border: 'none', background: 'transparent', outline: 'none', padding: '6px 4px 6px 0', fontSize: 12, fontWeight: 600, color: '#334155', cursor: 'pointer' }}
             >
               <option value="ALL">Tất cả trạng thái</option>
               <option value="ĐANG TÌM">Đang tìm gia sư</option>
@@ -124,16 +124,16 @@ export const ClassTable: React.FC<ClassTableProps> = ({
             </select>
           </div>
 
-          <div className="relative">
-            <Search className="w-4 h-4 absolute left-3 top-2.5 text-slate-400" />
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '0 12px', background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 4, width: 224 }} className="focus-within:border-indigo-400 focus-within:bg-white transition-colors">
+            <Search style={{ width: 16, height: 16, color: '#94a3b8', flexShrink: 0 }} />
             <input type="text" value={searchTerm} onChange={e => setSearchTerm(e.target.value)}
               placeholder="Tìm mã, môn, khu vực..."
-              className="pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm outline-none focus:bg-white focus:border-indigo-400 w-56 transition-colors" />
+              style={{ border: 'none', background: 'transparent', outline: 'none', padding: '8px 0', fontSize: 14, width: '100%' }} />
           </div>
-          <div className="relative">
-            <ArrowUpDown className="w-3.5 h-3.5 absolute left-2.5 top-2 text-slate-400" />
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '0 8px 0 10px', background: '#fff', border: '1px solid #e2e8f0', borderRadius: 4 }}>
+            <ArrowUpDown style={{ width: 14, height: 14, color: '#94a3b8', flexShrink: 0 }} />
             <select value={sortBy} onChange={e => setSortBy(e.target.value as any)}
-              className="pl-8 pr-2 py-1.5 bg-white border border-slate-200 rounded-lg text-xs font-semibold text-slate-600 outline-none cursor-pointer">
+              style={{ border: 'none', background: 'transparent', outline: 'none', padding: '6px 4px 6px 0', fontSize: 12, fontWeight: 600, color: '#475569', cursor: 'pointer' }}>
               <option value="newest">Mới nhất</option>
               <option value="fee-high">Phí cao → thấp</option>
               <option value="fee-low">Phí thấp → cao</option>

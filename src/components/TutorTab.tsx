@@ -143,11 +143,11 @@ export const TutorTab: React.FC<TutorTabProps> = ({ tutors, onAddTutor, onUpdate
       {/* Filter & Search */}
       {tutors.length > 0 && (
         <div className="flex flex-col sm:flex-row gap-3">
-          <div className="relative flex-1 max-w-sm">
-            <Search className="w-4 h-4 absolute left-3 top-2.5 text-slate-400" />
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '0 12px', background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 4, flex: 1, maxWidth: 384 }} className="focus-within:border-indigo-500 focus-within:bg-white transition-colors">
+            <Search style={{ width: 16, height: 16, color: '#94a3b8', flexShrink: 0 }} />
             <input type="text" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)}
               placeholder="Tìm gia sư..."
-              className="w-full pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm outline-none focus:bg-white focus:border-indigo-500 transition-colors" />
+              style={{ border: 'none', background: 'transparent', outline: 'none', padding: '8px 0', fontSize: 14, width: '100%' }} />
           </div>
           <div className="flex gap-2">
             {[
@@ -161,10 +161,10 @@ export const TutorTab: React.FC<TutorTabProps> = ({ tutors, onAddTutor, onUpdate
                 }`}>{f.label}</button>
             ))}
           </div>
-          <div className="relative">
-            <ArrowUpDown className="w-3.5 h-3.5 absolute left-2.5 top-2.5 text-slate-400" />
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '0 8px 0 10px', background: '#fff', border: '1px solid #e2e8f0', borderRadius: 4 }}>
+            <ArrowUpDown style={{ width: 14, height: 14, color: '#94a3b8', flexShrink: 0 }} />
             <select value={sortBy} onChange={e => setSortBy(e.target.value as any)}
-              className="pl-8 pr-3 py-2 bg-white border border-slate-200 rounded-lg text-xs font-semibold text-slate-600 outline-none cursor-pointer hover:border-slate-300 transition-colors">
+              style={{ border: 'none', background: 'transparent', outline: 'none', padding: '8px 4px 8px 0', fontSize: 12, fontWeight: 600, color: '#475569', cursor: 'pointer' }}>
               <option value="newest">Mới nhất</option>
               <option value="name">Tên A-Z</option>
               <option value="rating">Rating cao</option>

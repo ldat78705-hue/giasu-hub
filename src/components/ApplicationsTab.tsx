@@ -1,4 +1,4 @@
-﻿import React, { useState } from 'react';
+import React, { useState } from 'react';
 import { ClassApplication, TutorBooking } from '../types';
 import { ClipboardList, CheckCircle2, XCircle, Clock, UserCheck, BookOpen, Phone, MessageSquare, Filter, ChevronDown, Search } from 'lucide-react';
 
@@ -67,12 +67,12 @@ export const ApplicationsTab: React.FC<ApplicationsTabProps> = ({
         </div>
 
         {/* Filter */}
-        <div className="relative">
-          <Filter className="w-3.5 h-3.5 absolute left-3 top-2.5 text-slate-400" />
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '0 10px', background: '#fff', border: '1px solid #e2e8f0', borderRadius: 4 }}>
+          <Filter style={{ width: 14, height: 14, color: '#94a3b8', flexShrink: 0 }} />
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="pl-8 pr-8 py-2 bg-white border border-slate-200 rounded-lg text-xs font-semibold text-slate-700 cursor-pointer appearance-none outline-none focus:border-indigo-500 transition-colors"
+            style={{ border: 'none', background: 'transparent', outline: 'none', padding: '8px 4px 8px 0', fontSize: 12, fontWeight: 600, color: '#334155', cursor: 'pointer' }}
           >
             <option value="all">Tất cả trạng thái</option>
             <option value="Chờ duyệt">Chờ duyệt</option>
@@ -81,15 +81,14 @@ export const ApplicationsTab: React.FC<ApplicationsTabProps> = ({
             <option value="Chờ liên hệ">Chờ liên hệ</option>
             <option value="Đã xếp lớp">Đã xếp lớp</option>
           </select>
-          <ChevronDown className="w-3.5 h-3.5 absolute right-3 top-2.5 text-slate-400 pointer-events-none" />
         </div>
 
         <div className="flex gap-2">
-          <div className="relative">
-            <Search className="w-3.5 h-3.5 absolute left-2.5 top-2.5 text-slate-400" />
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '0 10px', background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 4, width: 160 }} className="focus-within:border-indigo-500 focus-within:bg-white transition-colors">
+            <Search style={{ width: 14, height: 14, color: '#94a3b8', flexShrink: 0 }} />
             <input type="text" value={searchTerm} onChange={e => setSearchTerm(e.target.value)}
               placeholder="Tìm GS, PH, môn..."
-              className="pl-8 pr-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs outline-none focus:bg-white focus:border-indigo-500 w-40 transition-colors" />
+              style={{ border: 'none', background: 'transparent', outline: 'none', padding: '8px 0', fontSize: 12, width: '100%' }} />
           </div>
         </div>
       </div>

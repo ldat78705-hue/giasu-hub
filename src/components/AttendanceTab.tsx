@@ -1,4 +1,4 @@
-﻿import React, { useState } from 'react';
+import React, { useState } from 'react';
 import { AttendanceRecord, ClassMatch } from '../types';
 import { ClipboardCheck, Plus, Search, Download, Calendar, CheckCircle2, XCircle, Clock } from 'lucide-react';
 
@@ -70,15 +70,15 @@ export const AttendanceTab: React.FC<AttendanceTabProps> = ({ attendance, matche
 
       {/* Filter */}
       <div className="flex gap-3 flex-wrap">
-        <div className="relative flex-1 max-w-xs">
-          <Search className="w-4 h-4 absolute left-3 top-2.5 text-slate-400" />
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '0 12px', background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 4, flex: 1, maxWidth: 320 }} className="focus-within:border-indigo-500 focus-within:bg-white transition-colors">
+          <Search style={{ width: 16, height: 16, color: '#94a3b8', flexShrink: 0 }} />
           <input type="text" value={searchTerm} onChange={e => setSearchTerm(e.target.value)} placeholder="Tìm GS, HS, mã lớp..."
-            className="w-full pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm outline-none focus:bg-white focus:border-indigo-500 transition-colors" />
+            style={{ border: 'none', background: 'transparent', outline: 'none', padding: '8px 0', fontSize: 14, width: '100%' }} />
         </div>
-        <div className="relative">
-          <Calendar className="w-4 h-4 absolute left-3 top-2.5 text-slate-400" />
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '0 10px', background: '#fff', border: '1px solid #e2e8f0', borderRadius: 4 }} className="focus-within:border-indigo-500 transition-colors">
+          <Calendar style={{ width: 16, height: 16, color: '#94a3b8', flexShrink: 0 }} />
           <input type="date" value={dateFilter} onChange={e => setDateFilter(e.target.value)}
-            className="pl-9 pr-3 py-2 bg-white border border-slate-200 rounded-lg text-xs font-semibold text-slate-600 outline-none cursor-pointer focus:border-indigo-500 transition-colors" />
+            style={{ border: 'none', background: 'transparent', outline: 'none', padding: '8px 4px 8px 0', fontSize: 12, fontWeight: 600, color: '#475569', cursor: 'pointer' }} />
         </div>
         {dateFilter && <button onClick={() => setDateFilter('')} className="px-3 py-2 bg-slate-200 hover:bg-slate-300 text-slate-600 rounded-lg text-xs font-bold cursor-pointer transition-colors">Xóa lọc</button>}
       </div>

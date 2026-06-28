@@ -102,10 +102,10 @@ export const ImportTab: React.FC<ImportTabProps> = ({ tutors, students, onImport
           <AlertTriangle className="w-4 h-4 text-amber-500" /> Kiểm tra trùng lặp
         </h3>
         <div className="flex gap-2 mb-3">
-          <div className="relative flex-1 max-w-md">
-            <Search className="w-4 h-4 absolute left-3 top-2.5 text-slate-400" />
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '0 12px', background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 4, flex: 1, maxWidth: 448 }} className="focus-within:border-indigo-500 focus-within:bg-white transition-colors">
+            <Search style={{ width: 16, height: 16, color: '#94a3b8', flexShrink: 0 }} />
             <input type="text" value={dupSearch} onChange={e => setDupSearch(e.target.value)} placeholder="Nhập số điện thoại hoặc tên để kiểm tra..."
-              className="w-full pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm outline-none focus:bg-white focus:border-indigo-500"
+              style={{ border: 'none', background: 'transparent', outline: 'none', padding: '8px 0', fontSize: 14, width: '100%' }}
               onKeyDown={e => e.key === 'Enter' && handleDuplicateSearch()} />
           </div>
           <button onClick={handleDuplicateSearch}
