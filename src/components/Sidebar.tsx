@@ -76,8 +76,9 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab, pendi
   const content = (
     <>
       {/* Brand */}
-      <div className="h-14 px-4 flex items-center justify-between border-b border-slate-800">
+      <div className="h-14 px-5 flex items-center justify-between border-b border-white/[0.06]">
         <div className="flex items-center gap-2.5 min-w-0">
+          <div className="w-7 h-7 rounded-lg bg-indigo-600 flex items-center justify-center text-white text-[11px] font-bold shrink-0">GS</div>
           <div className="text-[14px] font-semibold text-white tracking-tight truncate">Gia Sư Thành Đạt</div>
         </div>
         <button onClick={() => setMobileOpen(false)} className="lg:hidden p-1 text-slate-500 hover:text-white cursor-pointer">
@@ -86,28 +87,28 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab, pendi
       </div>
 
       {/* Nav */}
-      <nav className="flex-1 py-2 overflow-y-auto" style={{ scrollbarWidth: 'none' }}>
+      <nav className="flex-1 py-3 px-2 overflow-y-auto" style={{ scrollbarWidth: 'none' }}>
         {groups.map((group, gi) => {
           const filtered = group.items.filter(i => allowedTabs.includes(i.id));
           if (filtered.length === 0) return null;
           return (
-            <div key={gi} className={group.label ? 'mt-5' : ''}>
+            <div key={gi} className={group.label ? 'mt-6' : ''}>
               {group.label && (
-                <div className="px-4 mb-1 text-[10px] font-semibold uppercase tracking-wider text-slate-600">{group.label}</div>
+                <div className="px-3 mb-1.5 text-[10px] font-semibold uppercase tracking-wider text-slate-600">{group.label}</div>
               )}
               {filtered.map(item => {
                 const active = activeTab === item.id;
                 return (
                   <button key={item.id}
                     onClick={() => { setActiveTab(item.id); setMobileOpen(false); }}
-                    className={`w-full flex items-center gap-2.5 px-4 py-[7px] text-left cursor-pointer transition-colors ${
-                      active ? 'text-white bg-white/[0.08]' : 'text-slate-400 hover:text-slate-200 hover:bg-white/[0.04]'
+                    className={`w-full flex items-center gap-2.5 px-3 py-2 text-left cursor-pointer transition-all rounded-lg ${
+                      active ? 'text-white bg-indigo-600 shadow-sm shadow-indigo-600/25' : 'text-slate-400 hover:text-slate-200 hover:bg-white/[0.06]'
                     }`}>
-                    <span className={active ? 'text-white' : 'text-slate-500'}>{item.icon}</span>
+                    <span className={active ? 'text-indigo-200' : 'text-slate-500'}>{item.icon}</span>
                     <span className="text-[13px] flex-1">{item.label}</span>
                     {item.badge !== undefined && item.badge > 0 && (
-                      <span className={`text-[10px] font-semibold px-1.5 min-w-[18px] text-center rounded ${
-                        active ? 'text-white bg-white/20' : 'text-slate-400 bg-slate-800'
+                      <span className={`text-[10px] font-semibold px-1.5 min-w-[18px] text-center rounded-md ${
+                        active ? 'text-white bg-indigo-500' : 'text-slate-400 bg-white/[0.06]'
                       }`}>{item.badge}</span>
                     )}
                   </button>
@@ -119,9 +120,9 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab, pendi
       </nav>
 
       {/* Footer */}
-      <div className="border-t border-slate-800 p-3">
+      <div className="border-t border-white/[0.06] p-3">
         <button onClick={() => { window.open('/', '_blank'); setMobileOpen(false); }}
-          className="w-full px-3 py-2 text-[12px] font-medium text-slate-500 hover:text-slate-300 cursor-pointer transition-colors flex items-center justify-center gap-1.5">
+          className="w-full px-3 py-2 text-[12px] font-medium text-slate-500 hover:text-slate-300 cursor-pointer transition-colors flex items-center justify-center gap-1.5 rounded-lg hover:bg-white/[0.06]">
           <ExternalLink className="w-3.5 h-3.5" /> Trang công khai
         </button>
       </div>
@@ -138,12 +139,12 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab, pendi
       {mobileOpen && <div className="lg:hidden fixed inset-0 z-40 bg-black/50" onClick={() => setMobileOpen(false)} />}
 
       {/* Desktop */}
-      <aside className="hidden lg:flex w-56 bg-[#111318] text-slate-300 flex-col h-full shrink-0">
+      <aside className="hidden lg:flex w-60 bg-slate-900 text-slate-300 flex-col h-full shrink-0 border-r border-slate-800/50">
         {content}
       </aside>
 
       {/* Mobile */}
-      <aside className={`lg:hidden fixed top-0 left-0 z-50 w-64 bg-[#111318] text-slate-300 flex flex-col h-full transition-transform duration-200 ${mobileOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+      <aside className={`lg:hidden fixed top-0 left-0 z-50 w-64 bg-slate-900 text-slate-300 flex flex-col h-full transition-transform duration-200 shadow-2xl ${mobileOpen ? 'translate-x-0' : '-translate-x-full'}`}>
         {content}
       </aside>
     </>
