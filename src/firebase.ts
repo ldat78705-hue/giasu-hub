@@ -231,21 +231,25 @@ const SAMPLE_CLASSES: Omit<ClassItem, 'id'>[] = [
 
 // Sample financial transactions across multiple months
 const now = new Date();
+const m2 = String(now.getMonth() - 1).padStart(2, '0'); // 2 months ago
+const m1 = String(now.getMonth()).padStart(2, '0');       // last month
+const m0 = String(now.getMonth() + 1).padStart(2, '0');   // this month
+const yr = now.getFullYear();
 const SAMPLE_TRANSACTIONS = [
   // Tháng trước 2
-  { receiptId: 'REC-1001', type: 'Thu phí gia sư' as const, amount: 800000, targetName: 'GS Nguyễn Văn Minh - Lớp Toán 12', date: `15/0${now.getMonth() - 1}/${now.getFullYear()} 10:30`, status: 'Thành công' as const },
-  { receiptId: 'REC-1002', type: 'Thu phí gia sư' as const, amount: 1200000, targetName: 'GS Trần Thị Hương - Lớp IELTS', date: `18/0${now.getMonth() - 1}/${now.getFullYear()} 14:15`, status: 'Thành công' as const },
-  { receiptId: 'REC-1003', type: 'Thanh toán lương' as const, amount: 500000, targetName: 'Chi phí quảng cáo Facebook T' + (now.getMonth() - 1), date: `20/0${now.getMonth() - 1}/${now.getFullYear()} 09:00`, status: 'Thành công' as const },
+  { receiptId: 'REC-1001', type: 'Thu phí gia sư' as const, amount: 800000, targetName: 'GS Nguyễn Văn Minh - Lớp Toán 12', date: `15/${m2}/${yr} 10:30`, status: 'Thành công' as const },
+  { receiptId: 'REC-1002', type: 'Thu phí gia sư' as const, amount: 1200000, targetName: 'GS Trần Thị Hương - Lớp IELTS', date: `18/${m2}/${yr} 14:15`, status: 'Thành công' as const },
+  { receiptId: 'REC-1003', type: 'Thanh toán lương' as const, amount: 500000, targetName: `Chi phí quảng cáo Facebook T${now.getMonth() - 1}`, date: `20/${m2}/${yr} 09:00`, status: 'Thành công' as const },
   // Tháng trước
-  { receiptId: 'REC-2001', type: 'Thu phí gia sư' as const, amount: 1000000, targetName: 'GS Lê Hoàng Nam - Lớp Hóa 11', date: `05/0${now.getMonth()}/${now.getFullYear()} 11:20`, status: 'Thành công' as const },
-  { receiptId: 'REC-2002', type: 'Thu phí gia sư' as const, amount: 800000, targetName: 'GS Phạm Thuỳ Linh - Lớp Văn 9', date: `10/0${now.getMonth()}/${now.getFullYear()} 15:45`, status: 'Thành công' as const },
-  { receiptId: 'REC-2003', type: 'Hoàn tiền' as const, amount: 300000, targetName: 'Hoàn phí GS Đỗ Quang Huy - PH hủy lớp', date: `12/0${now.getMonth()}/${now.getFullYear()} 09:30`, status: 'Thành công' as const },
-  { receiptId: 'REC-2004', type: 'Thanh toán lương' as const, amount: 200000, targetName: 'Chi phí hosting & domain', date: `15/0${now.getMonth()}/${now.getFullYear()} 08:00`, status: 'Thành công' as const },
+  { receiptId: 'REC-2001', type: 'Thu phí gia sư' as const, amount: 1000000, targetName: 'GS Lê Hoàng Nam - Lớp Hóa 11', date: `05/${m1}/${yr} 11:20`, status: 'Thành công' as const },
+  { receiptId: 'REC-2002', type: 'Thu phí gia sư' as const, amount: 800000, targetName: 'GS Phạm Thuỳ Linh - Lớp Văn 9', date: `10/${m1}/${yr} 15:45`, status: 'Thành công' as const },
+  { receiptId: 'REC-2003', type: 'Hoàn tiền' as const, amount: 300000, targetName: 'Hoàn phí GS Đỗ Quang Huy - PH hủy lớp', date: `12/${m1}/${yr} 09:30`, status: 'Thành công' as const },
+  { receiptId: 'REC-2004', type: 'Thanh toán lương' as const, amount: 200000, targetName: 'Chi phí hosting & domain', date: `15/${m1}/${yr} 08:00`, status: 'Thành công' as const },
   // Tháng này
-  { receiptId: 'REC-3001', type: 'Thu phí gia sư' as const, amount: 1500000, targetName: 'GS Nguyễn Văn Minh - Lớp Toán 12 (T' + (now.getMonth() + 1) + ')', date: `02/0${now.getMonth() + 1}/${now.getFullYear()} 10:00`, status: 'Thành công' as const },
-  { receiptId: 'REC-3002', type: 'Thu phí gia sư' as const, amount: 1200000, targetName: 'GS Trần Thị Hương - Lớp IELTS (T' + (now.getMonth() + 1) + ')', date: `05/0${now.getMonth() + 1}/${now.getFullYear()} 14:30`, status: 'Thành công' as const },
-  { receiptId: 'REC-3003', type: 'Hoàn tiền' as const, amount: 200000, targetName: 'Hoàn phí GS Vũ Minh Anh - Lớp hủy sớm', date: `08/0${now.getMonth() + 1}/${now.getFullYear()} 11:15`, status: 'Thành công' as const },
-  { receiptId: 'REC-3004', type: 'Thu phí gia sư' as const, amount: 600000, targetName: 'GS Đỗ Quang Huy - Lớp Toán 3', date: `10/0${now.getMonth() + 1}/${now.getFullYear()} 16:00`, status: 'Thành công' as const },
+  { receiptId: 'REC-3001', type: 'Thu phí gia sư' as const, amount: 1500000, targetName: `GS Nguyễn Văn Minh - Lớp Toán 12 (T${now.getMonth() + 1})`, date: `02/${m0}/${yr} 10:00`, status: 'Thành công' as const },
+  { receiptId: 'REC-3002', type: 'Thu phí gia sư' as const, amount: 1200000, targetName: `GS Trần Thị Hương - Lớp IELTS (T${now.getMonth() + 1})`, date: `05/${m0}/${yr} 14:30`, status: 'Thành công' as const },
+  { receiptId: 'REC-3003', type: 'Hoàn tiền' as const, amount: 200000, targetName: 'Hoàn phí GS Vũ Minh Anh - Lớp hủy sớm', date: `08/${m0}/${yr} 11:15`, status: 'Thành công' as const },
+  { receiptId: 'REC-3004', type: 'Thu phí gia sư' as const, amount: 600000, targetName: 'GS Đỗ Quang Huy - Lớp Toán 3', date: `10/${m0}/${yr} 16:00`, status: 'Thành công' as const },
 ];
 
 const SAMPLE_REGISTRATIONS = [
