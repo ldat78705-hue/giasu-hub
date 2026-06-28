@@ -749,7 +749,7 @@ export default function App() {
 
   // ===================== ADMIN VIEW =====================
   return (
-    <div className="w-full h-screen bg-[#F1F5F9] flex font-sans overflow-hidden text-slate-800 select-text">
+    <div className="w-full h-screen bg-white flex font-sans overflow-hidden text-slate-800 select-text">
       <Sidebar activeTab={adminTab} setActiveTab={(tab) => { setAdminTab(tab); }}
         pendingClassesCount={pendingClassesCount}
         pendingApplicationsCount={pendingApplicationsCount + pendingTutorVerify}
@@ -771,7 +771,7 @@ export default function App() {
           </div>
         )}
 
-        <section className="flex-1 p-5 lg:p-7 grid grid-cols-12 gap-5 content-start overflow-y-auto admin-scroll">
+        <section className="flex-1 p-6 lg:p-8 grid grid-cols-12 gap-6 content-start overflow-y-auto" style={{ scrollbarWidth: 'thin' }}>
           {adminTab === 'dashboard' && (
             <Dashboard
               classes={classes} tutors={tutors} matches={matches}

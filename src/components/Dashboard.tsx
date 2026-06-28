@@ -1,5 +1,5 @@
 import React from 'react';
-import { Users, BookOpen, GraduationCap, ClipboardCheck, TrendingUp, Target, DollarSign, Calendar, Copy, Star, Trophy, UserPlus, ExternalLink, Sparkles, RefreshCw, AlertTriangle, Clock, Bell, ArrowRight } from 'lucide-react';
+import { Users, BookOpen, GraduationCap, TrendingUp, DollarSign, Copy, Star, Trophy, Sparkles, RefreshCw, AlertTriangle, Bell, ArrowRight, ChevronRight } from 'lucide-react';
 import { ClassItem, TutorItem, ClassMatch, ParentRegistration, AttendanceRecord, TutorReview, TransactionItem, ActiveTab } from '../types';
 
 interface DashboardProps {
@@ -12,7 +12,6 @@ interface DashboardProps {
   transactions: TransactionItem[];
   totalRevenue: number;
   onNavigate: (tab: ActiveTab) => void;
-  // AI match
   selectedClass?: ClassItem;
   aiMatches?: { tutorCode: string; matchPercentage: number; aiRationale: string }[];
   isMatchingLoading: boolean;
@@ -33,314 +32,274 @@ export const Dashboard: React.FC<DashboardProps> = ({
   const pendingRegs = registrations.filter(r => r.status === 'Mới').length;
   const unverifiedTutors = tutors.filter(t => !t.verified).length;
 
-  // Weekly
   const weekAgo = Date.now() - 7 * 86400000;
   const weekRegs = registrations.filter(r => r.createdAt > weekAgo).length;
   const weekMatches = matches.filter(m => m.createdAt > weekAgo).length;
 
-  // Urgent items
+  // Urgent
   const overdueRegs = registrations.filter(r => r.status === 'Mới' && (Date.now() - r.createdAt) > 2 * 3600000).length;
   const unpaidFees = matches.filter(m => m.status === 'Đang dạy' && !m.feePaid && (Date.now() - m.startDate) > 7 * 86400000).length;
   const staleMatches = matches.filter(m => {
     if (m.status !== 'Đang dạy') return false;
-    const matchAtt = attendance.filter(a => a.matchId === m.id);
-    const lastAtt = matchAtt.length > 0 ? Math.max(...matchAtt.map(a => a.createdAt)) : m.startDate;
-    return (Date.now() - lastAtt) > 14 * 86400000;
+    const ma = attendance.filter(a => a.matchId === m.id);
+    const last = ma.length > 0 ? Math.max(...ma.map(a => a.createdAt)) : m.startDate;
+    return (Date.now() - last) > 14 * 86400000;
   }).length;
 
-  const urgentItems = [
-    overdueRegs > 0 && { icon: <Bell className="w-4 h-4" />, color: '#ef4444', label: `${overdueRegs} đơn chưa gọi > 2 giờ`, tab: 'registrations' as ActiveTab },
-    unpaidFees > 0 && { icon: <DollarSign className="w-4 h-4" />, color: '#f59e0b', label: `${unpaidFees} lớp chưa thu phí > 7 ngày`, tab: 'matches' as ActiveTab },
-    unverifiedTutors > 0 && { icon: <GraduationCap className="w-4 h-4" />, color: '#3b82f6', label: `${unverifiedTutors} gia sư chờ xác minh`, tab: 'tutors' as ActiveTab },
-    staleMatches > 0 && { icon: <AlertTriangle className="w-4 h-4" />, color: '#f97316', label: `${staleMatches} lớp có thể đã ngưng`, tab: 'matches' as ActiveTab },
-  ].filter(Boolean) as { icon: React.ReactNode; color: string; label: string; tab: ActiveTab }[];
+  const alerts = [
+    overdueRegs > 0 && { label: `${overdueRegs} đơn chưa gọi > 2 giờ`, tab: 'registrations' as ActiveTab, urgent: true },
+    unpaidFees > 0 && { label: `${unpaidFees} lớp chưa thu phí > 7 ngày`, tab: 'matches' as ActiveTab, urgent: true },
+    unverifiedTutors > 0 && { label: `${unverifiedTutors} gia sư chờ xác minh`, tab: 'tutors' as ActiveTab, urgent: false },
+    staleMatches > 0 && { label: `${staleMatches} lớp có thể đã ngưng`, tab: 'matches' as ActiveTab, urgent: false },
+  ].filter(Boolean) as { label: string; tab: ActiveTab; urgent: boolean }[];
 
-  // 7-day chart
+  // 7 days
   const days = Array.from({ length: 7 }, (_, i) => {
-    const dayStart = Date.now() - (6 - i) * 86400000;
-    const dayEnd = dayStart + 86400000;
+    const s = Date.now() - (6 - i) * 86400000, e = s + 86400000;
     return {
-      label: new Date(dayStart).toLocaleDateString('vi-VN', { weekday: 'narrow' }),
-      regs: registrations.filter(r => r.createdAt >= dayStart && r.createdAt < dayEnd).length,
-      matched: matches.filter(m => m.createdAt >= dayStart && m.createdAt < dayEnd).length,
+      day: new Date(s).toLocaleDateString('vi-VN', { weekday: 'short' }).replace('Th ', 'T'),
+      regs: registrations.filter(r => r.createdAt >= s && r.createdAt < e).length,
+      matched: matches.filter(m => m.createdAt >= s && m.createdAt < e).length,
     };
   });
-  const maxChart = Math.max(...days.map(d => Math.max(d.regs, d.matched)), 1);
+  const maxC = Math.max(...days.map(d => Math.max(d.regs, d.matched)), 1);
 
-  // Top 5 recent classes needing tutor
-  const recentPending = classes
-    .filter(c => c.status === 'ĐANG TÌM' || c.status === 'KHẨN CẤP')
-    .sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0))
-    .slice(0, 5);
+  // Top 5 classes
+  const recentPending = classes.filter(c => c.status === 'ĐANG TÌM' || c.status === 'KHẨN CẤP')
+    .sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0)).slice(0, 5);
 
   // Top tutors
-  const tutorScores: Record<string, { name: string; active: number; rating: number }> = {};
+  const ts: Record<string, { name: string; active: number; rating: number }> = {};
   matches.filter(m => m.status === 'Đang dạy').forEach(m => {
-    if (!tutorScores[m.tutorCode]) tutorScores[m.tutorCode] = { name: m.tutorName, active: 0, rating: 0 };
-    tutorScores[m.tutorCode].active++;
+    if (!ts[m.tutorCode]) ts[m.tutorCode] = { name: m.tutorName, active: 0, rating: 0 };
+    ts[m.tutorCode].active++;
   });
-  Object.keys(tutorScores).forEach(code => {
-    const tr = reviews.filter(r => r.tutorCode === code);
-    tutorScores[code].rating = tr.length > 0 ? tr.reduce((s, r) => s + r.rating, 0) / tr.length : (tutors.find(t => t.code === code)?.rating || 0);
+  Object.keys(ts).forEach(c => {
+    const r = reviews.filter(rv => rv.tutorCode === c);
+    ts[c].rating = r.length > 0 ? r.reduce((s, rv) => s + rv.rating, 0) / r.length : (tutors.find(t => t.code === c)?.rating || 0);
   });
-  const topTutors = Object.entries(tutorScores)
-    .sort((a, b) => (b[1].active * 3 + b[1].rating * 2) - (a[1].active * 3 + a[1].rating * 2))
-    .slice(0, 4);
+  const topT = Object.entries(ts).sort((a, b) => (b[1].active * 3 + b[1].rating * 2) - (a[1].active * 3 + a[1].rating * 2)).slice(0, 4);
 
-  // AI matches display
-  const aiRecommendations = (aiMatches || []).map(m => {
+  // AI
+  const aiRec = (aiMatches || []).map(m => {
     const t = tutors.find(t => t.code === m.tutorCode || t.name.includes(m.tutorCode));
     return t ? { tutor: t, score: m.matchPercentage, rationale: m.aiRationale } : null;
   }).filter(Boolean) as { tutor: TutorItem; score: number; rationale: string }[];
 
   const copyReport = () => {
-    const report = `📊 BÁO CÁO TUẦN — Gia Sư Thành Đạt\n📅 ${new Date().toLocaleDateString('vi-VN')}\n\n📋 Đơn phụ huynh mới: ${weekRegs}\n🎓 Ghép thành công: ${weekMatches}\n📚 Đang dạy: ${activeMatches}\n💰 Doanh thu: ${fmt(totalRevenue)}đ\n📈 Tỷ lệ ghép: ${matchRate}%\n\n🔗 https://giasu-dusky.vercel.app/quan-tri`;
-    navigator.clipboard.writeText(report);
-    alert('Đã sao chép báo cáo! Dán vào Zalo để chia sẻ.');
+    const r = `📊 BÁO CÁO TUẦN — Gia Sư Thành Đạt\n📅 ${new Date().toLocaleDateString('vi-VN')}\n\n📋 Đơn mới: ${weekRegs}\n🎓 Ghép: ${weekMatches}\n📚 Đang dạy: ${activeMatches}\n💰 Doanh thu: ${fmt(totalRevenue)}đ\n📈 Tỷ lệ: ${matchRate}%\n\n🔗 https://giasu-dusky.vercel.app/quan-tri`;
+    navigator.clipboard.writeText(r);
+    alert('Đã sao chép báo cáo!');
   };
 
-  const medals = ['🥇', '🥈', '🥉', '4'];
-
-  // --- CARD STYLES ---
-  const card = "bg-white rounded-2xl border border-slate-200/70 p-5";
-  const cardTitle = "text-[13px] font-bold text-slate-800 mb-4 flex items-center gap-2";
+  // --- STYLES ---
+  const sectionTitle = "text-[13px] font-semibold text-slate-500 uppercase tracking-wide mb-3";
+  const divider = "border-t border-slate-200";
 
   return (
-    <div className="col-span-12 space-y-6">
+    <div className="col-span-12 max-w-[1200px]">
 
-      {/* ========== ROW 1: Urgent Alerts (compact inline bar) ========== */}
-      {urgentItems.length > 0 && (
-        <div className="flex flex-wrap gap-2">
-          {urgentItems.map((item, i) => (
-            <button key={i} onClick={() => onNavigate(item.tab)}
-              className="flex items-center gap-2 px-3 py-2 rounded-xl text-[12px] font-semibold cursor-pointer transition-all hover:shadow-md border"
-              style={{ background: `${item.color}08`, borderColor: `${item.color}30`, color: item.color }}>
-              {item.icon}
-              <span>{item.label}</span>
-              <ArrowRight className="w-3 h-3 opacity-50" />
+      {/* ====== ALERTS ====== */}
+      {alerts.length > 0 && (
+        <div className="mb-6">
+          {alerts.map((a, i) => (
+            <button key={i} onClick={() => onNavigate(a.tab)}
+              className="flex items-center gap-2 w-full text-left px-4 py-2.5 text-[13px] cursor-pointer transition-colors hover:bg-slate-50 border-b border-slate-100 last:border-b-0 group"
+              style={{ color: a.urgent ? '#dc2626' : '#64748b' }}>
+              <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${a.urgent ? 'bg-red-500' : 'bg-slate-400'}`} />
+              <span className="flex-1">{a.label}</span>
+              <ChevronRight className="w-3.5 h-3.5 text-slate-300 group-hover:text-slate-500 transition-colors" />
             </button>
           ))}
         </div>
       )}
 
-      {/* ========== ROW 2: 4 Key Metrics ========== */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        {/* Revenue */}
-        <div className="bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-700 p-5 rounded-2xl text-white relative overflow-hidden shimmer-overlay hover-lift">
-          <div className="relative z-10">
-            <div className="text-[11px] font-medium uppercase tracking-wider text-blue-200/80 mb-1">Doanh thu</div>
-            <div className="text-[26px] font-extrabold stat-number leading-tight">{fmt(totalRevenue)}đ</div>
-            <div className="text-[11px] text-blue-200/60 mt-1">Phí kết nối gia sư</div>
-          </div>
-        </div>
-        {/* Active */}
-        <button onClick={() => onNavigate('matches')} className={`${card} hover-lift text-left cursor-pointer`}>
-          <div className="text-[11px] font-medium uppercase tracking-wider text-slate-400 mb-1">Đang dạy</div>
-          <div className="text-[26px] font-extrabold text-emerald-600 stat-number">{activeMatches}</div>
-          <div className="flex items-center gap-2 mt-1">
-            <div className="flex-1 h-1.5 bg-slate-100 rounded-full overflow-hidden"><div className="h-full bg-emerald-500 rounded-full" style={{ width: `${matchRate}%` }} /></div>
-            <span className="text-[10px] font-bold text-emerald-600">{matchRate}%</span>
-          </div>
-        </button>
-        {/* Pending */}
-        <button onClick={() => onNavigate('registrations')} className={`${card} hover-lift text-left cursor-pointer`}>
-          <div className="text-[11px] font-medium uppercase tracking-wider text-slate-400 mb-1">Chờ xử lý</div>
-          <div className="text-[26px] font-extrabold text-slate-800 stat-number">{pendingRegs}</div>
-          <div className="text-[11px] text-slate-400 mt-1">đơn phụ huynh mới</div>
-        </button>
-        {/* Classes */}
-        <button onClick={() => onNavigate('classes')} className={`${card} hover-lift text-left cursor-pointer`}>
-          <div className="text-[11px] font-medium uppercase tracking-wider text-slate-400 mb-1">Lớp cần gia sư</div>
-          <div className="text-[26px] font-extrabold text-slate-800 stat-number">{pendingClasses}</div>
-          <div className="text-[11px] text-slate-400 mt-1">/ {classes.length} tổng lớp</div>
-        </button>
+      {/* ====== METRICS ====== */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 mb-8">
+        {[
+          { label: 'Doanh thu', value: fmt(totalRevenue) + 'đ', sub: 'Phí kết nối', accent: false },
+          { label: 'Đang dạy', value: String(activeMatches), sub: `${matchRate}% tỷ lệ ghép`, accent: true },
+          { label: 'Chờ xử lý', value: String(pendingRegs), sub: 'Đơn phụ huynh mới', accent: false },
+          { label: 'Cần gia sư', value: String(pendingClasses), sub: `/ ${classes.length} tổng lớp`, accent: false },
+        ].map((m, i) => (
+          <button key={i} onClick={() => onNavigate(i === 0 ? 'finance' : i === 1 ? 'matches' : i === 2 ? 'registrations' : 'classes')}
+            className={`text-left p-5 cursor-pointer transition-colors hover:bg-slate-50 ${i < 3 ? 'border-r border-slate-200' : ''}`}>
+            <div className="text-[12px] text-slate-400 font-medium mb-1">{m.label}</div>
+            <div className={`text-[28px] font-semibold leading-tight tracking-tight ${m.accent ? 'text-emerald-600' : 'text-slate-900'}`} style={{ fontVariantNumeric: 'tabular-nums' }}>{m.value}</div>
+            <div className="text-[12px] text-slate-400 mt-1">{m.sub}</div>
+          </button>
+        ))}
       </div>
 
-      {/* ========== ROW 3: Chart + Weekly Summary + Quick Numbers ========== */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-
-        {/* 7-Day Chart */}
-        <div className={`${card} lg:col-span-2`}>
-          <div className="flex items-center justify-between mb-4">
-            <div>
-              <h3 className="text-[13px] font-bold text-slate-800">Hoạt động 7 ngày</h3>
-              <p className="text-[11px] text-slate-400 mt-0.5">Đơn đăng ký & ghép lớp thành công</p>
-            </div>
-            <div className="flex items-center gap-4 text-[11px] text-slate-500">
-              <span className="flex items-center gap-1.5"><span className="w-2 h-2 bg-blue-500 rounded-sm" /> Ghép lớp</span>
-              <span className="flex items-center gap-1.5"><span className="w-2 h-2 bg-emerald-400 rounded-sm" /> Đơn đăng ký</span>
+      {/* ====== CHART + SUMMARY ====== */}
+      <div className="grid grid-cols-1 lg:grid-cols-5 gap-0 mb-8">
+        {/* Chart */}
+        <div className="lg:col-span-3 p-5 lg:border-r border-slate-200">
+          <div className="flex items-center justify-between mb-5">
+            <div className={sectionTitle} style={{ marginBottom: 0 }}>Hoạt động 7 ngày</div>
+            <div className="flex items-center gap-4 text-[11px] text-slate-400">
+              <span className="flex items-center gap-1.5"><span className="w-5 h-1.5 bg-slate-800 rounded-sm" /> Ghép lớp</span>
+              <span className="flex items-center gap-1.5"><span className="w-5 h-1.5 bg-slate-300 rounded-sm" /> Đơn đăng ký</span>
             </div>
           </div>
-          <div className="flex items-end gap-3" style={{ height: 120 }}>
+          <div className="flex items-end gap-2" style={{ height: 140 }}>
             {days.map((d, i) => (
-              <div key={i} className="flex-1 flex flex-col items-center gap-1">
-                <div className="w-full flex gap-1" style={{ height: 96, alignItems: 'flex-end' }}>
-                  <div className="flex-1 bg-blue-500 rounded-t transition-all hover:bg-blue-600" style={{ height: `${Math.max((d.matched / maxChart) * 100, d.matched > 0 ? 10 : 0)}%`, minHeight: d.matched > 0 ? 4 : 0 }} />
-                  <div className="flex-1 bg-emerald-400 rounded-t transition-all hover:bg-emerald-500" style={{ height: `${Math.max((d.regs / maxChart) * 100, d.regs > 0 ? 10 : 0)}%`, minHeight: d.regs > 0 ? 4 : 0 }} />
+              <div key={i} className="flex-1 flex flex-col items-center gap-1.5">
+                <div className="w-full flex gap-0.5" style={{ height: 112, alignItems: 'flex-end' }}>
+                  <div className="flex-1 bg-slate-800 transition-all rounded-sm" style={{ height: `${Math.max((d.matched / maxC) * 100, d.matched > 0 ? 6 : 0)}%`, minHeight: d.matched > 0 ? 3 : 0 }} />
+                  <div className="flex-1 bg-slate-300 transition-all rounded-sm" style={{ height: `${Math.max((d.regs / maxC) * 100, d.regs > 0 ? 6 : 0)}%`, minHeight: d.regs > 0 ? 3 : 0 }} />
                 </div>
-                <span className="text-[10px] text-slate-400 font-medium">{d.label}</span>
+                <span className="text-[10px] text-slate-400">{d.day}</span>
               </div>
             ))}
           </div>
         </div>
 
-        {/* Weekly Summary */}
-        <div className="bg-slate-900 rounded-2xl p-5 text-white flex flex-col justify-between">
-          <div>
-            <div className="text-[11px] font-medium uppercase tracking-wider text-slate-500 mb-4">Tuần này</div>
-            <div className="space-y-3">
-              {[
-                { label: 'Đơn phụ huynh mới', value: weekRegs, color: 'text-white' },
-                { label: 'Ghép thành công', value: weekMatches, color: 'text-emerald-400' },
-                { label: 'Lớp đang dạy', value: activeMatches, color: 'text-white' },
-                { label: 'Doanh thu', value: fmt(totalRevenue) + 'đ', color: 'text-blue-400' },
-              ].map((item, i) => (
-                <div key={i} className="flex justify-between items-center">
-                  <span className="text-slate-400 text-[13px]">{item.label}</span>
-                  <span className={`font-bold text-[14px] ${item.color}`}>{item.value}</span>
-                </div>
-              ))}
-            </div>
+        {/* Weekly summary */}
+        <div className="lg:col-span-2 p-5">
+          <div className={sectionTitle}>Tuần này</div>
+          <div className="space-y-3">
+            {[
+              { label: 'Đơn phụ huynh mới', value: String(weekRegs) },
+              { label: 'Ghép thành công', value: String(weekMatches) },
+              { label: 'Lớp đang dạy', value: String(activeMatches) },
+              { label: 'Doanh thu', value: fmt(totalRevenue) + 'đ' },
+            ].map((r, i) => (
+              <div key={i} className="flex justify-between items-center">
+                <span className="text-[13px] text-slate-500">{r.label}</span>
+                <span className="text-[14px] font-semibold text-slate-900" style={{ fontVariantNumeric: 'tabular-nums' }}>{r.value}</span>
+              </div>
+            ))}
           </div>
           <button onClick={copyReport}
-            className="mt-4 w-full py-2.5 bg-white/10 hover:bg-white/15 rounded-xl text-[12px] font-medium cursor-pointer border border-white/10 transition-all flex items-center justify-center gap-2">
+            className="mt-5 w-full py-2 text-[12px] font-medium text-slate-500 cursor-pointer transition-colors hover:text-slate-800 hover:bg-slate-50 border border-slate-200 rounded-lg flex items-center justify-center gap-2">
             <Copy className="w-3.5 h-3.5" /> Sao chép báo cáo
           </button>
         </div>
       </div>
 
-      {/* ========== ROW 4: Recent Classes + Quick Stats + Top Tutors ========== */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+      <div className={divider} />
 
-        {/* Recent pending classes */}
-        <div className={`${card} lg:col-span-1`}>
-          <div className={cardTitle}>
-            <BookOpen className="w-4 h-4 text-blue-600" />
-            Lớp mới cần gia sư
+      {/* ====== 3 LISTS ====== */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-0 mt-6">
+
+        {/* Lớp mới */}
+        <div className="p-5 lg:border-r border-slate-200">
+          <div className="flex items-center justify-between mb-4">
+            <div className={sectionTitle} style={{ marginBottom: 0 }}>Lớp mới cần gia sư</div>
+            {pendingClasses > 0 && (
+              <button onClick={() => onNavigate('classes')} className="text-[11px] font-medium text-blue-600 cursor-pointer hover:text-blue-700">
+                Xem tất cả
+              </button>
+            )}
           </div>
           {recentPending.length === 0 ? (
-            <p className="text-[12px] text-slate-400 text-center py-6">Không có lớp nào cần gia sư</p>
+            <p className="text-[13px] text-slate-400 py-4">Không có lớp nào</p>
           ) : (
-            <div className="space-y-2">
+            <div className="space-y-0.5">
               {recentPending.map(cls => (
                 <div key={cls.id || cls.code} onClick={() => onNavigate('classes')}
-                  className="flex items-center justify-between p-3 rounded-xl bg-slate-50/80 hover:bg-slate-100 cursor-pointer transition-colors group">
+                  className="flex items-center justify-between py-2.5 cursor-pointer transition-colors hover:bg-slate-50 -mx-2 px-2 rounded">
                   <div className="min-w-0 flex-1">
-                    <div className="text-[13px] font-semibold text-slate-800 truncate">{cls.subject}</div>
-                    <div className="text-[11px] text-slate-500 truncate">{cls.location} · {cls.studentInfo}</div>
+                    <div className="text-[13px] font-medium text-slate-800 truncate">{cls.subject}</div>
+                    <div className="text-[12px] text-slate-400 truncate">{cls.location}</div>
                   </div>
                   <div className="flex items-center gap-2 shrink-0 ml-3">
-                    <span className="text-[12px] font-bold text-blue-600 stat-number">{fmt(cls.fee)}đ</span>
-                    {cls.status === 'KHẨN CẤP' && <span className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />}
+                    <span className="text-[13px] font-semibold text-slate-700" style={{ fontVariantNumeric: 'tabular-nums' }}>{fmt(cls.fee)}đ</span>
+                    {cls.status === 'KHẨN CẤP' && <span className="w-1.5 h-1.5 bg-red-500 rounded-full" />}
                   </div>
                 </div>
               ))}
-              {pendingClasses > 5 && (
-                <button onClick={() => onNavigate('classes')} className="w-full text-center text-[11px] text-blue-600 font-semibold py-2 hover:text-blue-700 cursor-pointer">
-                  Xem tất cả {pendingClasses} lớp →
-                </button>
-              )}
             </div>
           )}
         </div>
 
-        {/* Quick numbers grid */}
-        <div className={`${card} lg:col-span-1`}>
-          <div className={cardTitle}>
-            <Target className="w-4 h-4 text-emerald-600" />
-            Tổng quan hệ thống
-          </div>
-          <div className="grid grid-cols-2 gap-3">
+        {/* Tổng quan */}
+        <div className="p-5 lg:border-r border-slate-200">
+          <div className={sectionTitle}>Tổng quan</div>
+          <div className="space-y-3">
             {[
-              { label: 'Gia sư', value: tutors.length, bg: 'bg-purple-50', color: 'text-purple-700', icon: <GraduationCap className="w-3.5 h-3.5" /> },
-              { label: 'Sẵn sàng', value: tutors.filter(t => t.status === 'online').length, bg: 'bg-emerald-50', color: 'text-emerald-700', icon: <Users className="w-3.5 h-3.5" /> },
-              { label: 'Học viên', value: registrations.length, bg: 'bg-blue-50', color: 'text-blue-700', icon: <UserPlus className="w-3.5 h-3.5" /> },
-              { label: 'Đánh giá', value: tutors.length > 0 ? (tutors.reduce((s, t) => s + t.rating, 0) / tutors.length).toFixed(1) : '—', bg: 'bg-amber-50', color: 'text-amber-700', icon: <Star className="w-3.5 h-3.5" /> },
+              { label: 'Tổng gia sư', value: tutors.length },
+              { label: 'Gia sư sẵn sàng', value: tutors.filter(t => t.status === 'online').length },
+              { label: 'Tổng đăng ký', value: registrations.length },
+              { label: 'Điểm đánh giá trung bình', value: tutors.length > 0 ? (tutors.reduce((s, t) => s + t.rating, 0) / tutors.length).toFixed(1) : '—' },
             ].map((item, i) => (
-              <div key={i} className={`${item.bg} rounded-xl p-3 text-center`}>
-                <div className={`text-xl font-extrabold ${item.color} stat-number`}>{item.value}</div>
-                <div className={`text-[10px] font-semibold ${item.color} mt-0.5 opacity-80`}>{item.label}</div>
+              <div key={i} className="flex justify-between items-center py-1">
+                <span className="text-[13px] text-slate-500">{item.label}</span>
+                <span className="text-[14px] font-semibold text-slate-900" style={{ fontVariantNumeric: 'tabular-nums' }}>{item.value}</span>
               </div>
             ))}
           </div>
         </div>
 
-        {/* Top Tutors */}
-        <div className={`${card} lg:col-span-1`}>
-          <div className={cardTitle}>
-            <Trophy className="w-4 h-4 text-amber-500" />
-            Gia sư nổi bật
-          </div>
-          {topTutors.length === 0 ? (
-            <p className="text-[12px] text-slate-400 text-center py-6">Chưa có dữ liệu</p>
+        {/* Top gia sư */}
+        <div className="p-5">
+          <div className={sectionTitle}>Gia sư nổi bật</div>
+          {topT.length === 0 ? (
+            <p className="text-[13px] text-slate-400 py-4">Chưa có dữ liệu</p>
           ) : (
-            <div className="space-y-2">
-              {topTutors.map(([code, data], i) => {
-                const tutor = tutors.find(t => t.code === code);
-                return (
-                  <div key={code} className={`flex items-center gap-3 p-2.5 rounded-xl transition-colors ${i === 0 ? 'bg-amber-50/80' : 'hover:bg-slate-50'}`}>
-                    <span className="text-sm w-5 text-center shrink-0">{medals[i]}</span>
-                    <div className="flex-1 min-w-0">
-                      <div className="text-[12px] font-bold text-slate-800 truncate">{data.name}</div>
-                      <div className="flex items-center gap-2 mt-0.5">
-                        {data.rating > 0 && <span className="text-[10px] text-amber-600 flex items-center gap-0.5"><Star className="w-2.5 h-2.5 fill-amber-400 text-amber-400" />{data.rating.toFixed(1)}</span>}
-                        <span className="text-[10px] text-blue-600 font-medium">{data.active} lớp</span>
-                      </div>
+            <div className="space-y-2.5">
+              {topT.map(([code, data], i) => (
+                <div key={code} className="flex items-center gap-3">
+                  <span className="text-[12px] font-semibold text-slate-400 w-4 text-right shrink-0">{i + 1}</span>
+                  <div className="flex-1 min-w-0">
+                    <div className="text-[13px] font-medium text-slate-800 truncate">{data.name}</div>
+                    <div className="flex items-center gap-2 mt-0.5">
+                      {data.rating > 0 && <span className="text-[11px] text-slate-500">{data.rating.toFixed(1)} ★</span>}
+                      <span className="text-[11px] text-slate-400">{data.active} lớp</span>
                     </div>
                   </div>
-                );
-              })}
+                </div>
+              ))}
             </div>
           )}
         </div>
       </div>
 
-      {/* ========== ROW 5: AI Match Panel (only if API key configured) ========== */}
+      {/* ====== AI MATCH ====== */}
       {hasApiKey && (
-        <div className={card}>
-          <div className="flex items-center justify-between">
-            <div className={cardTitle}>
-              <Sparkles className="w-4 h-4 text-purple-600" />
-              AI Ghép nối gia sư
-            </div>
-            {selectedClass && (
-              <button onClick={onRunMatch} disabled={isMatchingLoading}
-                className="px-3 py-1.5 bg-purple-600 hover:bg-purple-700 text-white rounded-lg text-[11px] font-semibold transition-colors flex items-center gap-1.5 cursor-pointer">
-                <RefreshCw className={`w-3 h-3 ${isMatchingLoading ? 'animate-spin' : ''}`} />
-                Phân tích
-              </button>
-            )}
-          </div>
-          <div className="mt-1">
-            {!selectedClass ? (
-              <p className="text-[12px] text-slate-400">Chọn 1 lớp tại mục <strong className="text-blue-600 cursor-pointer" onClick={() => onNavigate('classes')}>Quản lý lớp</strong> để AI đề xuất gia sư phù hợp.</p>
-            ) : isMatchingLoading ? (
-              <div className="flex items-center gap-3 py-4 text-[12px] text-slate-400">
-                <div className="w-5 h-5 border-2 border-purple-500 border-t-transparent rounded-full animate-spin" />
-                AI đang phân tích lớp {selectedClass.code} — {selectedClass.subject}...
+        <>
+          <div className={`${divider} mt-2`} />
+          <div className="p-5">
+            <div className="flex items-center justify-between mb-3">
+              <div className={sectionTitle} style={{ marginBottom: 0 }}>
+                <span className="flex items-center gap-1.5"><Sparkles className="w-3.5 h-3.5" /> AI Ghép nối</span>
               </div>
-            ) : aiRecommendations.length > 0 ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mt-2">
-                {aiRecommendations.map((item, idx) => (
-                  <div key={idx} className={`flex items-center gap-3 p-3 rounded-xl border ${idx === 0 ? 'border-purple-200 bg-purple-50/50' : 'border-slate-200 bg-slate-50/50'}`}>
-                    <div className={`w-9 h-9 rounded-lg flex items-center justify-center font-bold text-white text-xs shrink-0`} style={{ background: item.tutor.avatarColor || '#3b82f6' }}>
+              {selectedClass && (
+                <button onClick={onRunMatch} disabled={isMatchingLoading}
+                  className="px-3 py-1.5 text-[12px] font-medium cursor-pointer transition-colors border border-slate-200 rounded-lg hover:bg-slate-50 flex items-center gap-1.5">
+                  <RefreshCw className={`w-3 h-3 ${isMatchingLoading ? 'animate-spin' : ''}`} />
+                  Phân tích
+                </button>
+              )}
+            </div>
+            {!selectedClass ? (
+              <p className="text-[13px] text-slate-400">Chọn 1 lớp tại <span className="text-blue-600 font-medium cursor-pointer hover:underline" onClick={() => onNavigate('classes')}>Quản lý lớp</span> để AI đề xuất gia sư phù hợp.</p>
+            ) : isMatchingLoading ? (
+              <div className="flex items-center gap-2 py-3 text-[13px] text-slate-400">
+                <div className="w-4 h-4 border-2 border-slate-400 border-t-transparent rounded-full animate-spin" />
+                Đang phân tích {selectedClass.code}...
+              </div>
+            ) : aiRec.length > 0 ? (
+              <div className="space-y-2 mt-2">
+                {aiRec.map((item, idx) => (
+                  <div key={idx} className="flex items-center gap-3 py-2">
+                    <div className="w-8 h-8 rounded-full flex items-center justify-center font-semibold text-white text-[11px] shrink-0" style={{ background: item.tutor.avatarColor || '#64748b' }}>
                       {item.tutor.avatar}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <div className="flex items-center justify-between gap-1">
-                        <span className="text-[12px] font-bold text-slate-800 truncate">{item.tutor.name}</span>
-                        <span className="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded shrink-0">{item.score}%</span>
-                      </div>
-                      <div className="text-[10px] text-slate-500 mt-0.5 truncate italic">"{item.rationale}"</div>
+                      <div className="text-[13px] font-medium text-slate-800">{item.tutor.name}</div>
+                      <div className="text-[11px] text-slate-400 truncate">{item.rationale}</div>
                     </div>
+                    <span className="text-[12px] font-semibold text-emerald-600 shrink-0">{item.score}%</span>
                   </div>
                 ))}
               </div>
             ) : (
-              <p className="text-[12px] text-slate-400 mt-1">Đã chọn lớp <strong>{selectedClass.code}</strong> — {selectedClass.subject}. Nhấn <strong>Phân tích</strong> để AI tìm gia sư.</p>
+              <p className="text-[13px] text-slate-400">Đã chọn {selectedClass.code}. Nhấn Phân tích để AI tìm gia sư.</p>
             )}
           </div>
-        </div>
+        </>
       )}
     </div>
   );
