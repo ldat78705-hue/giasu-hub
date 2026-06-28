@@ -271,7 +271,7 @@ export const KPIDashboard: React.FC<KPIDashboardProps> = ({ matches, registratio
               <div className="text-3xl font-bold text-emerald-600">{referralRegs.length}</div>
             </div>
             <div className="bg-blue-50 rounded-2xl p-5 border border-blue-100">
-              <div className="text-[10px] font-bold uppercase text-blue-400 mb-1">Mã GT duy nhất</div>
+              <div className="text-[10px] font-bold uppercase text-blue-400 mb-1">Mã giới thiệu duy nhất</div>
               <div className="text-3xl font-bold text-blue-600">{Object.keys(referralCodes).length}</div>
             </div>
             <div className="bg-purple-50 rounded-2xl p-5 border border-purple-100">
