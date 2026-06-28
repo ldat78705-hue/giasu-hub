@@ -506,6 +506,32 @@ section .flex-col { flex-direction: column !important; }
 .dark section p { color: #cbd5e1; }
 .dark section label { color: #cbd5e1 !important; }
 
+/* Dark: Header */
+.dark header { background: #1e293b !important; border-bottom-color: #334155 !important; }
+.dark header h1 { color: #f1f5f9 !important; }
+.dark header input { background: #0f172a !important; border-color: #334155 !important; color: #e2e8f0 !important; }
+.dark header button { color: #94a3b8 !important; }
+.dark header div[style*="color: #334155"] { color: #e2e8f0 !important; }
+.dark header div[style*="color: #94a3b8"] { color: #64748b !important; }
+
+/* Dark: Headings inside section */
+.dark section h2 { color: #f1f5f9 !important; }
+.dark section h3 { color: #f1f5f9 !important; }
+.dark section h4 { color: #e2e8f0 !important; }
+
+/* Dark: Section inputs */
+.dark section input,
+.dark section textarea,
+.dark section select {
+  background: #0f172a !important;
+  border-color: #334155 !important;
+  color: #e2e8f0 !important;
+}
+.dark section input::placeholder,
+.dark section textarea::placeholder {
+  color: #64748b !important;
+}
+
 /* Dark: Modals */
 .dark .fixed.inset-0 { background: rgba(0,0,0,0.7) !important; }
 .dark section .bg-white.rounded-lg,
