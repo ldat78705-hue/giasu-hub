@@ -12,6 +12,7 @@ import { Header } from './components/Header';
 import { StatsCards } from './components/StatsCards';
 import { ClassTable } from './components/ClassTable';
 import { SideWidgets } from './components/SideWidgets';
+import { Dashboard } from './components/Dashboard';
 import { TutorTab } from './components/TutorTab';
 import { StudentTab } from './components/StudentTab';
 import { FinanceTab } from './components/FinanceTab';
@@ -772,23 +773,15 @@ export default function App() {
 
         <section className="flex-1 p-5 lg:p-7 grid grid-cols-12 gap-5 content-start overflow-y-auto admin-scroll">
           {adminTab === 'dashboard' && (
-            <>
-              <QuickActions tutors={tutors} registrations={registrations} matches={matches}
-                attendance={attendance} reviews={reviews} transactions={transactions} onNavigate={setAdminTab} />
-              <StatsCards totalClasses={classes.length} pendingClasses={pendingClassesCount}
-                totalTutors={tutors.length} totalStudents={students.length}
-                pendingApplications={pendingApplicationsCount} totalRevenue={totalRevenue}
-                unreadContacts={unreadContactsCount} totalRegistrations={registrations.length}
-                pendingRegistrations={registrations.filter(r => r.status === 'Mới').length}
-                matches={matches} registrations={registrations} />
-              <ClassTable classes={classes} onSelectClassForMatch={setSelectedClass}
-                selectedClassCode={selectedClass?.code} onAddClass={handleAddClass}
-                onUpdateStatus={handleUpdateClassStatus} onDeleteClass={handleDeleteClass}
-                onOpenAiGenerator={() => setShowAiGenModal(true)} />
-              <SideWidgets selectedClass={selectedClass} tutors={tutors} aiMatches={aiMatches}
-                isMatchingLoading={isMatchingLoading} onRunMatch={() => runAiMatch()} hasApiKey={!!apiKey}
-                matches={matches} reviews={reviews} attendance={attendance} />
-            </>
+            <Dashboard
+              classes={classes} tutors={tutors} matches={matches}
+              registrations={registrations} attendance={attendance}
+              reviews={reviews} transactions={transactions}
+              totalRevenue={totalRevenue} onNavigate={setAdminTab}
+              selectedClass={selectedClass} aiMatches={aiMatches}
+              isMatchingLoading={isMatchingLoading} onRunMatch={() => runAiMatch()}
+              hasApiKey={!!apiKey}
+            />
           )}
 
           {adminTab === 'classes' && (
