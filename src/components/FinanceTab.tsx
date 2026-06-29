@@ -29,12 +29,12 @@ export const FinanceTab: React.FC<FinanceTabProps> = ({ transactions, onAddTrans
     .reduce((sum, t) => sum + t.amount, 0);
 
   const totalRefund = transactions
-    .filter(t => t.type === 'Hoàn tiền')
-    .reduce((sum, t) => sum + t.amount, 0);
+    .filter(t => t.type === 'Hoàn tiền' && t.status === 'Thành công')
+    .reduce((sum, t) => sum + Math.abs(t.amount), 0);
 
   const totalSalary = transactions
-    .filter(t => t.type === 'Thanh toán lương')
-    .reduce((sum, t) => sum + t.amount, 0);
+    .filter(t => t.type === 'Thanh toán lương' && t.status === 'Thành công')
+    .reduce((sum, t) => sum + Math.abs(t.amount), 0);
 
   const netRevenue = totalIncome - totalRefund - totalSalary;
 

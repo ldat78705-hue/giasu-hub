@@ -14,27 +14,7 @@
 .max-w-5xl { max-width: 64rem; }
 .max-w-6xl { max-width: 72rem; }
 
-/* Padding utilities - hardcoded to prevent TW v4 purge issues */
-.pl-8 { padding-left: 2rem; }
-.pl-9 { padding-left: 2.25rem; }
-.pl-10 { padding-left: 2.5rem; }
-.pr-3 { padding-right: 0.75rem; }
-.pr-8 { padding-right: 2rem; }
-.pr-24 { padding-right: 6rem; }
-
-/* Position utilities - hardcoded for absolute-positioned icons */
-.left-2 { left: 0.5rem; }
-.left-2\.5 { left: 0.625rem; }
-.left-3 { left: 0.75rem; }
-.left-3\.5 { left: 0.875rem; }
-.right-2 { right: 0.5rem; }
-.right-3 { right: 0.75rem; }
-.top-1\.5 { top: 0.375rem; }
-.top-2 { top: 0.5rem; }
-.top-2\.5 { top: 0.625rem; }
-.top-3 { top: 0.75rem; }
-.top-3\.5 { top: 0.875rem; }
-.inset-0 { top: 0; right: 0; bottom: 0; left: 0; }
+/* Padding/Position utilities removed — all inputs now use flex layout */
 
 /* Grid utilities - hardcoded fallback */
 .grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -179,7 +159,7 @@ input, textarea, select {
   z-index: 55;
   max-height: 85vh;
   overflow-y: auto;
-  border-radius: 1rem 1rem 0 0;
+  border-radius: 4px 4px 0 0;
   padding-bottom: var(--safe-bottom);
   animation: slideUp 0.3s ease-out both;
 }
@@ -191,7 +171,7 @@ input, textarea, select {
     bottom: auto;
     top: 50%;
     transform: translate(-50%, -50%);
-    border-radius: 1rem;
+    border-radius: 4px;
     max-height: 90vh;
     width: 100%;
     max-width: 28rem;
@@ -364,23 +344,30 @@ section input[type="search"],
 section input[type="date"],
 section textarea {
   font-size: 13px !important;
-  padding: 9px 14px !important;
+  padding: 9px 14px;
   border-radius: 4px !important;
-  border: 1px solid #e2e8f0 !important;
-  background: #f8fafc !important;
+  border: 1px solid #e2e8f0;
+  background: #f8fafc;
   outline: none !important;
   transition: all 0.15s !important;
   color: #334155 !important;
   font-family: inherit !important;
   line-height: 1.5 !important;
 }
+/* Inputs inside flex wrappers: reset padding/border/bg (inline styles take over) */
+section input[style*="border: none"],
+section select[style*="border: none"] {
+  padding: unset !important;
+  border: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
 section input:focus,
 section textarea:focus {
-  background: #fff !important;
+  background: #fff;
   border-color: #818cf8 !important;
-  box-shadow: 0 0 0 3px rgba(129,140,248,0.1) !important;
+  box-shadow: 0 0 0 3px rgba(129,140,248,0.1);
 }
-section input.pl-8, section input.pl-9 { padding-left: 36px !important; }
 
 .dark section input[type="text"],
 .dark section input[type="password"],
@@ -405,9 +392,9 @@ section input.pl-8, section input.pl-9 { padding-left: 36px !important; }
 
 /* ── SELECT ── */
 section select {
-  font-size: 13px !important; padding: 8px 12px !important;
-  border-radius: 4px !important; border: 1px solid #e2e8f0 !important;
-  background: #fff !important; color: #334155 !important;
+  font-size: 13px !important; padding: 8px 12px;
+  border-radius: 4px !important; border: 1px solid #e2e8f0;
+  background: #fff; color: #334155 !important;
   cursor: pointer !important; outline: none !important; font-family: inherit !important;
 }
 .dark section select {
