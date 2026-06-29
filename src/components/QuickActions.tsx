@@ -1,4 +1,4 @@
-﻿import React from 'react';
+import React from 'react';
 import { ActiveTab, TutorItem, ParentRegistration, ClassMatch, AttendanceRecord, TutorReview, TransactionItem } from '../types';
 import { AlertTriangle, UserCheck, Clock, ArrowRight, ShieldAlert, Zap, Award, TrendingDown, XCircle, Calendar, DollarSign, Bell } from 'lucide-react';
 
@@ -91,7 +91,7 @@ export const QuickActions: React.FC<QuickActionsProps> = ({ tutors, registration
       <div className="flex flex-wrap gap-2">
         {actions.slice(0, 8).map((action, i) => (
           <button key={i} onClick={() => onNavigate(action.tab)}
-            className={`flex items-center gap-2.5 px-3.5 py-2.5 rounded-lg border text-left cursor-pointer transition-all hover:shadow-sm ${action.urgent ? urgentColors[action.color] : urgentColors[action.color]}`}>
+            className={`flex items-center gap-2.5 px-3.5 py-2.5 rounded-lg border text-left cursor-pointer transition-all hover:shadow-sm ${urgentColors[action.color]} ${action.urgent ? 'pulse-urgent' : ''}`}>
             <div className={`${iconColors[action.color]} shrink-0`}>{action.icon}</div>
             <div className="min-w-0">
               <div className="text-xs font-bold text-slate-800 truncate">{action.label}</div>
