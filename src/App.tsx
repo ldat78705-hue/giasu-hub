@@ -742,7 +742,7 @@ export default function App() {
           onNavigateRegister={() => setActiveTab('parent-register')}
           onContactSubmit={handleContactSubmit}
         />
-        <ChatbotWidget apiKey={settings.geminiApiKey} centerName={settings.centerName || 'Gia Sư Thành Đạt'} />
+        <ChatbotWidget apiKey={settings.geminiApiKey} centerName={settings.centerName || 'Gia Sư Thành Đạt'} onRegister={handleParentRegister} wards={settings.wards || []} tutors={tutors} />
       </div>
     );
   }
@@ -988,7 +988,7 @@ export default function App() {
       )}
 
       {/* AI Chatbot Widget for Admin */}
-      <ChatbotWidget apiKey={settings.geminiApiKey} centerName={settings.centerName || 'Gia Sư Thành Đạt'} />
+      <ChatbotWidget apiKey={settings.geminiApiKey} centerName={settings.centerName || 'Gia Sư Thành Đạt'} onRegister={handleParentRegister} wards={settings.wards || []} tutors={tutors} />
     </div>
   );
 }
