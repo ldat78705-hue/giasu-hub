@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Bot, Send, X, Sparkles, CheckCircle2, Edit3, UserPlus } from 'lucide-react';
+import { Bot, Send, X, Sparkles, CheckCircle2, UserPlus } from 'lucide-react';
 import { ParentRegistration, TutorItem } from '../types';
 
 interface ChatbotWidgetProps {
@@ -117,9 +117,15 @@ export const ChatbotWidget: React.FC<ChatbotWidgetProps> = ({
         break;
       }
 
-      case 'ask_subject':
-        // handled by quick reply toggle below
+      case 'ask_subject': {
+        // User typed a subject manually instead of clicking buttons
+        const typed = text.trim();
+        if (typed) {
+          setSelectedSubjects(prev => prev.includes(typed) ? prev : [...prev, typed]);
+          addBot(`Đã thêm **${typed}**! Chọn thêm môn hoặc bấm **Tiếp tục** 👇`, SUBJECTS.map(s => ({ label: s, value: s })));
+        }
         break;
+      }
 
       case 'ask_grade':
         setDraft(d => ({ ...d, grade: text }));
@@ -440,10 +446,11 @@ QUAN TRỌNG: Nếu phụ huynh có ý muốn tìm gia sư, đăng ký, hoặc c
             {/* Message bubble */}
             <div style={{ display: 'flex', justifyContent: m.role === 'user' ? 'flex-end' : 'flex-start', marginBottom: 2 }}>
               <div style={{
-                maxWidth: '85%', padding: '10px 14px', borderRadius: 4, fontSize: 13, lineHeight: 1.6,
+                maxWidth: '85%', padding: '10px 14px', fontSize: 13, lineHeight: 1.6,
                 background: m.role === 'user' ? '#6366f1' : '#f1f5f9',
                 color: m.role === 'user' ? '#fff' : '#334155',
                 whiteSpace: 'pre-wrap', wordBreak: 'break-word',
+                borderRadius: m.role === 'user' ? '4px 4px 2px 4px' : '4px 4px 4px 2px',
               }}
                 dangerouslySetInnerHTML={{ __html: m.text.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>').replace(/_(.*?)_/g, '<i>$1</i>') }}
               />
