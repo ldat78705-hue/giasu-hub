@@ -110,14 +110,17 @@ export const FinanceTab: React.FC<FinanceTabProps> = ({ transactions, onAddTrans
         transactions.forEach(t => {
           const dateParts = t.date.split(/[/,\- ]/);
           if (dateParts.length < 2) return;
-          const monthNum = dateParts[1].padStart(2, '0');
-          const yearNum = dateParts[2] || String(new Date().getFullYear());
+          // Support DD/MM/YYYY format
+          let dayStr = dateParts[0], monthStr = dateParts[1], yearStr = dateParts[2] || String(new Date().getFullYear());
+          // Handle MM/DD/YYYY (shouldn't happen with vi-VN but just in case)
+          const monthNum = monthStr.padStart(2, '0');
+          const yearNum = yearStr.slice(0, 4); // take first 4 chars in case of trailing chars
           const key = `T${monthNum}/${yearNum}`;
           const sortKey = parseInt(yearNum) * 100 + parseInt(monthNum);
           if (!monthlyData[key]) monthlyData[key] = { income: 0, refund: 0, expense: 0, sortKey };
-          if (t.type === 'Thu phí gia sư') monthlyData[key].income += t.amount;
-          else if (t.type === 'Hoàn tiền') monthlyData[key].refund += t.amount;
-          else monthlyData[key].expense += t.amount;
+          if (t.type === 'Thu phí gia sư') monthlyData[key].income += Math.abs(t.amount);
+          else if (t.type === 'Hoàn tiền') monthlyData[key].refund += Math.abs(t.amount);
+          else monthlyData[key].expense += Math.abs(t.amount); // Vận hành, Thanh toán lương, etc.
         });
         
         // Sort chronologically and take last 6
@@ -126,78 +129,89 @@ export const FinanceTab: React.FC<FinanceTabProps> = ({ transactions, onAddTrans
           .slice(-6);
         if (months.length === 0) return null;
         
-        const maxVal = Math.max(...months.map(([, d]) => Math.max(d.income, d.refund + d.expense)), 1);
-        const chartH = 180;
+        const maxVal = Math.max(...months.map(([, d]) => Math.max(d.income, d.refund + d.expense)), 100000);
+        const chartH = 200;
         const gridLines = [0, 0.25, 0.5, 0.75, 1];
         
         return (
           <div className="bg-white rounded-lg border border-slate-200 shadow-xs" style={{ padding: '24px 24px 16px' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
-              <div>
-                <h4 style={{ fontSize: 14, fontWeight: 700, color: '#1e293b', margin: 0, display: 'flex', alignItems: 'center', gap: 8 }}>
+            {/* Header */}
+            <div style={{ marginBottom: 16 }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                <h4 style={{ fontSize: 15, fontWeight: 700, color: '#1e293b', margin: 0, display: 'flex', alignItems: 'center', gap: 8 }}>
                   <DollarSign className="w-4 h-4" style={{ color: '#4f46e5' }} /> Doanh thu theo tháng
                 </h4>
-                <p style={{ fontSize: 11, color: '#94a3b8', marginTop: 2 }}>Phí kết nối vs Hoàn trả & Chi phí</p>
               </div>
-              <div style={{ display: 'flex', gap: 16, fontSize: 11, color: '#64748b' }}>
-                <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-                  <span style={{ width: 10, height: 10, borderRadius: 2, background: 'linear-gradient(135deg, #059669, #10b981)' }} /> Thu
+              <div style={{ display: 'flex', gap: 20, fontSize: 11, color: '#64748b', marginTop: 8 }}>
+                <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                  <span style={{ width: 12, height: 12, borderRadius: 2, background: 'linear-gradient(135deg, #059669, #10b981)', display: 'inline-block' }} /> Phí kết nối (Thu)
                 </span>
-                <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-                  <span style={{ width: 10, height: 10, borderRadius: 2, background: 'linear-gradient(135deg, #e11d48, #f43f5e)' }} /> Chi/Hoàn
+                <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                  <span style={{ width: 12, height: 12, borderRadius: 2, background: 'linear-gradient(135deg, #e11d48, #f43f5e)', display: 'inline-block' }} /> Hoàn trả & Chi phí
                 </span>
               </div>
             </div>
             
             {/* Chart area */}
             <div style={{ position: 'relative', height: chartH, marginBottom: 8 }}>
-              {/* Grid lines */}
+              {/* Grid lines + Y-axis labels */}
               {gridLines.map((pct, i) => (
-                <div key={i} style={{ position: 'absolute', left: 48, right: 0, bottom: pct * chartH, borderBottom: '1px solid #f1f5f9', zIndex: 0 }}>
-                  <span style={{ position: 'absolute', left: -48, top: -7, fontSize: 9, color: '#cbd5e1', fontWeight: 600, width: 44, textAlign: 'right' }}>
+                <div key={i} style={{ position: 'absolute', left: 60, right: 0, bottom: pct * chartH, borderBottom: `1px ${i === 0 ? 'solid' : 'dashed'} #f1f5f9`, zIndex: 0 }}>
+                  <span style={{ position: 'absolute', left: -60, top: -8, fontSize: 10, color: '#94a3b8', fontWeight: 500, width: 56, textAlign: 'right' }}>
                     {formatCurrency(Math.round(maxVal * pct / 1000) * 1000)}
                   </span>
                 </div>
               ))}
               
               {/* Bars */}
-              <div style={{ display: 'flex', alignItems: 'flex-end', gap: months.length <= 2 ? 32 : 12, height: '100%', paddingLeft: 52, paddingRight: 8, position: 'relative', zIndex: 1 }}>
+              <div style={{ display: 'flex', alignItems: 'flex-end', gap: months.length <= 2 ? 48 : 16, height: '100%', paddingLeft: 64, paddingRight: 16, position: 'relative', zIndex: 1 }}>
                 {months.map(([month, data]) => {
-                  const incomeH = Math.max(Math.round(data.income / maxVal * chartH), 3);
-                  const expenseH = Math.max(Math.round((data.refund + data.expense) / maxVal * chartH), 0);
-                  const net = data.income - data.refund - data.expense;
+                  const incomeH = data.income > 0 ? Math.max(Math.round(data.income / maxVal * chartH), 6) : 0;
+                  const totalExpense = data.refund + data.expense;
+                  const expenseH = totalExpense > 0 ? Math.max(Math.round(totalExpense / maxVal * chartH), 6) : 0;
+                  const net = data.income - totalExpense;
                   return (
-                    <div key={month} style={{ flex: 1, maxWidth: 80, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 0 }}>
-                      {/* Value label */}
-                      <div style={{ fontSize: 10, fontWeight: 700, color: '#059669', marginBottom: 4, whiteSpace: 'nowrap' }}>
-                        {formatCurrency(data.income)}đ
-                      </div>
+                    <div key={month} style={{ flex: 1, maxWidth: 100, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                      {/* Value label on top */}
+                      {incomeH > 0 && (
+                        <div style={{ fontSize: 10, fontWeight: 700, color: '#059669', marginBottom: 4, whiteSpace: 'nowrap' }}>
+                          {formatCurrency(data.income)}đ
+                        </div>
+                      )}
+                      {incomeH === 0 && expenseH > 0 && (
+                        <div style={{ fontSize: 10, fontWeight: 700, color: '#e11d48', marginBottom: 4, whiteSpace: 'nowrap' }}>
+                          -{formatCurrency(totalExpense)}đ
+                        </div>
+                      )}
                       {/* Bar group */}
-                      <div style={{ display: 'flex', gap: 3, alignItems: 'flex-end', width: '100%', justifyContent: 'center' }}>
+                      <div style={{ display: 'flex', gap: 4, alignItems: 'flex-end', width: '100%', justifyContent: 'center' }}>
                         {/* Income bar */}
-                        <div style={{ 
-                          width: expenseH > 0 ? '48%' : '70%', 
-                          height: incomeH, 
-                          background: 'linear-gradient(180deg, #059669 0%, #10b981 100%)', 
-                          borderRadius: '3px 3px 0 0',
-                          transition: 'height 0.3s ease',
-                          position: 'relative',
-                        }} />
+                        {incomeH > 0 && (
+                          <div title={`Thu: ${formatCurrency(data.income)}đ`} style={{ 
+                            width: expenseH > 0 ? '45%' : '65%', 
+                            height: incomeH, 
+                            background: 'linear-gradient(180deg, #059669 0%, #10b981 100%)', 
+                            borderRadius: '3px 3px 0 0',
+                            transition: 'height 0.3s ease',
+                            minHeight: 6,
+                          }} />
+                        )}
                         {/* Expense bar */}
                         {expenseH > 0 && (
-                          <div style={{ 
-                            width: '48%', 
+                          <div title={`Chi/Hoàn: ${formatCurrency(totalExpense)}đ`} style={{ 
+                            width: incomeH > 0 ? '45%' : '65%', 
                             height: expenseH, 
                             background: 'linear-gradient(180deg, #e11d48 0%, #f43f5e 100%)', 
                             borderRadius: '3px 3px 0 0',
                             transition: 'height 0.3s ease',
+                            minHeight: 6,
                           }} />
                         )}
                       </div>
                       {/* Month label */}
                       <div style={{ fontSize: 11, fontWeight: 600, color: '#475569', marginTop: 8 }}>{month}</div>
                       {/* Net label */}
-                      <div style={{ fontSize: 9, fontWeight: 700, color: net >= 0 ? '#059669' : '#e11d48', marginTop: 2 }}>
+                      <div style={{ fontSize: 10, fontWeight: 700, color: net >= 0 ? '#059669' : '#e11d48', marginTop: 2, whiteSpace: 'nowrap' }}>
                         {net >= 0 ? '+' : ''}{formatCurrency(net)}đ
                       </div>
                     </div>

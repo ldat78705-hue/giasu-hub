@@ -286,16 +286,25 @@ export default function App() {
   };
 
   const handleAiSearch = async (query: string) => {
-    if (!apiKey) { setAiSearchSummary('⚠️ Chưa cấu hình API Key AI. Vào Cài đặt để thiết lập.'); return; }
+    if (!apiKey) { setAiSearchSummary('⚠️ Chưa cấu hình API Key AI. Vào Cài đặt → nhập Gemini API Key.'); return; }
     setIsSearching(true);
+    setAiSearchSummary('🔍 Đang phân tích...');
     try {
       const data = await aiSmartSearch(apiKey, query);
-      setAiSearchSummary(`🤖 AI: "${data.intentSummary || query}"`);
+      const parts: string[] = [];
+      if (data.intentSummary) parts.push(`🤖 ${data.intentSummary}`);
+      if (data.extractedSubject) parts.push(`📚 Môn: ${data.extractedSubject}`);
+      if (data.extractedLocation) parts.push(`📍 Khu vực: ${data.extractedLocation}`);
+      if (data.suggestedMaxFee) parts.push(`💰 Phí gợi ý: ${new Intl.NumberFormat('vi-VN').format(data.suggestedMaxFee)}đ/buổi`);
+      setAiSearchSummary(parts.length > 0 ? parts.join(' · ') : `🤖 AI: "${query}"`);
       if (data.extractedSubject) {
         const found = classes.find(c => c.subject.toLowerCase().includes(data.extractedSubject.toLowerCase()));
         if (found) setSelectedClass(found);
       }
-    } catch (err) { console.error(err); }
+    } catch (err: any) {
+      console.error('AI Search error:', err);
+      setAiSearchSummary(`❌ Lỗi AI: ${err?.message || 'Không thể kết nối'}. Kiểm tra API key.`);
+    }
     finally { setIsSearching(false); }
   };
 
@@ -977,6 +986,9 @@ export default function App() {
           </div>
         </div>
       )}
+
+      {/* AI Chatbot Widget for Admin */}
+      <ChatbotWidget apiKey={settings.geminiApiKey} centerName={settings.centerName || 'Gia Sư Thành Đạt'} />
     </div>
   );
 }
