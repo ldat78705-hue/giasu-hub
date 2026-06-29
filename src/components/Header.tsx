@@ -56,8 +56,8 @@ export const Header: React.FC<HeaderProps> = ({
       <h1 style={{ fontSize: 18, fontWeight: 700, color: '#1e293b', margin: 0, flexShrink: 0 }}>{label}</h1>
 
       {/* Search */}
-      <div style={{ flex: 1, maxWidth: 360, margin: '0 16px', position: 'relative' }}>
-        <Search style={{ width: 16, height: 16, position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', color: '#94a3b8' }} />
+      <div style={{ flex: 1, maxWidth: 360, margin: '0 16px', display: 'flex', alignItems: 'center', gap: 8, padding: '0 12px', background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 4, position: 'relative' }}>
+        <Search style={{ width: 16, height: 16, color: '#94a3b8', flexShrink: 0 }} />
         <input
           type="text"
           value={searchInput}
@@ -65,16 +65,14 @@ export const Header: React.FC<HeaderProps> = ({
           onKeyDown={e => { if (e.key === 'Enter' && searchInput.trim()) onAiSearch(searchInput.trim()); }}
           placeholder="Tìm kiếm học viên, lớp học..."
           style={{
-            width: '100%', padding: '8px 16px 8px 36px',
-            background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 4,
-            fontSize: 13, outline: 'none', color: '#334155',
+            border: 'none', background: 'transparent', outline: 'none',
+            padding: '8px 0', fontSize: 13, color: '#334155', width: '100%',
           }}
         />
         {isSearching && (
           <div style={{
-            position: 'absolute', right: 12, top: '50%', transform: 'translateY(-50%)',
             width: 16, height: 16, border: '2px solid #4f46e5', borderTopColor: 'transparent',
-            borderRadius: '50%', animation: 'spin 1s linear infinite',
+            borderRadius: '50%', animation: 'spin 1s linear infinite', flexShrink: 0,
           }} />
         )}
       </div>
